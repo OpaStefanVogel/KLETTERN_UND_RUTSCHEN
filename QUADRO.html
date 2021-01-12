@@ -29,8 +29,28 @@ function Richtung(dr,dh,dv) {
   ST.firstElementChild.setAttribute("y2",aktuelle_Position[1]);
   ST.lastElementChild.setAttribute("cx",aktuelle_Position[0]);
   ST.lastElementChild.setAttribute("cy",aktuelle_Position[1]);
+  
   document.getElementById("Grafik").appendChild(ST);
   document.getElementById("Log").firstChild.nodeValue=[aktuelle_Position[0].toFixed(1),aktuelle_Position[1].toFixed(1)];
+
+  var qalt=q.position.clone();
+  q.position.z=q.position.z-dv*Faktor/40/80;
+  q.position.x=q.position.x+dr*Faktor/40/80;
+  q.position.y=q.position.y-dh*Faktor/40/80;
+  var qneu=q.position.clone();
+  var st=stange.clone();
+  st.position.x=(qalt.x+qneu.x)/2;
+  st.position.y=(qalt.y+qneu.y)/2;
+  st.position.z=(qalt.z+qneu.z)/2;
+//  st.lookAt(q.position.x+dh,q.position.y+dr,q.position.z+dv);
+//  st.position.y=q.position.y-0.5;
+//  st.rotation.z=st.rotation.z+90/180*Math.PI;
+  var quat=new THREE.Quaternion();
+  //alert(new THREE.Vector3(0,1,0));
+  //alert((new THREE.Vector3(dr,-dh,dv)).normalize());
+  quat.setFromUnitVectors(new THREE.Vector3(0,1,0),(new THREE.Vector3(dr,-dh,dv)).normalize());
+  st.setRotationFromQuaternion(quat);
+  scene.add( st );
   }
 
 function wo_bin_ich() {
@@ -111,6 +131,7 @@ Die Knöpfe verraten es dir.
 <div onclick="Faktor=80"><input type="radio" id="L80" name="Laenge" value="80"/><label for="L80">75</label></div>
 </span>
 </div>               
+<div id="Ausgabe zu tree.js"></div>               
 <div>               
 <button onclick="Richtung(-80,0,0)">links</button>
 <button onclick="Richtung(0,-80,0)">hoch</button>
@@ -135,6 +156,98 @@ Die Knöpfe verraten es dir.
 <div>               
 <button onclick="Faktormerk=Faktor;Faktor=40;Richtung(0,-(-120+153.1370849898476)/2,0);Faktor=Faktormerk;">Mini hoch</button>
 <button onclick="Faktormerk=Faktor;Faktor=40;Richtung(0,(-120+153.1370849898476)/2,0);Faktor=Faktormerk;">Mini runter</button>
-</div>               
+</div>
+
+
+<script src="../three.js/build/three.js"></script>
+<script>
+const clock = new THREE.Clock();
+//alert(1);
+//alert(THREE);
+var wsize=window.innerWidth-100;
+var hsize=window.innerHeight;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 45, wsize / hsize, 0.1, 1000 );
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( wsize, hsize );
+document.getElementById("Ausgabe zu tree.js").appendChild( renderer.domElement )
+
+
+//Create a plane that receives shadows (but does not cast them)
+const planeGeometry = new THREE.PlaneGeometry(20,20);
+const planeMaterial = new THREE.MeshBasicMaterial( { color: 0x777733 } )
+const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+plane.receiveShadow = true;
+plane.position.y=-0.2;
+plane.position.z=-9;
+plane.rotation.x=-90/180*Math.PI;
+//alert(JSON.stringify(plane.toJSON()));
+//alert(JSON.stringify(TREE.toJSON()));
+scene.add( plane );
+
+const skyGeometry = new THREE.PlaneGeometry(80,80);
+const skyMaterial = new THREE.MeshBasicMaterial( { color: 0xddddff } )
+const sky = new THREE.Mesh( skyGeometry, skyMaterial );
+//plane.receiveShadow = true;
+sky.position.y=40;
+sky.position.z=-30;
+scene.add( sky );
+
+const stangeGeometry = new THREE.CylinderGeometry( 0.05,0.05,1.1,20);
+const stangeMaterial = new THREE.MeshStandardMaterial( { color: 0xff0000 } );
+const stange = new THREE.Mesh( stangeGeometry, stangeMaterial );
+stange.castShadow = false;  //true; //default is false
+stange.receiveShadow = false; //default
+stange.position.y=0.5;
+//stange.openEnded=true;
+//stange.lookAt(-2,1,0);
+//stange.rotation.z=90/180*Math.PI;
+stange.position.x=-3;
+//alert(JSON.stringify(stange.toJSON()));
+scene.add( stange );
+
+const qGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
+const qMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00 } );
+const q = new THREE.Mesh( qGeometry, qMaterial );
+q.castShadow = true; //default is false
+q.receiveShadow = false; //default
+q.position.z=0;
+q.position.x=0;
+scene.add( q );
+
+camera.position.z = 6;
+camera.position.x = 1;
+camera.position.y = 1.5;
+
+// White directional light at half intensity shining from the top.
+const directionalLight = new THREE.DirectionalLight( 0x44ffff, 1 );
+scene.add( directionalLight );
+const directionalLight2 = new THREE.DirectionalLight( 0xffffff, 1 );
+directionalLight2.position.z=1;
+scene.add( directionalLight2 );
+const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+scene.add( light );
+
+
+function animate() {
+	requestAnimationFrame( animate );
+
+//cube.rotation.x += 0.01;
+//cube.rotation.y += 0.001;
+
+//zylinder.rotation.x += -0.01;
+//zylinder.rotation.y += 0.001;
+
+//if (sphere.position.x>4) sphere.position.x=-0.5; else sphere.position.x+=0.01;
+
+	renderer.render( scene, camera );
+}
+animate();
+
+//			alert(9);
+		</script>
+
+
   </body>
   </html>
