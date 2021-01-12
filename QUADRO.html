@@ -1,0 +1,140 @@
+<html>
+<head>
+  <title>QUADRO</title>
+  <meta charset="utf-8"/>
+<style>
+button {font-size:200%}
+  </style>
+<script>
+var aktuelle_Position=[20,530,0]
+var Stangen=[];
+var Faktor=40; //40=normal, 80=doppelt, 20=mini, 10=Ansatzstück 
+var Faktormerk=40;
+function Richtung(dr,dh,dv) {
+  var Q=document.getElementById("Quadromännchen");
+  Q.setAttribute("cx",Q.getAttribute("cx")*1+(dr-dv/2.5)*Faktor/40);
+  Q.setAttribute("cy",Q.getAttribute("cy")*1+(dh+dv/2)*Faktor/40);
+  //Q.setAttribute("r",Q.getAttribute("r")*2**(dv/333));
+  ST=document.getElementById("Musterstange").cloneNode(true);
+  ST.removeAttribute("id");
+  ST.setAttribute("aktuell",aktuelle_Position);
+  ST.firstElementChild.setAttribute("x1",aktuelle_Position[0]);
+  ST.firstElementChild.setAttribute("y1",aktuelle_Position[1]); 
+  ST.firstElementChild.nextElementSibling.setAttribute("cx",aktuelle_Position[0]);
+  ST.firstElementChild.nextElementSibling.setAttribute("cy",aktuelle_Position[1]);
+  aktuelle_Position[0]=aktuelle_Position[0]+(dr-dv/2.5)*Faktor/40;
+  aktuelle_Position[1]=aktuelle_Position[1]+(dh+dv/2)*Faktor/40;
+  aktuelle_Position[2]=aktuelle_Position[2]+dv*Faktor/40;
+  ST.firstElementChild.setAttribute("x2",aktuelle_Position[0]);
+  ST.firstElementChild.setAttribute("y2",aktuelle_Position[1]);
+  ST.lastElementChild.setAttribute("cx",aktuelle_Position[0]);
+  ST.lastElementChild.setAttribute("cy",aktuelle_Position[1]);
+  document.getElementById("Grafik").appendChild(ST);
+  document.getElementById("Log").firstChild.nodeValue=[aktuelle_Position[0].toFixed(1),aktuelle_Position[1].toFixed(1)];
+  }
+
+function wo_bin_ich() {
+  //alert("Hallo Laura, ich bin hieeeer");
+  //alert(event.target);
+  var Q=document.getElementById("Quadromännchen");
+  Q.setAttribute("cx",event.target.getAttribute("cx")*1);
+  Q.setAttribute("cy",event.target.getAttribute("cy")*1);
+  aktuelle_Position[0]=event.target.getAttribute("cx")*1;
+  aktuelle_Position[1]=event.target.getAttribute("cy")*1;
+  //alert(aktuelle_Position);
+  document.getElementById("Log").firstChild.nodeValue=aktuelle_Position;
+  }
+
+var was_geloescht_werden_soll=0;
+function Löschknopf() {
+  was_geloescht_werden_soll=event.target.parentNode;
+  }
+
+function Löschen() {
+  if (was_geloescht_werden_soll!=0) {
+    //alert(was_geloescht_werden_soll.getAttribute("aktuell"));
+    eval("aktuelle_Position=["+was_geloescht_werden_soll.getAttribute("aktuell")+"]");
+    was_geloescht_werden_soll.remove();
+    var Q=document.getElementById("Quadromännchen");
+    Q.setAttribute("cx",aktuelle_Position[0]);
+    Q.setAttribute("cy",aktuelle_Position[1]);
+    } else if (document.getElementById("Grafik").lastElementChild.nodeName=="g") {
+      var el=document.getElementById("Grafik").lastElementChild;
+      eval("aktuelle_Position=["+el.getAttribute("aktuell")+"]");
+      el.remove();
+      var Q=document.getElementById("Quadromännchen");
+      Q.setAttribute("cx",aktuelle_Position[0]);
+      Q.setAttribute("cy",aktuelle_Position[1]);
+      }
+  was_geloescht_werden_soll=0;
+  }
+
+function Farbe(farbe) {
+  if (was_geloescht_werden_soll!=0) was_geloescht_werden_soll.firstElementChild.setAttribute("stroke",farbe); else
+    if (document.getElementById("Grafik").lastElementChild.nodeName=="g")
+      document.getElementById("Grafik").lastElementChild.firstElementChild.setAttribute("stroke",farbe);   
+  was_geloescht_werden_soll=0;
+  }
+  </script>
+  </head>
+<body>
+<div style="position:fixed; top:0px; left:200px;">
+<span style="display:flex; flex-direction:row">
+<button onclick="Löschen()">Löschen</button>
+<button onclick="Farbe('red')" style="background-color:red">rot</button>
+<button onclick="Farbe('green')" style="background-color:green">grün</button>
+<button onclick="Farbe('blue')" style="background-color:blue">blau</button>
+<button onclick="Farbe('orange')" style="background-color:orange">orange</button>
+</span>
+  </div>
+<div style="font-style:italic; white-space:pre-wrap;">
+
+ANLEITUNG:
+
+Die Knöpfe verraten es dir.
+
+
+</div>
+<div style="display:flex; align-items:flex-start">               
+<svg id="Grafik" width="900" height="550" viewBox="0 0 900 550" style="border:solid 1px lightgrey" xmlns="http://www.w3.org/2000/svg" stroke="black" fill="none">
+  <g id="Musterstange">
+    <line x1="10" y1="-130" x2="90" y2="-130" stroke="red" stroke-width="10" onclick="Löschknopf()" draggable="true" ondragstart="alert('dragstart')"/>
+    <circle cx="10" cy="-130" r="6" fill="black" onclick="wo_bin_ich()"/>
+    <circle cx="90" cy="-130" r="6" fill="black" onclick="wo_bin_ich()"/>
+    </g>
+  <circle id="Quadromännchen" fill="aqua" cx="20" cy="530" r="15"/>
+  </svg>
+<span style="display:flex; flex-direction:column; font-size:200%">
+<div onclick="Faktor=10"><input type="radio" id="L10" name="Laenge" value="10"/><label for="L10">7</label></div>
+<div onclick="Faktor=20"><input type="radio" id="L20" name="Laenge" value="20"/><label for="L20">15</label></div>
+<div onclick="Faktor=40"><input type="radio" id="L40" name="Laenge" value="40" checked="checked"/><label for="L40">35</label></div>
+<div onclick="Faktor=80"><input type="radio" id="L80" name="Laenge" value="80"/><label for="L80">75</label></div>
+</span>
+</div>               
+<div>               
+<button onclick="Richtung(-80,0,0)">links</button>
+<button onclick="Richtung(0,-80,0)">hoch</button>
+<button onclick="Richtung(80,0,0)">rechts</button>
+<button onclick="Richtung(0,80,0)">runter</button>
+<button onclick="Richtung(0,0,-80)">hinter</button>
+<button onclick="Richtung(0,0,80)">vor</button>
+<span id="Log"> </span>
+</div>               
+<div>               
+<button onclick="Faktormerk=Faktor;Faktor=40;Richtung(-(-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini links</button>
+<button onclick="Richtung(80/Math.sqrt(2),-80/Math.sqrt(2),0)">schräg rechts hoch</button>
+<button onclick="Richtung(80/Math.sqrt(2),80/Math.sqrt(2),0)">schräg rechts runter</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-(-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini links</button>
+</div>               
+<div>               
+<button onclick="Faktormerk=Faktor;Faktor=40;Richtung((-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini rechts</button>
+<button onclick="Richtung(-80/Math.sqrt(2),-80/Math.sqrt(2),0)">schräg links hoch</button>
+<button onclick="Richtung(-80/Math.sqrt(2),80/Math.sqrt(2),0)">schräg links runter</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung((-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini rechts</button>
+</div>
+<div>               
+<button onclick="Faktormerk=Faktor;Faktor=40;Richtung(0,-(-120+153.1370849898476)/2,0);Faktor=Faktormerk;">Mini hoch</button>
+<button onclick="Faktormerk=Faktor;Faktor=40;Richtung(0,(-120+153.1370849898476)/2,0);Faktor=Faktormerk;">Mini runter</button>
+</div>               
+  </body>
+  </html>

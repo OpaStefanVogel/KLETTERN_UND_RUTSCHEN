@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>hallo <button onclick="cube.rotation.x += 20">+20°</button>
+		<script src="../three.js/build/three.js"></script>
+		<script>
+			// Our Javascript will go here.
+const clock = new THREE.Clock();
+//alert(1);
+//alert(THREE);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement )
+
+
+//Create a plane that receives shadows (but does not cast them)
+const planeGeometry = new THREE.PlaneGeometry(20,20,3,4);
+const planeMaterial = new THREE.MeshBasicMaterial( { color: 0x777733 } )
+const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+plane.receiveShadow = true;
+plane.position.z=-10;
+plane.rotation.x=-20;
+scene.add( plane );
+
+const zylinderGeometry = new THREE.CylinderGeometry( 1,1,1,100);
+const zylinderMaterial = new THREE.MeshStandardMaterial( { color: 0x00ff00 } );
+const zylinder = new THREE.Mesh( zylinderGeometry, zylinderMaterial );
+zylinder.castShadow = true; //default is false
+zylinder.receiveShadow = false; //default
+zylinder.position.z=-2;
+zylinder.position.x=4;
+zylinder.rotation.x=10;
+scene.add( zylinder );
+
+const sphereGeometry = new THREE.SphereGeometry( 0.6, 32, 32 );
+const sphereMaterial = new THREE.MeshStandardMaterial( { color: 0xff0000 } );
+const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+sphere.castShadow = true; //default is false
+sphere.receiveShadow = false; //default
+sphere.position.z=-3
+sphere.position.x=3
+scene.add( sphere );
+
+const geometry = new THREE.BoxGeometry();
+const material = new THREE.MeshStandardMaterial( { color: 0xffffff } );
+const cube = new THREE.Mesh( geometry, material );
+//cube.material.color=0xaaaaaa;
+cube.castShadow = true;
+renderer.domElement.addEventListener("click",function(event){alert(event.clientX+" "+event.clientY+" "+clock.getDelta());clock.start()});
+scene.add( cube );
+//cube.click();
+
+camera.position.z = 3;
+camera.position.x = 1;
+camera.position.y = 0.5;
+
+// White directional light at half intensity shining from the top.
+const directionalLight = new THREE.DirectionalLight( 0xffff44, 1 );
+scene.add( directionalLight );
+const directionalLight2 = new THREE.DirectionalLight( 0x44ffff, 1 );
+directionalLight2.position.z=1;
+scene.add( directionalLight2 );
+
+function animate() {
+	requestAnimationFrame( animate );
+
+cube.rotation.x += 0.01;
+cube.rotation.y += 0.001;
+
+zylinder.rotation.x += -0.01;
+zylinder.rotation.y += 0.001;
+
+if (sphere.position.x>4) sphere.position.x=-0.5; else sphere.position.x+=0.01;
+
+	renderer.render( scene, camera );
+}
+animate();
+
+//			alert(9);
+		</script>
+	</body>
+</html>
