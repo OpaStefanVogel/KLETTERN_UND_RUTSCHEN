@@ -52,6 +52,7 @@ function Richtung(dr,dh,dv) {
   s.position.x=st.position.x;
   s.position.y=st.position.y;
   s.position.z=st.position.z;
+  sminind=Stangen.length-1;
   }
 
 function wo_bin_ich() {
@@ -95,6 +96,7 @@ function Farbe(farbe) {
     if (document.getElementById("Grafik").lastElementChild.nodeName=="g")
       document.getElementById("Grafik").lastElementChild.firstElementChild.setAttribute("stroke",farbe);   
   was_geloescht_werden_soll=0;
+  Stangen[sminind].material.color.set(farbe);
   }
 
 function drag_starten() {
@@ -329,6 +331,7 @@ function Bild_touchmove() {
   event.preventDefault();
   }
 
+var sminind=0;
 function Bild_click() {
   var mouse=new THREE.Vector3();
   var Log="\nmouse=["+(event.clientX-event.target.getBoundingClientRect().left)+","+(event.clientY-event.target.getBoundingClientRect().top)+"]\n";
@@ -346,7 +349,7 @@ function Bild_click() {
     }
 
   var smin=100000;
-  var sminind=0;
+  sminind=0;
   for (var i=0;i<Stangen.length;i++) {
     //Log=Log+i+" "+Stangen[i].position.toArray()+"\n"+Stangen[i].position.clone().project(camera).toArray()+"\n";
     var dist=Stangen[i].position.clone().project(camera).distanceToSquared(mouse);
