@@ -40,12 +40,13 @@ function Richtung(dr,dh,dv) {
   q.position.y=q.position.y-dh*Faktor/40/80;
   Knoten.push(q.position.clone());
   var qneu=q.position.clone();
-  var st=stange.clone();
+  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,1.1,20)),(new THREE.MeshStandardMaterial( { color: 0xff0000 } )));
   st.position.x=(qalt.x+qneu.x)/2;
   st.position.y=(qalt.y+qneu.y)/2;
   st.position.z=(qalt.z+qneu.z)/2;
   st.lookAt(q.position);
   st.rotateX(Math.PI/2);
+  //st.material.color.set(0x009900);
   scene.add( st );
   }
 
@@ -221,17 +222,6 @@ skyr.position.y=10-0.2;
 skyr.position.z=-9;
 skyr.rotation.y=-90/180*Math.PI;
 scene.add( skyr );
-
-const stangeGeometry = new THREE.CylinderGeometry( 0.05,0.05,1.1,20);
-const stangeMaterial = new THREE.MeshStandardMaterial( { color: 0xff0000 } );
-const stange = new THREE.Mesh( stangeGeometry, stangeMaterial );
-stange.castShadow = false;  //true; //default is false
-stange.receiveShadow = false; //default
-stange.position.y=0.5;
-//stange.openEnded=true;
-stange.position.x=-3;
-//alert(JSON.stringify(stange.toJSON()));
-scene.add( stange );
 
 const qGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
 const qMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00 } );
