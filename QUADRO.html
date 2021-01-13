@@ -51,6 +51,7 @@ function Richtung(dr,dh,dv) {
   quat.setFromUnitVectors(new THREE.Vector3(0,1,0),(new THREE.Vector3(dr,-dh,dv)).normalize());
   st.setRotationFromQuaternion(quat);
   scene.add( st );
+//  camera.lookAt(q.position);
   }
 
 function wo_bin_ich() {
@@ -103,7 +104,7 @@ function drag_starten() {
   </script>
   </head>
 <body>
-<div style="position:fixed; top:0px; left:200px;">
+<div style="position:; top:0px; left:200px;">
 <span style="display:flex; flex-direction:row">
 <button onclick="Löschen()">Löschen</button>
 <button onclick="Farbe('red')" style="background-color:red">rot</button>
@@ -173,9 +174,9 @@ var wsize=window.innerWidth-100;
 var hsize=window.innerHeight;
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 45, wsize / hsize, 0.1, 1000 );
-camera.position.z = 6;
-camera.position.x = 1;
-camera.position.y = 1.5;
+var gamma=Math.PI/2.4;
+var delta=0.2;
+camera.position.setFromSphericalCoords(6,gamma,delta);
 camera.lookAt(0,0,0);
 
 const renderer = new THREE.WebGLRenderer();
@@ -186,7 +187,6 @@ renderer.domElement.addEventListener("touchmove",Bild_touchmove);
 document.getElementById("Ausgabe zu tree.js").appendChild( renderer.domElement )
 
 
-//Create a plane that receives shadows (but does not cast them)
 const planeGeometry = new THREE.PlaneGeometry(20,20);
 const planeMaterial = new THREE.MeshBasicMaterial( { color: 0x777733 } )
 const plane = new THREE.Mesh( planeGeometry, planeMaterial );
@@ -198,13 +198,22 @@ plane.rotation.x=-90/180*Math.PI;
 //alert(JSON.stringify(TREE.toJSON()));
 scene.add( plane );
 
-const skyGeometry = new THREE.PlaneGeometry(80,80);
+const skyGeometry = new THREE.PlaneGeometry(20,20);
 const skyMaterial = new THREE.MeshBasicMaterial( { color: 0xddddff } )
 const sky = new THREE.Mesh( skyGeometry, skyMaterial );
 //plane.receiveShadow = true;
-sky.position.y=40;
-sky.position.z=-30;
+sky.position.y=10-0.2;
+sky.position.z=-19;
 scene.add( sky );
+
+const skylGeometry = new THREE.PlaneGeometry(20,20);
+const skylMaterial = new THREE.MeshBasicMaterial( { color: 0xccbbff } )
+const skyl = new THREE.Mesh( skylGeometry, skylMaterial );
+skyl.position.x=-10;
+skyl.position.y=10-0.2;
+skyl.position.z=-9;
+skyl.rotation.y=90/180*Math.PI;
+scene.add( skyl );
 
 const stangeGeometry = new THREE.CylinderGeometry( 0.05,0.05,1.1,20);
 const stangeMaterial = new THREE.MeshStandardMaterial( { color: 0xff0000 } );
@@ -222,10 +231,6 @@ scene.add( stange );
 const qGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
 const qMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00 } );
 const q = new THREE.Mesh( qGeometry, qMaterial );
-q.castShadow = true; //default is false
-q.receiveShadow = false; //default
-q.position.z=0;
-q.position.x=0;
 scene.add( q );
 
 
@@ -235,8 +240,11 @@ scene.add( directionalLight );
 const directionalLight2 = new THREE.DirectionalLight( 0xffffff, 1 );
 directionalLight2.position.z=1;
 scene.add( directionalLight2 );
-const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+const light = new THREE.AmbientLight( 0x606060 ); // soft white light
 scene.add( light );
+
+var cl=q.position.clone();
+
 
 function animate() {
 	requestAnimationFrame( animate );
@@ -249,36 +257,51 @@ function animate() {
 
 //if (sphere.position.x>4) sphere.position.x=-0.5; else sphere.position.x+=0.01;
 
+    var diff=new THREE.Vector3();
+    diff.subVectors(q.position,cl).normalize().multiplyScalar(0.005);
+    cl.add(diff);
+    camera.lookAt(cl);
+    
 	renderer.render( scene, camera );
 }
 animate();
 
 var TouchposX=0;
 var TouchposY=0;
-var cameraposXalt=0;
-var cameraposZalt=0;
-var cameraposYalt=0;
+var cameraposalt=0;
+var gammaalt=0;
+var deltaalt=0;
+
 function Bild_touchstart() {
   var Touch=event.targetTouches.item(0);
   document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
   TouchposX=Touch.clientX;
   TouchposY=Touch.clientY;
-  cameraposXalt=camera.position.x;
-  cameraposYalt=camera.position.y;
-  cameraposZalt=camera.position.z;
-  camera.lookAt(0,0,0);
+  cameraposalt=camera.position.clone();
+  gammaalt=gamma;
+  deltaalt=delta;
   //event.preventDefault();
   }
 function Bild_touchmove() {
   var Touch=event.targetTouches.item(0);
-  document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
-  var delta=(Touch.clientX-TouchposX)/300;
-  var deltaq=Math.sqrt(1-delta*delta);
-  camera.position.x = cameraposXalt*deltaq+cameraposZalt*delta;
-  camera.position.z = -cameraposXalt*delta+cameraposZalt*deltaq;
-  camera.position.y = cameraposYalt+(Touch.clientY-TouchposY)/100;
-  camera.lookAt(0,0,0);
+  //var delta=-(Touch.clientX-TouchposX)/4/180*Math.PI;
+  //var sindelta=Math.sin(delta/180*Math.PI);
+  //var cosdelta=Math.cos(delta/180*Math.PI);
+  //var gamma=(Touch.clientY-TouchposY)/4/180*Math.PI;
+  //var singamma=Math.sin(gamma/180*Math.PI);
+  //var cosgamma=Math.cos(gamma/180*Math.PI);
+//  camera.position.x = (cameraposXalt*cosdelta+cameraposZalt*sindelta)*cosgamma;
+//  camera.position.z = -(cameraposXalt*sindelta+cameraposZalt*cosdelta)*cosgamma;
+//  camera.position.y = cameraposYalt+(Touch.clientY-TouchposY)/100;
+  //camera.position.copy(cameraposalt);
+  gamma=Math.min(Math.PI-0.01,Math.max(0.01,gammaalt-(Touch.clientY-TouchposY)/8/180*Math.PI));
+  delta=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
+  camera.position.setFromSphericalCoords(6,gamma,delta).add(q.position);
+  //camera.position.applyEuler((new THREE.Euler(0,delta,gamma)));
+  //THREE.MathUtils.setQuaternionFromProperEuler(camera.quaternion,0,delta,0,'XYZ');
+  camera.lookAt(q.position);
   event.preventDefault();
+  document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
   }
 		</script>
 
