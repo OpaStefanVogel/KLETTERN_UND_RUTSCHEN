@@ -10,6 +10,7 @@ var aktuelle_Position=[20,530,0]
 var Stangen=[];
 var Faktor=40; //40=normal, 80=doppelt, 20=mini, 10=Ansatzstück 
 var Faktormerk=40;
+var Knoten=[];
 function Richtung(dr,dh,dv) {
   var Q=document.getElementById("Quadromännchen");
   Q.setAttribute("cx",Q.getAttribute("cx")*1+(dr-dv/2.5)*Faktor/40);
@@ -37,6 +38,7 @@ function Richtung(dr,dh,dv) {
   q.position.z=q.position.z-dv*Faktor/40/80;
   q.position.x=q.position.x+dr*Faktor/40/80;
   q.position.y=q.position.y-dh*Faktor/40/80;
+  Knoten.push(q.position.clone());
   var qneu=q.position.clone();
   var st=stange.clone();
   st.position.x=(qalt.x+qneu.x)/2;
@@ -145,7 +147,9 @@ Die Knöpfe verraten es dir.
 <button onclick="Richtung(0,80,0)">runter</button>
 <button onclick="Richtung(0,0,-80)">hinter</button>
 <button onclick="Richtung(0,0,80)">vor</button>
+<button onclick=""> </button>
 <span id="Log"> </span>
+<span id="Log2" style="white-space:pre-wrap"> </span>
 </div>               
 <div>               
 <button onclick="Faktormerk=Faktor;Faktor=40;Richtung(-(-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini links</button>
@@ -181,7 +185,7 @@ camera.lookAt(0,0,0);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( wsize, hsize );
-renderer.domElement.addEventListener("click",function(event){alert(event.clientX+" "+event.clientY+" "+clock.getDelta());clock.start()});
+renderer.domElement.addEventListener("click",Bild_click);
 renderer.domElement.addEventListener("touchstart",Bild_touchstart);
 renderer.domElement.addEventListener("touchmove",Bild_touchmove);
 document.getElementById("Ausgabe zu tree.js").appendChild( renderer.domElement )
@@ -215,6 +219,15 @@ skyl.position.z=-9;
 skyl.rotation.y=90/180*Math.PI;
 scene.add( skyl );
 
+const skyrGeometry = new THREE.PlaneGeometry(20,20);
+const skyrMaterial = new THREE.MeshBasicMaterial( { color: 0xffeecc } )
+const skyr = new THREE.Mesh( skyrGeometry, skyrMaterial );
+skyr.position.x=10;
+skyr.position.y=10-0.2;
+skyr.position.z=-9;
+skyr.rotation.y=-90/180*Math.PI;
+scene.add( skyr );
+
 const stangeGeometry = new THREE.CylinderGeometry( 0.05,0.05,1.1,20);
 const stangeMaterial = new THREE.MeshStandardMaterial( { color: 0xff0000 } );
 const stange = new THREE.Mesh( stangeGeometry, stangeMaterial );
@@ -237,10 +250,14 @@ scene.add( q );
 // White directional light at half intensity shining from the top.
 const directionalLight = new THREE.DirectionalLight( 0x44ffff, 1 );
 scene.add( directionalLight );
-const directionalLight2 = new THREE.DirectionalLight( 0xffffff, 1 );
-directionalLight2.position.z=1;
+const directionalLight2 = new THREE.DirectionalLight( 0x888888, 1 );
+directionalLight2.position.z=-20;
+directionalLight2.position.y=5;
 scene.add( directionalLight2 );
-const light = new THREE.AmbientLight( 0x606060 ); // soft white light
+const directionalLight3 = new THREE.DirectionalLight( 0x555555, 1 );
+directionalLight3.position.z=+20;
+scene.add( directionalLight3 );
+const light = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( light );
 
 var cl=q.position.clone();
@@ -258,9 +275,13 @@ function animate() {
 //if (sphere.position.x>4) sphere.position.x=-0.5; else sphere.position.x+=0.01;
 
     var diff=new THREE.Vector3();
-    diff.subVectors(q.position,cl).normalize().multiplyScalar(0.005);
-    cl.add(diff);
-    camera.lookAt(cl);
+    diff.subVectors(q.position,cl)
+    
+    if (diff.length()>0.01) {
+      diff.normalize().multiplyScalar(0.005);
+      cl.add(diff);
+      camera.lookAt(cl);
+      }
     
 	renderer.render( scene, camera );
 }
@@ -303,6 +324,41 @@ function Bild_touchmove() {
   event.preventDefault();
   document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
   }
+
+function Bild_click() {
+  var mouse=new THREE.Vector3();
+  var Log=(event.clientX-event.target.getBoundingClientRect().left)+" "+(event.clientY-event.target.getBoundingClientRect().top)+"\n";
+  mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / event.target.width ) * 2 - 1;
+  mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / event.target.height ) * 2 + 1;
+  mouse.z = 0.96;
+  //Log=Log+mouse.toArray()+"\n"+Knoten.length+"####\n";
+  var min=100000;
+  var minind=0;
+  for (var i=0;i<Knoten.length;i++) {
+    //Log=Log+i+" "+Knoten[i].clone().toArray()+"\n"+Knoten[i].clone().project(camera).toArray()+"\n";
+    var dist=Knoten[i].clone().project(camera).distanceToSquared(mouse);
+    if (dist<min) {min=dist; minind=i}
+    //Log=Log+minind+" "+dist+"\n";
+    }
+
+  //Log=Log+q.position.clone().project(camera).toArray()+"\n";
+  //Log=Log+event.clientX+" "+event.clientY+" "+clock.getDelta()+"\n";
+  clock.start();
+  if (min>0.1) { if (mouse.y>-0.7) q.visible=false } else {
+    q.visible=true;
+    q.position.x=Knoten[minind].x;
+    q.position.y=Knoten[minind].y;
+    q.position.z=Knoten[minind].z;
+    }
+  //document.getElementById("Log2").firstChild.nodeValue=Log;
+  }
+
+/*jetzt noch
+.. Stange auswählen
+.. Zoom
+.. unterschiedliche Stangenlängen
+.. farbige Richtungstasten
+*/
 		</script>
 
 
