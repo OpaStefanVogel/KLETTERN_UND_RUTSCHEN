@@ -41,22 +41,16 @@ function Löschknopf() {
   }
 
 function Löschen() {
-  if (was_geloescht_werden_soll!=0) {
-    //alert(was_geloescht_werden_soll.getAttribute("aktuell"));
-    eval("aktuelle_Position=["+was_geloescht_werden_soll.getAttribute("aktuell")+"]");
-    was_geloescht_werden_soll.remove();
-    var Q=document.getElementById("Quadromännchen");
-    Q.setAttribute("cx",aktuelle_Position[0]);
-    Q.setAttribute("cy",aktuelle_Position[1]);
-    } else if (document.getElementById("Grafik").lastElementChild.nodeName=="g") {
-      var el=document.getElementById("Grafik").lastElementChild;
-      eval("aktuelle_Position=["+el.getAttribute("aktuell")+"]");
-      el.remove();
-      var Q=document.getElementById("Quadromännchen");
-      Q.setAttribute("cx",aktuelle_Position[0]);
-      Q.setAttribute("cy",aktuelle_Position[1]);
-      }
-  was_geloescht_werden_soll=0;
+  scene.remove(Stangen[sminind]);
+  Stangen.splice(sminind,1);
+  Knoten.splice(sminind+1,1);
+  sminind=Stangen.length-1;
+  s.position.x=Stangen[sminind].position.x;
+  s.position.y=Stangen[sminind].position.y;
+  s.position.z=Stangen[sminind].position.x;
+  q.position.x=Knoten[sminind+1].x;
+  q.position.y=Knoten[sminind+1].y;
+  q.position.z=Knoten[sminind+1].z;
   }
 
 function Farbe(farbe) {
@@ -185,6 +179,7 @@ const qGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
 const qMaterial = new THREE.MeshStandardMaterial( { color: 0x00dddd } );
 const q = new THREE.Mesh( qGeometry, qMaterial );
 scene.add( q );
+Knoten.push(q.position.clone());
 
 const sGeometry = new THREE.SphereGeometry( 0.06, 32, 32 );
 const sMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00 } );
