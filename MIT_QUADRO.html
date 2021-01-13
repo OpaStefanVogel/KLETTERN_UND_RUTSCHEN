@@ -49,6 +49,9 @@ function Richtung(dr,dh,dv) {
   //st.material.color.set(0x009900);
   Stangen.push(st);
   scene.add( st );
+  s.position.x=st.position.x;
+  s.position.y=st.position.y;
+  s.position.z=st.position.z;
   }
 
 function wo_bin_ich() {
@@ -225,9 +228,14 @@ skyr.rotation.y=-90/180*Math.PI;
 scene.add( skyr );
 
 const qGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
-const qMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00 } );
+const qMaterial = new THREE.MeshStandardMaterial( { color: 0x00dddd } );
 const q = new THREE.Mesh( qGeometry, qMaterial );
 scene.add( q );
+
+const sGeometry = new THREE.SphereGeometry( 0.06, 32, 32 );
+const sMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00 } );
+const s = new THREE.Mesh( sGeometry, sMaterial );
+scene.add( s );
 
 
 // White directional light at half intensity shining from the top.
@@ -323,7 +331,7 @@ function Bild_touchmove() {
 
 function Bild_click() {
   var mouse=new THREE.Vector3();
-  var Log="\nmouse= "+(event.clientX-event.target.getBoundingClientRect().left)+" "+(event.clientY-event.target.getBoundingClientRect().top)+"\n";
+  var Log="\nmouse=["+(event.clientX-event.target.getBoundingClientRect().left)+","+(event.clientY-event.target.getBoundingClientRect().top)+"]\n";
   mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / event.target.width ) * 2 - 1;
   mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / event.target.height ) * 2 + 1;
   mouse.z = 0.96;
@@ -337,16 +345,31 @@ function Bild_click() {
     //Log=Log+minind+" "+dist+"\n";
     }
 
+  var smin=100000;
+  var sminind=0;
+  for (var i=0;i<Stangen.length;i++) {
+    //Log=Log+i+" "+Stangen[i].position.toArray()+"\n"+Stangen[i].position.clone().project(camera).toArray()+"\n";
+    var dist=Stangen[i].position.clone().project(camera).distanceToSquared(mouse);
+    if (dist<smin) {smin=dist; sminind=i}
+    //Log=Log+"sminind="+sminind+", smin="+smin+"\n";
+    }
+
+
   //Log=Log+q.position.clone().project(camera).toArray()+"\n";
   //Log=Log+event.clientX+" "+event.clientY+" "+clock.getDelta()+"\n";
   clock.start();
-  if (min>0.1) { if (mouse.y>-0.7) q.visible=false } else {
+  if (min>0.1) { if (mouse.y>-0.7) q.visible=false; s.visible=false; } else {
     q.visible=true;
     q.position.x=Knoten[minind].x;
     q.position.y=Knoten[minind].y;
     q.position.z=Knoten[minind].z;
+    s.visible=true;
+    s.position.x=Stangen[sminind].position.x;
+    s.position.y=Stangen[sminind].position.y;
+    s.position.z=Stangen[sminind].position.z;
+    
     }
-  document.getElementById("Log2").firstChild.nodeValue=Log;
+  //document.getElementById("Log2").firstChild.nodeValue=Log;
   }
 
 
