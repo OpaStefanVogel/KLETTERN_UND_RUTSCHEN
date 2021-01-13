@@ -44,16 +44,9 @@ function Richtung(dr,dh,dv) {
   st.position.x=(qalt.x+qneu.x)/2;
   st.position.y=(qalt.y+qneu.y)/2;
   st.position.z=(qalt.z+qneu.z)/2;
-//  st.lookAt(q.position.x+dh,q.position.y+dr,q.position.z+dv);
-//  st.position.y=q.position.y-0.5;
-//  st.rotation.z=st.rotation.z+90/180*Math.PI;
-  var quat=new THREE.Quaternion();
-  //alert(new THREE.Vector3(0,1,0));
-  //alert((new THREE.Vector3(dr,-dh,dv)).normalize());
-  quat.setFromUnitVectors(new THREE.Vector3(0,1,0),(new THREE.Vector3(dr,-dh,dv)).normalize());
-  st.setRotationFromQuaternion(quat);
+  st.lookAt(q.position);
+  st.rotateX(Math.PI/2);
   scene.add( st );
-//  camera.lookAt(q.position);
   }
 
 function wo_bin_ich() {
@@ -155,13 +148,13 @@ Die Knöpfe verraten es dir.
 <button onclick="Faktormerk=Faktor;Faktor=40;Richtung(-(-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini links</button>
 <button onclick="Richtung(80/Math.sqrt(2),-80/Math.sqrt(2),0)">schräg rechts hoch</button>
 <button onclick="Richtung(80/Math.sqrt(2),80/Math.sqrt(2),0)">schräg rechts runter</button>
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-(-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini links</button>
+<button onclick="Faktormerk=Faktor;Faktor=40;Richtung(-(-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini links</button>
 </div>               
 <div>               
 <button onclick="Faktormerk=Faktor;Faktor=40;Richtung((-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini rechts</button>
 <button onclick="Richtung(-80/Math.sqrt(2),-80/Math.sqrt(2),0)">schräg links hoch</button>
 <button onclick="Richtung(-80/Math.sqrt(2),80/Math.sqrt(2),0)">schräg links runter</button>
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung((-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini rechts</button>
+<button onclick="Faktormerk=Faktor;Faktor=40;Richtung((-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini rechts</button>
 </div>
 <div>               
 <button onclick="Faktormerk=Faktor;Faktor=40;Richtung(0,-(-120+153.1370849898476)/2,0);Faktor=Faktormerk;">Mini hoch</button>
@@ -236,8 +229,6 @@ stange.castShadow = false;  //true; //default is false
 stange.receiveShadow = false; //default
 stange.position.y=0.5;
 //stange.openEnded=true;
-//stange.lookAt(-2,1,0);
-//stange.rotation.z=90/180*Math.PI;
 stange.position.x=-3;
 //alert(JSON.stringify(stange.toJSON()));
 scene.add( stange );
@@ -325,9 +316,11 @@ function Bild_touchmove() {
         touchzahl=2;
         TouchposX=Touch.clientX;
         Touch2posX=Touch2.clientX;
+        TouchposY=Touch.clientY;
+        Touch2posY=Touch2.clientY;
         distanzalt=distanz;
         } else {
-          distanz=distanzalt-(Math.sqrt((Touch.clientX-Touch2.clientX)**2+(Touch.clientY-Touch2.clientY)**2)-Math.sqrt((TouchposX-Touch2posX)**2+(TouchposY-Touch2posY)**2))/100;
+          distanz=distanzalt-(Math.sqrt((Touch.clientX-Touch2.clientX)**2+(Touch.clientY-Touch2.clientY)**2)-Math.sqrt((TouchposX-Touch2posX)**2+(TouchposY-Touch2posY)**2))/50;
           distanz=Math.min(Math.max(distanz,3),10);
           }
       }
@@ -376,10 +369,12 @@ Richtung(0,0,80);
 
 /*jetzt noch
 ok Zoom
+ok Stange ausrichten mit .up=(1,0,0) und erst dann .lookAt, nö .lookAt, dann .rotateX
 .. Stange auswählen
 .. unterschiedliche Stangenlängen, ohne Vorlage
 .. farbige Richtungstasten
 .. langsam-schnell-langsam ausrichten
+
 */
 		</script>
 
