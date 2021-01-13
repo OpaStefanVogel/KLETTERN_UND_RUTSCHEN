@@ -180,7 +180,8 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 45, wsize / hsize, 0.1, 1000 );
 var gamma=Math.PI/2.4;
 var delta=0.2;
-camera.position.setFromSphericalCoords(6,gamma,delta);
+var distanz=6;
+camera.position.setFromSphericalCoords(distanz,gamma,delta);
 camera.lookAt(0,0,0);
 
 const renderer = new THREE.WebGLRenderer();
@@ -289,9 +290,13 @@ animate();
 
 var TouchposX=0;
 var TouchposY=0;
+var Touch2posX=0;
+var Touch2posY=0;
 var cameraposalt=0;
 var gammaalt=0;
 var deltaalt=0;
+var distanzalt=0;
+var touchzahl=0;
 
 function Bild_touchstart() {
   var Touch=event.targetTouches.item(0);
@@ -301,28 +306,35 @@ function Bild_touchstart() {
   cameraposalt=camera.position.clone();
   gammaalt=gamma;
   deltaalt=delta;
+  distanzalt=distanz;
+  touchzahl=1;
   //event.preventDefault();
   }
+
 function Bild_touchmove() {
+  var Log=event.targetTouches.length;
   var Touch=event.targetTouches.item(0);
-  //var delta=-(Touch.clientX-TouchposX)/4/180*Math.PI;
-  //var sindelta=Math.sin(delta/180*Math.PI);
-  //var cosdelta=Math.cos(delta/180*Math.PI);
-  //var gamma=(Touch.clientY-TouchposY)/4/180*Math.PI;
-  //var singamma=Math.sin(gamma/180*Math.PI);
-  //var cosgamma=Math.cos(gamma/180*Math.PI);
-//  camera.position.x = (cameraposXalt*cosdelta+cameraposZalt*sindelta)*cosgamma;
-//  camera.position.z = -(cameraposXalt*sindelta+cameraposZalt*cosdelta)*cosgamma;
-//  camera.position.y = cameraposYalt+(Touch.clientY-TouchposY)/100;
-  //camera.position.copy(cameraposalt);
-  gamma=Math.min(Math.PI-0.01,Math.max(0.01,gammaalt-(Touch.clientY-TouchposY)/8/180*Math.PI));
-  delta=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
-  camera.position.setFromSphericalCoords(6,gamma,delta).add(q.position);
-  //camera.position.applyEuler((new THREE.Euler(0,delta,gamma)));
-  //THREE.MathUtils.setQuaternionFromProperEuler(camera.quaternion,0,delta,0,'XYZ');
+  if (event.targetTouches.length==1&&touchzahl==1) {
+    gamma=Math.min(Math.PI-0.01,Math.max(0.01,gammaalt-(Touch.clientY-TouchposY)/8/180*Math.PI));
+    delta=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
+    document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
+    //touchzahl=1;
+    } else {
+      var Touch2=event.targetTouches.item(1);
+      if (touchzahl==1) {
+        touchzahl=2;
+        TouchposX=Touch.clientX;
+        Touch2posX=Touch2.clientX;
+        distanzalt=distanz;
+        } else {
+          distanz=distanzalt-(Math.sqrt((Touch.clientX-Touch2.clientX)**2+(Touch.clientY-Touch2.clientY)**2)-Math.sqrt((TouchposX-Touch2posX)**2+(TouchposY-Touch2posY)**2))/100;
+          distanz=Math.min(Math.max(distanz,3),10);
+          }
+      }
+  camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
   camera.lookAt(q.position);
+  document.getElementById("Log2").firstChild.nodeValue=Log;
   event.preventDefault();
-  document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
   }
 
 function Bild_click() {
@@ -353,11 +365,21 @@ function Bild_click() {
   //document.getElementById("Log2").firstChild.nodeValue=Log;
   }
 
+
+Richtung(-80,0,0);
+Richtung(0,-80,0);
+Richtung(80,0,0);
+Richtung(0,80,0);
+//Richtung(0,0,-80);
+Richtung(0,0,80);
+
+
 /*jetzt noch
+ok Zoom
 .. Stange auswählen
-.. Zoom
-.. unterschiedliche Stangenlängen
+.. unterschiedliche Stangenlängen, ohne Vorlage
 .. farbige Richtungstasten
+.. langsam-schnell-langsam ausrichten
 */
 		</script>
 
