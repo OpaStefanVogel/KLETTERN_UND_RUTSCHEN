@@ -95,6 +95,11 @@ function Farbe(farbe) {
       document.getElementById("Grafik").lastElementChild.firstElementChild.setAttribute("stroke",farbe);   
   was_geloescht_werden_soll=0;
   }
+
+function drag_starten() {
+  alert(event.target);
+  }
+
   </script>
   </head>
 <body>
@@ -168,9 +173,16 @@ var wsize=window.innerWidth-100;
 var hsize=window.innerHeight;
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 45, wsize / hsize, 0.1, 1000 );
+camera.position.z = 6;
+camera.position.x = 1;
+camera.position.y = 1.5;
+camera.lookAt(0,0,0);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( wsize, hsize );
+renderer.domElement.addEventListener("click",function(event){alert(event.clientX+" "+event.clientY+" "+clock.getDelta());clock.start()});
+renderer.domElement.addEventListener("touchstart",Bild_touchstart);
+renderer.domElement.addEventListener("touchmove",Bild_touchmove);
 document.getElementById("Ausgabe zu tree.js").appendChild( renderer.domElement )
 
 
@@ -216,9 +228,6 @@ q.position.z=0;
 q.position.x=0;
 scene.add( q );
 
-camera.position.z = 6;
-camera.position.x = 1;
-camera.position.y = 1.5;
 
 // White directional light at half intensity shining from the top.
 const directionalLight = new THREE.DirectionalLight( 0x44ffff, 1 );
@@ -228,7 +237,6 @@ directionalLight2.position.z=1;
 scene.add( directionalLight2 );
 const light = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( light );
-
 
 function animate() {
 	requestAnimationFrame( animate );
@@ -245,7 +253,33 @@ function animate() {
 }
 animate();
 
-//			alert(9);
+var TouchposX=0;
+var TouchposY=0;
+var cameraposXalt=0;
+var cameraposZalt=0;
+var cameraposYalt=0;
+function Bild_touchstart() {
+  var Touch=event.targetTouches.item(0);
+  document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
+  TouchposX=Touch.clientX;
+  TouchposY=Touch.clientY;
+  cameraposXalt=camera.position.x;
+  cameraposYalt=camera.position.y;
+  cameraposZalt=camera.position.z;
+  camera.lookAt(0,0,0);
+  //event.preventDefault();
+  }
+function Bild_touchmove() {
+  var Touch=event.targetTouches.item(0);
+  document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
+  var delta=(Touch.clientX-TouchposX)/300;
+  var deltaq=Math.sqrt(1-delta*delta);
+  camera.position.x = cameraposXalt*deltaq+cameraposZalt*delta;
+  camera.position.z = -cameraposXalt*delta+cameraposZalt*deltaq;
+  camera.position.y = cameraposYalt+(Touch.clientY-TouchposY)/100;
+  camera.lookAt(0,0,0);
+  event.preventDefault();
+  }
 		</script>
 
 
