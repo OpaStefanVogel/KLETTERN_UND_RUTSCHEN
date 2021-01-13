@@ -40,13 +40,14 @@ function Richtung(dr,dh,dv) {
   q.position.y=q.position.y-dh*Faktor/40/80;
   Knoten.push(q.position.clone());
   var qneu=q.position.clone();
-  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,1.1,20)),(new THREE.MeshStandardMaterial( { color: 0xff0000 } )));
+  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor/40,20)),(new THREE.MeshStandardMaterial( { color: 0xff0000 } )));
   st.position.x=(qalt.x+qneu.x)/2;
   st.position.y=(qalt.y+qneu.y)/2;
   st.position.z=(qalt.z+qneu.z)/2;
   st.lookAt(q.position);
   st.rotateX(Math.PI/2);
   //st.material.color.set(0x009900);
+  Stangen.push(st);
   scene.add( st );
   }
 
@@ -146,16 +147,16 @@ Die Knöpfe verraten es dir.
 <span id="Log2" style="white-space:pre-wrap"> </span>
 </div>               
 <div>               
-<button onclick="Faktormerk=Faktor;Faktor=40;Richtung(-(-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini links</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-(-120+153.1370849898476)*2,0,0);Faktor=Faktormerk;">Mini links</button>
 <button onclick="Richtung(80/Math.sqrt(2),-80/Math.sqrt(2),0)">schräg rechts hoch</button>
 <button onclick="Richtung(80/Math.sqrt(2),80/Math.sqrt(2),0)">schräg rechts runter</button>
-<button onclick="Faktormerk=Faktor;Faktor=40;Richtung(-(-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini links</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-(-120+153.1370849898476)*2,0,0);Faktor=Faktormerk;">Mini links</button>
 </div>               
 <div>               
-<button onclick="Faktormerk=Faktor;Faktor=40;Richtung((-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini rechts</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung((-120+153.1370849898476)*2,0,0);Faktor=Faktormerk;">Mini rechts</button>
 <button onclick="Richtung(-80/Math.sqrt(2),-80/Math.sqrt(2),0)">schräg links hoch</button>
 <button onclick="Richtung(-80/Math.sqrt(2),80/Math.sqrt(2),0)">schräg links runter</button>
-<button onclick="Faktormerk=Faktor;Faktor=40;Richtung((-120+153.1370849898476)/2,0,0);Faktor=Faktormerk;">Mini rechts</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung((-120+153.1370849898476)*2,0,0);Faktor=Faktormerk;">Mini rechts</button>
 </div>
 <div>               
 <button onclick="Faktormerk=Faktor;Faktor=40;Richtung(0,-(-120+153.1370849898476)/2,0);Faktor=Faktormerk;">Mini hoch</button>
@@ -322,7 +323,7 @@ function Bild_touchmove() {
 
 function Bild_click() {
   var mouse=new THREE.Vector3();
-  var Log=(event.clientX-event.target.getBoundingClientRect().left)+" "+(event.clientY-event.target.getBoundingClientRect().top)+"\n";
+  var Log="\nmouse= "+(event.clientX-event.target.getBoundingClientRect().left)+" "+(event.clientY-event.target.getBoundingClientRect().top)+"\n";
   mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / event.target.width ) * 2 - 1;
   mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / event.target.height ) * 2 + 1;
   mouse.z = 0.96;
@@ -345,7 +346,7 @@ function Bild_click() {
     q.position.y=Knoten[minind].y;
     q.position.z=Knoten[minind].z;
     }
-  //document.getElementById("Log2").firstChild.nodeValue=Log;
+  document.getElementById("Log2").firstChild.nodeValue=Log;
   }
 
 
@@ -360,11 +361,11 @@ Richtung(0,0,80);
 /*jetzt noch
 ok Zoom
 ok Stange ausrichten mit .up=(1,0,0) und erst dann .lookAt, nö .lookAt, dann .rotateX
+ok unterschiedliche Stangenlängen, ohne Anfangsstange
 .. Stange auswählen
-.. unterschiedliche Stangenlängen, ohne Vorlage
 .. farbige Richtungstasten
 .. langsam-schnell-langsam ausrichten
-
+.. Seitenlicht
 */
 		</script>
 
