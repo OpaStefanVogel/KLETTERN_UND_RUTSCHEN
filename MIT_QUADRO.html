@@ -18,9 +18,10 @@ function Richtung(dr,dh,dv) {
   q.position.z=q.position.z-dv*Faktor/40/80;
   q.position.x=q.position.x+dr*Faktor/40/80;
   q.position.y=q.position.y-dh*Faktor/40/80;
+  q.visible=true;
   Knoten.push(q.position.clone());
   var qneu=q.position.clone();
-  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor/40,20)),(new THREE.MeshStandardMaterial( { color: 0xff0000 } )));
+  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor/40,16)),(new THREE.MeshStandardMaterial( { color: 0xff0000 } )));
   st.position.x=(qalt.x+qneu.x)/2;
   st.position.y=(qalt.y+qneu.y)/2;
   st.position.z=(qalt.z+qneu.z)/2;
@@ -29,10 +30,11 @@ function Richtung(dr,dh,dv) {
   //st.material.color.set(0x009900);
   Stangen.push(st);
   scene.add( st );
+  sminind=Stangen.length-1;
   s.position.x=st.position.x;
   s.position.y=st.position.y;
   s.position.z=st.position.z;
-  sminind=Stangen.length-1;
+  s.visible=true;
   }
 
 var was_geloescht_werden_soll=0;
@@ -48,6 +50,8 @@ function Löschen() {
   q.position.x=Knoten[sminind+1].x;
   q.position.y=Knoten[sminind+1].y;
   q.position.z=Knoten[sminind+1].z;
+  q.visible=true;
+  s.visible=true;
   if (sminind>-1) {
     s.position.x=Stangen[sminind].position.x;
     s.position.y=Stangen[sminind].position.y;
@@ -66,9 +70,7 @@ function Farbe(farbe) {
   </script>
   </head>
 <body>
-<div style="position:; top:0px; left:200px;">
-</span>
-  </div>
+<div style="position:; top:0px; left:200px;"></div>
 <div style="font-style:italic; white-space:pre-wrap;">
 
 ANLEITUNG:
@@ -78,23 +80,25 @@ Die Knöpfe verraten es dir.
 
 </div>
 <div style="display:flex; align-items:flex-end">               
-<span style="display:flex; flex-direction:row">
+<span style="display:flex; flex-direction:row; align-items:flex-end">
 <button onclick="Löschen()">Löschen</button>
-<button onclick="Farbe('red')" style="background-color:red">rot</button>
 <button onclick="Farbe('green')" style="background-color:green">grün</button>
 <button onclick="Farbe('blue')" style="background-color:blue">blau</button>
 <button onclick="Farbe('orange')" style="background-color:orange">orange</button>
+<button onclick="Farbe('red')" style="background-color:red">rot</button>
 <span id="Log"> </span>
 <span id="Log2" style="white-space:pre-wrap"> </span>
+  </span>
+<span style="float:right"> Grafikprogramm: <a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a></span>
 </div>               
 <div id="Ausgabe zu tree.js"></div>               
 <div>               
-<button onclick="Richtung(-80,0,0)">links</button>
-<button onclick="Richtung(0,-80,0)">hoch</button>
-<button onclick="Richtung(80,0,0)">rechts</button>
-<button onclick="Richtung(0,80,0)">runter</button>
-<button onclick="Richtung(0,0,-80)">hinter</button>
-<button onclick="Richtung(0,0,80)">vor</button>
+<button onclick="Richtung(-80,0,0)" style="background-color:ccbbff">links</button>
+<button onclick="Richtung(0,-80,0)" style="background-color:f7f7f7">hoch</button>
+<button onclick="Richtung(80,0,0)" style="background-color:ffeecc">rechts</button>
+<button onclick="Richtung(0,80,0)" style="background-color:777733">runter</button>
+<button onclick="Richtung(0,0,-80)" style="background-color:444444; color:777777">hinter</button>
+<button onclick="Richtung(0,0,80)" style="background-color:ddddff">vor</button>
 mit Länge:<span style="display:inline-flex; flex-direction:row; font-size:200%">
 <span onclick="Faktor=10"><input type="radio" id="L10" name="Laenge" value="10"/><label for="L10">10</label></span>
 <span onclick="Faktor=20"><input type="radio" id="L20" name="Laenge" value="20"/><label for="L20">20</label></span>
@@ -103,20 +107,20 @@ mit Länge:<span style="display:inline-flex; flex-direction:row; font-size:200%"
 </span>
 </div>               
 <div>               
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-(-120+153.1370849898476)*2,0,0);Faktor=Faktormerk;">Mini links</button>
-<button onclick="Richtung(80/Math.sqrt(2),-80/Math.sqrt(2),0)">schräg rechts hoch</button>
-<button onclick="Richtung(80/Math.sqrt(2),80/Math.sqrt(2),0)">schräg rechts runter</button>
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-(-120+153.1370849898476)*2,0,0);Faktor=Faktormerk;">Mini links</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-80,0,0);Faktor=Faktormerk;">Mini links</button>
+<button onclick="Richtung(60,-60,0)">schräg rechts hoch</button>
+<button onclick="Richtung(60,60,0)">schräg rechts runter</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-80,0,0);Faktor=Faktormerk;">Mini links</button>
 </div>               
 <div>               
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung((-120+153.1370849898476)*2,0,0);Faktor=Faktormerk;">Mini rechts</button>
-<button onclick="Richtung(-80/Math.sqrt(2),-80/Math.sqrt(2),0)">schräg links hoch</button>
-<button onclick="Richtung(-80/Math.sqrt(2),80/Math.sqrt(2),0)">schräg links runter</button>
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung((-120+153.1370849898476)*2,0,0);Faktor=Faktormerk;">Mini rechts</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(80,0,0);Faktor=Faktormerk;">Mini rechts</button>
+<button onclick="Richtung(-60,-60,0)">schräg links hoch</button>
+<button onclick="Richtung(-60,60,0)">schräg links runter</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(80,0,0);Faktor=Faktormerk;">Mini rechts</button>
 </div>
 <div>               
-<button onclick="Faktormerk=Faktor;Faktor=40;Richtung(0,-(-120+153.1370849898476)/2,0);Faktor=Faktormerk;">Mini hoch</button>
-<button onclick="Faktormerk=Faktor;Faktor=40;Richtung(0,(-120+153.1370849898476)/2,0);Faktor=Faktormerk;">Mini runter</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(0,-(-120+153.1370849898476)*2,0);Faktor=Faktormerk;">Mini hoch</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(0,(-120+153.1370849898476)*2,0);Faktor=Faktormerk;">Mini runter</button>
 </div>
 
 
@@ -179,6 +183,15 @@ skyr.position.y=10-0.2;
 skyr.position.z=-9;
 skyr.rotation.y=-90/180*Math.PI;
 scene.add( skyr );
+
+const skyoGeometry = new THREE.PlaneGeometry(20,20);
+const skyoMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff } )
+const skyo = new THREE.Mesh( skyoGeometry, skyoMaterial );
+skyo.position.x=0;
+skyo.position.y=20-0.2;
+skyo.position.z=-9;
+skyo.rotation.x=90/180*Math.PI;
+scene.add( skyo );
 
 const qGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
 const qMaterial = new THREE.MeshStandardMaterial( { color: 0x00dddd } );
@@ -300,16 +313,6 @@ function Bild_click() {
     //Log=Log+minind+" "+dist+"\n";
     }
 
-  var smin=100000;
-  sminind=0;
-  for (var i=0;i<Stangen.length;i++) {
-    //Log=Log+i+" "+Stangen[i].position.toArray()+"\n"+Stangen[i].position.clone().project(camera).toArray()+"\n";
-    var dist=Stangen[i].position.clone().project(camera).distanceToSquared(mouse);
-    if (dist<smin) {smin=dist; sminind=i}
-    //Log=Log+"sminind="+sminind+", smin="+smin+"\n";
-    }
-
-
   //Log=Log+q.position.clone().project(camera).toArray()+"\n";
   //Log=Log+event.clientX+" "+event.clientY+" "+clock.getDelta()+"\n";
   clock.start();
@@ -319,6 +322,16 @@ function Bild_click() {
     q.position.y=Knoten[minind].y;
     q.position.z=Knoten[minind].z;
     s.visible=true;
+
+    var smin=100000;
+    sminind=0;
+    for (var i=0;i<Stangen.length;i++) {
+      //Log=Log+i+" "+Stangen[i].position.toArray()+"\n"+Stangen[i].position.clone().project(camera).toArray()+"\n";
+      var dist=Stangen[i].position.clone().project(camera).distanceToSquared(mouse);
+      if (dist<smin) {smin=dist; sminind=i}
+      //Log=Log+"sminind="+sminind+", smin="+smin+"\n";
+      }
+
     s.position.x=Stangen[sminind].position.x;
     s.position.y=Stangen[sminind].position.y;
     s.position.z=Stangen[sminind].position.z;
@@ -329,11 +342,11 @@ function Bild_click() {
 
 
 Richtung(-80,0,0);
-Richtung(0,-80,0);
-Richtung(80,0,0);
-Richtung(0,80,0);
+//Richtung(0,-80,0);
+//Richtung(80,0,0);
+//Richtung(0,80,0);
 //Richtung(0,0,-80);
-Richtung(0,0,80);
+//Richtung(0,0,80);
 
 
 /*jetzt noch
@@ -341,9 +354,11 @@ ok Zoom
 ok Stange ausrichten mit .up=(1,0,0) und erst dann .lookAt, nö .lookAt, dann .rotateX
 ok unterschiedliche Stangenlängen, ohne Anfangsstange
 ok Stange auswählen
+ok den Mini Abstand noch auf 10 umfunktionieren
 .. farbige Richtungstasten
 .. langsam-schnell-langsam ausrichten
 .. Seitenlicht
+.. Speichern
 */
 		</script>
 
