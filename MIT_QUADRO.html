@@ -15,9 +15,9 @@ function Richtung(dr,dh,dv) {
   //document.getElementById("Log").firstChild.nodeValue=[aktuelle_Position[0].toFixed(1),aktuelle_Position[1].toFixed(1)];
 
   var qalt=q.position.clone();
-  q.position.z=q.position.z-dv*Faktor/40/80;
   q.position.x=q.position.x+dr*Faktor/40/80;
   q.position.y=q.position.y-dh*Faktor/40/80;
+  q.position.z=q.position.z-dv*Faktor/40/80;
   q.visible=true;
   Knoten.push(q.position.clone());
   var qneu=q.position.clone();
@@ -31,9 +31,7 @@ function Richtung(dr,dh,dv) {
   Stangen.push(st);
   scene.add( st );
   sminind=Stangen.length-1;
-  s.position.x=st.position.x;
-  s.position.y=st.position.y;
-  s.position.z=st.position.z;
+  s.position.copy(st.position);
   s.visible=true;
   }
 
@@ -47,19 +45,13 @@ function Löschen() {
   Stangen.splice(sminind,1);
   Knoten.splice(sminind+1,1);
   sminind=Stangen.length-1;
-  q.position.x=Knoten[sminind+1].x;
-  q.position.y=Knoten[sminind+1].y;
-  q.position.z=Knoten[sminind+1].z;
+  q.position.copy(Knoten[sminind+1]);
   q.visible=true;
   s.visible=true;
   if (sminind>-1) {
-    s.position.x=Stangen[sminind].position.x;
-    s.position.y=Stangen[sminind].position.y;
-    s.position.z=Stangen[sminind].position.z;
+    s.position.copy(Stangen[sminind].position);
     } else {
-      s.position.x=q.position.x;
-      s.position.y=q.position.y;
-      s.position.z=q.position.z;
+      s.position.cooy(q.position);
       }
   }
 
@@ -83,13 +75,11 @@ Die Knöpfe verraten es dir.
 <span style="display:flex; flex-direction:row; align-items:flex-end">
 <button onclick="Löschen()">Löschen</button>
 <button onclick="Farbe('green')" style="background-color:green">grün</button>
-<button onclick="Farbe('blue')" style="background-color:blue">blau</button>
+<button onclick="Farbe('mediumblue')" style="background-color:blue">blau</button>
 <button onclick="Farbe('orange')" style="background-color:orange">orange</button>
 <button onclick="Farbe('red')" style="background-color:red">rot</button>
-<span id="Log"> </span>
-<span id="Log2" style="white-space:pre-wrap"> </span>
   </span>
-<span style="float:right"> Grafikprogramm: <a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a></span>
+<span style="float:right"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span>
 </div>               
 <div id="Ausgabe zu tree.js"></div>               
 <div>               
@@ -99,13 +89,15 @@ Die Knöpfe verraten es dir.
 <button onclick="Richtung(0,80,0)" style="background-color:777733">runter</button>
 <button onclick="Richtung(0,0,-80)" style="background-color:444444; color:777777">hinter</button>
 <button onclick="Richtung(0,0,80)" style="background-color:ddddff">vor</button>
-mit Länge:<span style="display:inline-flex; flex-direction:row; font-size:200%">
+Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 <span onclick="Faktor=10"><input type="radio" id="L10" name="Laenge" value="10"/><label for="L10">10</label></span>
 <span onclick="Faktor=20"><input type="radio" id="L20" name="Laenge" value="20"/><label for="L20">20</label></span>
 <span onclick="Faktor=40"><input type="radio" id="L40" name="Laenge" value="40" checked="checked"/><label for="L40">40</label></span>
 <span onclick="Faktor=80"><input type="radio" id="L80" name="Laenge" value="80"/><label for="L80">80</label></span>
 </span>
 </div>               
+<span id="Log"> </span>
+<span id="Log2" style="white-space:pre-wrap"> </span>
 <div>               
 <button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-80,0,0);Faktor=Faktormerk;">Mini links</button>
 <button onclick="Richtung(60,-60,0)">schräg rechts hoch</button>
@@ -119,9 +111,16 @@ mit Länge:<span style="display:inline-flex; flex-direction:row; font-size:200%"
 <button onclick="Faktormerk=Faktor;Faktor=10;Richtung(80,0,0);Faktor=Faktormerk;">Mini rechts</button>
 </div>
 <div>               
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(0,-(-120+153.1370849898476)*2,0);Faktor=Faktormerk;">Mini hoch</button>
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(0,(-120+153.1370849898476)*2,0);Faktor=Faktormerk;">Mini runter</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(0,-80,0);Faktor=Faktormerk;">Mini hoch</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(0,80,0);Faktor=Faktormerk;">Mini runter</button>
 </div>
+Kamera ausrichten: 
+<span onclick="Ausrichten=0.5"><input type="radio" id="K10" name="Ausrichten" value="10"/><label for="K10">sofort</label></span>
+<span onclick="Ausrichten=0.05"><input type="radio" id="K20" name="Ausrichten" value="20"/><label for="K20">schnell</label></span>
+<span onclick="Ausrichten=0.005"><input type="radio" id="K40" name="Ausrichten" value="40" checked="checked"/><label for="K40">langsam</label></span>
+<span onclick="Ausrichten=0"><input type="radio" id="K80" name="Ausrichten" value="80"/><label for="K80">nur bei</label></span>
+<button onclick="Kamera_ausrichten()">Kamera ausrichten</button>
+  <div>               
 
 
 <script src="../three.js/build/three.js"></script>
@@ -219,7 +218,7 @@ const light = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( light );
 
 var cl=q.position.clone();
-
+var Ausrichten=0.005;
 
 function animate() {
 	requestAnimationFrame( animate );
@@ -232,14 +231,34 @@ function animate() {
 
 //if (sphere.position.x>4) sphere.position.x=-0.5; else sphere.position.x+=0.01;
 
+  if (q.visible) {
+    
     var diff=new THREE.Vector3();
     diff.subVectors(q.position,cl)
     
     if (diff.length()>0.01) {
-      diff.normalize().multiplyScalar(0.005);
+      diff.normalize().multiplyScalar(Ausrichten);
       cl.add(diff);
       camera.lookAt(cl);
       }
+    
+    var diff2=new THREE.Vector3();
+    diff2.subVectors(camera.position,q.position)
+    
+    document.getElementById("Log2").firstChild.nodeValue=diff2.length().toFixed(4);
+
+    if (Math.abs(diff2.length()-distanz)>0.01) {
+//      if (diff2.length()>distanz) {
+        diff2.normalize().multiplyScalar(Ausrichten);
+        camera.position.add(diff);
+//        } else {
+//          diff2.normalize().multiplyScalar(Ausrichten);        
+  //        camera.position.add(diff2);
+//          }
+      camera.lookAt(cl);
+      }
+
+    }
     
 	renderer.render( scene, camera );
 }
@@ -318,9 +337,7 @@ function Bild_click() {
   clock.start();
   if (min>0.1) { if (mouse.y>-0.7) q.visible=false; s.visible=false; } else {
     q.visible=true;
-    q.position.x=Knoten[minind].x;
-    q.position.y=Knoten[minind].y;
-    q.position.z=Knoten[minind].z;
+    q.position.copy(Knoten[minind]);
     s.visible=true;
 
     var smin=100000;
@@ -332,9 +349,7 @@ function Bild_click() {
       //Log=Log+"sminind="+sminind+", smin="+smin+"\n";
       }
 
-    s.position.x=Stangen[sminind].position.x;
-    s.position.y=Stangen[sminind].position.y;
-    s.position.z=Stangen[sminind].position.z;
+    s.position.copy(Stangen[sminind].position);
     
     }
   //document.getElementById("Log2").firstChild.nodeValue=Log;
@@ -342,11 +357,11 @@ function Bild_click() {
 
 
 Richtung(-80,0,0);
-//Richtung(0,-80,0);
-//Richtung(80,0,0);
-//Richtung(0,80,0);
+Richtung(0,-80,0);
+Richtung(80,0,0);
+Richtung(0,80,0);
 //Richtung(0,0,-80);
-//Richtung(0,0,80);
+Richtung(0,0,80);
 
 
 /*jetzt noch
