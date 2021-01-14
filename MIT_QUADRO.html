@@ -12,7 +12,7 @@ var Faktor=40; //40=normal, 80=doppelt, 20=mini, 10=Ansatzstück
 var Faktormerk=40;
 var Knoten=[];
 function Richtung(dr,dh,dv) {
-  document.getElementById("Log").firstChild.nodeValue=[aktuelle_Position[0].toFixed(1),aktuelle_Position[1].toFixed(1)];
+  //document.getElementById("Log").firstChild.nodeValue=[aktuelle_Position[0].toFixed(1),aktuelle_Position[1].toFixed(1)];
 
   var qalt=q.position.clone();
   q.position.z=q.position.z-dv*Faktor/40/80;
@@ -45,12 +45,18 @@ function Löschen() {
   Stangen.splice(sminind,1);
   Knoten.splice(sminind+1,1);
   sminind=Stangen.length-1;
-  s.position.x=Stangen[sminind].position.x;
-  s.position.y=Stangen[sminind].position.y;
-  s.position.z=Stangen[sminind].position.x;
   q.position.x=Knoten[sminind+1].x;
   q.position.y=Knoten[sminind+1].y;
   q.position.z=Knoten[sminind+1].z;
+  if (sminind>-1) {
+    s.position.x=Stangen[sminind].position.x;
+    s.position.y=Stangen[sminind].position.y;
+    s.position.z=Stangen[sminind].position.z;
+    } else {
+      s.position.x=q.position.x;
+      s.position.y=q.position.y;
+      s.position.z=q.position.z;
+      }
   }
 
 function Farbe(farbe) {
@@ -61,12 +67,6 @@ function Farbe(farbe) {
   </head>
 <body>
 <div style="position:; top:0px; left:200px;">
-<span style="display:flex; flex-direction:row">
-<button onclick="Löschen()">Löschen</button>
-<button onclick="Farbe('red')" style="background-color:red">rot</button>
-<button onclick="Farbe('green')" style="background-color:green">grün</button>
-<button onclick="Farbe('blue')" style="background-color:blue">blau</button>
-<button onclick="Farbe('orange')" style="background-color:orange">orange</button>
 </span>
   </div>
 <div style="font-style:italic; white-space:pre-wrap;">
@@ -77,13 +77,15 @@ Die Knöpfe verraten es dir.
 
 
 </div>
-<div style="display:flex; align-items:flex-start">               
-<span style="display:flex; flex-direction:column; font-size:200%">
-<div onclick="Faktor=10"><input type="radio" id="L10" name="Laenge" value="10"/><label for="L10">7</label></div>
-<div onclick="Faktor=20"><input type="radio" id="L20" name="Laenge" value="20"/><label for="L20">15</label></div>
-<div onclick="Faktor=40"><input type="radio" id="L40" name="Laenge" value="40" checked="checked"/><label for="L40">35</label></div>
-<div onclick="Faktor=80"><input type="radio" id="L80" name="Laenge" value="80"/><label for="L80">75</label></div>
-</span>
+<div style="display:flex; align-items:flex-end">               
+<span style="display:flex; flex-direction:row">
+<button onclick="Löschen()">Löschen</button>
+<button onclick="Farbe('red')" style="background-color:red">rot</button>
+<button onclick="Farbe('green')" style="background-color:green">grün</button>
+<button onclick="Farbe('blue')" style="background-color:blue">blau</button>
+<button onclick="Farbe('orange')" style="background-color:orange">orange</button>
+<span id="Log"> </span>
+<span id="Log2" style="white-space:pre-wrap"> </span>
 </div>               
 <div id="Ausgabe zu tree.js"></div>               
 <div>               
@@ -93,9 +95,12 @@ Die Knöpfe verraten es dir.
 <button onclick="Richtung(0,80,0)">runter</button>
 <button onclick="Richtung(0,0,-80)">hinter</button>
 <button onclick="Richtung(0,0,80)">vor</button>
-<button onclick=""> </button>
-<span id="Log"> </span>
-<span id="Log2" style="white-space:pre-wrap"> </span>
+mit Länge:<span style="display:inline-flex; flex-direction:row; font-size:200%">
+<span onclick="Faktor=10"><input type="radio" id="L10" name="Laenge" value="10"/><label for="L10">10</label></span>
+<span onclick="Faktor=20"><input type="radio" id="L20" name="Laenge" value="20"/><label for="L20">20</label></span>
+<span onclick="Faktor=40"><input type="radio" id="L40" name="Laenge" value="40" checked="checked"/><label for="L40">40</label></span>
+<span onclick="Faktor=80"><input type="radio" id="L80" name="Laenge" value="80"/><label for="L80">80</label></span>
+</span>
 </div>               
 <div>               
 <button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-(-120+153.1370849898476)*2,0,0);Faktor=Faktormerk;">Mini links</button>
@@ -239,7 +244,7 @@ var touchzahl=0;
 
 function Bild_touchstart() {
   var Touch=event.targetTouches.item(0);
-  document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
+  //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
   TouchposX=Touch.clientX;
   TouchposY=Touch.clientY;
   cameraposalt=camera.position.clone();
@@ -256,7 +261,7 @@ function Bild_touchmove() {
   if (event.targetTouches.length==1&&touchzahl==1) {
     gamma=Math.min(Math.PI-0.01,Math.max(0.01,gammaalt-(Touch.clientY-TouchposY)/8/180*Math.PI));
     delta=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
-    document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
+    //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
     //touchzahl=1;
     } else {
       var Touch2=event.targetTouches.item(1);
@@ -274,7 +279,7 @@ function Bild_touchmove() {
       }
   camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
   camera.lookAt(q.position);
-  document.getElementById("Log2").firstChild.nodeValue=Log;
+  //document.getElementById("Log2").firstChild.nodeValue=Log;
   event.preventDefault();
   }
 
@@ -335,7 +340,7 @@ Richtung(0,0,80);
 ok Zoom
 ok Stange ausrichten mit .up=(1,0,0) und erst dann .lookAt, nö .lookAt, dann .rotateX
 ok unterschiedliche Stangenlängen, ohne Anfangsstange
-.. Stange auswählen
+ok Stange auswählen
 .. farbige Richtungstasten
 .. langsam-schnell-langsam ausrichten
 .. Seitenlicht
