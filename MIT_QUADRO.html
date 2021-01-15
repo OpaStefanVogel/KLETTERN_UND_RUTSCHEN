@@ -78,8 +78,8 @@ Die Knöpfe verraten es dir.
 <button onclick="Farbe('mediumblue')" style="background-color:blue">blau</button>
 <button onclick="Farbe('orange')" style="background-color:orange">orange</button>
 <button onclick="Farbe('red')" style="background-color:red">rot</button>
+<!--span id="link" style="position:relative; top:0px; left:60px; background-color:white"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span-->
   </span>
-<span style="float:right"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span>
 </div>               
 <div id="Ausgabe zu tree.js"></div>               
 <div>               
@@ -198,7 +198,7 @@ scene.add( s );
 
 
 // White directional light at half intensity shining from the top.
-const directionalLight = new THREE.DirectionalLight( 0x44ffff, 1 );
+const directionalLight = new THREE.DirectionalLight( 0x44ffff, 0.5 );
 scene.add( directionalLight );
 const directionalLight2 = new THREE.DirectionalLight( 0x888888, 1 );
 directionalLight2.position.z=-20;
@@ -238,7 +238,7 @@ function animate() {
     var diff2=new THREE.Vector3();
     diff2.subVectors(camera.position,q.position)
     
-    document.getElementById("Log2").firstChild.nodeValue=diff2.length().toFixed(4);
+    //document.getElementById("Log2").firstChild.nodeValue=diff2.length().toFixed(4);
 
     if (Math.abs(diff2.length()-distanz)>0.01) {
       diff2.normalize().multiplyScalar(Ausrichten);
@@ -346,14 +346,20 @@ function Bild_click() {
   //document.getElementById("Log2").firstChild.nodeValue=Log;
   }
 
+function Kamera_ausrichten() {
+  cl.copy(q.position);
+  camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
+  camera.lookAt(q.position);    
+  }
 
+/*
 Richtung(-80,0,0);
 Richtung(0,-80,0);
 Richtung(80,0,0);
 Richtung(0,80,0);
 //Richtung(0,0,-80);
 Richtung(0,0,80);
-
+*/
 
 /*jetzt noch
 ok Zoom
@@ -361,7 +367,7 @@ ok Stange ausrichten mit .up=(1,0,0) und erst dann .lookAt, nö .lookAt, dann .r
 ok unterschiedliche Stangenlängen, ohne Anfangsstange
 ok Stange auswählen
 ok den Mini Abstand noch auf 10 umfunktionieren
-.. farbige Richtungstasten
+ok farbige Richtungstasten
 .. langsam-schnell-langsam ausrichten
 .. Seitenlicht
 .. Speichern
