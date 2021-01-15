@@ -116,7 +116,8 @@ Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 </div>
 
 
-<script src="../three.js/build/three.js"></script>
+<!--script src="../three.js/build/three.js"></script-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script>
 <script>
 const clock = new THREE.Clock();
 //alert(1);
@@ -198,16 +199,17 @@ scene.add( s );
 
 
 // White directional light at half intensity shining from the top.
-const directionalLight = new THREE.DirectionalLight( 0x44ffff, 0.5 );
+const directionalLight = new THREE.DirectionalLight( 0x44ffff, 0.1 );
 scene.add( directionalLight );
 const directionalLight2 = new THREE.DirectionalLight( 0x888888, 1 );
 directionalLight2.position.z=-20;
 directionalLight2.position.y=5;
 scene.add( directionalLight2 );
-const directionalLight3 = new THREE.DirectionalLight( 0x555555, 1 );
-directionalLight3.position.z=+20;
+const directionalLight3 = new THREE.DirectionalLight( 0x555555, 0.3 );
+directionalLight2.position.y=2;
+directionalLight3.position.z=2;
 scene.add( directionalLight3 );
-const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+const light = new THREE.AmbientLight( 0xC0C0C0 ); // soft white light
 scene.add( light );
 
 var cl=q.position.clone();
