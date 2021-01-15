@@ -1,0 +1,388 @@
+<html>
+<head>
+  <title>QUADRO</title>
+  <meta charset="utf-8"/>
+<style>
+button {font-size:200%}
+  </style>
+<script>
+var aktuelle_Position=[20,530,0]
+var Stangen=[];
+var Faktor=40; //40=normal, 80=doppelt, 20=mini, 10=Ansatzstück 
+var Faktormerk=40;
+var Knoten=[];
+function Richtung(dr,dh,dv) {
+  //document.getElementById("Log").firstChild.nodeValue=[aktuelle_Position[0].toFixed(1),aktuelle_Position[1].toFixed(1)];
+
+  var qalt=q.position.clone();
+  q.position.x=q.position.x+dr*Faktor/40/80;
+  q.position.y=q.position.y-dh*Faktor/40/80;
+  q.position.z=q.position.z-dv*Faktor/40/80;
+  q.visible=true;
+  Knoten.push(q.position.clone());
+  var qneu=q.position.clone();
+  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor/40,16)),(new THREE.MeshStandardMaterial( { color: 0xff0000 } )));
+  st.position.x=(qalt.x+qneu.x)/2;
+  st.position.y=(qalt.y+qneu.y)/2;
+  st.position.z=(qalt.z+qneu.z)/2;
+  st.lookAt(q.position);
+  st.rotateX(Math.PI/2);
+  //st.material.color.set(0x009900);
+  Stangen.push(st);
+  scene.add( st );
+  sminind=Stangen.length-1;
+  s.position.copy(st.position);
+  s.visible=true;
+  }
+
+var was_geloescht_werden_soll=0;
+function Löschknopf() {
+  was_geloescht_werden_soll=event.target.parentNode;
+  }
+
+function Löschen() {
+  scene.remove(Stangen[sminind]);
+  Stangen.splice(sminind,1);
+  Knoten.splice(sminind+1,1);
+  sminind=Stangen.length-1;
+  q.position.copy(Knoten[sminind+1]);
+  q.visible=true;
+  s.visible=true;
+  if (sminind>-1) {
+    s.position.copy(Stangen[sminind].position);
+    } else {
+      s.position.cooy(q.position);
+      }
+  }
+
+function Farbe(farbe) {
+  Stangen[sminind].material.color.set(farbe);
+  }
+
+  </script>
+  </head>
+<body>
+<div style="position:; top:0px; left:200px;"></div>
+<div style="font-style:italic; white-space:pre-wrap;">
+
+ANLEITUNG:
+
+Die Knöpfe verraten es dir.
+
+
+</div>
+<div style="display:flex; align-items:flex-end">               
+<span style="display:flex; flex-direction:row; align-items:flex-end">
+<button onclick="Löschen()">Löschen</button>
+<button onclick="Farbe('green')" style="background-color:green">grün</button>
+<button onclick="Farbe('mediumblue')" style="background-color:blue">blau</button>
+<button onclick="Farbe('orange')" style="background-color:orange">orange</button>
+<button onclick="Farbe('red')" style="background-color:red">rot</button>
+<!--span id="link" style="position:relative; top:0px; left:60px; background-color:white"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span-->
+  </span>
+</div>               
+<div id="Ausgabe zu tree.js"></div>               
+<div>               
+<button onclick="Richtung(-80,0,0)" style="background-color:ccbbff">links</button>
+<button onclick="Richtung(0,-80,0)" style="background-color:f7f7f7">hoch</button>
+<button onclick="Richtung(80,0,0)" style="background-color:ffeecc">rechts</button>
+<button onclick="Richtung(0,80,0)" style="background-color:777733">runter</button>
+<button onclick="Richtung(0,0,-80)" style="background-color:444444; color:777777">hinter</button>
+<button onclick="Richtung(0,0,80)" style="background-color:ddddff">vor</button>
+Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
+<span onclick="Faktor=10"><input type="radio" id="L10" name="Laenge" value="10"/><label for="L10">10</label></span>
+<span onclick="Faktor=20"><input type="radio" id="L20" name="Laenge" value="20"/><label for="L20">20</label></span>
+<span onclick="Faktor=40"><input type="radio" id="L40" name="Laenge" value="40" checked="checked"/><label for="L40">40</label></span>
+<span onclick="Faktor=80"><input type="radio" id="L80" name="Laenge" value="80"/><label for="L80">80</label></span>
+</span>
+</div>               
+<span id="Log"> </span>
+<span id="Log2" style="white-space:pre-wrap"> </span>
+<div>               
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-80,0,0);Faktor=Faktormerk;">Mini links</button>
+<button onclick="Richtung(60,-60,0)">schräg rechts hoch</button>
+<button onclick="Richtung(60,60,0)">schräg rechts runter</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-80,0,0);Faktor=Faktormerk;">Mini links</button>
+</div>               
+<div>               
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(80,0,0);Faktor=Faktormerk;">Mini rechts</button>
+<button onclick="Richtung(-60,-60,0)">schräg links hoch</button>
+<button onclick="Richtung(-60,60,0)">schräg links runter</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(80,0,0);Faktor=Faktormerk;">Mini rechts</button>
+</div>
+<div>               
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(0,-80,0);Faktor=Faktormerk;">Mini hoch</button>
+<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(0,80,0);Faktor=Faktormerk;">Mini runter</button>
+</div>
+
+
+<script src="../three.js/build/three.js"></script>
+<script>
+const clock = new THREE.Clock();
+//alert(1);
+//alert(THREE);
+var wsize=window.innerWidth-100;
+var hsize=window.innerHeight-30;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 45, wsize / hsize, 0.1, 1000 );
+var gamma=Math.PI/2.4;
+var delta=0.2;
+var distanz=6;
+camera.position.setFromSphericalCoords(distanz,gamma,delta);
+camera.lookAt(0,0,0);
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( wsize, hsize );
+renderer.domElement.addEventListener("click",Bild_click);
+renderer.domElement.addEventListener("touchstart",Bild_touchstart);
+renderer.domElement.addEventListener("touchmove",Bild_touchmove);
+document.getElementById("Ausgabe zu tree.js").appendChild( renderer.domElement )
+
+
+const planeGeometry = new THREE.PlaneGeometry(20,20);
+const planeMaterial = new THREE.MeshBasicMaterial( { color: 0x777733 } )
+const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+plane.receiveShadow = true;
+plane.position.y=-0.2;
+plane.position.z=-9;
+plane.rotation.x=-90/180*Math.PI;
+//alert(JSON.stringify(plane.toJSON()));
+//alert(JSON.stringify(TREE.toJSON()));
+scene.add( plane );
+
+const skyGeometry = new THREE.PlaneGeometry(20,20);
+const skyMaterial = new THREE.MeshBasicMaterial( { color: 0xddddff } )
+const sky = new THREE.Mesh( skyGeometry, skyMaterial );
+//plane.receiveShadow = true;
+sky.position.y=10-0.2;
+sky.position.z=-19;
+scene.add( sky );
+
+const skylGeometry = new THREE.PlaneGeometry(20,20);
+const skylMaterial = new THREE.MeshBasicMaterial( { color: 0xccbbff } )
+const skyl = new THREE.Mesh( skylGeometry, skylMaterial );
+skyl.position.x=-10;
+skyl.position.y=10-0.2;
+skyl.position.z=-9;
+skyl.rotation.y=90/180*Math.PI;
+scene.add( skyl );
+
+const skyrGeometry = new THREE.PlaneGeometry(20,20);
+const skyrMaterial = new THREE.MeshBasicMaterial( { color: 0xffeecc } )
+const skyr = new THREE.Mesh( skyrGeometry, skyrMaterial );
+skyr.position.x=10;
+skyr.position.y=10-0.2;
+skyr.position.z=-9;
+skyr.rotation.y=-90/180*Math.PI;
+scene.add( skyr );
+
+const skyoGeometry = new THREE.PlaneGeometry(20,20);
+const skyoMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff } )
+const skyo = new THREE.Mesh( skyoGeometry, skyoMaterial );
+skyo.position.x=0;
+skyo.position.y=20-0.2;
+skyo.position.z=-9;
+skyo.rotation.x=90/180*Math.PI;
+scene.add( skyo );
+
+const qGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
+const qMaterial = new THREE.MeshStandardMaterial( { color: 0x00dddd } );
+const q = new THREE.Mesh( qGeometry, qMaterial );
+scene.add( q );
+Knoten.push(q.position.clone());
+
+const sGeometry = new THREE.SphereGeometry( 0.06, 32, 32 );
+const sMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00 } );
+const s = new THREE.Mesh( sGeometry, sMaterial );
+scene.add( s );
+
+
+// White directional light at half intensity shining from the top.
+const directionalLight = new THREE.DirectionalLight( 0x44ffff, 0.5 );
+scene.add( directionalLight );
+const directionalLight2 = new THREE.DirectionalLight( 0x888888, 1 );
+directionalLight2.position.z=-20;
+directionalLight2.position.y=5;
+scene.add( directionalLight2 );
+const directionalLight3 = new THREE.DirectionalLight( 0x555555, 1 );
+directionalLight3.position.z=+20;
+scene.add( directionalLight3 );
+const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+scene.add( light );
+
+var cl=q.position.clone();
+var Ausrichten=0.005;
+
+function animate() {
+	requestAnimationFrame( animate );
+
+//cube.rotation.x += 0.01;
+//cube.rotation.y += 0.001;
+
+//zylinder.rotation.x += -0.01;
+//zylinder.rotation.y += 0.001;
+
+//if (sphere.position.x>4) sphere.position.x=-0.5; else sphere.position.x+=0.01;
+
+  if (q.visible) {
+    
+    var diff=new THREE.Vector3();
+    diff.subVectors(q.position,cl)
+    
+    if (diff.length()>0.01) {
+      if (Ausrichten<1) diff.normalize().multiplyScalar(Ausrichten);
+      cl.add(diff);
+      camera.lookAt(cl);
+      }
+    
+    var diff2=new THREE.Vector3();
+    diff2.subVectors(camera.position,q.position)
+    
+    //document.getElementById("Log2").firstChild.nodeValue=diff2.length().toFixed(4);
+
+    if (Math.abs(diff2.length()-distanz)>0.01) {
+      diff2.normalize().multiplyScalar(Ausrichten);
+      camera.position.add(diff);
+      camera.lookAt(cl);
+      }
+
+    }
+    
+	renderer.render( scene, camera );
+}
+animate();
+
+var TouchposX=0;
+var TouchposY=0;
+var Touch2posX=0;
+var Touch2posY=0;
+var cameraposalt=0;
+var gammaalt=0;
+var deltaalt=0;
+var distanzalt=0;
+var touchzahl=0;
+
+function Bild_touchstart() {
+  var Touch=event.targetTouches.item(0);
+  //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
+  TouchposX=Touch.clientX;
+  TouchposY=Touch.clientY;
+  cameraposalt=camera.position.clone();
+  gammaalt=gamma;
+  deltaalt=delta;
+  distanzalt=distanz;
+  touchzahl=1;
+  //event.preventDefault();
+  }
+
+function Bild_touchmove() {
+  var Log=event.targetTouches.length;
+  var Touch=event.targetTouches.item(0);
+  if (event.targetTouches.length==1&&touchzahl==1) {
+    gamma=Math.min(Math.PI-0.01,Math.max(0.01,gammaalt-(Touch.clientY-TouchposY)/8/180*Math.PI));
+    delta=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
+    //alert(distanz+" "+camera.position.clone().sub(cl).length());
+    camera.position.setFromSphericalCoords(distanz,gamma,delta).add(cl);//???gewagt
+    camera.lookAt(q.position);
+    //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
+    //touchzahl=1;
+    } else {
+      var Touch2=event.targetTouches.item(1);
+      if (touchzahl==1) {
+        touchzahl=2;
+        TouchposX=Touch.clientX;
+        Touch2posX=Touch2.clientX;
+        TouchposY=Touch.clientY;
+        Touch2posY=Touch2.clientY;
+        distanzalt=distanz;
+        } else {
+          distanz=distanzalt-(Math.sqrt((Touch.clientX-Touch2.clientX)**2+(Touch.clientY-Touch2.clientY)**2)-Math.sqrt((TouchposX-Touch2posX)**2+(TouchposY-Touch2posY)**2))/50;
+          distanz=Math.min(Math.max(distanz,3),10);
+          }
+      camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
+      camera.lookAt(q.position);
+      }
+  //document.getElementById("Log2").firstChild.nodeValue=Log;
+  event.preventDefault();
+  }
+
+var sminind=0;
+function Bild_click() {
+  var mouse=new THREE.Vector3();
+  var Log="\nmouse=["+(event.clientX-event.target.getBoundingClientRect().left)+","+(event.clientY-event.target.getBoundingClientRect().top)+"]\n";
+  mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / event.target.width ) * 2 - 1;
+  mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / event.target.height ) * 2 + 1;
+  mouse.z = 0.96;
+  //Log=Log+mouse.toArray()+"\n"+Knoten.length+"####\n";
+  var min=100000;
+  var minind=0;
+  for (var i=0;i<Knoten.length;i++) {
+    //Log=Log+i+" "+Knoten[i].clone().toArray()+"\n"+Knoten[i].clone().project(camera).toArray()+"\n";
+    var dist=Knoten[i].clone().project(camera).distanceToSquared(mouse);
+    if (dist<min) {min=dist; minind=i}
+    //Log=Log+minind+" "+dist+"\n";
+    }
+
+  //Log=Log+q.position.clone().project(camera).toArray()+"\n";
+  //Log=Log+event.clientX+" "+event.clientY+" "+clock.getDelta()+"\n";
+  clock.start();
+  if (min>0.1) { if (mouse.y>-0.7) q.visible=false; s.visible=false; } else {
+    q.visible=true;
+    q.position.copy(Knoten[minind]);
+    s.visible=true;
+
+    var smin=100000;
+    sminind=0;
+    for (var i=0;i<Stangen.length;i++) {
+      //Log=Log+i+" "+Stangen[i].position.toArray()+"\n"+Stangen[i].position.clone().project(camera).toArray()+"\n";
+      var dist=Stangen[i].position.clone().project(camera).distanceToSquared(mouse);
+      if (dist<smin) {smin=dist; sminind=i}
+      //Log=Log+"sminind="+sminind+", smin="+smin+"\n";
+      }
+
+    s.position.copy(Stangen[sminind].position);
+    
+    }
+  //document.getElementById("Log2").firstChild.nodeValue=Log;
+  }
+
+function Kamera_ausrichten() {
+  cl.copy(q.position);
+  camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
+  camera.lookAt(q.position);    
+  }
+
+/*
+Richtung(-80,0,0);
+Richtung(0,-80,0);
+Richtung(80,0,0);
+Richtung(0,80,0);
+//Richtung(0,0,-80);
+Richtung(0,0,80);
+*/
+
+/*jetzt noch
+ok Zoom
+ok Stange ausrichten mit .up=(1,0,0) und erst dann .lookAt, nö .lookAt, dann .rotateX
+ok unterschiedliche Stangenlängen, ohne Anfangsstange
+ok Stange auswählen
+ok den Mini Abstand noch auf 10 umfunktionieren
+ok farbige Richtungstasten
+.. langsam-schnell-langsam ausrichten
+.. Seitenlicht
+.. Speichern
+*/
+		</script>
+
+<div>
+<hr/>
+zum Testen: Kamera ausrichten 
+<span onclick="Ausrichten=1"><input type="radio" id="K10" name="Ausrichten" value="10"/><label for="K10">sofort</label></span>
+<span onclick="Ausrichten=0.05"><input type="radio" id="K20" name="Ausrichten" value="20"/><label for="K20">schnell</label></span>
+<span onclick="Ausrichten=0.005"><input type="radio" id="K40" name="Ausrichten" value="40" checked="checked"/><label for="K40">langsam</label></span>
+<span onclick="Ausrichten=0"><input type="radio" id="K80" name="Ausrichten" value="80"/><label for="K80">nur bei</label></span>
+<button onclick="Kamera_ausrichten()">Kamera ausrichten</button>
+  </div>               
+
+  </body>
+  </html>
