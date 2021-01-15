@@ -114,13 +114,6 @@ Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 <button onclick="Faktormerk=Faktor;Faktor=10;Richtung(0,-80,0);Faktor=Faktormerk;">Mini hoch</button>
 <button onclick="Faktormerk=Faktor;Faktor=10;Richtung(0,80,0);Faktor=Faktormerk;">Mini runter</button>
 </div>
-Kamera ausrichten: 
-<span onclick="Ausrichten=0.5"><input type="radio" id="K10" name="Ausrichten" value="10"/><label for="K10">sofort</label></span>
-<span onclick="Ausrichten=0.05"><input type="radio" id="K20" name="Ausrichten" value="20"/><label for="K20">schnell</label></span>
-<span onclick="Ausrichten=0.005"><input type="radio" id="K40" name="Ausrichten" value="40" checked="checked"/><label for="K40">langsam</label></span>
-<span onclick="Ausrichten=0"><input type="radio" id="K80" name="Ausrichten" value="80"/><label for="K80">nur bei</label></span>
-<button onclick="Kamera_ausrichten()">Kamera ausrichten</button>
-  <div>               
 
 
 <script src="../three.js/build/three.js"></script>
@@ -237,7 +230,7 @@ function animate() {
     diff.subVectors(q.position,cl)
     
     if (diff.length()>0.01) {
-      diff.normalize().multiplyScalar(Ausrichten);
+      if (Ausrichten<1) diff.normalize().multiplyScalar(Ausrichten);
       cl.add(diff);
       camera.lookAt(cl);
       }
@@ -248,13 +241,8 @@ function animate() {
     document.getElementById("Log2").firstChild.nodeValue=diff2.length().toFixed(4);
 
     if (Math.abs(diff2.length()-distanz)>0.01) {
-//      if (diff2.length()>distanz) {
-        diff2.normalize().multiplyScalar(Ausrichten);
-        camera.position.add(diff);
-//        } else {
-//          diff2.normalize().multiplyScalar(Ausrichten);        
-  //        camera.position.add(diff2);
-//          }
+      diff2.normalize().multiplyScalar(Ausrichten);
+      camera.position.add(diff);
       camera.lookAt(cl);
       }
 
@@ -293,6 +281,9 @@ function Bild_touchmove() {
   if (event.targetTouches.length==1&&touchzahl==1) {
     gamma=Math.min(Math.PI-0.01,Math.max(0.01,gammaalt-(Touch.clientY-TouchposY)/8/180*Math.PI));
     delta=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
+    //alert(distanz+" "+camera.position.clone().sub(cl).length());
+    camera.position.setFromSphericalCoords(distanz,gamma,delta).add(cl);//???gewagt
+    camera.lookAt(q.position);
     //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
     //touchzahl=1;
     } else {
@@ -308,9 +299,9 @@ function Bild_touchmove() {
           distanz=distanzalt-(Math.sqrt((Touch.clientX-Touch2.clientX)**2+(Touch.clientY-Touch2.clientY)**2)-Math.sqrt((TouchposX-Touch2posX)**2+(TouchposY-Touch2posY)**2))/50;
           distanz=Math.min(Math.max(distanz,3),10);
           }
+      camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
+      camera.lookAt(q.position);
       }
-  camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
-  camera.lookAt(q.position);
   //document.getElementById("Log2").firstChild.nodeValue=Log;
   event.preventDefault();
   }
@@ -377,6 +368,15 @@ ok den Mini Abstand noch auf 10 umfunktionieren
 */
 		</script>
 
+<div>
+<hr/>
+zum Testen: Kamera ausrichten 
+<span onclick="Ausrichten=1"><input type="radio" id="K10" name="Ausrichten" value="10"/><label for="K10">sofort</label></span>
+<span onclick="Ausrichten=0.05"><input type="radio" id="K20" name="Ausrichten" value="20"/><label for="K20">schnell</label></span>
+<span onclick="Ausrichten=0.005"><input type="radio" id="K40" name="Ausrichten" value="40" checked="checked"/><label for="K40">langsam</label></span>
+<span onclick="Ausrichten=0"><input type="radio" id="K80" name="Ausrichten" value="80"/><label for="K80">nur bei</label></span>
+<button onclick="Kamera_ausrichten()">Kamera ausrichten</button>
+  </div>               
 
   </body>
   </html>
