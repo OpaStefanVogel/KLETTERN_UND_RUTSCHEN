@@ -2,5 +2,4 @@
 
 simuliert den Aufbau vom [QUADRO](https://quadroshop.de) Klettergerüst, nur die Stangen.
 
-Verwendetes 3D-Grafikprogramm [mrdoob/three.js](https://github.com/mrdoob/three.js.git) (ersatzweise cdnjs.cloudflare.com...three.js siehe <script...> in MIT_QUADRO.html, weil dort href zu mrdoob/three.js nicht funktionieren will)
-
+Verwendetes 3D-Grafikprogramm [mrdoob/three.js](https://github.com/mrdoob/three.js.git) als submodule, alternativ geht auch cdnjs.cloudflare.com...three.js siehe <script...> in MIT_QUADRO.html.
