@@ -1,0 +1,7 @@
+[Desktop Entry]
+Exec=lxterminal -e "ls;git pull;gitk --all &pcmanfm .&mousepad KLETTERN_UND_RUTSCHEN.desktop README.md MIT_QUADRO.html&bash"
+Type=Application
+Path=/home/pi/Desktop/CLONE/KLETTERN_UND_RUTSCHEN
+Terminal=false
+StartupNotify=true
+Icon=
