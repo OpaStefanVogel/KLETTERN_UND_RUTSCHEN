@@ -61,6 +61,13 @@ function Farbe(farbe) {
 
   </script>
   </head>
+
+
+
+
+
+
+
 <body>
 <a style="float:right" href="https://github.com/OpaStefanVogel/KLETTERN_UND_RUTSCHEN">Quelle</a>
 <div style="font-style:italic; white-space:pre-wrap;">
@@ -388,5 +395,16 @@ zum Testen: Kamera ausrichten
 <button onclick="Kamera_ausrichten()">Kamera ausrichten</button>
   </div>               
 
+<hr/>
+<div>
+<input type="file" id="files" name="files[]" onchange="reader.readAsText(event.target.files[0])" />
+
+<script>
+var reader = new FileReader();
+reader.onload = function(e) {
+  document.getElementById("Log").firstChild.nodeValue=e.target.result;
+  };
+  </script>
+  <div>
   </body>
   </html>
