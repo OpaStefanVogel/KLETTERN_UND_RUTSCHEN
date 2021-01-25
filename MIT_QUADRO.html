@@ -11,8 +11,10 @@ var Stangen=[];
 var Faktor=40; //40=normal, 80=doppelt, 20=mini, 10=Ansatzstück 
 var Faktormerk=40;
 var Knoten=[];
+var Downloadtext='<KLETTERN_UND_RUTSCHEN xmlns="https://github.com/OpaStefanVogel/KLETTERN_UND_RUTSCHEN">\n';
 function Richtung(dr,dh,dv) {
   //document.getElementById("Log").firstChild.nodeValue=[aktuelle_Position[0].toFixed(1),aktuelle_Position[1].toFixed(1)];
+  Downloadtext=Downloadtext+"Richtung("+dr+","+dh+","+dv+")\n";
 
   var qalt=q.position.clone();
   q.position.x=q.position.x+dr*Faktor/40/80;
@@ -405,6 +407,24 @@ reader.onload = function(e) {
   document.getElementById("Log").firstChild.nodeValue=e.target.result;
   };
   </script>
+
+<script type="application/ecmascript">
+
+function download(filename, text) {
+  alert(text);
+  //var pom = document.createElement('a');
+  var pom=document.getElementById("download");
+  pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  pom.setAttribute('download', filename);
+  pom.firstChild.nodeValue="Download "+filename;
+  }
+  </script>
+<div> 
+<button onclick='download("KLETTERN_UND_RUTSCHEN.txt",Downloadtext+"</KLETTERN_UND_RUTSCHEN>\n");document.getElementById("download").click()'>Speichern</button>
+  <a id="download"> </a><small> (dieser Download erfolgt mit <a href="http://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file">&lt;a href=... download=...&gt;</a>)</small>
+  </div>
+
+
   <div>
   </body>
   </html>
