@@ -14,7 +14,8 @@ var Knoten=[];
 var Downloadtext='<KLETTERN_UND_RUTSCHEN xmlns="https://github.com/OpaStefanVogel/KLETTERN_UND_RUTSCHEN">\n';
 function Richtung(dr,dh,dv) {
   //document.getElementById("Log").firstChild.nodeValue=[aktuelle_Position[0].toFixed(1),aktuelle_Position[1].toFixed(1)];
-  Downloadtext=Downloadtext+"Richtung("+dr+","+dh+","+dv+")\n";
+  Downloadtext=Downloadtext+"Richtung("+dr+","+dh+","+dv+");\n";
+  document.getElementById("Ausgabe Downloadtext").firstChild.nodeValue=Downloadtext;
 
   var qalt=q.position.clone();
   q.position.x=q.position.x+dr*Faktor/40/80;
@@ -91,6 +92,7 @@ Die Knöpfe verraten es dir.
 <!--span id="link" style="position:relative; top:0px; left:60px; background-color:white"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span-->
   </span>
 </div>               
+<div id="Ausgabe Downloadtext"> </div>
 <div id="Ausgabe zu tree.js"></div>               
 <div>               
 <button onclick="Richtung(-80,0,0)" style="background-color:ccbbff">links</button>
