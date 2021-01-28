@@ -20,7 +20,7 @@ function Richtung(dr,dh,dv,Faktor) {
   document.getElementById("Logpos").firstChild.nodeValue=[aktuelle_Position[0].toFixed(0),aktuelle_Position[1].toFixed(0),aktuelle_Position[2].toFixed(0)];
   Downloadtext=Downloadtext+"Richtung("+dr+","+dh+","+dv+","+Faktor+");\n";
   document.getElementById("Ausgabe Downloadtext").firstChild.nodeValue=Downloadtext+"</KLETTERN_UND_RUTSCHEN>";
-return;
+//return;
   var qalt=q.position.clone();
   q.position.x=q.position.x+dr*Faktor/40/40;
   q.position.y=q.position.y-dh*Faktor/40/40;
@@ -96,7 +96,7 @@ Die Knöpfe verraten es dir.
 <!--span id="link" style="position:relative; top:0px; left:60px; background-color:white"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span-->
   </span>
 </div>               
-<div id="Ausgabe Downloadtext" style="white-space:pre-wrap; font-size:100%"> </div>
+<div id="Ausgabe Downloadtext" style="white-space:pre-wrap; font-size:50%"> </div>
 <div id="Ausgabe zu tree.js"></div>               
 <div>               
 <button onclick="Richtung(-40,0,0,Faktor)" style="background-color:ccbbff">links</button>
@@ -134,9 +134,8 @@ Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 
 
 <!--script src="../three.js/build/three.js"></script-->
-<!--script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script>
 <!--script src="three.js"></script-->
-<script src="three.js/build/three.js"></script>
 <script>
 const clock = new THREE.Clock();
 //alert(1);
@@ -417,7 +416,7 @@ als Datei <input id="Ausdabedateiname" value="Klettern_und_Rutschen.xml"> <butto
   </span>,
 
 <span>
-zum Zurückladen eine <input type="file" id="files" onchange="reader.readAsText(event.target.files[0])" size="100" accept=".xml"/>
+zum Zurückladen eine <input type="file" id="files" onchange="reader.readAsText(event.target.files[0])" size="100" accept="*.xml"/>
 
 <script>
 var reader = new FileReader();
@@ -439,7 +438,6 @@ function download(filename, text) {
 <div> 
 
 <!--dann noch
-.. Faktor in Richtung() hineinpacken
 
   -->
   </body>
