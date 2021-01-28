@@ -6,18 +6,25 @@
 button {font-size:200%}
   </style>
 <script>
-var aktuelle_Position=[20,530,0]
+var aktuelle_Position=[0,0,0];
+var vorherige_Position=[0,0,0];
 var Stangen=[];
 var Faktor=40; //40=normal, 80=doppelt, 20=mini, 10=Ansatzstück 
-var Faktormerk=40;
 var Knoten=[];
-function Richtung(dr,dh,dv) {
-  //document.getElementById("Log").firstChild.nodeValue=[aktuelle_Position[0].toFixed(1),aktuelle_Position[1].toFixed(1)];
-
+var Downloadtext='<?xml version="1.0" encoding="utf-8" ?>\n<KLETTERN_UND_RUTSCHEN xmlns="https://github.com/OpaStefanVogel/KLETTERN_UND_RUTSCHEN">\n';
+function Richtung(dr,dh,dv,Faktor) {
+  vorherige_Position=aktuelle_Position.slice();
+  aktuelle_Position[0]=aktuelle_Position[0]+dr*Faktor/40;
+  aktuelle_Position[1]=aktuelle_Position[1]-dh*Faktor/40;
+  aktuelle_Position[2]=aktuelle_Position[2]-dv*Faktor/40;
+  document.getElementById("Logpos").firstChild.nodeValue=[aktuelle_Position[0].toFixed(0),aktuelle_Position[1].toFixed(0),aktuelle_Position[2].toFixed(0)];
+  Downloadtext=Downloadtext+"Richtung("+dr+","+dh+","+dv+","+Faktor+");\n";
+  document.getElementById("Ausgabe Downloadtext").firstChild.nodeValue=Downloadtext+"</KLETTERN_UND_RUTSCHEN>";
+return;
   var qalt=q.position.clone();
-  q.position.x=q.position.x+dr*Faktor/40/80;
-  q.position.y=q.position.y-dh*Faktor/40/80;
-  q.position.z=q.position.z-dv*Faktor/40/80;
+  q.position.x=q.position.x+dr*Faktor/40/40;
+  q.position.y=q.position.y-dh*Faktor/40/40;
+  q.position.z=q.position.z-dv*Faktor/40/40;
   q.visible=true;
   Knoten.push(q.position.clone());
   var qneu=q.position.clone();
@@ -61,6 +68,13 @@ function Farbe(farbe) {
 
   </script>
   </head>
+
+
+
+
+
+
+
 <body>
 <a style="float:right" href="https://github.com/OpaStefanVogel/KLETTERN_UND_RUTSCHEN">Quelle</a>
 <div style="font-style:italic; white-space:pre-wrap;">
@@ -82,14 +96,15 @@ Die Knöpfe verraten es dir.
 <!--span id="link" style="position:relative; top:0px; left:60px; background-color:white"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span-->
   </span>
 </div>               
+<div id="Ausgabe Downloadtext" style="white-space:pre-wrap; font-size:100%"> </div>
 <div id="Ausgabe zu tree.js"></div>               
 <div>               
-<button onclick="Richtung(-80,0,0)" style="background-color:ccbbff">links</button>
-<button onclick="Richtung(0,-80,0)" style="background-color:f7f7f7">hoch</button>
-<button onclick="Richtung(80,0,0)" style="background-color:ffeecc">rechts</button>
-<button onclick="Richtung(0,80,0)" style="background-color:777733">runter</button>
-<button onclick="Richtung(0,0,-80)" style="background-color:444444; color:777777">hinter</button>
-<button onclick="Richtung(0,0,80)" style="background-color:ddddff">vor</button>
+<button onclick="Richtung(-40,0,0,Faktor)" style="background-color:ccbbff">links</button>
+<button onclick="Richtung(0,-40,0,Faktor)" style="background-color:f7f7f7">hoch</button>
+<button onclick="Richtung(40,0,0,Faktor)" style="background-color:ffeecc">rechts</button>
+<button onclick="Richtung(0,40,0,Faktor)" style="background-color:777733">runter</button>
+<button onclick="Richtung(0,0,-40,Faktor)" style="background-color:444444; color:777777">hinter</button>
+<button onclick="Richtung(0,0,40,Faktor)" style="background-color:ddddff">vor</button>
 Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 <span onclick="Faktor=10"><input type="radio" id="L10" name="Laenge" value="10"/><label for="L10">10</label></span>
 <span onclick="Faktor=20"><input type="radio" id="L20" name="Laenge" value="20"/><label for="L20">20</label></span>
@@ -97,23 +112,24 @@ Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 <span onclick="Faktor=80"><input type="radio" id="L80" name="Laenge" value="80"/><label for="L80">80</label></span>
 </span>
 </div>               
+<span id="Logpos"> </span>
 <span id="Log"> </span>
 <span id="Log2" style="white-space:pre-wrap"> </span>
 <div>               
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-80,0,0);Faktor=Faktormerk;">Mini links</button>
-<button onclick="Richtung(60,-60,0)">schräg rechts hoch</button>
-<button onclick="Richtung(60,60,0)">schräg rechts runter</button>
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(-80,0,0);Faktor=Faktormerk;">Mini links</button>
+<button onclick="Richtung(-40,0,0,10)">Mini links</button>
+<button onclick="Richtung(30,-30,0,Faktor)">schräg rechts hoch</button>
+<button onclick="Richtung(30,30,0,Faktor)">schräg rechts runter</button>
+<button onclick="Richtung(-40,0,0,10)">Mini links</button>
 </div>               
 <div>               
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(80,0,0);Faktor=Faktormerk;">Mini rechts</button>
-<button onclick="Richtung(-60,-60,0)">schräg links hoch</button>
-<button onclick="Richtung(-60,60,0)">schräg links runter</button>
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(80,0,0);Faktor=Faktormerk;">Mini rechts</button>
+<button onclick="Richtung(40,0,0,10)">Mini rechts</button>
+<button onclick="Richtung(-30,-30,0,Faktor)">schräg links hoch</button>
+<button onclick="Richtung(-30,30,0,Faktor)">schräg links runter</button>
+<button onclick="Richtung(40,0,0,10)">Mini rechts</button>
 </div>
 <div>               
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(0,-80,0);Faktor=Faktormerk;">Mini hoch</button>
-<button onclick="Faktormerk=Faktor;Faktor=10;Richtung(0,80,0);Faktor=Faktormerk;">Mini runter</button>
+<button onclick="Richtung(0,-40,0,10)">Mini hoch</button>
+<button onclick="Richtung(0,40,0,10)">Mini runter</button>
 </div>
 
 
@@ -306,7 +322,7 @@ function Bild_touchmove() {
           }
       camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
       camera.lookAt(q.position);
-      }
+      }+
   //document.getElementById("Log2").firstChild.nodeValue=Log;
   event.preventDefault();
   }
@@ -381,6 +397,7 @@ ok farbige Richtungstasten
 
 <div>
 <hr/>
+<hr/>
 zum Testen: Kamera ausrichten 
 <span onclick="Ausrichten=1"><input type="radio" id="K10" name="Ausrichten" value="10"/><label for="K10">sofort</label></span>
 <span onclick="Ausrichten=0.05"><input type="radio" id="K20" name="Ausrichten" value="20"/><label for="K20">schnell</label></span>
@@ -389,5 +406,41 @@ zum Testen: Kamera ausrichten
 <button onclick="Kamera_ausrichten()">Kamera ausrichten</button>
   </div>               
 
+
+
+
+<hr/>
+<hr/>
+<span>
+als Datei <input id="Ausdabedateiname" value="Klettern_und_Rutschen.xml"> <button onclick='download(document.getElementById("Ausdabedateiname").value,Downloadtext+"</KLETTERN_UND_RUTSCHEN>\n");document.getElementById("download").click()'>speichern</button>
+<span style="display:none">  <a id="download"> </a><small> (dieser Download erfolgt mit <a href="http://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file">&lt;a href=... download=...&gt;</a>)</small></span>
+  </span>,
+
+<span>
+zum Zurückladen eine <input type="file" id="files" onchange="reader.readAsText(event.target.files[0])" size="100" accept=".xml"/>
+
+<script>
+var reader = new FileReader();
+reader.onload = function(e) {
+  var Eingabe=e.target.result;
+  document.getElementById("Log").firstChild.nodeValue=Eingabe;
+  eval(Eingabe.slice(Eingabe.indexOf('N">')+3,-25));
+  };
+
+function download(filename, text) {
+  alert("als Datei "+filename+" wird gespeichert:\n\n"+text);
+  //var pom = document.createElement('a');
+  var pom=document.getElementById("download");
+  pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  pom.setAttribute('download', filename);
+  pom.firstChild.nodeValue="Download "+filename;
+  }
+  </script>
+<div> 
+
+<!--dann noch
+.. Faktor in Richtung() hineinpacken
+
+  -->
   </body>
   </html>
