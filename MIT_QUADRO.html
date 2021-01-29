@@ -32,7 +32,7 @@ function Richtung(dr,dh,dv,Faktor) {
   st.position.x=(qalt.x+qneu.x)/2;
   st.position.y=(qalt.y+qneu.y)/2;
   st.position.z=(qalt.z+qneu.z)/2;
-  st.knoten=[qalt.clone(),qneu.clone(),Faktor/40,"red"];
+  st.Stange=[qalt.toArray(),qneu.toArray(),Faktor/40,"red"];
   st.lookAt(q.position);
   st.rotateX(Math.PI/2);
   //st.material.color.set(0x009900);
@@ -44,11 +44,11 @@ function Richtung(dr,dh,dv,Faktor) {
   }
 
 var was_geloescht_werden_soll=0;
-function Löschknopf() {
+function Loeschknopf() {
   was_geloescht_werden_soll=event.target.parentNode;
   }
 
-function Löschen() {
+function Loeschen() {
   scene.remove(Stangen[sminind]);
   Stangen.splice(sminind,1);
   Knoten.splice(sminind+1,1);
@@ -73,10 +73,11 @@ function Stange(qalt,qneu,Faktor,Farbe) {
   q.position.x=qneu[0];
   q.position.y=qneu[1];
   q.position.z=qneu[2];
+  Knoten.push(q.position.clone());
   st.position.x=(qalt[0]+qneu[0])/2;
   st.position.y=(qalt[1]+qneu[1])/2;
   st.position.z=(qalt[2]+qneu[2])/2;
- // st.knoten=[qalt.clone(),qneu.clone(),Faktor/40,"red"];
+  st.Stange=[qalt.slice(),qneu.slice(),Faktor,Farbe];
   st.lookAt(q.position);
   st.rotateX(Math.PI/2);
   //st.material.color.set(0x009900);
@@ -108,7 +109,7 @@ Die Knöpfe verraten es dir.
 <div style="display:flex; align-items:flex-end">               
 <span style="display:flex; flex-direction:row; align-items:flex-end">
 
-<button onclick="Löschen()">Löschen</button>
+<button onclick="Loeschen()">Löschen</button>
 <button onclick="Farbe('green')" style="background-color:green">grün</button>
 <button onclick="Farbe('mediumblue')" style="background-color:blue">blau</button>
 <button onclick="Farbe('orange')" style="background-color:orange">orange</button>
@@ -154,9 +155,9 @@ Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 
 
 <!--script src="../three.js/build/three.js"></script-->
-<!--script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script>
 <!--script src="three.js"></script-->
-<script src="three.js/build/three.js"></script>
+<!--script src="three.js/build/three.js"></script-->
 <script>
 const clock = new THREE.Clock();
 //alert(1);
@@ -431,24 +432,32 @@ zum Testen: Kamera ausrichten
 
 <hr/>
 <hr/>
-<span>
-als Datei <input id="Ausdabedateiname" value="Klettern_und_Rutschen.xml"> <button onclick='download(document.getElementById("Ausdabedateiname").value,neuerDownloadtext());document.getElementById("download").click()'>speichern</button>
+<div>
+Als Datei <input id="Ausdabedateiname" value="Klettern_und_Rutschen.xml"> <button onclick='download(document.getElementById("Ausdabedateiname").value,neuerDownloadtext());document.getElementById("download").click()'>speichern</button>.
 <span style="display:none">  <a id="download"> </a><small> (dieser Download erfolgt mit <a href="http://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file">&lt;a href=... download=...&gt;</a>)</small></span>
-  </span>,
+  </div>
 
-<span>
-zum Zurückladen eine <input type="file" id="files" onchange="reader.readAsText(event.target.files[0])" size="100" accept="*.xml"/>
+<div>
+Zum Zurückladen <b><u>erst ganze Seite reload</u></b> und danach Datei auswählen: <input style="font-size:200%" type="file" id="files" oninput="reader.readAsText(event.target.files[0])"/>
+  </div>
 
 <script>
 var reader = new FileReader();
 reader.onload = function(e) {
   var Eingabe=e.target.result;
   //document.getElementById("Log").firstChild.nodeValue=Eingabe;
+  //alert("los");
+  var l=Stangen.length;
+  if (l>0) {alert("Erst ganze Seite neu laden, sonst geht es nicht"); return}
+  //for (var i=0;i<l;i++) Loeschen();
+  //alert("lösch");
+  Stangen=[];
+  Knoten=Knoten.slice(0,1);
   eval(Eingabe.slice(Eingabe.indexOf('N">')+3,-25));
   };
 
 function download(filename, text) {
-  alert("als Datei "+filename+" wird gespeichert:\n\n"+text);
+  //alert("als Datei "+filename+" wird gespeichert:\n\n"+text);
   //var pom = document.createElement('a');
   var pom=document.getElementById("download");
   pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -458,10 +467,10 @@ function download(filename, text) {
 
 function neuerDownloadtext() {
   //return Downloadtext+"</KLETTERN_UND_RUTSCHEN>\n";
-  var Text='<?xml version="1.0" encoding="utf-8"; ?>\n<KLETTERN_UND_RUTSCHEN xmlns="https://github.com/OpaStefanVogel/KLETTERN_UND_RUTSCHEN">\n';
+  var Text='<?xml version="1.0" encoding="utf-8" ?>\n<KLETTERN_UND_RUTSCHEN xmlns="https://github.com/OpaStefanVogel/KLETTERN_UND_RUTSCHEN">\n';
   //alert(Stangen.length);
   for (var i=0;i<Stangen.length;i++) {
-    Text=Text+"Stange(["+Stangen[i].knoten[0].toArray()+"],["+Stangen[i].knoten[1].toArray()+"],"+Stangen[i].knoten[2]+',"'+Stangen[i].knoten[3]+'");\n';
+    Text=Text+"Stange(["+Stangen[i].Stange[0]+"],["+Stangen[i].Stange[1]+"],"+Stangen[i].Stange[2]+',"'+Stangen[i].Stange[3]+'");\n';
     }
   Text=Text+"</KLETTERN_UND_RUTSCHEN>\n";
   return Text;
