@@ -68,7 +68,7 @@ function Farbe(farbe) {
   }
 
 function Stange(qalt,qneu,Faktor,Farbe) {
-  alert(qalt+" "+qneu+" "+Faktor+" "+Farbe);
+  //alert(qalt+" "+qneu+" "+Faktor+" "+Farbe);
   var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor,16)),(new THREE.MeshStandardMaterial( { color: 0xff0000 } )));
   q.position.x=qneu[0];
   q.position.y=qneu[1];
@@ -443,7 +443,7 @@ zum Zurückladen eine <input type="file" id="files" onchange="reader.readAsText(
 var reader = new FileReader();
 reader.onload = function(e) {
   var Eingabe=e.target.result;
-  document.getElementById("Log").firstChild.nodeValue=Eingabe;
+  //document.getElementById("Log").firstChild.nodeValue=Eingabe;
   eval(Eingabe.slice(Eingabe.indexOf('N">')+3,-25));
   };
 
