@@ -67,6 +67,25 @@ function Farbe(farbe) {
   Stangen[sminind].material.color.set(farbe);
   }
 
+function Stange(qalt,qneu,Faktor,Farbe) {
+  alert(qalt+" "+qneu+" "+Faktor+" "+Farbe);
+  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor,16)),(new THREE.MeshStandardMaterial( { color: 0xff0000 } )));
+  q.position.x=qneu[0];
+  q.position.y=qneu[1];
+  q.position.z=qneu[2];
+  st.position.x=(qalt[0]+qneu[0])/2;
+  st.position.y=(qalt[1]+qneu[1])/2;
+  st.position.z=(qalt[2]+qneu[2])/2;
+ // st.knoten=[qalt.clone(),qneu.clone(),Faktor/40,"red"];
+  st.lookAt(q.position);
+  st.rotateX(Math.PI/2);
+  //st.material.color.set(0x009900);
+  Stangen.push(st);
+  scene.add( st );
+  sminind=Stangen.length-1;
+  s.position.copy(st.position);
+  s.visible=true;
+  }
   </script>
   </head>
 
