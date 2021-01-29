@@ -32,6 +32,7 @@ function Richtung(dr,dh,dv,Faktor) {
   st.position.x=(qalt.x+qneu.x)/2;
   st.position.y=(qalt.y+qneu.y)/2;
   st.position.z=(qalt.z+qneu.z)/2;
+  st.knoten=[qalt.clone(),qneu.clone(),Faktor/40,"red"];
   st.lookAt(q.position);
   st.rotateX(Math.PI/2);
   //st.material.color.set(0x009900);
@@ -134,10 +135,9 @@ Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 
 
 <!--script src="../three.js/build/three.js"></script-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script>
+<!--script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script-->
 <!--script src="three.js"></script-->
-<!--script src="three2.js/build2/three.js"></script-->
-<!--script src="three.js/build/three.js"></script-->
+<script src="three.js/build/three.js"></script>
 <script>
 const clock = new THREE.Clock();
 //alert(1);
@@ -413,7 +413,7 @@ zum Testen: Kamera ausrichten
 <hr/>
 <hr/>
 <span>
-als Datei <input id="Ausdabedateiname" value="Klettern_und_Rutschen.xml"> <button onclick='download(document.getElementById("Ausdabedateiname").value,Downloadtext+"</KLETTERN_UND_RUTSCHEN>\n");document.getElementById("download").click()'>speichern</button>
+als Datei <input id="Ausdabedateiname" value="Klettern_und_Rutschen.xml"> <button onclick='download(document.getElementById("Ausdabedateiname").value,neuerDownloadtext());document.getElementById("download").click()'>speichern</button>
 <span style="display:none">  <a id="download"> </a><small> (dieser Download erfolgt mit <a href="http://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file">&lt;a href=... download=...&gt;</a>)</small></span>
   </span>,
 
@@ -435,6 +435,17 @@ function download(filename, text) {
   pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
   pom.setAttribute('download', filename);
   pom.firstChild.nodeValue="Download "+filename;
+  }
+
+function neuerDownloadtext() {
+  //return Downloadtext+"</KLETTERN_UND_RUTSCHEN>\n";
+  var Text='<?xml version="1.0" encoding="utf-8"; ?>\n<KLETTERN_UND_RUTSCHEN xmlns="https://github.com/OpaStefanVogel/KLETTERN_UND_RUTSCHEN">\n';
+  //alert(Stangen.length);
+  for (var i=0;i<Stangen.length;i++) {
+    Text=Text+"Stange(["+Stangen[i].knoten[0].toArray()+"],["+Stangen[i].knoten[1].toArray()+"],"+Stangen[i].knoten[2]+',"'+Stangen[i].knoten[3]+'");\n';
+    }
+  Text=Text+"</KLETTERN_UND_RUTSCHEN>\n";
+  return Text;
   }
   </script>
 <div> 
