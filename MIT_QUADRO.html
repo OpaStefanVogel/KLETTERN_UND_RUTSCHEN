@@ -65,11 +65,12 @@ function Loeschen() {
 
 function Farbe(farbe) {
   Stangen[sminind].material.color.set(farbe);
+  Stangen[sminind].Stange[3]=farbe;
   }
 
 function Stange(qalt,qneu,Faktor,Farbe) {
   //alert(qalt+" "+qneu+" "+Faktor+" "+Farbe);
-  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor,16)),(new THREE.MeshStandardMaterial( { color: 0xff0000 } )));
+  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor,16)),(new THREE.MeshStandardMaterial( { color: Farbe } )));
   q.position.x=qneu[0];
   q.position.y=qneu[1];
   q.position.z=qneu[2];
@@ -155,9 +156,9 @@ Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 
 
 <!--script src="../three.js/build/three.js"></script-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script>
+<!--script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script-->
 <!--script src="three.js"></script-->
-<!--script src="three.js/build/three.js"></script-->
+<script src="three.js/build/three.js"></script>
 <script>
 const clock = new THREE.Clock();
 //alert(1);
