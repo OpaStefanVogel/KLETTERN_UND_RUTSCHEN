@@ -487,25 +487,31 @@ robi0.position.y=0;
 robi0.position.z=-1;
 scene.add(robi0);
 
-var robi1=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+1,16)),(new THREE.MeshStandardMaterial( { color: "brown" } )));
+var robi1=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.0+1,16)),(new THREE.MeshStandardMaterial( { color: "brown" } )));
 robi1.position.x=0;
 robi1.position.y=0.5;
 robi1.position.z=0;
 robi0.add(robi1);
 
-var robi2=new THREE.Mesh( (new THREE.SphereGeometry( 0.1, 32, 32 )),(new THREE.MeshStandardMaterial( { color: "red" } )));
+var robi2=new THREE.Mesh( (new THREE.SphereGeometry( 0.01, 32, 32 )),(new THREE.MeshStandardMaterial( { color: "red" } )));
+var robi2a=new THREE.Mesh( (new THREE.CylinderGeometry( 0.07,0.07,0.14,16)),(new THREE.MeshStandardMaterial( { color: "red" } )));
+robi2a.rotateZ(3.1415/2);
+robi2.add(robi2a);
 robi2.position.x=0;
 robi2.position.y=0.5;
 robi2.position.z=0;
 robi1.add(robi2);
 
-var robi3=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+1,16)),(new THREE.MeshStandardMaterial( { color: "blue" } )));
+var robi3=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.0+1,16)),(new THREE.MeshStandardMaterial( { color: "blue" } )));
 robi3.position.x=0;
 robi3.position.y=0.5;
 robi3.position.z=0;
 robi2.add(robi3);
 
-var robi4=new THREE.Mesh( (new THREE.SphereGeometry( 0.1, 32, 32 )),(new THREE.MeshStandardMaterial( { color: "red" } )));
+var robi4=new THREE.Mesh( (new THREE.SphereGeometry( 0.01, 32, 32 )),(new THREE.MeshStandardMaterial( { color: "red" } )));
+var robi4a=new THREE.Mesh( (new THREE.CylinderGeometry( 0.07,0.07,0.14,16)),(new THREE.MeshStandardMaterial( { color: "red" } )));
+robi4a.rotateZ(3.1415/2);
+robi4.add(robi4a);
 robi4.position.x=0;
 robi4.position.y=0.5;
 robi4.position.z=0;
@@ -517,16 +523,34 @@ robi5.position.y=0.5;
 robi5.position.z=0;
 robi4.add(robi5);
 
+var robi6=new THREE.Mesh( (new THREE.SphereGeometry( 0.01, 32, 32 )),(new THREE.MeshStandardMaterial( { color: "red" } )));
+var robi6a=new THREE.Mesh( (new THREE.CylinderGeometry( 0.07,0.07,0.14,16)),(new THREE.MeshStandardMaterial( { color: "red" } )));
+robi6a.rotateZ(3.1415/2);
+robi6.add(robi6a);
+robi6.position.x=0;
+robi6.position.y=0.5;
+robi6.position.z=0;
+robi5.add(robi6);
+
+var robi7=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+1,16)),(new THREE.MeshStandardMaterial( { color: "lightblue" } )));
+robi7.position.x=0;
+robi7.position.y=0.5;
+robi7.position.z=0;
+robi6.add(robi7);
+
 robi1.rotateY(2);
 robi2.rotateX(2);
 robi3.rotateY(2);
 robi4.rotateX(2);
-scene.remove(robi0);
+robi5.rotateY(4.5);
+robi6.rotateX(2);
+//scene.remove(robi0);
 /**/
 //var Logtext="";
 //for (var i in THREE) Logtext=Logtext+i+"\n"; alert(Logtext);
-//Logtext="";
-//for (var i in robi1) Logtext=Logtext+i+"\n"; alert(Logtext);
+Logtext="";
+for (var i in robi1) Logtext=Logtext+i+"\n";
+document.getElementById("Log").firstChild.nodeValue=Logtext;
 
   </script>
 
