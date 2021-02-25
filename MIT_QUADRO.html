@@ -161,6 +161,8 @@ Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 <script src="three.js/build/three.js"></script>
 <script>
 const clock = new THREE.Clock();
+clock.start();
+//alert(clock.getDelta());
 //alert(1);
 //alert(THREE);
 var wsize=window.innerWidth-100;
@@ -291,6 +293,12 @@ function animate() {
 
     }
     
+robi1.rotateY(Math.sin(clock.getElapsedTime()/7)/200);
+robi2.rotateX(Math.sin(clock.getElapsedTime())/200);
+robi3.rotateY(Math.sin(clock.getElapsedTime()/5)/200);
+robi4.rotateX(Math.sin(clock.getElapsedTime()/3)/400);
+robi5.rotateY(Math.sin(clock.getElapsedTime()/3)/400);
+robi6.rotateX(Math.sin(clock.getElapsedTime()*4)/20);
 	renderer.render( scene, camera );
 }
 animate();
@@ -368,7 +376,7 @@ function Bild_click() {
 
   //Log=Log+q.position.clone().project(camera).toArray()+"\n";
   //Log=Log+event.clientX+" "+event.clientY+" "+clock.getDelta()+"\n";
-  clock.start();
+  //clock.start();
   if (min>0.1) { if (mouse.y>-0.7) q.visible=false; s.visible=false; } else {
     q.visible=true;
     q.position.copy(Knoten[minind]);
@@ -544,13 +552,15 @@ robi3.rotateY(2);
 robi4.rotateX(2);
 robi5.rotateY(4.5);
 robi6.rotateX(2);
-scene.remove(robi0);
+//scene.remove(robi0);
 /**/
 //var Logtext="";
 //for (var i in THREE) Logtext=Logtext+i+"\n"; alert(Logtext);
 Logtext="";
-for (var i in robi1) Logtext=Logtext+i+"\n";
+//for (var i in robi1) Logtext=Logtext+i+"\n";
+for (var i in clock) Logtext=Logtext+i+"\n";
 document.getElementById("Log").firstChild.nodeValue=Logtext;
+//alert(clock.getDelta());
 
   </script>
 
