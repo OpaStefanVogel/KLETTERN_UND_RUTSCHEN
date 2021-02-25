@@ -293,12 +293,13 @@ function animate() {
 
     }
     
-robi1.rotateY(Math.sin(clock.getElapsedTime()/7)/200);
-robi2.rotateX(Math.sin(clock.getElapsedTime())/200);
-robi3.rotateY(Math.sin(clock.getElapsedTime()/5)/200);
-robi4.rotateX(Math.sin(clock.getElapsedTime()/3)/400);
-robi5.rotateY(Math.sin(clock.getElapsedTime()/3)/400);
-robi6.rotateX(Math.sin(clock.getElapsedTime()*4)/20);
+robi1.rotation.y=Math.sin(clock.getElapsedTime()/7);
+robi2.rotation.x=Math.sin(clock.getElapsedTime())/3+2;
+robi3.rotation.y=Math.sin(clock.getElapsedTime()/5);
+robi4.rotation.x=Math.sin(clock.getElapsedTime()/3)/4+2;
+robi5.rotation.y=Math.sin(clock.getElapsedTime()/3);
+robi6.rotation.x=Math.sin(clock.getElapsedTime())*2;
+
 	renderer.render( scene, camera );
 }
 animate();
@@ -557,8 +558,8 @@ robi6.rotateX(2);
 //var Logtext="";
 //for (var i in THREE) Logtext=Logtext+i+"\n"; alert(Logtext);
 Logtext="";
-//for (var i in robi1) Logtext=Logtext+i+"\n";
-for (var i in clock) Logtext=Logtext+i+"\n";
+for (var i in robi1) Logtext=Logtext+i+"\n";
+//for (var i in clock) Logtext=Logtext+i+"\n";
 document.getElementById("Log").firstChild.nodeValue=Logtext;
 //alert(clock.getDelta());
 
