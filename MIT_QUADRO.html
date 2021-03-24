@@ -156,9 +156,9 @@ Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 
 
 <!--script src="../three.js/build/three.js"></script-->
+<script src="three.js/build/three.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script>
 <!--script src="three.js"></script-->
-<!--script src="three.js/build/three.js"></script-->
 <script>
 const clock = new THREE.Clock();
 clock.start();
@@ -299,6 +299,8 @@ robi3.rotation.y=Math.sin(clock.getElapsedTime()/5);
 robi4.rotation.x=Math.sin(clock.getElapsedTime()/3)/4+2;
 robi5.rotation.y=Math.sin(clock.getElapsedTime()/3);
 robi6.rotation.x=Math.sin(clock.getElapsedTime())*2;
+robo0.children[0].rotation.y=-Math.sin(clock.getElapsedTime()/7);
+robo0.children[0].children[0].rotation.x=-Math.sin(clock.getElapsedTime())/3+2;
 
 	renderer.render( scene, camera );
 }
@@ -553,15 +555,26 @@ robi3.rotateY(2);
 robi4.rotateX(2);
 robi5.rotateY(4.5);
 robi6.rotateX(2);
-scene.remove(robi0);
+
+var robo0=robi0.clone();
+robo0.position.x=-3;
+robo0.position.y=0;
+robo0.position.z=-1;
+scene.add(robo0);
+
+//scene.remove(robi0);
+//scene.remove(robo0);
 /**/
 //var Logtext="";
 //for (var i in THREE) Logtext=Logtext+i+"\n"; alert(Logtext);
 Logtext="";
-for (var i in robi1) Logtext=Logtext+i+"\n";
+//for (var i in robi1) Logtext=Logtext+i+"\n";
+//for (var i in robo0.children[0]) Logtext=Logtext+i+"\n";
 //for (var i in clock) Logtext=Logtext+i+"\n";
+//Logtext=Logtext+"\n\n\n"+JSON.stringify(robo0.toJSON());
 document.getElementById("Log").firstChild.nodeValue=Logtext;
 //alert(clock.getDelta());
+//alert(THREE.CylinderGeometry);
 
   </script>
 
