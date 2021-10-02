@@ -1,0 +1,992 @@
+( hier versuche ich QuelltextQ7Konstruktion aus dem Verzeichnis PSION
+( dazu folgende Anpassungen:
+( ok VOCABULARY E-Format stillgelegt
+( ok etliche Grafiksachen und GL-INIT auch
+( ok *** Anpassung 4 + in 1+
+( ok *** in KEIL QUADER und so die erste Zeile
+( oooookkkk der Quelltext ist drin, jetzt die Rechnung
+( ok Definition B, muss vone dran sonst Verwechslung mit B,000
+( ok schon etliche 8 --> 2 und 10 --> 4 
+( weiter in -->KONSTRUKhelp
+
+HEX -1 CRBIT !
+: 2VARIABLE ( <name>  a b --> )
+  RAMP1 @ DUP CONSTANT DUP 2 + RAMP1 ! 2! ;
+( : TREXEC VDUBIT @ 0 VDUBIT ! 20 WORD CR TYPE VDUBIT ! ;
+: TREXEC 20 WORD CR TYPE ;
+0 WORD: (( 2DROP ;
+: CMOVE MOVE ;
+20 WORD: => ( <text> ) INTERPRET ;
+: 2ROT ( a b c d e f --> c d e f a b )
+  >R >R 2SWAP R> R> 2SWAP ;
+: 2! ( a b --> adr ) >R SWAP R> 2! ;
+: 2@ ( adr --> a b ) 2@ SWAP ; 
+: B, ( a b --> ) HERE 2! 2 ALLOT ;
+
+
+
+
+( VOCABULARY KONSTRUKTION
+TREXEC <!WTFFcad>.Q1-rechnen
+
+0 1 2VARIABLE X1
+0 1 2VARIABLE Y1
+0 1 2VARIABLE Z1
+0 1 2VARIABLE X2
+0 1 2VARIABLE Y2
+0 1 2VARIABLE Z2
+0 1 2VARIABLE X3
+0 1 2VARIABLE Y3
+0 1 2VARIABLE Z3
+0 1 2VARIABLE A1
+0 1 2VARIABLE B1
+0 1 2VARIABLE C1
+0 1 2VARIABLE A2
+0 1 2VARIABLE B2
+0 1 2VARIABLE C2
+0 1 2VARIABLE A3
+0 1 2VARIABLE B3
+0 1 2VARIABLE C3
+
+: DET3 ( A1 B1 C1 ... A3 B3 C3 --> DET )
+  ( klar die Determinante
+  C3 2! B3 2! A3 2!
+  C2 2! B2 2! A2 2!
+  C1 2! B1 2! A1 2!
+  ( A1 B1 C1 )
+  ( A2 B2 C2 )
+  ( A3 B3 C3 )
+  ( A1B2C3+B1C2A3+C1A2B3
+  ( -A1C2B3-B1A2C3-C1B2A3 )
+  NEBENRECHNUNG
+  A1 2@ B2 2@ C3 2@ B* B* 
+  B1 2@ C2 2@ A3 2@ B* B* B+
+  C1 2@ A2 2@ B3 2@ B* B* B+
+  A1 2@ C2 2@ B3 2@ B* B* B-
+  B1 2@ A2 2@ C3 2@ B* B* B-
+  C1 2@ B2 2@ A3 2@ B* B* B- BK
+  ROT HAUPTRECHNUNG B+0
+  ;
+
+1 1 0 1 0 1 0 1 1 1 0 1 0 1 0 1 1 1 DET3 B.
+1 1 1 1 0 1 1 1 1 1 0 1 0 1 0 1 1 1 DET3 B.
+
+: EGGT ( c1 d1 ... c4 d4 --> e1 f1 ... e4 f4 )
+  ( aus der Ebenengleichung wird ein ggt herausdividiert +
+  8 LOCAL
+  >R >R
+  R! {0-5} 
+  R@ {0,2,4} GGT GGT ABS
+  R@ {1,3,5} GGT GGT ABS SWAP
+  R@ {0,1} 2OVER B* BK 2SWAP
+  R@ {2,3} 2OVER B* BK 2SWAP
+  R@ {4,5} 2OVER B* BK 2SWAP
+  R> R> B* BK
+  ENDLOCAL
+  ;
+
+: EBENE0 ( a1 b1 ... a9 b9 --> c1 d1 ... c4 d4 )
+  ( liefert aus 3 gegebenen Punkten [a1/b1,a2/b2],...
+  ( die Ebenengleichung c1/d1*x+c2/d2*y+c3/d3*z=c4/d4
+  (  1  X  Y  Z  )
+  (  1  X1 Y1 Z1 )
+  (  1  X2 Y2 Z2 )
+  (  1  X3 Y3 Z3 )
+  Z3 2! Y3 2! X3 2!
+  Z2 2! Y2 2! X2 2!
+  Z1 2! Y1 2! X1 2!
+
+  X1 2@ Y1 2@ Z1 2@
+  X2 2@ Y2 2@ Z2 2@
+  X3 2@ Y3 2@ Z3 2@ DET3 >R >R
+  (  1     Y  Z  )
+  (  1     Y1 Z1 )
+  (  1     Y2 Z2 )
+  (  1     Y3 Z3 )
+  1 1 Y1 2@ Z1 2@
+  1 1 Y2 2@ Z2 2@
+  1 1 Y3 2@ Z3 2@ DET3 2DUP B.
+  (  1  X  Y  Z  )
+  (  1  X1 Y1 Z1 )
+  (  1  X2 Y2 Z2 )
+  (  1  X3 Y3 Z3 )
+  X1 2@ 1 1 Z1 2@
+  X2 2@ 1 1 Z2 2@
+  X3 2@ 1 1 Z3 2@ DET3 2DUP B.
+  X1 2@ Y1 2@ 1 1
+  X2 2@ Y2 2@ 1 1
+  X3 2@ Y3 2@ 1 1 DET3 2DUP B.
+  R> R> 2DUP B. EGGT
+  ;
+
+DECIMAL
+100,0 0,0 0,0
+200,0 50,0 150,0
+200,0 0,0 90,0
+EBENE0 B... B... B... B...
+HEX
+
+
+( GRUNDFLÄCHE )
+0,0 0,0 0,0 
+1,0 0,0 0,0
+0,0 1,0 0,0
+EBENE0 CR B... B... B... B...
+( DECKFLÄCHE )
+0,0 0,0 1,0 
+1,0 0,0 1,0
+0,0 1,0 1,0
+EBENE0 CR B... B... B... B...
+0,0 0,0 0,0 
+0,0 1,0 0,0
+1,0 0,0 0,0
+EBENE0 CR B... B... B... B...
+( DECKFLÄCHE )
+0,0 0,0 1,0 
+0,0 1,0 1,0
+1,0 0,0 1,0
+EBENE0 CR B... B... B... B...
+
+( aus QUADER2
+: VADR* ( vadr1 vadr2 --> x y )
+  ( Skalarprodukt, vadr1/2 Adresse eines mindestens 6 langen Speicherbereiches 
+  2 LOCAL
+  R! {0-1}
+  NEBENRECHNUNG >R
+  R@ {0} 2@ R@ {1} 2@ B*
+  R@ {0} 2 + 2@ R@ {1} 2 + 2@ B* B+
+  R@ {0} 4 + 2@ R@ {1} 4 + 2@ B* B+ BK
+  R> HAUPTRECHNUNG B+0
+  ENDLOCAL
+  ;
+( 1,0 0,5 0,0 PARRA1 V!
+( 0,0 0,5 1,0 PARRA2 V!
+( PARRA1 PARRA2 VADR* B...
+
+
+( aus ???
+: VMITT ( vadr1 vadr2 --> vektor )
+  ( Mitte von zwei Punkten
+  2 LOCAL
+  R! {0-1}
+  06 0 DO
+    R@ {0} I + 2@ R@ {1} I + 2@ B+
+    2 1 B/ BK
+    02 +LOOP
+  ENDLOCAL
+  ;
+( 2,0 1,0 0,0 PARRA1 V!
+( 0,0 0,5 1,0 PARRA2 V!
+( PARRA1 PARRA2 VMITT V... 
+
+TREXEC <!WTFFcad>.Q2-füllen
+HEX
+( als nächstes ein erster QUADER
+( Ebenenliste
+( Punktliste
+( Kantenliste
+( Flächenliste
+
+( XXXX
+( ---- Vordem aber das neue QUADER5a
+( 00 EZAHL Ebenenzahl
+( 01 VZAHL Verknüpfungszahl
+( 02 PZAHL Punktezahl
+( 03 KZAHL Kantenzahl
+( 04 EADR  Ebenenlisteanfang
+( EADR+08*EZAHL = VADR Verknüpfungslisteanfang
+( VADR+01*VZAHL = PADR Punktlisteanfang
+( PADR+0A*PZAHL = KADR Kantenlisteanfang
+
+: EZAHL ( kadr --> enadr )
+  ;
+: EADR ( kadr --> eadr )
+  04 + ;
+: VZAHL ( kadr --> pnadr )
+  01 +
+  ;
+: VADR ( kadr --> padr )
+  DUP EADR SWAP EZAHL @ 08 * +
+  ;
+: PZAHL ( kadr --> pnadr )
+  02 +
+  ;
+: PADR ( kadr --> padr )
+  DUP VADR SWAP VZAHL @ 01 * +
+  ;
+: KZAHL ( kadr --> pnadr )
+  03 +
+  ;
+: KADR ( kadr --> padr )
+  DUP PADR SWAP PZAHL @ 0A * +
+  ;
+0 VARIABLE TEIL
+
+( 
+2000 RAMBUF MERKMERKADR
+0 VARIABLE MERKMERKADRESSE
+0 VARIABLE MERKMERKZAHL
+
+: MERKMERK ( b c d --> )
+  4 LOCAL
+  MERKMERKADRESSE @ R! {0-3}
+  BEGIN
+    R@ {3} @ R@ {0} =
+    R@ {3} 01 + @ R@ {1} =
+    AND NOT WHILE
+      R@ {3} @ -1 = IF 
+        R@ {0-1,3} 2!
+        R@ {2} 0 R@ {3} 02 + 2!
+        -1 -1 R@ {3} 04 + 2!
+        ( CR ." MERKMERK " R@ {0-1} B.
+  (      R@ {0,1} B, ( QUATSCH, WAR MAL
+        1 MERKMERKZAHL +!
+        ELSE 
+          R@ {3} 04 + R! {3}
+          ENDIF
+    REPEAT
+  ENDLOCAL
+  ;
+      
+: DINGSLIST ( kadr --> )
+  ( wozu das gut sein soll???
+  ( merkt aus der Punktliste (0,1,2) 
+  ( alle auftretenden Paare
+  ( 01 02 12 und so weiter
+  ( also alle Kantenkandidaten
+  ( mitsamt der dritten Ebene
+  ( aber kein Paar doppelt!!
+  3 LOCAL
+  TEIL !
+  MERKMERKADR MERKMERKADRESSE !
+  -1 -1 MERKMERKADRESSE @ 2!
+  0 MERKMERKZAHL !
+  TEIL @ PADR TEIL @ PZAHL @ 0 DO
+    DUP 2@ R! {0,1} 
+    DUP 02 + @ R! {2} ( R{0-2}=Ebenennummern eines Punktes 
+    (( CR R@ {0-1} B. R@ {2} .
+    R@ {0-2} MERKMERK
+    R@ {0-2} ROT MERKMERK
+    R@ {0-2} SWAP MERKMERK
+    0A + LOOP DROP
+  (( MERKMERKZAHL @ CR . CR
+  MERKMERKZAHL @ TEIL @ KZAHL ! 
+  ENDLOCAL
+  ;
+
+( nun noch den dickeren Brocken, die Plotliste. Aber erstmal zwischennein den Lotpunkt. 
+
+: PUNKTWERT ( pnr enr kadr --> wa wb )
+  ( aha, ist die Punktkkordinate in Ebenengleichung eingesetzt
+  ( dann die Differenz zur rechten Seite
+  ( px-d )
+  3 LOCAL
+  R! {0-2}
+  R@ {2} PADR R@ {0} 0A * + 04 + ( va1
+  R@ {2} EADR R@ {1} 08 * + ( va1 ea2
+  VADR*
+  R@ {2} EADR R@ {1} 08 * + 06 + 2@
+  B- BK (( 2DUP B...
+  ENDLOCAL
+  ;
+
+: DRAUFGUCKER ( adr --> )
+  ( füllt die Kantenliste
+  ( kommt aber am Ende erst richtig voll
+  DROP ;
+
+
+400 RAMBUF PZZT ( 1000 ALLOT
+0 VARIABLE PZZU
+: BUMSLIST ( kadr --> )
+  ( vollständige Kantensuche und -speicherung allein aus den Punkten und Ebenen
+  3 LOCAL
+  NEBENRECHNUNG >R
+  DUP DINGSLIST
+  R! {0}
+  MERKMERKADRESSE @
+  ( CR MERKMERKZAHL @ .
+  MERKMERKZAHL @ 0 DO
+    ( hier wird erstmal Punktnummer gemerkt. 
+    ( wenn in zwei Punkten
+    ( zwei von drei Punktebenen übereinstimmen,
+    ( dann sind diese ein Kantenkandidatenpaar
+    ( jedem Eintrag in MERKMERK entspricht einer Kantenfluchtlinie
+CR ." Merkpunkt " I .
+    0 PZZU !
+    R@ {0} PADR R@ {0} PZAHL @ 0 DO ( merkadresse padr
+      ( merkadresse padr
+CR ." Vergleichspunkt " I .
+      2DUP R! {1,2}
+      R@ {1} @ R@ {2} @ =
+      R@ {1} @ R@ {2} 01 + @ = OR
+      R@ {1} 01 + @ R@ {2} 01 + @ = 
+      R@ {1} 01 + @ R@ {2} 02 + @ = OR AND ( nööö! hier nicht versuchsweise 02->00!!!
+      IF 
+CR ." MERK " R@ {1} 2@ B. ." PUNKT " I .
+        I PZZT PZZU @ + !
+        04 PZZU +!
+        ENDIF 
+      0A +
+      LOOP DROP
+CR ." Abstand zur dritten Ebene"
+    ( zu den Punktnummern den Abstand zur MERKMERK-Ebene eintragen
+    PZZT PZZU @ + PZZT DO
+      I @ ( madr pnr
+CR OVER H. OVER @ H. OVER 1 + @ H. OVER 2 + @ H. ." ABSTAND=" 
+      OVER 02 + @ ( madr pnr enr
+      R@ {0} ( madr pnr enr kadr
+      PUNKTWERT 
+2DUP SWAP H. H.
+      I 02 + 2! -1 1 I 06 + 2!
+      04 +LOOP
+
+CR ." Sortieren "
+    ( Sortieren
+    PZZU @ 08 > IF
+      PZZT PZZU @ + 04 - PZZT DO
+        ( aus dem restlichen 
+        ( den kleinsten Wert suchen
+        ( diesen auf I eintragen und 
+        ( I auf dessen Platz setzen
+        PZZT PZZU @ + I 04 + DO
+          I 02 + 2@ J 02 + 2@ 
+          B< IF
+            I @ I 02 + 2@ 
+            J @ J 02 + 2@
+            I 02 + 2! I !
+            J 02 + 2! J !
+            ENDIF
+          04 +LOOP
+        04 +LOOP
+      ENDIF
+
+CR ." Zurückschreiben"
+    PZZU @ 04 > IF ( wegen 3Ebenen)
+      PZZT PZZU @ + 04 - PZZT DO
+        I 02 + 2@ I 06 + 2@ B- DROP IF
+." !"
+          R@ {0} TEIL !
+          I => DRAUFGUCKER        
+          ( hier ist noch die Möglichkeit,    
+          ( die in der Plotliste 
+          ( nicht verwendeten Punkte
+          ( zu markieren, Platz ist da
+          ENDIF
+        04 +LOOP
+      ENDIF
+CR ." ###"
+    04 + 
+    LOOP DROP ( -1 , 0 , war hier mal
+  R> HAUPTRECHNUNG
+  ENDLOCAL
+  ;
+( DECIMAL
+( 200,0 100,0 150,0 QUADER Balken1
+( HEX
+
+( --- QFILL mal auch noch
+0 VARIABLE E1
+0 VARIABLE E2
+0 VARIABLE E3
+0 1 2VARIABLE EDET
+: EDET/ ( a b c d --> e f )
+  NEBENRECHNUNG >R
+  OVER IF B/ ELSE 2DROP 2DROP 0 1 ENDIF BK
+  R> HAUPTRECHNUNG
+  B+0
+  ;
+
+: DREIEBENEN ( eadr1 eadr2 eadr3 --> pxa pxb pya pyb pza pzb deta detb)
+  ( Schnittpunkt dreier Ebenen
+  ( kört eigentlich in Q0 rein
+  E3 ! E2 ! E1 !
+  E1 @ 00 + 2@ E1 @ 02 + 2@ E1 @ 04 + 2@
+  E2 @ 00 + 2@ E2 @ 02 + 2@ E2 @ 04 + 2@
+  E3 @ 00 + 2@ E3 @ 02 + 2@ E3 @ 04 + 2@
+  DET3 EDET 2!
+  E1 @ 06 + 2@ E1 @ 02 + 2@ E1 @ 04 + 2@
+  E2 @ 06 + 2@ E2 @ 02 + 2@ E2 @ 04 + 2@
+  E3 @ 06 + 2@ E3 @ 02 + 2@ E3 @ 04 + 2@
+  DET3 EDET 2@ EDET/
+  E1 @ 00 + 2@ E1 @ 06 + 2@ E1 @ 04 + 2@
+  E2 @ 00 + 2@ E2 @ 06 + 2@ E2 @ 04 + 2@
+  E3 @ 00 + 2@ E3 @ 06 + 2@ E3 @ 04 + 2@
+  DET3 EDET 2@ EDET/
+  E1 @ 00 + 2@ E1 @ 02 + 2@ E1 @ 06 + 2@
+  E2 @ 00 + 2@ E2 @ 02 + 2@ E2 @ 06 + 2@
+  E3 @ 00 + 2@ E3 @ 02 + 2@ E3 @ 06 + 2@
+  DET3 EDET 2@ EDET/
+  EDET 2@
+  ;
+( 1 1 1 1 . . . . . .
+( 1 1 1 1 . . . . . .
+( 1 1 1 1 . . . . . .
+: QFILL ( kadr --> )
+  ( füllt zu den Punkt-Ebenennummern die Punktkoordinaten
+  3 LOCAL
+  DUP EADR DUP . SWAP
+  DUP PADR DUP . SWAP
+  PZAHL @ DUP . ( eadr padr pn )
+  0 DO    ( eadr padr
+CR 2DUP B.
+    DUP I 0A * + R! {0-2}
+    R@ {0,2} 00 + @ 08 * + DUP . 
+    R@ {0,2} 01 + @ 08 * + DUP .
+    R@ {0,2} 02 + @ 08 * + DUP .
+    DREIEBENEN 2DROP
+    R@ {2} 08 + 2!
+    R@ {2} 06 + 2!
+    R@ {2} 04 + 2!
+    R@ {0-1}
+    LOOP
+  2DROP
+  ENDLOCAL
+  ;
+
+( ---------
+
+
+( nun weiter mit QUADER2
+ 0 CONSTANT TEND
+ 1 CONSTANT TEBN
+ 2 CONSTANT TAND
+ 3 CONSTANT TNOT
+ 4 CONSTANT TNOP
+: EBENE ( <bezeichnung>  p1xa p1xb p1ya p1yb p1za p1zb p2... p3... --> )
+  0 VARIABLE HERE RAMP1 @ 1 - !
+  1 , ( 1 Ebene
+  2 , ( 2 Verknüpfungsangaben
+  0 , ( 0 Eckpunkte zu je 28 Byte
+  0 , ( 0 Kanten zu je 8 Byte
+  ( Ebenenliste, ax-d>0 fürs innere:
+  EBENE0
+  >R >R 2ROT B, 2SWAP B, B, R> R> B,
+  TEBN , TEND ,
+  ;
+
+DECIMAL
+100,0 0,0 0,0
+200,0 50,0 150,0
+200,0 0,0 100,0
+EBENE Schnitt1
+  0,0  0,0   0,0
+  2,0  0,0   0,0
+  0,0  2,0   0,0
+  EBENE E0
+  0,0  0,0   0,0
+  0,0  1,0   1,0
+  1,0  0,0   0,0
+  EBENE E1
+  1,0  0,0   0,0
+  0,0  0,0   1,0
+  1,0  1,0   0,0
+  EBENE E2
+  0,0  1,0   0,0
+  1,0  1,0   1,0
+  0,0  0,0   0,0
+  EBENE E3
+  1,0  2,0   0,0
+  1,0  1,0   1,0
+  0,0  2,0   0,0
+  EBENE E4
+HEX
+
+: QUADER ( <quaderbezeichnung>  qxz qxn qyz qyn qzz qzn --> )
+  0 VARIABLE HERE RAMP1 @ 1 - !
+  HERE TEIL !
+  6 ,  ( 6 Ebenen zu je 20 Byte
+  0C , ( 12 Verknüpfungsangaben zu je 4
+  8 ,  ( 8 Eckpunkte zu je 28 Byte
+  0C , ( 12 Kanten zu je 8 Byte
+  ( Ebenenliste, ax-d>0 fürs innere:
+  MINUS 2SWAP MINUS 2ROT MINUS
+  1,0 B, 0,0 B, 0,0 B, 0,0 B, ( L0:x=0
+  0,0 B, 1,0 B, 0,0 B, 0,0 B, ( V1:y=0
+  0,0 B, 0,0 B, 1,0 B, 0,0 B, ( U2:z=0
+  -1,0 B, 0,0 B, 0,0 B, B,    ( R3:x=qx
+  0,0 B, -1,0 B, 0,0 B, B,    ( H4:y=qy
+  0,0 B, 0,0 B, -1,0 B, B,    ( O5:z=qz
+  TEBN , TEBN , TAND , TEBN , TAND , TEBN , TAND , TEBN , TAND , TEBN , TAND
+, TEND , 
+  ( Punktliste
+  0 , 1 , 2 , ( P0=LVU ) 0 , 06 ALLOT
+  0 , 1 , 5 , ( P1=LVO ) 0 , 06 ALLOT
+  0 , 2 , 4 , ( P2=LHU ) 0 , 06 ALLOT
+  0 , 4 , 5 , ( P3=LHO ) 0 , 06 ALLOT
+  1 , 2 , 3 , ( P4=RVU ) 0 , 06 ALLOT
+  1 , 3 , 5 , ( P5=RVO ) 0 , 06 ALLOT
+  2 , 3 , 4 , ( P6=RHU ) 0 , 06 ALLOT
+  3 , 4 , 5 , ( P7=RHO ) 0 , 06 ALLOT
+( Punkteflag
+( 00 - nix
+( 01 - ax-d>=0
+( 10 - ax-d<=0
+( 11 - ax-d=0
+
+( TAND= OR|AND
+( innerer Punkt:  01 
+( Randpunkt:      11
+( äusserer Punkt: 10
+( TNOT macht aus 01 10 und 11 bleibt
+
+( jetzt die Kantliste füllen
+  TEIL @ QFILL
+  TEIL @ BUMSLIST
+  ;
+
+DECIMAL
+200,0 100,0 150,0 QUADER Balken1
+HEX
+
+: KDUMP ( kadr --> )
+  ( Textausgabe des Körpers
+  DUP EZAHL CR DUP . @ . ." Ebenen"
+  DUP EADR OVER EZAHL @ 0 DO
+    CR DUP H.
+    08 0 DO I OVER + @ H. LOOP
+    08 + LOOP DROP
+  DUP VZAHL CR DUP . @ . ." Verknüpfungsangaben"
+  DUP VADR OVER VZAHL @ CR OVER . 0 DO I OVER + @ . LOOP DROP
+  DUP PZAHL CR DUP . @ . ." Eckpunkte"
+  DUP PZAHL @ IF 
+    DUP PADR OVER PZAHL @ 0 DO
+      CR DUP H.
+      04 00 DO I OVER + @ . LOOP 
+      0A 04 DO I OVER + @ H. LOOP 
+      0A + LOOP DROP
+    ENDIF
+  DUP KZAHL CR DUP . @ . ." Kanten "
+  DUP KZAHL @ IF
+    DUP KADR OVER KZAHL @ 0 DO
+      CR DUP H.
+      02 0 DO I OVER + @ H. LOOP
+      02 + LOOP DROP
+    ENDIF
+  DROP
+  ;
+
+Balken1 @ KDUMP
+
+
+
+( es muss halt doch mal ein einfaches Dachel her
+HEX
+: E, ( e --> )
+  >R
+  R 2@ B, R 02 + 2@ B, 
+  R 04 + 2@ B, R 06 + 2@ B,
+  R> DROP
+  ; 
+: WDACH ( <bezeichnung>  e1 e2 e3 e4 e5 --> )
+  5 LOCAL
+  0 VARIABLE HERE RAMP1 @ 1 - !
+  HERE TEIL !
+  5 ,  ( 5 Ebenen zu je 20 Byte
+  0A , ( 10 Verknüpfungsangaben zu je 4
+  6 ,  ( 6 Eckpunkte zu je 28 Byte
+  9 , ( 9 Kanten zu je 10 Byte
+  ( Ebenenliste, ax-d>0 fürs innere:
+  R! {0-4}
+  R@ {0} @ 04 + E, ( U0 unten
+  R@ {1} @ 04 + E, ( V1 vorn
+  R@ {2} @ 04 + E, ( L2 links
+  R@ {3} @ 04 + E, ( R3 rechts
+  R@ {4} @ 04 + E, ( H4 hinten
+  TEBN , TEBN , TAND , TEBN , TAND , TEBN , TAND , TEBN , TAND , TEND , 
+  ( Punktliste
+  0 , 1 , 2 , ( P0=UVL ) 0 , 06 ALLOT
+  0 , 1 , 3 , ( P1=UVR ) 0 , 06 ALLOT
+  0 , 2 , 4 , ( P2=UHL ) 0 , 06 ALLOT
+  0 , 3 , 4 , ( P3=UHR ) 0 , 06 ALLOT
+  1 , 2 , 3 , ( P4=VLR ) 0 , 06 ALLOT
+  2 , 3 , 4 , ( P5=HLR ) 0 , 06 ALLOT
+  TEIL @ QFILL
+  TEIL @ BUMSLIST
+  ENDLOCAL
+  ;
+E0 E1 E2 E3 E4 WDACH DACH4 ( erst nach DRAUFGUCKER...
+DACH4 @ KDUMP
+
+: KEIL ( <bezeichnung>  --> )
+  0 VARIABLE HERE RAMP1 @ 1 - !
+  HERE TEIL !
+  2 , ( 2 Ebenen zu je 20 Byte
+  4 , ( 4 Verknüpfungsangaben zu je 4
+  0 , ( 0 Eckpunkte zu je 28 Byte
+  0 , ( 1 Kante zu je 10 Byte????
+  ( Ebenenliste, ax-d>0 fürs innere:
+  0,0 B, 0,0 B, 0,0 B, 0,0 B,
+  0,0 B, 0,0 B, 0,0 B, 0,0 B,
+  TEBN , TEBN , TAND , TEND , 
+  ( 0 Kanten weil nicht endlich )
+  ;
+   
+KEIL KEILSÄGE
+
+( hier Plot und Transform rausgenommen
+
+
+TREXEC <!WTFFcad>.Q5-schneid
+HEX
+0 1 2VARIABLE PX
+0 1 2VARIABLE PY
+0 1 2VARIABLE PZ
+0 VARIABLE ETADR
+0 VARIABLE TADR
+
+( und zum Letzt, da hab ich doch auch nochmal den Durchgucker hergenommen und siehe da, den wohl wie er sein soll )
+( 1 innen
+( 2 außen
+( 3 drauf
+
+0 VARIABLE TOPLIST ( ob 2&7, geht auch mal raus )
+: TOP1 ( a b --> c )
+  2DUP + 9 = IF 1 TOPLIST ! ENDIF
+  ( 1 1 1
+  ( 1 2 2
+  ( 1 3 3
+  ( 2 1 2
+  ( 2 2 2
+  ( 2 3 2 X
+  ( 3 1 3
+  ( 3 2 2 X
+  ( 3 3 3
+  ( 1 7 7
+  ( 2 7 2 x
+  ( 3 7 7
+  ( 7 7 7
+  ( 7 1 7
+  ( 7 2 2 x
+  ( 7 3 7
+  SWAP CASE
+    2 OF DROP 2 ENDOF
+    3 OF CASE
+      1 OF 3 ENDOF
+      2 OF 2 ENDOF
+      3 OF 3 ENDOF
+      7 OF 7 ENDOF
+      ENDCASE ENDOF
+    7 OF CASE
+      1 OF 7 ENDOF
+      2 OF 2 ENDOF
+      3 OF 7 ENDOF
+      7 OF 7 ENDOF
+      ENDCASE ENDOF 
+    ENDCASE
+  ;
+
+: TOP2 ( a --> c )
+  ( 1 2
+  ( 2 1
+  ( 3 3
+  ( 7 7
+  DUP 3 < IF 3 SWAP - ENDIF ;
+
+: TSETZ ( n --> tflag )
+  DUP 0< IF DROP 2 
+    ELSE 0= IF 3 ELSE 1 ENDIF ENDIF ;
+  
+: TFIND ( --> tflag )
+  NEBENRECHNUNG >R
+  ETADR @ 00 + 2@ PX 2@ B*
+  ETADR @ 02 + 2@ PY 2@ B* B+
+  ETADR @ 04 + 2@ PZ 2@ B* B+
+  ETADR @ 06 + 2@ B-
+  0< IF MINUS ENDIF
+  R> HAUPTRECHNUNG
+  TSETZ
+  ;
+
+: DURCHGUCKER (  pxa pxb pya pyb pza pzb kadr--> tflag )
+  ( schaut wo ein Punkt im Körper enthalten ist: 1=innen 2=außen 3=Rand
+  DUP VADR TADR ! ( ist eigentlich Verknüpflistenanfang)
+  EADR ETADR ! ( ist eigentlich Ebenenlistenanfang
+  PZ 2! PY 2! PX 2!
+  BEGIN TADR @ @ WHILE
+    TADR @ @ CASE 
+      1 OF TFIND 08 ETADR +! ENDOF
+      2 OF TOP1 ENDOF
+      3 OF TOP2 ENDOF
+      ENDCASE
+      1 TADR +!
+    REPEAT
+  CR ." DURCHGUCK " DUP .
+  ;
+
+ 
+0 VARIABLE OBJ1
+0 VARIABLE OBJ2
+0 VARIABLE IX
+0 VARIABLE IY
+0 VARIABLE IZ
+
+0 VARIABLE T1
+0 VARIABLE T2
+0 VARIABLE T3
+0 VARIABLE EBUXEL
+: DURCHGUCKER2 (  pxa pxb pya pyb pza pzb tx ty tz kadr--> tflag )
+  ( schaut wo ein Punkt im Körper enthalten ist mit 7 wenn=tx,ty,tz
+  NEBENRECHNUNG >R
+  DUP VADR TADR !
+  EADR ETADR !
+  T3 ! T2 ! T1 !
+  PZ 2! PY 2! PX 2!
+  0 TOPLIST !
+  0 EBUXEL !
+  BEGIN TADR @ @ WHILE
+    TADR @ @ CASE 
+      1 OF TFIND 
+        DUP 3 = IF
+          EBUXEL @ T1 @ =
+          EBUXEL @ T2 @ = OR
+          EBUXEL @ T3 @ = OR
+          IF DROP 7 ENDIF
+          ENDIF
+        08 ETADR +!
+        1 EBUXEL +! ENDOF
+      2 OF TOP1 ENDOF
+      3 OF TOP2 ENDOF
+      ENDCASE
+      1 TADR +!
+    REPEAT
+  TOPLIST @ IF DROP 0 ENDIF
+  R> HAUPTRECHNUNG
+  ;
+
+: RAUSSUCH ( adr1 adr2 --> i j )
+  ( sucht von 2*3 Ebenennummern die gleichen raus )
+  2 LOCAL
+  R! {0,1}
+  R@ {0} 0 + @ R@ {1} 0 + @ 2DUP - IF DROP ENDIF DROP
+  R@ {0} 0 + @ R@ {1} 1 + @ 2DUP - IF DROP ENDIF DROP
+  R@ {0} 0 + @ R@ {1} 2 + @ 2DUP - IF DROP ENDIF DROP
+  R@ {0} 1 + @ R@ {1} 0 + @ 2DUP - IF DROP ENDIF DROP
+  R@ {0} 1 + @ R@ {1} 1 + @ 2DUP - IF DROP ENDIF DROP
+  R@ {0} 1 + @ R@ {1} 2 + @ 2DUP - IF DROP ENDIF DROP
+  R@ {0} 2 + @ R@ {1} 0 + @ 2DUP - IF DROP ENDIF DROP
+  R@ {0} 2 + @ R@ {1} 1 + @ 2DUP - IF DROP ENDIF DROP
+  R@ {0} 2 + @ R@ {1} 2 + @ 2DUP - IF DROP ENDIF DROP
+  ENDLOCAL
+  ;
+
+: GERADEXEBENE ( adr1 adr2 --> )
+  ( bestimmt Schnittpunkt Gerade Ebene und gibt an DSPLOT weiter
+  6 LOCAL
+  OBJ2 ! OBJ1 !
+  OBJ1 @ @ 03 + @ IF
+    OBJ1 @ @ 03 + @ 0 DO
+      OBJ2 @ @ @ 0 DO
+        CR ." Gerade " J . 
+        ." und Ebene " I .
+        ( nun aber ran an die Ebenen
+        OBJ1 @ @ KADR J 2 * + 2@ IY ! IX !
+        OBJ1 @ @ PADR IX @ 0A * +
+        OBJ1 @ @ PADR IY @ 0A * + 
+        RAUSSUCH 2DUP IY ! IX ! I IZ !
+." also " IX ? IY ? IZ ?
+        OBJ1 @ @ EADR ROT 08 * +
+        OBJ1 @ @ EADR ROT 08 * +
+        OBJ2 @ @ 04 + I 08 * +
+
+CR ." #" >R OVER . DUP . R> DUP .
+        DREIEBENEN 
+CR ." < " 2DUP B.
+        DROP IF
+          R! {0-5}
+          R@ {0-5} IX @ IY @ DUP OBJ1 @ @
+          DURCHGUCKER2 1 AND
+          R@ {0-5} IZ @ DUP DUP OBJ2 @ @
+          DURCHGUCKER2 1 AND
+          AND IF
+            R@ {0-5} 
+            => DISPLOT ENDIF
+          ELSE 2DROP 2DROP 2DROP ENDIF
+        LOOP LOOP 
+    ENDIF
+  ENDLOCAL
+  ;
+
+: DISPLOT CR 2ROT B... 2SWAP B... B... ;
+
+0 VARIABLE FALL
+: SCHNITTPUNKTE ( adr1 adr2 --> )
+  ( erst alle Schnittgeraden von 1 
+  ( mit den Ebenen von 2
+  0 FALL ! 2DUP GERADEXEBENE
+  1 FALL ! SWAP GERADEXEBENE
+  ;
+ 
+DECIMAL
+( Balken1 Schnitt1 SCHNITTPUNKTE
+100,0 0,0 0,0
+200,0 50,0 150,0
+200,0 0,0 90,0
+EBENE Schnitt2
+( Balken1 Schnitt2 SCHNITTPUNKTE
+( Balken1 10,0 0,0 0,0 TRANSFORM
+( Balken1 Schnitt2 SCHNITTPUNKTE
+( Balken1 COPY Balken2
+( Balken2 Schnitt2 SCHNITTPUNKTE
+( Balken2 10,0 10,0 10,0 TRANSFORM
+( Balken1 Balken2 SCHNITTPUNKTE
+
+HEX
+
+( hier PLOT und TRANSFORM raus, nur V@ noch:
+: V! ( vektor vadr --> )
+  >R R 4 + 2! R 2 + 2! R> 2! ;
+: V@ ( vadr --> vektor )
+  >R R 2@ R 2 + 2@ R> 4 + 2@ ;
+: W! ( 4vektor vadr --> )
+  >R R 6 + 2! R 4 + 2! R 2 + 2! R> 2! ;
+: W@ ( vadr --> 4vektor )
+  >R R 2@ R 2 + 2@ R 4 + 2@ R> 6 + 2@ ;
+: V. 2ROT B. 2SWAP B. B. ;
+: W. >R >R >R >R 2SWAP B. B. R> R> B. R> R> B. ;
+: V... 2ROT B... 2SWAP B... B... ;
+: W... >R >R >R >R 2SWAP B... B... R> R> B... R> R> B... ;
+
+
+( aus QUADER5
+0 VARIABLE RUMP1
+0 VARIABLE RUMP2
+0 VARIABLE RUMP3
+0 VARIABLE TRU
+0 VARIABLE ZUTSCHER
+: RUMPS ( <name> obj1 obj2 --> )
+  ( setzt den neuen Körper zusammen )
+  ( und zwar erst alle Flächen zusammensetzen
+  ( dann die Schnittpunkte dazulisten
+  ( dann die Ecken von 1 innerhalb von 2
+  ( und die Ecken von 2 innerhalb von 1)
+  ( schliesslich daraus die Kanten
+  0 VARIABLE HERE RAMP1 @ 1 - !
+  @ RUMP2 ! @ RUMP1 !
+  HERE RUMP3 !
+  4 ALLOT
+  ( los denn: die Flächen
+  ( TRU=EZAHL1
+  RUMP1 @ EADR HERE
+  RUMP1 @ EZAHL @ 08 * CMOVE
+  RUMP1 @ EZAHL @ 08 * ALLOT ( aha, weil CMOVE nicht DP weiterstellt
+  RUMP2 @ EADR HERE
+  RUMP2 @ EZAHL @ 08 * CMOVE
+  RUMP2 @ EZAHL @ 08 * ALLOT
+  RUMP1 @ EZAHL @ DUP TRU !
+  RUMP2 @ EZAHL @ +
+  RUMP3 @ EZAHL !
+  ( Verknüpfung zusammensetzen:
+  RUMP1 @ VADR HERE
+  RUMP1 @ VZAHL @ 1 * CMOVE
+  RUMP1 @ VZAHL @ 1 - 1 * ALLOT ( ohne TEND=0
+  RUMP2 @ VADR HERE
+  RUMP2 @ VZAHL @ 1 * CMOVE
+  RUMP2 @ VZAHL @ 1 - 1 * ALLOT
+  ZUTSCHER @ IF TNOT , ENDIF
+  TAND , 0 ,
+  RUMP1 @ VZAHL @ 
+  RUMP2 @ VZAHL @ + ZUTSCHER @ +
+  RUMP3 @ VZAHL !
+  ( nun die Punkte
+  HERE
+CR ." ab HERE " DUP . SP ?
+  RUMP1 RUMP2 SCHNITTPUNKTE
+  ( innere Punkte 1 in 2
+CR ." innere Punkte 1 in 2"
+  RUMP1 @ PADR
+  RUMP1 @ PZAHL @ IF 
+    RUMP1 @ PZAHL @ 0 DO
+CR I . SP ?
+      DUP 04 + V@ RUMP2 @ DURCHGUCKER
+      1 ZUTSCHER @ + AND IF
+        DUP @ , DUP 01 + @ , DUP 02 + @ ,
+        0 ,
+        DUP 04 + 2@ B, DUP 06 + 2@ B,
+        DUP 08 + 2@ B,
+        ENDIF
+      0A +
+      LOOP
+    ENDIF DROP
+  ( innere Punkte 2 in 1 und auch Randpunkte
+CR ." innere Punkte 2 in 1 und auch Randpunkte"
+  RUMP2 @ PADR
+  RUMP2 @ PZAHL @ IF 
+    RUMP2 @ PZAHL @ 0 DO
+CR I . SP ?
+      DUP 04 + V@ RUMP1 @ DURCHGUCKER
+      1 AND IF
+        DUP @ TRU @ + , 
+        DUP 1 + @ TRU @ + ,
+        DUP 2 + @ TRU @ + ,
+        0 ,
+        DUP 04 + 2@ B, DUP 06 + 2@ B,
+        DUP 08 + 2@ B,
+        ENDIF
+      0A +
+      LOOP
+    ENDIF DROP
+CR ." für PZAHL " 2OVER B. 2DUP B. SP ?
+  HERE SWAP - 0A / RUMP3 @ PZAHL !
+  ( nun nur noch die Kantenliste
+  ( nun mit BUMSLIST
+CR ." nun nur noch die Kantenliste"
+  RUMP3 @ PZAHL @ IF
+    RUMP3 @ BUMSLIST ( geht nicht durch, jetzt eigentlich doch
+    ELSE 0 RUMP3 @ 4 - ! 
+    RUMP3 @ DP ! ENDIF
+  ;
+( Balken1 Schnitt2 RUMPS Rest1 ( auch erst nach DRAUF...
+( Rest1 @ KDUMP
+
+: ZUTSCH ( <name> obj1 obj2 --> ) 
+  1 ZUTSCHER ! RUMPS
+  0 ZUTSCHER ! ;
+
+
+: DISPLOT
+  ( gültige Schnittpunkte in die Punkteliste eintragen
+  6 LOCAL
+  R! {0-5}
+  TRU @ FALL @ IF
+    DUP IX +! IY +! 
+    (( CR IZ @ . IX @ . IY @ . 
+    IZ @ , IX @ , IY @ , 0 ,
+    ELSE IZ +! 
+CR ." >>>DISPLOT " IX @ . IY @ . IZ @ . R@ {0-5} 2ROT B... 2SWAP B... B...
+      IX @ , IY @ , IZ @ , 0 ,
+      ENDIF 
+  R@ {0-5}
+  2ROT B, 2SWAP B, B,
+  ENDLOCAL
+  ;
+
+( als allerletztes noch den Draufgucker 
+: DRAUFGUCKER ( adr --> )
+  ( füllt die Kantenliste
+  1 LOCAL
+  R! {0}
+  TEIL @ PADR R@ {0} @ 0A * + 04 + ( ist schon 10 --> 04 )
+  TEIL @ PADR R@ {0} 04 + @ 0A * + 04 +
+  VMITT 
+CR ." VMITT " >R >R 2OVER B... 2DUP B... R> R> 2DUP B... 
+  TEIL @ DURCHGUCKER 3 = IF
+    (( R@ {0} @ CR . 
+    R@ {0} @ , R@ {0} 04 + @ ,
+CR ." Kante " R@ {0} @ . R@ {0} 04 + @ .
+    ENDIF
+  ENDLOCAL
+  ;
+
+DECIMAL
+200,0 100,0 150,0 QUADER Balken1
+Balken1 @ KDUMP
+E0 E1 E2 E3 E4 WDACH DACH4
+DACH4 @ KDUMP
+Balken1 Schnitt2 RUMPS Rest1
+Rest1 @ KDUMP
+HEX
+
+
+7 EMIT
+DECIMAL

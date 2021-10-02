@@ -1,0 +1,124 @@
+( ok R7 kann raus
+( ok huiii LOCAL muss ja mit rein!!!!
+( .. Testmodus!
+( ok ein KDUMP
+( ok aaaaha, 2! verlangt hier a b --> a b
+( ok in DINGS  und BUMS neu TEIL@ statt TEIL
+( ok BUMSLIST läuft jetzt wenigstens durch, puh
+( ok nun scheint die Kantenliste gar nich angelegt zu sein?
+( ok KDUMP geht!!!
+( .. Punktliste ginge eigentlich auch automatisch???
+( .. B, gar raus
+( .. das ganze Prog anders anfangen mit QUADER gleich dann RUMPS
+( ok na, Q012 läuft schon ganz gut
+( ok also Kantenliste füllt erstma nur mit 2x DROP -1 IF
+( ok gut Feierabend heute, sit schon nich schlecht
+( .. TEIL DURCHGUCKER noch mit @
+( ok Rechtehandregel zeigt nach innen
+( .. GERADEXEBENE stimmt ja gar nicht
+( .. in GERADEXEBENE geht @ IF nich!!!
+( ok an DISPLOT müssen/werden schon besser die Ebenennummern übergebne werden statt Koordinaten, ja ist IX IY IZ
+( ok juhuuu RUMPS geht, zuletzt IX IY erst nach RAUSSUCH
+( ok jetzt geht auf einmal das @ IF wieder, war wohl doch das doppelte IX mit
+( ok DRAUFGUCKER vo QUADER noch für die Beispiele
+( .. wenn ich beim KEIL noch Seitenflächen ranmach...
+( .. manchmal ist noch +04 statt EADR und so
+( ok hab nen funktionsfähigen Teil raus und einen Rest. 1000:2000 Zeilen
+( ok dieser funktionsfähige Teil jetzt auch in KONSTRUK(GAP)!!!
+
+: DET3 ( A1 B1 C1 ... A3 B3 C3 --> DET )
+  ( klar die Determinante
+: EGGT ( c1 d1 ... c4 d4 --> e1 f1 ... e4 f4 )
+  ( aus der Ebenengleichung wird der ggt herauisdividiert +
+: EBENE0 ( a1 b1 ... a9 b9 --> c1 d1 ... c4 d4 )
+  ( liefert aus 3 gegebenen Punkten [a1/b1,a2/b2],...
+  ( die Ebenengleichung c1/d1*x+c2/d2*y+c3/d3*z=c4/d4
+: VADR* ( vadr1 vadr2 --> x y )
+  ( Skalarprodukt, dabei vadr1 Adresse eines mindestens 6 langen Speicherbereiches 
+: VMITT ( vadr1 vadr2 --> vektor )
+  ( na die Mitte von zwei Punkten
+: VERSCHIEDENPUNKT? ( p1 p2 kadr --> r )
+: MERKMERK ( b c d --> )
+: DINGSLIST ( kadr --> )
+  ( wozu das gut sein soll???
+  ( merkt aus der Punktliste (0,1,2) 
+  ( alle auftretenden Paare
+  ( 01 02 12 und so weiter
+  ( also alle Kantenkandidaten
+  ( mitsamt der dritten Ebene
+: PUNKTWERT ( pnr enr kadr --> wa wb )
+  ( aha, ist die Punktkkordinate in Ebenengleichung eingesetzt
+  ( dann die Differenz zur rechten Seite
+: BUMSLIST ( kadr --> )
+  ( bestimmt irgendwie die Kanten aus den Punkten
+: DRAUFGUCKER ( adr --> )
+  ( füllt die Kantenliste
+: EDET/ ( a b c d --> e f )
+  ( wie B/ mit NEBENRECHNUNG und /0
+: DREIEBENEN ( eadr1 eadr2 eadr3 --> pxa pxb pya pyb pza pzb deta detb)
+: QFILL ( kadr --> )
+  ( füllt zu den Punkt-Ebenennummern die Punktkoordinaten
+: EBENE ( <bezeichnung>  p1xa p1xb p1ya p1yb p1za p1zb p2... p3...  --> )
+: QUADER ( <quaderbezeichnung>  qxz qxn qyz qyn qzz qzn --> )
+  ( Länge Breite Höhe
+: KDUMP ( kadr --> )
+  ( Textausgabe des Körpers
+: E, ( e --> )
+: WDACH ( <bezeichnung>  e1 e2 e3 e4 e5 --> )
+: KEIL ( <bezeichnung>  --> )
+: DURCHGUCKER (  pxa pxb pya pyb pza pzb kadr--> tflag )
+  ( schaut wo ein Punkt im Körper enthalten ist: 1=innen 2=außen 3=Rand
+: DURCHGUCKER2 (  pxa pxb pya pyb pza pzb tx ty tz kadr--> tflag )
+  ( schaut wo ein Punkt im Körper enthalten ist mit 7 wenn=tx,ty,tz
+: SCHNITTPUNKTE ( adr1 adr2 --> )
+  ( bestimmt Schnittpunkte aller Geraden/Ebenen und gibt an DSPLOT weiter
+: RUMPS ( <name> obj1 obj2 --> )
+  ( setzt den neuen Körper zusammen )
+  ( und zwar erst alle Flächen zusammensetzen
+  ( dann die Schnittpunkte dazulisten
+  ( dann die Ecken von 1 innerhalb von 2
+  ( und die Ecken von 2 innerhalb von 1)
+  ( schliesslich daraus die Kanten
+: DISPLOT
+  ( gültige Schnittpunkte in die Punkteliste eintragen
+: DRAUFGUCKER ( adr --> )
+  ( füllt die Kantenliste mit einem Punktepaar
+
+Listen:
+00 EZAHL ?Ebenenzahl
+01 VZAHL ?Verknüpfungszahl
+02 PZAHL ?Punktezahl
+03 KZAHL ?Kantenzahl
+04 EADR  Ebenenlisteanfang
+EADR+08*EZAHL = VADR Verknüpfungslisteanfang
+VADR+01*VZAHL = PADR Punktlisteanfang
+PADR+0A*PZAHL = KADR Kantenlisteanfang
+
+MERKMERKADR: (pe1=Punktebene1
+pe1 pe2 pe3 0 (MERKMERKZAHL+1)
+
+PZZT: (pi=Punktnummer i)
+pi distx disty distz (PZZU+4)
+
+
+Tests:
+DECIMAL
+200,0 100,0 150,0 QUADER Balken1
+Balken1 @ KDUMP
+E0 E1 E2 E3 E4 WDACH DACH4
+DACH4 @	KDUMP
+KEIL KL
+KL @ KDUMP
+Schnitt1 @ KDUMP
+Schnitt2 @ KDUMP
+200,0 100,0 150,0 QUADER Balken1
+Balken1 Schnitt1 SCHNITTPUNKTE
+Balken1 Schnitt2 SCHNITTPUNKTE
+Balken1 Schnitt2 RUMPS Rest1
+Rest1 @ KDUMP
+HEX TEIL @ 100 DUMP ( PADR=104FDF
+TEIL @ QFILL
+TEIL @ DINGSLIST
+1 2 TEIL @ PUNKTWERT B.
+TEIL @ BUMSLIST
+TEIL @ KDUMP

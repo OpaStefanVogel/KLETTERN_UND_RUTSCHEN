@@ -1,0 +1,2949 @@
+( 0fortyforthen 1rechnen 2füllen 3ansehen 4transformieren 5schneiden 6rundumsehen 7messen 8tappen 9fenstern
+: FEHLERTEXT ( nr --> adr n )
+  DUP 500 < IF FEHLERTEXT ELSE >R
+    R 502 = IF U" OBJEKT X ist nicht markiert" ENDIF
+    R 503 = IF U" OBJEKT Y ist nicht markiert" ENDIF
+    R 504 = IF U" VEKTOR AS ist nicht markiert oder A fällt mit S zusammen" ENDIF
+    R 505 = IF U" EBENE ASD ist nicht markiert oder A fällt mit S oder D zusammen" ENDIF
+    R 506 = IF U" AS und AD sind parallel" ENDIF
+    R 507 = IF U" AS2 und AD sind parallel" ENDIF
+    R 508 = IF U" Wurzel aus negativer ganzen Zahl" ENDIF
+    R 500 = IF U" Wurzel aus negativer rationalen Zahl" ENDIF
+    R 501 = IF U" Fehler im Rechenausdruck" ENDIF
+    R 508 > IF " ???" ENDIF
+    R> DROP 
+		ENDIF
+  ;
+
+HEX
+0 WORD: (( 2DROP ;
+( : INTERPRET VDUAUS INTERPRET VDUEIN ;
+( : WCOL R! {0} SWI Wimp_SetColour ;
+: WCOL DROP ;
+( : KEYEY ... s. u.
+: KEYEY ( --> )
+  0 ; ( erstmal hier )
+: VDUEIN ;
+: VDUAUS ;
+: GCOL 2DROP ;
+: SÄGSÄG 2DROP 2DROP ; ( SAUND )
+
+
+( CASEOFS aus WFF:
+: CASEOFS ( n  <name> -> )
+  DUP 4 * VARIABLE
+  0 DO
+    0 , ( E1B0F00E M, ( MOVS PC,R14
+    LOOP
+  ;
+
+( ST<R7<PFA=RMA
+
+( ST<PFA<R7=ROM
+
+( R7<ST<PFA=ROM
+
+( R7<PFA<ST=RAM
+( PFA<... gibts nich
+( Also von PFA aus das nächstkleinere R7 oder ST nehmen und diesbezüglich speichern. Wenn das nächstkleinere ST, dann wie bisher. Wenn R7, dann geht sogar BRANCH, oder der negativ gespeicherte Distanzwert.
+
+  ( zuvor aber noch ein : ohne LFA <name> CFA )
+: CRE 
+  HERE PFA !
+  4 STAT !
+  SP@ CSP !
+  E92D4000 M, ( STMDB R13!,{R14}
+  ;
+
+: CASEOF ( fn en --> )
+  4 * + @ DUP IF
+    STARTADRESSE @ + EXECUTE
+    ELSE DROP ENDIF ;
+
+: CASEOF: ( fn en --> )
+  >R >R
+  CRE
+  R> R> 4 * +
+  PFA @ STARTADRESSE @ - SWAP ! ;
+
+: TREXEC VDUBIT @ 0 VDUBIT ! 20 WORD CR TYPE VDUBIT ! ;
+
+VOCABULARY KONSTRUKTION
+TREXEC <!WTFFcad>.Q1-rechnen
+( DET3
+( EBEBE0 Normalform aus drei Punkten
+( VADR* Skalarprodukt
+( QDISTANZ [[v0+v1]/2-[v2+v3]/2]*...
+( VDISTANZ [v0+v1]/2-[v2+v3]/2
+( VADRX v1xv2
+( SQRTG
+( BSQRT50???
+( VGLEIC v1 v2
+( VMITT [v0+v1]/2
+
+0 1 2VARIABLE X1
+0 1 2VARIABLE Y1
+0 1 2VARIABLE Z1
+0 1 2VARIABLE X2
+0 1 2VARIABLE Y2
+0 1 2VARIABLE Z2
+0 1 2VARIABLE X3
+0 1 2VARIABLE Y3
+0 1 2VARIABLE Z3
+0 1 2VARIABLE A1
+0 1 2VARIABLE B1
+0 1 2VARIABLE C1
+0 1 2VARIABLE A2
+0 1 2VARIABLE B2
+0 1 2VARIABLE C2
+0 1 2VARIABLE A3
+0 1 2VARIABLE B3
+0 1 2VARIABLE C3
+
+: DET3 ( A1 B1 C1 ... A3 B3 C3 --> DET )
+  C3 2! B3 2! A3 2!
+  C2 2! B2 2! A2 2!
+  C1 2! B1 2! A1 2!
+  ( A1 B1 C1 )
+  ( A2 B2 C2 )
+  ( A3 B3 C3 )
+  ( A1B2C3+B1C2A3+C1A2B3
+  ( -A1C2B3-B1A2C3-C1B2A3 )
+  NEBENRECHNUNG
+  A1 2@ B2 2@ C3 2@ B* B* 
+  B1 2@ C2 2@ A3 2@ B* B* B+
+  C1 2@ A2 2@ B3 2@ B* B* B+
+  A1 2@ C2 2@ B3 2@ B* B* B-
+  B1 2@ A2 2@ C3 2@ B* B* B-
+  C1 2@ B2 2@ A3 2@ B* B* B- BK
+  ROT HAUPTRECHNUNG B+0
+  ;
+
+: EGGT ( c1 d1 ... c4 d4 --> e1 f1 ... e4 f4 )
+  >R >R
+  R! {0-5} 
+  R@ {0,2,4} GGT GGT ABS
+  R@ {1,3,5} GGT GGT ABS SWAP
+  R@ {0,1} 2OVER B* BK 2SWAP
+  R@ {2,3} 2OVER B* BK 2SWAP
+  R@ {4,5} 2OVER B* BK 2SWAP
+  R> R> B* BK
+  ;
+
+: EBENE0 ( a1 b1 ... a9 b9 --> c1 d1 ... c4 d4 )
+  (  1  X  Y  Z  )
+  (  1  X1 Y1 Z1 )
+  (  1  X2 Y2 Z2 )
+  (  1  X3 Y3 Z3 )
+  Z3 2! Y3 2! X3 2!
+  Z2 2! Y2 2! X2 2!
+  Z1 2! Y1 2! X1 2!
+
+  X1 2@ Y1 2@ Z1 2@
+  X2 2@ Y2 2@ Z2 2@
+  X3 2@ Y3 2@ Z3 2@ DET3 >R >R
+  (  1     Y  Z  )
+  (  1     Y1 Z1 )
+  (  1     Y2 Z2 )
+  (  1     Y3 Z3 )
+  1 1 Y1 2@ Z1 2@
+  1 1 Y2 2@ Z2 2@
+  1 1 Y3 2@ Z3 2@ DET3
+  (  1  X  Y  Z  )
+  (  1  X1 Y1 Z1 )
+  (  1  X2 Y2 Z2 )
+  (  1  X3 Y3 Z3 )
+  X1 2@ 1 1 Z1 2@
+  X2 2@ 1 1 Z2 2@
+  X3 2@ 1 1 Z3 2@ DET3
+  X1 2@ Y1 2@ 1 1
+  X2 2@ Y2 2@ 1 1
+  X3 2@ Y3 2@ 1 1 DET3
+  R> R> EGGT
+  ;
+
+( GRUNDFLÄCHE )
+0,0 0,0 0,0 
+1,0 0,0 0,0
+0,0 1,0 0,0
+EBENE0 CR B... B... B... B...
+( DECKFLÄCHE )
+0,0 0,0 1,0 
+1,0 0,0 1,0
+0,0 1,0 1,0
+EBENE0 CR B... B... B... B...
+0,0 0,0 0,0 
+0,0 1,0 0,0
+1,0 0,0 0,0
+EBENE0 CR B... B... B... B...
+( DECKFLÄCHE )
+0,0 0,0 1,0 
+0,0 1,0 1,0
+1,0 0,0 1,0
+EBENE0 CR B... B... B... B...
+
+( aus QUADER2
+: VADR* ( vadr1 vadr2 --> x y )
+  R! {0-1}
+  NEBENRECHNUNG >R
+  R@ {0} 2@ R@ {1} 2@ B*
+  R@ {0} 8 + 2@ R@ {1} 8 + 2@ B* B+
+  R@ {0} 10 + 2@ R@ {1} 10 + 2@ B* B+ BK
+  R> HAUPTRECHNUNG B+0
+  ;
+
+0 VARIABLE R7
+: QDISTANZ ( vadr1 ... vadr8 --> da db )
+  R7 ! R! {0-6}
+  NEBENRECHNUNG >R
+  18 0 DO
+    R@ {0} I + 2@ R@ {1} I + 2@ B+
+    R@ {2} I + 2@ R@ {3} I + 2@ B+ B-
+    R@ {4} I + 2@ R@ {5} I + 2@ B+
+    R@ {6} I + 2@ R7 @   I + 2@ B+ B- B*
+    8 +LOOP B+ B+ 4 1 B/ BK
+  R> HAUPTRECHNUNG B+0
+  ;
+
+( aus QUADER9
+: VDISTANZ ( vadr1 ... vadr4 --> vektor )
+  R! {0-3}
+  18 0 DO
+    R@ {0} I + 2@ R@ {1} I + 2@ B+
+    R@ {2} I + 2@ R@ {3} I + 2@ B+ B-
+    2 1 B/ BK
+    8 +LOOP
+  ;
+
+: VADRX ( vadr1 vadr2 --> vektor )
+  ( Kreuzprodukt
+  R! {0,1}
+  R@ {0} 08 + 2@ R@ {1} 10 + 2@ B*
+  R@ {0} 10 + 2@ R@ {1} 08 + 2@ B* B- BK
+  R@ {0} 10 + 2@ R@ {1} 00 + 2@ B*
+  R@ {0} 00 + 2@ R@ {1} 10 + 2@ B* B- BK
+  R@ {0} 00 + 2@ R@ {1} 08 + 2@ B*
+  R@ {0} 08 + 2@ R@ {1} 00 + 2@ B* B- BK
+  ;
+
+10000 VARIABLE BSCALFAKT
+( naja muss schon noch weng schneller wern. aber gut gehn tuts ganz gut.
+: SQRTG ( a --> b )
+  ( A Y B  C=(B+X]/2
+  ( A C D  E=(C+D]/2
+  ( A E F  G=(E+F]/2
+  NEBENRECHNUNG SWAP
+  DUP 0< IF 1F4 ( 500 ) ERROR ENDIF
+  DUP 0= IF ELSE
+    1 DUP R! {0}
+    BEGIN
+      DUP R@ {0} R! {0,1}
+      2DUP / + 2 / 
+      DUP R@ {1} = UNTIL
+    SWAP DROP
+    ENDIF
+  SWAP HAUPTRECHNUNG A+0
+  ;
+
+: BSQRT50??? ( a b --> c d )
+  DUP 0< IF MINUS SWAP MINUS SWAP ENDIF
+  OVER 0< IF 1F5 ( 501 ) ERROR ENDIF
+  BSCALFAKT @ 2 ^ * SQRTG SWAP BSCALFAKT @ 2 ^ * SQRTG SWAP
+  BK ;
+
+: VGLEICH ( vadr1 vadr2 --> )
+  ( macht v2 so lang wie v1 )
+  R! {0,1}
+  R@ {0} DUP VADR*
+  R@ {1} DUP VADR* B/
+  BSQRT50???
+  2DUP  R@ {1} 00 + 2@ 
+  B* BK R@ {1} 00 + 2!
+  2DUP  R@ {1} 08 + 2@ 
+  B* BK R@ {1} 08 + 2!
+        R@ {1} 10 + 2@ 
+  B* BK R@ {1} 10 + 2!
+  ;
+
+( aus ???
+: VMITT ( vadr1 vadr2 --> vektor )
+  R! {0-1}
+  18 0 DO
+    R@ {0} I + 2@ R@ {1} I + 2@ B+
+    2 1 B/ BK
+    8 +LOOP
+  ;
+TREXEC <!WTFFcad>.Q2-füllen
+HEX
+( als nächstes ein erster QUADER
+( Ebenenliste
+( Punktliste
+( Kantenliste
+( Flächenliste
+
+( ---- Vordem aber das neue QUADER5a
+: EZAHL ( kadr --> enadr )
+  ;
+: EADR ( kadr --> eadr )
+  10 + ;
+: VZAHL ( kadr --> pnadr )
+  4 +
+  ;
+: VADR ( kadr --> padr )
+  DUP EADR SWAP EZAHL @ 20 * +
+  ;
+: PZAHL ( kadr --> pnadr )
+  8 +
+  ;
+: PADR ( kadr --> padr )
+  DUP VADR SWAP VZAHL @ 4 * +
+  ;
+: KZAHL ( kadr --> pnadr )
+  0C +
+  ;
+: KADR ( kadr --> padr )
+  DUP PADR SWAP PZAHL @ 28 * +
+  ;
+0 VARIABLE TEIL
+
+8000 RAMBUF MERKMERKADR
+0 VARIABLE MERKMERKADRESSE
+0 VARIABLE MERKMERKZAHL
+: VERSCHIEDENPUNKT? ( p1 p2 kadr --> r )
+  NEBENRECHNUNG >R
+  PADR R! {0}
+  28 * R@ {0} + 10 + R! {1}
+  28 * R@ {0} + 10 + R! {2}
+  R@ {1} 2@ R@ {2} 2@ B- DROP
+  R@ {1} 8 + 2@ R@ {2} 8 + 2@ B- DROP
+  R@ {1} 10 + 2@ R@ {2} 10 + 2@ B- DROP
+  OR OR
+  R> HAUPTRECHNUNG ;
+
+: MERKMERK ( b c d --> )
+  MERKMERKADRESSE @ R! {0-3}
+  BEGIN
+    R@ {3} @ R@ {0} =
+    R@ {3} 4 + @ R@ {1} =
+    AND NOT WHILE
+      R@ {3} @ -1 = IF 
+        R@ {0-1,3} 2!
+        R@ {2} 0 R@ {3} 8 + 2!
+        -1 -1 R@ {3} 10 + 2!
+        (( CR ." MERKMERK " R@ {0-1} B.
+        R@ {0,1} B,
+        1 MERKMERKZAHL +!
+        ELSE 
+          R@ {3} 10 + R! {3}
+          ENDIF
+    REPEAT
+  ;
+      
+: DINGSLIST ( kadr --> )
+  @ TEIL !
+  MERKMERKADR MERKMERKADRESSE !
+  -1 -1 MERKMERKADRESSE @ 2!
+  0 MERKMERKZAHL !
+  TEIL @ PADR TEIL @ PZAHL @ 0 DO
+    DUP 2@ R! {0,1}
+    DUP 8 + @ R! {2}
+    (( CR R@ {0-1} B. R@ {2} .
+    R@ {0-2} MERKMERK
+    R@ {0-2} ROT MERKMERK
+    R@ {0-2} SWAP MERKMERK
+    28 + LOOP DROP
+  (( MERKMERKZAHL @ CR . CR
+  MERKMERKZAHL @ TEIL @ KZAHL ! ;
+
+( nun noch den dickeren Brocken, die Plotliste. Aber erstmal zwischennein den Lotpunkt. 
+
+: PUNKTWERT ( pnr enr kadr --> wa wb )
+  ( px-d )
+  R! {0-2}
+  R@ {2} PADR R@ {0} 28 * + 10 + ( va1
+  R@ {2} EADR R@ {1} 20 * + ( va1 ea2
+  VADR*
+  R@ {2} EADR R@ {1} 20 * + 18 + 2@
+  B- BK (( 2DUP B...
+  ;
+
+0 VARIABLE PZZT 1000 ALLOT
+0 VARIABLE PZZU
+: BUMSLIST ( kadr --> )
+  NEBENRECHNUNG >R
+  DUP DINGSLIST
+  @ R! {0}
+  MERKMERKADRESSE @
+  MERKMERKZAHL @ 0 DO
+    0 PZZU !
+    R@ {0} PADR R@ {0} PZAHL @ 0 DO
+      ( merkadresse padr
+      2DUP R! {1,2}
+      R@ {1} @ R@ {2} @ =
+      R@ {1} @ R@ {2} 4 + @ = OR
+      R@ {1} 4 + @ R@ {2} 4 + @ = 
+      R@ {1} 4 + @ R@ {2} 8 + @ = OR AND
+      IF (( CR ." MERK " R@ {1} 2@ B. 
+        (( ." PUNKT " I .
+        I PZZT PZZU @ + !
+        10 PZZU +!
+        ENDIF 
+      28 +
+      LOOP DROP
+    ( Werte eintragen
+    PZZT PZZU @ + PZZT DO
+      I @ ( madr pnr
+      (( CR OVER @ . OVER 4 + @ . OVER 8 + @ .
+      OVER 08 + @ ( madr pnr enr
+      R@ {0} ( madr pnr enr kadr
+      PUNKTWERT
+      I 8 + 2! -1 1 I 18 + 2!
+      10 +LOOP
+    ( Sortieren
+    PZZU @ 20 > IF
+      PZZT PZZU @ + 10 - PZZT DO
+        ( aus dem restlichen 
+        ( den kleinsten Wert suchen
+        ( diesen auf I eintragen und 
+        ( I auf dessen Platz setzen
+        PZZT PZZU @ + I 10 + DO
+          I 8 + 2@ J 8 + 2@ 
+          B< IF
+            I @ I 8 + 2@ 
+            J @ J 8 + 2@
+            I 8 + 2! I !
+            J 8 + 2! J !
+            ENDIF
+          10 +LOOP
+        10 +LOOP
+      ENDIF
+    ( Austragen
+    PZZU @ 10 > IF ( wegen 3Ebenen)
+      PZZT PZZU @ + 10 - PZZT DO
+        I 8 + 2@ I 18 + 2@ B- DROP IF
+          R@ {0} TEIL !
+          I => DRAUFGUCKER        
+          ( hier ist noch die Möglichkeit,    
+          ( die in der Plotliste 
+          ( nicht verwendeten Punkte
+          ( zu markieren, Platz ist da
+          ENDIF
+        10 +LOOP
+      ENDIF
+    10 + (( CR ." ###"
+    LOOP DROP -1 , 0 , 
+  R> HAUPTRECHNUNG
+  ;
+
+: DRAUFGUCKER ( adr --> )
+  R! {0}
+  (( R@ {0} @ CR . 
+  R@ {0} @ , R@ {0} 10 + @ ,
+  ;
+
+( --- QFILL mal auch noch
+0 VARIABLE E1
+0 VARIABLE E2
+0 VARIABLE E3
+0 1 2VARIABLE EDET
+: EDET/ ( a b c d --> e f )
+  NEBENRECHNUNG >R
+  OVER IF B/ ELSE 2DROP ENDIF BK
+  R> HAUPTRECHNUNG
+  B+0
+  ;
+
+: DREIEBENEN ( eadr1 eadr2 eadr3 --> pxa pxb pya pyb pza pzb deta detb)
+  ( kört eigentlich in Q0 rein
+  E3 ! E2 ! E1 !
+  E1 @ 00 + 2@ E1 @ 08 + 2@ E1 @ 10 + 2@
+  E2 @ 00 + 2@ E2 @ 08 + 2@ E2 @ 10 + 2@
+  E3 @ 00 + 2@ E3 @ 08 + 2@ E3 @ 10 + 2@
+  DET3 EDET 2!
+  E1 @ 18 + 2@ E1 @ 08 + 2@ E1 @ 10 + 2@
+  E2 @ 18 + 2@ E2 @ 08 + 2@ E2 @ 10 + 2@
+  E3 @ 18 + 2@ E3 @ 08 + 2@ E3 @ 10 + 2@
+  DET3 EDET 2@ EDET/
+  E1 @ 00 + 2@ E1 @ 18 + 2@ E1 @ 10 + 2@
+  E2 @ 00 + 2@ E2 @ 18 + 2@ E2 @ 10 + 2@
+  E3 @ 00 + 2@ E3 @ 18 + 2@ E3 @ 10 + 2@
+  DET3 EDET 2@ EDET/
+  E1 @ 00 + 2@ E1 @ 08 + 2@ E1 @ 18 + 2@
+  E2 @ 00 + 2@ E2 @ 08 + 2@ E2 @ 18 + 2@
+  E3 @ 00 + 2@ E3 @ 08 + 2@ E3 @ 18 + 2@
+  DET3 EDET 2@ EDET/
+  EDET 2@
+  ;
+
+: QFILL ( kadr --> )
+  DUP EADR SWAP
+  DUP PADR SWAP
+  PZAHL @ ( eadr padr pn )
+  0 DO    ( eadr padr
+    DUP I 28 * + R! {0-2}
+    R@ {0,2} 0 + @ 20 * +
+    R@ {0,2} 4 + @ 20 * +
+    R@ {0,2} 8 + @ 20 * +
+    DREIEBENEN 2DROP
+    R@ {2} 20 + 2!
+    R@ {2} 18 + 2!
+    R@ {2} 10 + 2!
+    R@ {0-1}
+    LOOP
+  2DROP
+  ;
+
+
+( ---------
+
+
+( nun weiter mit QUADER2
+: B, HERE 2! 8 ALLOT ;
+ 0 CONSTANT TEND
+ 1 CONSTANT TEBN
+ 2 CONSTANT TAND
+ 3 CONSTANT TNOT
+ 4 CONSTANT TNOP
+: EBENE ( <bezeichnung>  p1xa p1xb p1ya p1yb p1za p1zb p2... p3...  --> )
+  0 VARIABLE HERE DUP 4 - !
+  1 , ( 1 Ebene
+  2 , ( 2 Verknüpfungsangaben
+  0 , ( 0 Eckpunkte zu je 28 Byte
+  0 , ( 0 Kanten zu je 8 Byte
+  ( Ebenenliste, ax-d>0 fürs innere:
+  EBENE0
+  >R >R 2ROT B, 2SWAP B, B, R> R> B,
+  TEBN , TEND ,
+  ;
+
+: QUADER ( <quaderbezeichnung>  qxz qxn qyz qyn qzz qzn --> )
+  0 VARIABLE HERE DUP 4 - !
+  HERE TEIL !
+  6 ,  ( 6 Ebenen zu je 20 Byte
+  0C , ( 12 Verknüpfungsangaben zu je 4
+  8 ,  ( 8 Eckpunkte zu je 28 Byte
+  0C , ( 12 Kanten zu je 8 Byte
+  ( Ebenenliste, ax-d>0 fürs innere:
+  MINUS 2SWAP MINUS 2ROT MINUS
+  1,0 B, 0,0 B, 0,0 B, 0,0 B, ( L0:x=0
+  0,0 B, 1,0 B, 0,0 B, 0,0 B, ( V1:y=0
+  0,0 B, 0,0 B, 1,0 B, 0,0 B, ( U2:z=0
+  -1,0 B, 0,0 B, 0,0 B, B,    ( R3:x=qx
+  0,0 B, -1,0 B, 0,0 B, B,    ( H4:y=qy
+  0,0 B, 0,0 B, -1,0 B, B,    ( O5:z=qz
+  TEBN , TEBN , TAND , TEBN , TAND , TEBN , TAND , TEBN , TAND , TEBN , TAND
+, TEND , 
+  ( Punktliste
+  0 , 1 , 2 , ( P0=LVU ) 0 , 18 ALLOT
+  0 , 1 , 5 , ( P1=LVO ) 0 , 18 ALLOT
+  0 , 2 , 4 , ( P2=LHU ) 0 , 18 ALLOT
+  0 , 4 , 5 , ( P3=LHO ) 0 , 18 ALLOT
+  1 , 2 , 3 , ( P4=RVU ) 0 , 18 ALLOT
+  1 , 3 , 5 , ( P5=RVO ) 0 , 18 ALLOT
+  2 , 3 , 4 , ( P6=RHU ) 0 , 18 ALLOT
+  3 , 4 , 5 , ( P7=RHO ) 0 , 18 ALLOT
+( Punkteflag
+( 00 - nix
+( 01 - ax-d>=0
+( 10 - ax-d<=0
+( 11 - ax-d=0
+
+( TAND= OR|AND
+( innerer Punkt:  01 
+( Randpunkt:      11
+( äusserer Punkt: 10
+( TNOT macht aus 01 10 und 11 bleibt
+
+( jetzt die Kantliste füllen
+  TEIL @ QFILL
+  TEIL BUMSLIST
+  ;
+
+( es muss halt doch mal ein einfaches Dachel her
+HEX
+: E, ( e --> )
+  >R
+  R 2@ B, R 8 + 2@ B, 
+  R 10 + 2@ B, R 18 + 2@ B,
+  R> DROP
+  ; 
+: WDACH ( <bezeichnung>  e1 e2 e3 e4 e5 --> )
+  0 VARIABLE HERE DUP 4 - !
+  HERE TEIL !
+  5 ,  ( 5 Ebenen zu je 20 Byte
+  0A , ( 10 Verknüpfungsangaben zu je 4
+  6 ,  ( 6 Eckpunkte zu je 28 Byte
+  9 , ( 9 Kanten zu je 10 Byte
+  ( Ebenenliste, ax-d>0 fürs innere:
+  R! {0-4}
+  R@ {0} @ 10 + E, ( U0 unten
+  R@ {1} @ 10 + E, ( V1 vorn
+  R@ {2} @ 10 + E, ( L2 links
+  R@ {3} @ 10 + E, ( R3 rechts
+  R@ {4} @ 10 + E, ( H4 hinten
+  TEBN , TEBN , TAND , TEBN , TAND , TEBN , TAND , TEBN , TAND , TEND , 
+  ( Punktliste
+  0 , 1 , 2 , ( P0=UVL ) 0 , 18 ALLOT
+  0 , 1 , 3 , ( P1=UVR ) 0 , 18 ALLOT
+  0 , 2 , 4 , ( P2=UHL ) 0 , 18 ALLOT
+  0 , 3 , 4 , ( P3=UHR ) 0 , 18 ALLOT
+  1 , 2 , 3 , ( P4=VLR ) 0 , 18 ALLOT
+  2 , 3 , 4 , ( P5=HLR ) 0 , 18 ALLOT
+  TEIL @ QFILL
+  TEIL BUMSLIST
+  ;
+
+: KEIL ( <bezeichnung>  --> )
+  0 VARIABLE HERE DUP 4 - !
+  HERE TEIL !
+  2 , ( 2 Ebenen zu je 20 Byte
+  4 , ( 4 Verknüpfungsangaben zu je 4
+  0 , ( 0 Eckpunkte zu je 28 Byte
+  1 , ( 0 Kanten zu je 10 Byte????
+  ( Ebenenliste, ax-d>0 fürs innere:
+  0,0 B, 0,0 B, 0,0 B, 0,0 B,
+  0,0 B, 0,0 B, 0,0 B, 0,0 B,
+  TEBN , TEBN , TAND , TEND , 
+  ( immerhin 1 Kante )
+  0 , 1 ,
+  ;
+   
+KEIL KEILSÄGE
+  
+  
+DECIMAL
+( 100,0 0,0 0,0
+( 200,0 50,0 150,0
+( 200,0 0,0 100,0
+( EBENE Schnitt1
+
+( 200,0 100,0 150,0 
+( QUADER Balken1
+
+TREXEC <!WTFFcad>.Q3-ansehen
+HEX
+( interressannt wäre auch der Aufbau von Q aus Ebenen, wie das algorithmisch zugeht. ok ist da)
+
+
+( hier mal das Displayen ein wenig )
+: V! ( vektor vadr --> )
+  >R R 10 + 2! R 08 + 2! R> 2! ;
+: V@ ( vadr --> vektor )
+  >R R 2@ R 8 + 2@ R> 10 + 2@ ;
+: W! ( 4vektor vadr --> )
+  >R R 18 + 2! R 10 + 2! R 08 + 2! R> 2! ;
+: W@ ( vadr --> 4vektor )
+  >R R 2@ R 8 + 2@ R 10 + 2@ R> 18 + 2@ ;
+
+: VEKTOR 0 VARIABLE 5 4 * ALLOT ;
+VEKTOR STANDPUNKT
+VEKTOR BLICKPUNKT
+VEKTOR PARRA1
+VEKTOR PARRA2
+VEKTOR VADRES
+1,0 0,5 0,0 PARRA1 V!
+0,0 0,5 1,0 PARRA2 V!
+1 1 2VARIABLE SCAL
+
+( Bildebene: (s-b](x-b]=0
+
+: DISP ( vektor --> bxa bxb bya byb )
+  VADRES V!
+  VADRES PARRA1 VADR*
+  VADRES PARRA2 VADR*
+  ; 
+
+: DPLOT ( bxa bxb bya byb --> )
+  >R >R SCAL 2@ B* /
+  R> R> SCAL 2@ B* /
+  45 PLOT
+  ;
+
+( für dings )
+0 0 2VARIABLE VERSCHIEB
+: PXADR* ( vadr1 vadr2 --> a )
+  ( extra wegen exakter 45 Grad Linie
+  V@ 0 R! {0-6}
+  V@
+  R@ {4,5} B* SCAL 2@ B* / R@ {6} + R! {6}
+  R@ {2,3} B* SCAL 2@ B* / R@ {6} + R! {6}
+  R@ {0,1} B* SCAL 2@ B* / R@ {6} +
+  ;
+    
+: DRECH ( vadr --> px py )
+  DUP PARRA1 PXADR*
+  SWAP PARRA2 PXADR*
+  ;
+
+: RECHRECH ( py2 px2 py1 px1 &2000 --> py2' ... px1' )
+  ( hierrein geht noch 0...2000 statt -2000...2000
+(            0  0  1000 10000 2000
+  ( p1x'=&2000
+  ( p1y'=py2+
+  (      (py1-py2]/(px1-px2]*(&2000-px2]
+  ( NEU wenn px2 auch >2000 oder <-2000, dann alles &2000
+  R! {0-4}
+  R@ {4} 0 > R@ {1,4} > AND
+  R@ {4} 0 < R@ {1,4} < AND
+  OR IF 2000 2000 2000 2000
+    ELSE
+    R@ {0,1}
+    R@ {0}
+    R@ {0,2} - R@ {1,4} - * 
+    R@ {1,3} - / - R@ {4}
+    ENDIF
+  ;
+
+: VERKÜRZ ( px1 py1 px2 py2 --> px1' px2' py1' py2' )
+  ( |px1|>&2000: |p1| bis &2000 zu p2
+  ( |py1|>&2000: |p1| bis &2000 zu p2
+  ( |px1|>&2000: |p1| bis &2000 zu p2
+  ( |py1|>&2000: |p1| bis &2000 zu p2
+  DUP  2000 > IF  2000 RECHRECH ENDIF
+  DUP -2000 < IF -2000 RECHRECH ENDIF
+  >R >R SWAP R> R> SWAP
+  DUP  2000 > IF  2000 RECHRECH ENDIF
+  DUP -2000 < IF -2000 RECHRECH ENDIF
+  2SWAP
+  DUP  2000 > IF  2000 RECHRECH ENDIF
+  DUP -2000 < IF -2000 RECHRECH ENDIF
+  >R >R SWAP R> R> SWAP
+  DUP  2000 > IF  2000 RECHRECH ENDIF
+  DUP -2000 < IF -2000 RECHRECH ENDIF
+  2SWAP
+  ; 
+
+1,0 0,0 0,0 DISP 2SWAP B... B...
+
+3 1 SCAL 2!
+( Balken1 Schnitt2 SCHNITTPUNKTE
+( ok also Displayen ist geritzt )
+( nu gehmer halt nochmal zurück und tun die Punkt- und Kantenliste rein, dasses Displayen eines Quaders geht 
+
+( Balken1 @ QFILL
+( Balken2 @ QFILL
+
+( kommt nochmal in QUADER6
+: KPLOT ( obj --> )
+  ( was braung wer denn )
+  ( padr gadr gn
+  @ >R 
+  R PADR R! {0}
+  R KADR
+  R> 0C + @ 8 * +
+  BEGIN DUP @ -1 - WHILE
+    (( DUP 2@ CR B. DUP .
+    DUP @ 28 * 10 +
+    R@ {0} + DRECH 45 PLOT
+    DUP 4 + @ 28 * 10 +
+    R@ {0} + DRECH 05 PLOT
+    (( DUP .
+    8 + REPEAT DROP 
+  ;
+
+
+( Balken1 KPLOT
+( Balken2 KPLOT
+
+( aus QUADER6
+HEX
+8000 RAMBUF SCHNAPPKANTTLISTE ( war 38000 CONSTANT
+0 VARIABLE SCHNAPPERZEIGER
+: SCHNAPPSPEICH 
+  SCHNAPPKANTTLISTE 
+  SCHNAPPERZEIGER @ + 2!
+  8 SCHNAPPERZEIGER +! ;
+
+: KPLOT ( obj --> )
+  ( was braung wer denn )
+  ( padr gadr gn
+  @ >R 
+  R PADR R! {0}
+  R KADR
+  R> KZAHL @ 8 * +
+  BEGIN DUP @ -1 - WHILE
+    DUP @ 28 * 10 +
+    R@ {0} + DUP R! {5}
+    DRECH R! {1,2} ( 45 PLOT
+    DUP 4 + @ 28 * 10 +
+    R@ {0} + DUP R! {6}
+    DRECH R! {3,4} ( 05 PLOT
+    R@ {1-4} VERKÜRZ R! {1-4}
+    R@ {1,2} 45 PLOT
+    R@ {3,4} 05 PLOT
+    R@ {1,2} SCHNAPPSPEICH
+    R@ {5} DUP SCHNAPPSPEICH
+    R@ {3,4} SCHNAPPSPEICH
+    R@ {6} DUP SCHNAPPSPEICH
+    R@ {1,3} + 2 /
+    R@ {2,4} + 2 / SCHNAPPSPEICH
+    R@ {5,6} SCHNAPPSPEICH
+    8 + REPEAT DROP
+  ;
+
+: KRECH ( obj --> )
+  ( füllt nur die Liste )
+  3 0 DO
+    -10000 10000 SCHNAPPSPEICH
+    -1 OVER @ SCHNAPPSPEICH
+    LOOP
+  @ >R 
+  R PADR R! {0}
+  R KADR
+  R> KZAHL @ 8 * +
+  BEGIN DUP @ -1 - WHILE
+    DUP @ 28 * 10 +
+    R@ {0} + DUP R! {5}
+    DRECH R! {1,2} ( 45 PLOT
+    DUP 4 + @ 28 * 10 +
+    R@ {0} + DUP R! {6}
+    DRECH R! {3,4} ( 05 PLOT
+   ( R@ {1-4} VERKÜRZ R! {1-4}
+   ( R@ {1,2} 45 PLOT
+   ( R@ {3,4} 05 PLOT
+    R@ {1,2} SCHNAPPSPEICH
+    R@ {5} DUP SCHNAPPSPEICH
+    R@ {3,4} SCHNAPPSPEICH
+    R@ {6} DUP SCHNAPPSPEICH
+    R@ {1,3} + 2 / ( vor VERKÜRZ!! oder VERKÜRZ in SPLOT
+    R@ {2,4} + 2 / SCHNAPPSPEICH
+    R@ {5,6} SCHNAPPSPEICH
+    8 + REPEAT DROP
+  ;
+
+0 VARIABLE OBJEKT1
+0 VARIABLE OBJEKT2
+: SPLOT
+  NEBENRECHNUNG
+  SCHNAPPKANTTLISTE
+  BEGIN DUP 8 + @ WHILE
+    DUP 08 + @ -1 = IF
+      05 WCOL
+      DUP 0C + @ OBJEKT2 @ @ = IF 03 WCOL ENDIF
+      DUP 0C + @ OBJEKT1 @ @ = IF 07 WCOL ENDIF
+      30 + ENDIF
+    >R
+    R 2@ VERSCHIEB 2@ ++ 
+    R 10 + 2@ VERSCHIEB 2@ ++ 
+    VERKÜRZ
+    45 PLOT 05 PLOT
+    R> 30 +
+    REPEAT
+  DROP
+  HAUPTRECHNUNG
+  ;
+TREXEC <!WTFFcad>.Q4-transfo
+HEX
+( kurz mal noch ein TRANSFORM )
+
+0 1 2VARIABLE TX
+0 1 2VARIABLE TY
+0 1 2VARIABLE TZ
+: TRANSFORM ( kadr vektor --> )
+  TZ 2! TY 2! TX 2!
+  @ 10 + DUP 10 - @ 0 DO
+    >R 
+    R 2@ TX 2@ B*
+    R 08 + 2@ TY 2@ B* B+
+    R 10 + 2@ TZ 2@ B* B+
+    R 18 + 2@ B+ BK
+    R 18 + 2!
+    ( eweng mit kürzen
+    R 18 + 2@ DROP IF
+      R 00 + 2@ R 18 + 2@ 
+      ABS SWAP ABS SWAP B/ BK
+      R 00 + 2!
+      R 08 + 2@ R 18 + 2@ 
+      ABS SWAP ABS SWAP B/ BK 
+      R 08 + 2!
+      R 10 + 2@ R 18 + 2@ 
+      ABS SWAP ABS SWAP B/ BK 
+      R 10 + 2!
+      R 18 + 2@ R 18 + 2@ 
+      ABS SWAP ABS SWAP B/ BK
+      R 18 + 2!
+      ENDIF
+    R 00 + 2@ R 08 + 2@ 
+    R 10 + 2@ R 18 + 2@ EGGT
+    R 18 + 2! R 10 + 2! 
+    R 08 + 2! R 00 + 2!
+    R> 20 + LOOP DROP ;
+
+: COPY ( <neuername>  kadr --> )
+  0 VARIABLE HERE DUP 4 - !
+  @ >R
+  10
+  R @ 20 * +
+  R 4 + @ 4 * +
+  R 8 + @ 28 * +
+  R 0C + @ 8 * +
+  HERE >R
+  DUP ALLOT
+  R> R SWAP ROT DUP >R CMOVE
+  R> R> + BEGIN
+    DUP @ -1 - WHILE
+      DUP @ , 4 + REPEAT
+  -1 , 0 , DROP ;
+
+( und Transform mit rein )
+( nu das TRANSFORM ist noch recht mager )
+
+: TRANSFORM2
+  R! {0-5} DUP >R
+  R@ {0-5} TRANSFORM ( DROP !!! )
+  R> @ QFILL ( 2DROP !!!) ;
+
+
+: VERSCHIEBEN
+  R! {0-6}
+  R@ {6} R@ {0-5} TRANSFORM2
+  ;
+
+( erste Drehung
+0,7 2VARIABLE A00
+0,0 2VARIABLE A01
+0,6 2VARIABLE A02
+0,1 2VARIABLE A10
+0,9 2VARIABLE A11
+-0,2 2VARIABLE A12
+-0,5 2VARIABLE A20
+0,2 2VARIABLE A21
+0,7 2VARIABLE A22
+
+VEKTOR Z
+0,0 0,0 1,0 Z V!
+VEKTOR ASX
+VEKTOR ASY
+VEKTOR ASZ
+VEKTOR QWX
+VEKTOR QWY
+VEKTOR QWZ
+
+: DETTER3 ( vadr1 vadr2 vadr3 --> axz axn )
+  >R >R >R
+  R> V@ R> V@ R> V@ DET3 
+  ;
+: METTER3 ( --> axz axn )
+  R! {0,1}
+  ASX R@ {0} + 2@ >R >R
+  QWX R@ {1} + 2@
+  ASX R@ {0} + 2!
+  ASY R@ {0} + 2@ >R >R
+  QWY R@ {1} + 2@
+  ASY R@ {0} + 2!
+  ASZ R@ {0} + 2@ >R >R
+  QWZ R@ {1} + 2@
+  ASZ R@ {0} + 2!
+  ASX ASY ASZ DETTER3
+  R> R> ASZ R@ {0} + 2!
+  R> R> ASY R@ {0} + 2!
+  R> R> ASX R@ {0} + 2!
+  ;
+  
+: INVAT
+  ( QW=QW/AS )
+  ASX ASY ASZ DETTER3 R! {0,1}
+  00 00 METTER3 R@ {0,1} B/ BK
+  00 08 METTER3 R@ {0,1} B/ BK
+  00 10 METTER3 R@ {0,1} B/ BK
+  ( QWX V!
+  08 00 METTER3 R@ {0,1} B/ BK
+  08 08 METTER3 R@ {0,1} B/ BK
+  08 10 METTER3 R@ {0,1} B/ BK
+  ( QWY V!
+  10 00 METTER3 R@ {0,1} B/ BK
+  10 08 METTER3 R@ {0,1} B/ BK
+  10 10 METTER3 R@ {0,1} B/ BK
+  QWZ V! QWY V! QWX V!
+  ;
+
+: DREHER1 ( --> )
+  ( DREHT v1 in Richtung v2 mit z-Auspendeln )
+  Z ASX VADRX ASY V!
+  QWX V@ 2DROP DROP 
+  0= SWAP DROP SWAP 0= AND IF
+    ASY V@ QWY V! ELSE
+      Z QWX VADRX QWY V! ENDIF
+  ASX V@ 2DROP DROP
+  0= SWAP DROP SWAP 0= AND IF
+    QWY V@ ASY V! ENDIF
+  ASX ASY VADRX ASZ V!
+  QWX QWY VADRX QWZ V!
+  ASX QWX VGLEICH
+  ASY QWY VGLEICH
+  ASZ QWZ VGLEICH
+  INVAT ( QW=QW/AS )
+  ;
+
+: DREHER2 ( --> )
+  ( pendelt AD um AS in Richtung QE )
+  ( also aus AS wird AS=QW
+  ( aus ASxAD wird ASxQE normiert
+  ( und aus ASx(ASxAD] wird ASx<ASxQE>
+  ( ASX=AS ASY=AD ASZ=ASxAD
+  ( QWX=QE
+  ASX ASY VADRX ASY V! ( ASY=ASxAD )
+  ASX ASY VADRX ASZ V! ( ASZ=ASx(ASxAD)
+  ASX QWX VADRX QWY V! ( =ASxQE )
+  ASX V@ QWX V! ( QWX=QW=AS )
+  QWX QWY VADRX QWZ V!
+  ASY QWY VGLEICH
+  ASZ QWZ VGLEICH
+  INVAT ( QW=QW/AS )
+  ;
+
+: TRANSFORM3 ( kadr --> )
+  @ DUP >R 10 + DUP 10 - @ 0 DO
+    >R 
+    R 00 + 2@ A00 2@ B*
+    R 08 + 2@ A01 2@ B* B+
+    R 10 + 2@ A02 2@ B* B+ ( BSCAL ) BK
+    R 00 + 2@ A10 2@ B*
+    R 08 + 2@ A11 2@ B* B+
+    R 10 + 2@ A12 2@ B* B+ ( BSCAL ) BK
+    R 00 + 2@ A20 2@ B*
+    R 08 + 2@ A21 2@ B* B+
+    R 10 + 2@ A22 2@ B* B+ ( BSCAL ) BK
+    R 18 + 2@ EGGT R 18 + 2!
+    R 10 + 2! R 08 + 2! R 00 + 2!
+
+    R> 20 + LOOP
+  DROP R> QFILL
+  ;
+
+TREXEC <!WTFFcad>.Q5-schneid
+HEX
+0 1 2VARIABLE PX
+0 1 2VARIABLE PY
+0 1 2VARIABLE PZ
+0 VARIABLE ETADR
+0 VARIABLE TADR
+
+( und zum Letzt, da hab ich doch auch nochmal den Durchgucker hergenommen und siehe da, den wohl wie er sein soll )
+0 VARIABLE TOPLIST ( ob 2&7, geht auch mal raus )
+: TOP1 ( a b --> c )
+  2DUP + 9 = IF 1 TOPLIST ! ENDIF
+  ( 1 1 1
+  ( 1 2 2
+  ( 1 3 3
+  ( 2 1 2
+  ( 2 2 2
+  ( 2 3 2 X
+  ( 3 1 3
+  ( 3 2 2 X
+  ( 3 3 3
+  ( 1 7 7
+  ( 2 7 2 x
+  ( 3 7 7
+  ( 7 7 7
+  ( 7 1 7
+  ( 7 2 2 x
+  ( 7 3 7
+  SWAP CASE
+    2 OF DROP 2 ENDOF
+    3 OF CASE
+      1 OF 3 ENDOF
+      2 OF 2 ENDOF
+      3 OF 3 ENDOF
+      7 OF 7 ENDOF
+      ENDCASE ENDOF
+    7 OF CASE
+      1 OF 7 ENDOF
+      2 OF 2 ENDOF
+      3 OF 7 ENDOF
+      7 OF 7 ENDOF
+      ENDCASE ENDOF 
+    ENDCASE
+  ;
+
+: TOP2 ( a --> c )
+  ( 1 2
+  ( 2 1
+  ( 3 3
+  ( 7 7
+  DUP 3 < IF 3 SWAP - ENDIF ;
+
+: TSETZ ( n --> tflag )
+  DUP 0< IF DROP 2 
+    ELSE 0= IF 3 ELSE 1 ENDIF ENDIF ;
+  
+: TFIND ( --> tflag )
+  NEBENRECHNUNG >R
+  ETADR @ 00 + 2@ PX 2@ B*
+  ETADR @ 08 + 2@ PY 2@ B* B+
+  ETADR @ 10 + 2@ PZ 2@ B* B+
+  ETADR @ 18 + 2@ B-
+  0< IF MINUS ENDIF
+  R> HAUPTRECHNUNG
+  TSETZ
+  ;
+
+: DURCHGUCKER (  pxa pxb pya pyb pza pzb kadr--> tflag )
+  >R R @ 10 + R @ @ 20 * + TADR !
+  R> @ 10 + ETADR !
+  PZ 2! PY 2! PX 2!
+  BEGIN TADR @ @ WHILE
+    TADR @ @ CASE 
+      1 OF TFIND 20 ETADR +! ENDOF
+      2 OF TOP1 ENDOF
+      3 OF TOP2 ENDOF
+      ENDCASE
+      4 TADR +!
+    REPEAT
+  ;
+
+ 
+0 VARIABLE OBJ1
+0 VARIABLE OBJ2
+0 VARIABLE IX
+0 VARIABLE IY
+0 VARIABLE IZ
+
+0 VARIABLE T1
+0 VARIABLE T2
+0 VARIABLE T3
+0 VARIABLE EBUXEL
+: DURCHGUCKER2 (  pxa pxb pya pyb pza pzb tx ty tz kadr--> tflag )
+  NEBENRECHNUNG >R
+  0 TOPLIST !
+  >R 
+  T3 ! T2 ! T1 !
+  R @ 10 + R @ @ 20 * + TADR !
+  R> @ 10 + ETADR !
+  PZ 2! PY 2! PX 2!
+  0 EBUXEL !
+  BEGIN TADR @ @ WHILE
+    TADR @ @ CASE 
+      1 OF TFIND 
+        DUP 3 = IF
+          EBUXEL @ T1 @ =
+          EBUXEL @ T2 @ = OR
+          EBUXEL @ T3 @ = OR
+          IF DROP 7 ENDIF
+          ENDIF
+        20 ETADR +!
+        1 EBUXEL +! ENDOF
+      2 OF TOP1 ENDOF
+      3 OF TOP2 ENDOF
+      ENDCASE
+      4 TADR +!
+    REPEAT
+  TOPLIST @ IF DROP 0 ENDIF
+  R> HAUPTRECHNUNG
+  ;
+
+: GERADEXEBENE ( adr1 adr2 --> )
+  OBJ2 ! OBJ1 !
+  OBJ1 @ @ 0C + @ IF
+    OBJ1 @ @ 0C + @ 0 DO
+      OBJ2 @ @ @ 0 DO
+        ( CR ." Gerade " J . 
+        ( ." und Ebene " I .
+        ( ." also "
+        ( OBJ1 @ @ KADR J 8 * + 2@ B. I .
+        ( nun aber ran an die Ebenen
+        OBJ1 @ @ KADR J 8 * + @
+        DUP IX ! 20 *
+        OBJ1 @ @ 10 + +
+        OBJ1 @ @ KADR J 8 * + 4 + @
+        DUP IY ! 20 *
+        OBJ1 @ @ 10 + +
+        OBJ2 @ @ 10 + I 20 * +
+        I IZ !
+        DREIEBENEN 
+        DROP IF
+          R! {0-5}
+          R@ {0-5} IX @ IY @ DUP OBJ1 @
+          DURCHGUCKER2 1 AND
+          R@ {0-5} IZ @ DUP DUP OBJ2 @ 
+          DURCHGUCKER2 1 AND
+          AND IF
+            PX 2@ PY 2@ PZ 2@ 
+            => DISPLOT ENDIF
+          ELSE 2DROP 2DROP 2DROP ENDIF
+        LOOP LOOP 
+    ENDIF
+  ;
+
+: DISPLOT CR 2ROT B... 2SWAP B... B... ;
+
+0 VARIABLE FALL
+: SCHNITTPUNKTE ( adr1 adr2 --> )
+  ( erst alle Schnittgeraden von 1 
+  ( mit den Ebenen von 2
+  0 FALL ! 2DUP GERADEXEBENE
+  1 FALL ! SWAP GERADEXEBENE
+  ;
+ 
+DECIMAL
+( Balken1 Schnitt1 SCHNITTPUNKTE
+( 100,0 0,0 0,0
+( 200,0 50,0 150,0
+( 200,0 0,0 90,0
+( EBENE Schnitt2
+( Balken1 Schnitt2 SCHNITTPUNKTE
+( Balken1 10,0 0,0 0,0 TRANSFORM
+( Balken1 Schnitt2 SCHNITTPUNKTE
+( Balken1 COPY Balken2
+( Balken2 Schnitt2 SCHNITTPUNKTE
+( Balken2 10,0 10,0 10,0 TRANSFORM
+( Balken1 Balken2 SCHNITTPUNKTE
+
+HEX
+
+( aus QUADER5
+0 VARIABLE RUMP1
+0 VARIABLE RUMP2
+0 VARIABLE RUMP3
+0 VARIABLE TRU
+0 VARIABLE ZUTSCHER
+: RUMPS ( <name> obj1 obj2 --> )
+  ( setzt den neuen Körper zusammen )
+  ( und zwar erst alle Flächen zusammensetzen
+  ( dann die Schnittpunkte dazulisten
+  ( dann die Ecken von 1 innerhalb von 2
+  ( und die Ecken von 2 innerhalb von 1)
+  ( schliesslich daraus die Kanten
+  0 VARIABLE HERE DUP 4 - !
+  @ RUMP2 ! @ RUMP1 !
+  HERE RUMP3 !
+  10 ALLOT
+  ( los denn: die Flächen
+  RUMP1 @ EADR HERE
+  RUMP1 @ EZAHL @ 20 * CMOVE
+  RUMP1 @ EZAHL @ 20 * ALLOT
+  RUMP2 @ EADR HERE
+  RUMP2 @ EZAHL @ 20 * CMOVE
+  RUMP2 @ EZAHL @ 20 * ALLOT
+  RUMP1 @ EZAHL @ DUP TRU !
+  RUMP2 @ EZAHL @ +
+  RUMP3 @ EZAHL !
+  ( Verknüpfung zusammensetzen:
+  RUMP1 @ VADR HERE
+  RUMP1 @ VZAHL @ 4 * CMOVE
+  RUMP1 @ VZAHL @ 1 - 4 * ALLOT
+  RUMP2 @ VADR HERE
+  RUMP2 @ VZAHL @ 4 * CMOVE
+  RUMP2 @ VZAHL @ 1 - 4 * ALLOT
+  ZUTSCHER @ IF TNOT , ENDIF
+  TAND , 0 ,
+  RUMP1 @ VZAHL @ 
+  RUMP2 @ VZAHL @ + ZUTSCHER @ +
+  RUMP3 @ VZAHL !
+  ( nun die Punkte
+  HERE
+  RUMP1 RUMP2 SCHNITTPUNKTE
+  ( innere Punkte 1 in 2
+  RUMP1 @ PADR
+  RUMP1 @ PZAHL @ IF 
+    RUMP1 @ PZAHL @ 0 DO
+      DUP 10 + V@ RUMP2 DURCHGUCKER
+      1 ZUTSCHER @ + AND IF
+        DUP @ , DUP 4 + @ , DUP 8 + @ ,
+        0 ,
+        DUP 10 + 2@ B, DUP 18 + 2@ B,
+        DUP 20 + 2@ B,
+        ENDIF
+      28 +
+      LOOP
+    ENDIF DROP
+  ( innere Punkte 2 in 1 und auch Randpunkte
+  RUMP2 @ PADR
+  RUMP2 @ PZAHL @ IF 
+    RUMP2 @ PZAHL @ 0 DO
+      DUP 10 + V@ RUMP1 DURCHGUCKER
+      1 AND IF
+        DUP @ TRU @ + , 
+        DUP 4 + @ TRU @ + ,
+        DUP 8 + @ TRU @ + ,
+        0 ,
+        DUP 10 + 2@ B, DUP 18 + 2@ B,
+        DUP 20 + 2@ B,
+        ENDIF
+      28 +
+      LOOP
+    ENDIF DROP
+  HERE SWAP - 28 / RUMP3 @ PZAHL !
+  ( nun nur noch die Kantenliste
+  ( nun mit BUMSLIST
+  RUMP3 @ PZAHL @ IF
+    RUMP3 BUMSLIST ( geht nicht durch
+    ELSE 0 RUMP3 @ 4 - ! 
+    RUMP3 @ DP ! ENDIF
+  ;
+
+: ZUTSCH ( <name> obj1 obj2 --> ) 
+  1 ZUTSCHER ! RUMPS
+  0 ZUTSCHER ! ;
+
+
+: DISPLOT
+  R! {0-5}
+  TRU @ FALL @ IF
+    DUP IX +! IY +! 
+    (( CR IZ @ . IX @ . IY @ . 
+    IZ @ , IX @ , IY @ , 0 ,
+    ELSE IZ +! 
+      (( CR IX @ . IY @ . IZ @ .
+      IX @ , IY @ , IZ @ , 0 ,
+      ENDIF 
+  R@ {0-5}
+  2ROT B, 2SWAP B, B,
+  ;
+
+: PLIST ( obj --> )
+  @ >R
+  R EADR
+  R EZAHL @ 0 DO CR I .
+    DUP 2@ B.
+    DUP 8 + 2@ B.
+    DUP 10 + 2@ B. 
+    DUP 18 + 2@ B.
+    20 +
+    LOOP
+  R PADR
+  R PZAHL @ 0 DO
+    CR ." P" I . DUP @ .
+    DUP 4 + @ .
+    DUP 8 + @ .
+    DUP 10 + V@
+    2ROT CR B. 2SWAP CR B. CR B.
+    28 +
+    LOOP
+  R KADR
+  R KZAHL @ 0 DO
+    CR I . DUP @ .
+    DUP 4 + @ .
+    8 + 
+    LOOP
+  R KADR
+  R> KZAHL @ 8 * +
+    BEGIN DUP @ -1 - WHILE
+      CR DUP @ . DUP 4 + @ . 
+      8 + REPEAT ; 
+
+
+DECIMAL
+( Balken1 Schnitt2 RUMPS Rest1
+( Rest1 CLS KPLOT
+( Rest1 Schnitt1 RUMPS Rest2
+( Rest2 CLS KPLOT
+( Balken1 Balken2 ZUTSCH T1
+( T1 Schnitt2 ZUTSCH Z1
+( Z1 CLS KPLOT
+( Balken2 Balken1 ZUTSCH T2
+( T2 Schnitt2 RUMPS Z2
+( Z2 CLS KPLOT
+( Z2 Schnitt1 RUMPS Z3
+( 5 1 SCAL 2!
+( Z3 CLS KPLOT
+
+TREXEC <!WTFFcad>.Q6-rundums
+HEX
+( oi noi )
+( Verkürzen mal noch mit ASD auch
+( und auch so, dass der Mittelpunkt bleibt
+20 WORD: ASC ( <char>  --> code )
+  IF C@ ELSE 0 ENDIF ; 
+
+( : KEYEY 
+(   ( neu mit Groß-/Klein)
+(   81 1 0 R! {0-2}
+(   SWI OS_Byte
+(   R@ {1}
+(   DUP 60 > OVER 7B < AND IF 20 - ENDIF
+(   ( CLI *FX 15,1
+(   ;
+
+0 VARIABLE PLOTOBJ 100 ALLOT
+PLOTOBJ 100 0 FILL
+0 0 2VARIABLE MXY
+0 0 2VARIABLE MXY'
+: SCALER ( a b --> )
+  2DUP SCAL 2@ B* BK SCAL 2!
+  ( VERSCHIEB so einstellen, dass die Position MXY nach dem scalieren wieder da steht
+  ( VNEU=P-SCAL*(P-V)
+  ( MXY ist neu = MXY-VERSCHIEB
+  ( also P-VNEU=SCAL*(P-V)
+  ( oder wieder VNEU=P-SCAL*(P-V)
+  ( immerhin MX' raus!!!
+  ( ach nee mx' wieder drin, für nachfolgende SCALER
+  2DUP MXY 2@
+  >R -1 B* / ROT ROT R> -1 B* / 
+  MXY 2@ ++ 
+  2DUP SWAP MINUS SWAP MINUS MXY 2@ ++ MXY 2! 
+  VERSCHIEB 2@ ++
+  VERSCHIEB 2!
+  ( ging genau wie gedacht, aber trotzdem mal noch ein neues anders: unter DREHSCALER
+  ;
+1 VARIABLE BILDNUMMER
+( : BILDWECHSEL
+(   3 BILDNUMMER @ - BILDNUMMER !
+(   70 BILDNUMMER @ R! {0,1}
+(   SWI OS_Byte
+(   ;
+( : BILDSTILL
+(   71 BILDNUMMER @ R! {0,1}
+(   SWI OS_Byte
+(   ;
+( 
+( : BILDINIT
+(   2 R! {0}
+(   SWI OS_ReadDynamicArea
+(   2 R! {0}
+(   SWI OS_ChangeDynamicArea
+(   CLS BILDWECHSEL CLS BILDWECHSEL
+(   ;
+( BILDINIT
+
+: BILDWECHSEL ;
+: BILDSTILL ;
+: BILDINIT ;
+
+0 VARIABLE ALTSCHNAPPER
+0 VARIABLE VONSCHNAPPER
+0 VARIABLE KOSCHNAPPER1 0 ,
+0 VARIABLE KOSCHNAPPER2 0 , 0 ,
+0 VARIABLE SCHNAPPVAR
+: VPLOT
+  >R VERSCHIEB 2@ ++
+  OVER ABS 4000 >
+  OVER ABS 4000 > OR IF 2DROP 4000 4000 ENDIF
+  R> PLOT ;
+: WPLOT >R >R VERSCHIEB 2@ ++ 2SWAP VERSCHIEB 2@ ++ VERKÜRZ R> PLOT R> PLOT ;
+
+0 VARIABLE BREMSER
+
+: DREHSCALER
+  NEBENRECHNUNG
+  ALTSCHNAPPER @ 2@
+  ALTSCHNAPPER @ 8 + 2@
+  >R DRECH R> DRECH
+  >R SWAP >R + 2 / R> R> + 2 /
+  >R SWAP >R - R> R> -
+  VERSCHIEB 2@
+  >R SWAP >R + R> R> +
+  VERSCHIEB 2!
+  HAUPTRECHNUNG
+  VERSCHIEB 2@ B+0 VERSCHIEB 2!
+  ;
+
+: SCALER ( a b --> )
+  ( hält ALTSCHNAPPER fest genau wie bei J K )
+  SCAL 2@ B* BK SCAL 2!
+  DREHSCALER
+  ;
+
+: SCHNAPPERPLOTTER
+  BREMSER @ 0= IF 39 ELSE 3C ENDIF
+  WCOL
+  SCHNAPPVAR @ IF
+    CLI *FX 19
+    VONSCHNAPPER @ 0 > IF
+      VONSCHNAPPER @ 2@ 
+      ALTSCHNAPPER @ 2@ 1 16 WPLOT ( 44 15 WPLOT
+      ENDIF
+    ELSE
+      BREMSER @ 0=
+      VONSCHNAPPER @ 0 > AND IF
+        VONSCHNAPPER @ 2@ 
+        ALTSCHNAPPER @ 2@ 1 16 WPLOT ( 44 15 WPLOT
+        ENDIF
+      ALTSCHNAPPER @ 2@ 1 VPLOT ( 44 VPLOT
+      8 0 15 PLOT ( 91 PLOT
+      ENDIF
+  05 WCOL
+  ;
+
+: NURGUCKER
+  ALTSCHNAPPER @ 2@
+
+  MXY 2@ >R SWAP >R - ABS R> R> - ABS + 
+  ALTSCHNAPPER @ R! {0,1} ( MAX ADR )
+  SCHNAPPKANTTLISTE
+  BEGIN
+    DUP 8 + @ WHILE
+    DUP 2@ MXY 2@ >R SWAP >R - ABS
+    R> R> - ABS + 
+    DUP R@ {0} < IF R! {0} DUP R! {1}
+      ELSE DROP ENDIF
+    10 +
+    REPEAT
+  DROP R@ {1}
+  CLI *FX 19
+  SCHNAPPERPLOTTER
+  0 SCHNAPPVAR !
+  ALTSCHNAPPER !
+  SCHNAPPERPLOTTER
+  ;
+
+: ABWINKLER ( rx ry sx sy tx ty --> d )
+  R! {0-5}         ( 0  1  2  3  4  5
+  ( (s-r]*(t-r]/max(rx-SX,ry-SY]
+  ( ((sx-rx]*(tx-rx]+(sy...]]/max
+  ( neu max^2=(s-r]^2*(t-r]^2
+  R@ {0,2} - R@ {0,4} - *
+  R@ {1,3} - R@ {1,5} - * + 1000 *
+  R@ {0,2} - DUP * R@ {1,3} - DUP * +
+  R@ {0,4} - DUP * R@ {1,5} - DUP * + *
+  SQRTG /
+  ( R@ {0,2} - ABS R@ {0,4} - ABS MAX /
+  ;
+
+0 VARIABLE DREIER
+: SCHIFTGUCKER
+  ( sucht eine Kante, welche einen Punkt an der gleichen Bildposition hat wie A und am Mauszeiger am nächsten liegt.
+  ( für den Anfang mal die erste Kante
+  0 DREIER !
+  0 ALTSCHNAPPER @ R! {0,1}
+  SCHNAPPKANTTLISTE
+  BEGIN
+    DUP 8 + @ WHILE
+    DUP @ VONSCHNAPPER @ @ =
+    OVER 4 + @ VONSCHNAPPER @ 4 + @ =
+    AND 
+    OVER 8 + 2@ = AND
+    IF
+      DUP 10 DREIER @ IF MINUS ENDIF
+      + R! {2}
+      DUP 2@ R@ {2} 2@ MXY 2@
+      ABWINKLER DUP R@ {0} > IF
+        R! {0}
+        R@ {2} R! {1}
+        ELSE DROP ENDIF
+      ENDIF
+    DREIER @ 1+ 
+    DUP 2 > IF DROP 0 ENDIF
+    DREIER !
+    10 +
+    REPEAT
+  DROP R@ {1}
+  CLI *FX 19
+  SCHNAPPERPLOTTER
+  1 SCHNAPPVAR !
+  ALTSCHNAPPER !
+  SCHNAPPERPLOTTER
+  ;
+
+0 VARIABLE SCHIFTSTELLER
+: SCHNAPPERGUCKER
+  79 0 R! {0,1}
+(  SWI OS_Byte
+  R@ {1} 0= 
+  VONSCHNAPPER @ 0 > AND
+  SCHIFTSTELLER @ 0 > OR
+  IF SCHIFTGUCKER ELSE
+    NURGUCKER ENDIF
+  ;
+
+: COLLECT
+  PLOTOBJ @ 0 DO
+    PLOTOBJ 4 + I 4 * + 
+    @ >R
+    R VADR R EADR DO
+      I 00 + 2@ B+0 I 00 + 2!
+      I 08 + 2@ B+0 I 08 + 2!
+      I 10 + 2@ B+0 I 10 + 2!
+      I 18 + 2@ B+0 I 18 + 2!
+      20 +LOOP
+    R KADR R PADR 10 + DO
+      I 00 + 2@ B+0 I 00 + 2!
+      I 08 + 2@ B+0 I 08 + 2!
+      I 10 + 2@ B+0 I 10 + 2!
+      28 +LOOP
+    R> DROP
+    LOOP
+  RECHENBLOCK
+  ;
+0 VARIABLE DISPOBJEKT
+
+: ASDPLOTTER
+  ( ASD grün/blau 10/8
+  KOSCHNAPPER2 @ IF
+    08 WCOL
+    KOSCHNAPPER2 @ 2@ 1 VPLOT ( 44 VPLOT
+    02 0 15 PLOT ( 04 0 91 PLOT
+    KOSCHNAPPER2 0 + @ 2@ 
+    KOSCHNAPPER2 8 + @ 2@ 1 14 WPLOT ( 44 05 WPLOT
+    0A WCOL
+    KOSCHNAPPER2 0 + @ 2@ 
+    KOSCHNAPPER2 4 + @ 2@ 1 14 WPLOT ( 44 05 WPLOT
+    ENDIF
+  ( AS braun 13
+  KOSCHNAPPER1 @ IF
+    0D WCOL
+    KOSCHNAPPER1 @ 2@ 1 VPLOT ( 44 VPLOT
+    03 0 15 PLOT ( 08 0 91 PLOT
+    KOSCHNAPPER1 0 + @ 2@
+    KOSCHNAPPER1 4 + @ 2@ 1 14 WPLOT ( 44 05 WPLOT
+    ENDIF
+  ( A rot 11
+  VONSCHNAPPER @ IF
+    0B WCOL
+    VONSCHNAPPER @ 2@ 1 VPLOT ( 44 VPLOT
+    04 0 15 PLOT ( 0C 0 91 PLOT
+    ENDIF
+  ;
+
+0 VARIABLE NICHNEURECH
+: SRECH
+  NEBENRECHNUNG
+  NICHNEURECH @ 0= IF
+    0 SCHNAPPERZEIGER !
+    DISPOBJEKT @ 1 < IF
+      PLOTOBJ @ 0 DO
+        PLOTOBJ 4 + I 4 * +
+        KRECH
+        LOOP
+      ENDIF
+    OBJEKT2 @ 0 > DISPOBJEKT @ 1 = 0= AND
+    IF OBJEKT2 @ KRECH ENDIF
+    OBJEKT1 @ IF OBJEKT1 @ KRECH ENDIF
+    0 0 SCHNAPPSPEICH
+    0 0 SCHNAPPSPEICH
+    ENDIF
+  HAUPTRECHNUNG ( oi, hier muß noch weng A+0 rein!!! )
+  SCHNAPPKANTTLISTE
+  BEGIN DUP 8 + @ WHILE
+    DUP @ A+0 OVER ! 4 +
+    DUP @ A+0 OVER ! 4 +
+    DUP @ A+0 OVER ! 4 +
+    DUP @ A+0 OVER ! 4 +
+    REPEAT
+  DROP
+  ;
+
+: CP
+  ( hellblau 15 Objekte
+  ( schwarz 7 X
+  ( grau 3 Y
+  NEBENRECHNUNG >R
+  CLI *FX 19 
+  BILDWECHSEL
+  SRECH
+  CLS SPLOT
+  ASDPLOTTER
+  SCHNAPPERPLOTTER
+  0 40 4 PLOT
+  BILDSTILL
+  R> HAUPTRECHNUNG
+  ( HEX ZAHLENSPEICHER @ . BLOCKANFANG @ . BLOCKENDE @ . ERGEBNIS @ .
+SPEICHERENDE @ . DECIMAL
+  ;
+
+( neu ESCAPE-STATE aus RiscPC 2 S.47 )
+: ESCAPEBYE ( --> r )
+  0 R! {0}
+(  SWI OS_ReadEscapeState
+(  [ 23A00001 , ] ( MOVCS R0,#1 )
+  R@ {0} IF BYE ENDIF
+  ;
+
+100 CASEOFS TAPP
+
+: RUNDUM ( obj --> )
+  VDUEIN
+  BILDINIT
+  5 EMIT 17 EMIT 11 EMIT 7 EMIT 6 EMIT
+  18 EMIT 0 EMIT 18 EMIT 0 EMIT
+  0 EMIT 0 EMIT 0 EMIT 0 EMIT
+  PLOTOBJ !
+  PLOTOBJ @ 0 DO
+    @ PLOTOBJ 4 + I 4 * + ! LOOP
+  CP CP 
+  BEGIN
+    ( 0 0 LOC SP@ . ERGEBNIS @ . SPEICHERENDE @ .
+    ESCAPEBYE
+(    SWI OS_Mouse
+    R@ {0,1,2} CASE
+      0 OF VERSCHIEB 2@ -- MXY 2!
+        SCHNAPPERGUCKER 
+        0 0 MXY' 2! ENDOF
+      4 OF MXY 2@ -- MXY' 2@ ++
+        VERSCHIEB 2!
+        1 NICHNEURECH !
+        CP
+        0 NICHNEURECH !
+        ENDOF
+      ELSEOF 2DROP ENDOF
+      ENDCASE
+    TAPP KEYEY
+(    SWI OS_Mouse
+    R@ {0} 10 - R@ {1} 10 + 44 PLOT
+    DUP DUP 80 < IF EMIT ELSE DROP ENDIF
+    CASEOF
+    0 UNTIL
+  ;
+
+: RUNDUMWEITER
+  PLOTOBJ @ 0 DO
+    PLOTOBJ 4 + I 4 * + LOOP
+  PLOTOBJ @ RUNDUM ;
+
+DECIMAL
+( Balken1 Balken2 ZUTSCH PPP
+( PPP 150,0 50,0 30,0 TRANSFORM
+( Balken2 Balken1 ZUTSCH T2
+( T2 Schnitt2 RUMPS Z2
+( da muss noch der Kantenausleser rein
+( Z2 Schnitt1 RUMPS Z3
+( Z3 PPP ZUTSCH Z4
+5 1 SCAL 2!
+
+( Z3 1 RUNDUM
+( Z4 1 1 RUNDUM wenn Kantenliste neu
+( Z3 KPLOT
+
+( schnapperei nochmal fürs wimp
+HEX
+0 VARIABLE NEUSCHNAPPER
+0 VARIABLE NEUSCHNAPPVAR
+
+: NEUSCHNAPPERPLOTTER
+(  CLI *FX 19
+  BREMSER @ 0= IF 39 ELSE 3C ENDIF
+  WCOL
+  NEUSCHNAPPVAR @ IF
+    VONSCHNAPPER @ 0 > IF
+      VONSCHNAPPER @ 2@ 
+      NEUSCHNAPPER @ 2@ 1 16 WPLOT ( 44 15 WPLOT
+      ENDIF
+    ELSE
+      BREMSER @ 0=
+      VONSCHNAPPER @ 0 > AND IF
+        VONSCHNAPPER @ 2@ 
+        NEUSCHNAPPER @ 2@ 1 16 WPLOT ( 44 15 WPLOT
+        ENDIF
+      NEUSCHNAPPER @ 2@ 1 VPLOT ( 44 VPLOT
+      8 0 15 PLOT ( 91 PLOT
+      ENDIF
+  7F 0 GCOL
+  ;
+
+: NURGUCKER2
+  ALTSCHNAPPER @ 2@
+
+  MXY 2@ >R SWAP >R - DUP * R> R> - DUP * + 
+  ALTSCHNAPPER @ R! {0,1} ( MAX ADR )
+  SCHNAPPKANTTLISTE
+  BEGIN
+    DUP 8 + @ WHILE
+    DUP 2@ MXY 2@ >R SWAP >R - DUP *
+    R> R> - DUP * + 
+    DUP R@ {0} < IF R! {0} DUP R! {1}
+      ELSE DROP ENDIF
+    10 +
+    REPEAT
+  DROP R@ {1}
+  NEUSCHNAPPER !
+  0 NEUSCHNAPPVAR !
+  ;
+
+: SCHIFTGUCKER2
+  ( sucht eine Kante, welche einen Punkt an der gleichen Bildposition hat wie A und am Mauszeiger am nächsten liegt.
+  ( für den Anfang mal die erste Kante
+  0 DREIER !
+  0 ALTSCHNAPPER @ R! {0,1}
+  SCHNAPPKANTTLISTE
+  BEGIN
+    DUP 8 + @ WHILE
+    DUP @ VONSCHNAPPER @ @ =
+    OVER 4 + @ VONSCHNAPPER @ 4 + @ =
+    AND 
+    OVER 8 + 2@ = AND
+    IF
+      DUP 10 DREIER @ IF MINUS ENDIF
+      + R! {2}
+      DUP 2@ R@ {2} 2@ MXY 2@
+      ABWINKLER DUP R@ {0} > IF
+        R! {0}
+        R@ {2} R! {1}
+        ELSE DROP ENDIF
+      ENDIF
+    DREIER @ 1+ 
+    DUP 2 > IF DROP 0 ENDIF
+    DREIER !
+    10 +
+    REPEAT
+  DROP R@ {1}
+  NEUSCHNAPPER !
+  1 NEUSCHNAPPVAR !
+  ;
+
+: SCHNAPPERGUCKER2
+  ( neu guckt der nur den neuen Eckpunkt
+  NEBENRECHNUNG 
+  VONSCHNAPPER @ 0 >
+  SCHIFTSTELLER @ 0 > AND
+  IF SCHIFTGUCKER2 ELSE
+    NURGUCKER2 ENDIF
+  HAUPTRECHNUNG
+  ;
+
+TREXEC <!WTFFcad>.Q7-messen
+( nun die ersten Messungen 
+HEX
+
+: TAPP: TAPP 20 WORD DROP C@ CASEOF: ;
+
+TAPP: ^ BYE ;
+
+VEKTOR TRX
+VEKTOR TRY
+1 VARIABLE MESSFENS
+E-Format LINK-ON
+: MESSICH
+MESSFENS @ IF
+  NEBENRECHNUNG
+  Ergebnisfenster @ 1 18 PLOT
+  Ergebnisfenster @ gUSE
+  0 0 17 PLOT
+  0 10 1 PLOT
+  " Ergebnis:" PRINT
+  VONSCHNAPPER @ IF
+    VONSCHNAPPER @ 8 + 2@
+    ALTSCHNAPPER @ 8 + 2@
+    2OVER 2OVER
+    QDISTANZ BSQRT50???
+    8 AUSGABESTELLEN !
+    0 20 1 PLOT
+    " d=" PRINT
+    E-STR$ PRINT ( DTEXT SWAP 1+ CMOVE
+    ENDIF 
+  KOSCHNAPPER1 @ IF
+    VONSCHNAPPER @ 8 + 2@
+    ALTSCHNAPPER @ 8 + 2@   
+    KOSCHNAPPER1 @ 8 + 2@
+    KOSCHNAPPER1 4 + @ 8 + 2@
+    QDISTANZ   
+    KOSCHNAPPER1 @ 8 + 2@
+    KOSCHNAPPER1 4 + @ 8 + 2@
+    2OVER 2OVER
+    QDISTANZ B/
+    KOSCHNAPPER1 @ 8 + 2@
+    KOSCHNAPPER1 4 + @ 8 + 2@
+    2OVER 2OVER   
+    QDISTANZ BSQRT50??? B* ( tut erweitern, weil sonst d<>k wird
+    0 30 1 PLOT " k=" PRINT
+    DUP IF E-STR$ PRINT ELSE 2DROP ENDIF
+    ( KTEXT SWAP 1+ CMOVE
+    ENDIF
+  KOSCHNAPPER2 @ IF
+    VONSCHNAPPER @ 8 + 2@
+    ALTSCHNAPPER @ 8 + 2@ ( : VADRX ( vadr1 vadr2 --> vektor )
+    ( ASxAD
+    KOSCHNAPPER2 @ 8 + 2@   
+    KOSCHNAPPER2 4 + @ 8 + 2@
+    VDISTANZ TRX V!
+    KOSCHNAPPER2 @ 8 + 2@
+    KOSCHNAPPER2 8 + @ 8 + 2@
+    VDISTANZ TRY V!
+    TRX TRY VADRX TRY V!
+    0,0 0,0 0,0 TRX V!
+    TRX TRX TRY TRY QDISTANZ
+    TRX TRX TRY TRY 2OVER 2OVER   
+    QDISTANZ B/
+    TRX TRX TRY TRY 2OVER 2OVER
+    QDISTANZ BSQRT50??? B* ( proforma auch Nenner rational gemacht
+    0 40 1 PLOT
+    " l=" PRINT
+    DUP IF E-STR$ PRINT ELSE 2DROP ENDIF
+    ( LTEXT SWAP 1+ CMOVE
+    ENDIF
+  7F 0 GCOL
+  HAUPTRECHNUNG
+  ELSE Ergebnisfenster @ -1 18 PLOT ENDIF
+  ;
+E-Format LINK-OFF 
+
+( DECIMAL
+( Balken1 Balken2 ZUTSCH PPP
+( PPP 150,0 50,0 30,0 TRANSFORM
+( Balken2 Balken1 ZUTSCH T2
+( T2 Schnitt2 RUMPS Z2
+( da muss noch der Kantenausleser rein
+( Z2 Schnitt1 RUMPS Z3
+( Z3 PPP ZUTSCH Z4
+5 1 SCAL 2!
+
+( Z3 1 RUNDUM
+( Z4 1 RUNDUM wenn Kantenliste neu
+
+( weitere TAPPS
+TAPP 0D CASEOF: CP ;
+TAPP 20 CASEOF: CP ;
+( Objekt wählen
+: GUCKOBJEKT ( vadr --> kadr )
+  DUP IF R! {0}
+    PLOTOBJ BEGIN ( pkadr
+      4 +
+      R@ {0} OVER @ KADR < 
+      OVER @ R@ {0} < AND UNTIL
+    ENDIF
+  ;
+
+TAPP: A
+  OBJEKT1 @ 0= IF
+    ALTSCHNAPPER @ 8 + @
+    GUCKOBJEKT
+    OBJEKT1 ! 
+    SRECH
+    SCHNAPPERGUCKER
+    ENDIF
+  ALTSCHNAPPER @ VONSCHNAPPER !
+  0 SCHIFTSTELLER !  
+  CP ;
+
+TAPP: S 
+  VONSCHNAPPER @ ALTSCHNAPPER @
+  KOSCHNAPPER1 2!
+  0 SCHIFTSTELLER !  
+  CP ;
+TAPP: D 
+  KOSCHNAPPER1 2@ KOSCHNAPPER2 2! 
+  ALTSCHNAPPER @ 
+  KOSCHNAPPER2 8 + !
+  0 SCHIFTSTELLER !  
+  CP ;
+
+( TAPP: P 4 EMIT QUIT ;
+TAPP: G
+  DISPOBJEKT @ 1+
+  DUP 2 > IF 3 - ENDIF
+  DUP 1 = OBJEKT1 @ 0= AND IF 1 + ENDIF
+  DUP 2 = OBJEKT2 @ 0= AND IF 2 - ENDIF
+  DISPOBJEKT !
+  0 VONSCHNAPPER !
+  0 0 KOSCHNAPPER1 2!
+  KOSCHNAPPER2 0C 0 FILL
+  CP ;
+TAPP: 1 1 4 SCALER CP
+  CLI *FX 15,1
+  ;
+TAPP: 2 ( - ZOOM
+  2 3 SCALER CP
+  CLI *FX 15,1
+  ;
+TAPP: 3 ( Ä ZOOM
+  3 2 SCALER CP 
+  CLI *FX 15,1
+  ;
+TAPP: 4 4 1 SCALER CP
+  CLI *FX 15,1
+  ;
+
+TAPP: 5
+  [ DECIMAL ] 320 120 [ HEX ]
+  VERSCHIEB 2@ --
+  ALTSCHNAPPER @ 2@ --
+  VERSCHIEB 2@ ++
+  VERSCHIEB 2!
+  ;
+
+DECIMAL
+47 48 2VARIABLE KAVA
+3 8 2VARIABLE KAVB
+-1 12 2VARIABLE KAVC
+ 1 3 2VARIABLE KAVD
+
+HEX
+0 1 2VARIABLE KAPA
+0 1 2VARIABLE KAPB
+0 1 2VARIABLE KAPC
+0 1 2VARIABLE PX
+0 1 2VARIABLE PY
+0 1 2VARIABLE PZ
+0 1 2VARIABLE QX
+0 1 2VARIABLE QY
+0 1 2VARIABLE QZ
+0 1 2VARIABLE T11
+: PARRASTIX ( p1 p2 p3 p4 kava kavb kavc -> f g )
+  ( neu
+  ( t=(a*px+b*py]/(a*qx+b*qy]
+  ( d=-(c*(px-t*qx]+pz-t*qz]/(py-t*qy)
+  KAPC 2! KAPB 2! KAPA 2!
+  QZ 2! QY 2! QX 2! 
+  PZ 2! PY 2! PX 2! 
+  KAPA 2@ PX 2@ B* 
+  KAPB 2@ PY 2@ B* B+
+  KAPA 2@ QX 2@ B* 
+  KAPB 2@ QY 2@ B* B+
+  B/ BK T11 2!
+
+  KAPC 2@ PX 2@ T11 2@ QX 2@ B* B- B*
+  PZ 2@ T11 2@ QZ 2@ B* B- B+
+  PY 2@ T11 2@ QY 2@ B* B- B/ MINUS BK
+  ;
+
+DECIMAL
+0 1 2VARIABLE PARTM
+0 1 2VARIABLE PARTN
+
+0,0 5750,0 0,0 
+4600,0 3520,0 4160,0 
+KAVA 2@ KAVB 2@ KAVC 2@
+PARRASTIX PARTM 2!
+
+9200,0 0,0 0,0
+4600,0 3520,0 4160,0 
+KAVB 2@ MINUS KAVA 2@ MINUS KAVD 2@
+PARRASTIX PARTN 2! 
+
+HEX
+
+: DREHTAPPER ( i --> )
+  CASE
+    0 OF
+      ( a b  c d
+      KAVA 2@ KAVB 2@
+      KAVC 2@ PARTM 2@
+      ENDOF
+    1 OF
+      ( a -b -c d
+      KAVA 2@ KAVB 2@ MINUS
+      KAVC 2@ MINUS PARTM 2@
+      ENDOF
+    2 OF
+      ( b -a d -c
+      KAVB 2@ KAVA 2@ MINUS
+      KAVD 2@ PARTN 2@ MINUS
+      ENDOF
+    3 OF
+      ( -b -a d c
+      KAVB 2@ MINUS KAVA 2@ MINUS
+      KAVD 2@ PARTN 2@
+      ENDOF
+    4 OF
+      ( -a -b -c -d
+      KAVA 2@ MINUS KAVB 2@ MINUS
+      KAVC 2@ MINUS PARTM 2@ MINUS
+      ENDOF
+    5 OF
+      ( -a b c -d
+      KAVA 2@ MINUS KAVB 2@
+      KAVC 2@ PARTM 2@ MINUS
+      ENDOF
+    6 OF
+      ( -b a -d c
+      KAVB 2@ MINUS KAVA 2@
+      KAVD 2@ MINUS PARTN 2@
+      ENDOF
+    7 OF
+      ( -b a -d c
+      KAVB 2@ KAVA 2@
+      KAVD 2@ MINUS PARTN 2@ MINUS
+      ENDOF
+    ENDCASE
+  1,0 PARRA2 V!
+  0,0 PARRA1 V!
+  ;
+
+: DREHTAPPER ( i --> )
+  ( also die Bestimmungsregel ist wirklich nur das xy-Koordinatenpaar für jede Drehrichtung wie gewünscht aufzeichnen und px,py-Koordinaten abnehmen.
+  [ DECIMAL ]
+  CASE
+    00 OF  28  09  00  09 ENDOF
+    01 OF  23 -05  05  10 ENDOF
+    02 OF  16 -20  07  06 ENDOF
+    03 OF  09 -28  09  00 ENDOF
+    04 OF -05 -23  10 -05 ENDOF
+    05 OF -20 -16  06 -07 ENDOF
+    06 OF -28 -09  00 -09 ENDOF
+    07 OF -23  05 -05 -10 ENDOF
+    08 OF -16  20 -07 -06 ENDOF
+    09 OF -09  28 -09  00 ENDOF
+    10 OF  05  23 -10  05 ENDOF
+    11 OF  20  16 -06  07 ENDOF
+    ENDCASE
+  >R >R >R 28 R> 28 R> -28 R> -28
+  [ HEX ]
+  -1,0 PARRA2 V!
+  0,0 PARRA1 V!
+  ;
+
+0 VARIABLE DREHRICHTUNG
+TAPP: . ( L DREH
+  0 DREHTAPPER
+  DREHSCALER
+  CP ;
+TAPP: , ( L DREH
+  1 DREHTAPPER
+  DREHSCALER
+  CP ;
+TAPP: J ( R DREH
+  DREHRICHTUNG @
+  1 + DUP 0B > IF 0C - ENDIF
+  DUP DREHRICHTUNG !  
+  DREHTAPPER
+  DREHSCALER
+  CP ;
+TAPP: K ( R DREH
+  DREHRICHTUNG @
+  1 - DUP 0 < IF 0C + ENDIF
+  DUP DREHRICHTUNG !  
+  DREHTAPPER
+  DREHSCALER
+  CP ;
+
+
+TREXEC <!WTFFcad>.Q8-tappen
+( machmer halt mal das Dacherl her.
+GL-INIT
+
+: PUNKT ( <name> p1 ... p6 --> )
+  0 VARIABLE -4 DP +! ( ??? )
+  2ROT B, 2SWAP B, B, ;
+
+: X>0? ( --> r )
+  OBJEKT1 @ 0= IF
+    1F6 ( 502 ) ERROR ENDIF ;
+: Y>0? ( --> r )
+  OBJEKT2 @ 0= IF 
+    1F7 ( 503 ) ERROR ENDIF ;
+: AS>0? ( --> r )
+  KOSCHNAPPER1 0 + @ 0 >
+  KOSCHNAPPER1 4 + @ 0 > AND
+  DUP IF
+    KOSCHNAPPER1 0 + @ 8 + 2@
+    KOSCHNAPPER1 4 + @ 8 + 2@
+    2OVER 2OVER 
+    QDISTANZ DROP 0= 0= AND
+    ENDIF
+  0= IF 1F8 ( 504 ) ERROR ENDIF ;
+: ASD>0? ( --> r )
+  KOSCHNAPPER2 0 + @ 0 >
+  KOSCHNAPPER2 4 + @ 0 > AND
+  KOSCHNAPPER2 8 + @ 0 > AND
+  DUP IF
+    KOSCHNAPPER2 0 + @ 8 + 2@
+    KOSCHNAPPER2 4 + @ 8 + 2@
+    2OVER 2OVER 
+    QDISTANZ DROP 0= 0= AND
+    KOSCHNAPPER2 0 + @ 8 + 2@
+    KOSCHNAPPER2 8 + @ 8 + 2@
+    2OVER 2OVER 
+    QDISTANZ DROP 0= 0= AND
+    ENDIF
+  0= IF 1F9 ( 505 ) ERROR ENDIF ;
+: AS/AD? ( --> r )
+  ( AS nicht parallel AD? )
+  KOSCHNAPPER2 0 + @ 8 + 2@
+  KOSCHNAPPER2 4 + @ 8 + 2@ 
+  VDISTANZ ASX V!
+  KOSCHNAPPER2 0 + @ 8 + 2@
+  KOSCHNAPPER2 8 + @ 8 + 2@ 
+  VDISTANZ ASY V!
+  ASX ASY VADRX DROP >R DROP >R DROP
+  0= R> 0= AND R> 0= AND
+  IF 1FA ( 506 ) ERROR ENDIF ;
+: AS2/AD? ( --> r )
+  ( AS2 nicht parallel AD? )
+  KOSCHNAPPER1 0 + @ 8 + 2@
+  KOSCHNAPPER1 4 + @ 8 + 2@
+  VDISTANZ ASX V!
+  KOSCHNAPPER2 0 + @ 8 + 2@
+  KOSCHNAPPER2 8 + @ 8 + 2@
+  VDISTANZ ASY V!
+  ASX ASY VADRX DROP >R DROP >R DROP
+  0= R> 0= AND R> 0= AND
+  IF 1FB ( 507 ) ERROR ENDIF ;
+
+TAPP: X
+  ALTSCHNAPPER @ 8 + @
+  GUCKOBJEKT
+  BREMSER @ 0= IF
+    DUP OBJEKT1 @ = IF DROP 0 ENDIF
+    DUP OBJEKT2 @ = IF DROP 0 ENDIF
+    OBJEKT2 ! 
+    ELSE
+     ( DUP OBJEKT1 @ = IF DROP 0 ENDIF
+     ( DUP OBJEKT2 @ = IF DROP 0 ENDIF
+      OBJEKT1 ! 
+      ENDIF
+  CP ;
+TAPP: Y
+  ALTSCHNAPPER @ 8 + @
+  GUCKOBJEKT
+  BREMSER @ 0= IF
+    DUP OBJEKT1 @ = IF DROP 0 ENDIF
+    DUP OBJEKT2 @ = IF DROP 0 ENDIF
+    OBJEKT1 ! 
+    ELSE
+     ( DUP OBJEKT1 @ = IF DROP 0 ENDIF
+     ( DUP OBJEKT2 @ = IF DROP 0 ENDIF
+      OBJEKT2 ! 
+      ENDIF
+  CP ;
+TAPP: Z
+  ALTSCHNAPPER @ 8 + @
+  GUCKOBJEKT
+  BREMSER @ 0= IF
+    DUP OBJEKT1 @ = IF DROP 0 ENDIF
+    DUP OBJEKT2 @ = IF DROP 0 ENDIF
+    OBJEKT1 ! 
+    ELSE
+     ( DUP OBJEKT1 @ = IF DROP 0 ENDIF
+     ( DUP OBJEKT2 @ = IF DROP 0 ENDIF
+      OBJEKT2 ! 
+      ENDIF
+  CP ;
+
+0 VARIABLE ZAHLENSALAT
+
+TAPP: C
+  X>0?
+  SCHIFTSTELLER @ 0= IF
+    OBJEKT1 @ 
+    " COPY CCC CCC " INTERPRET
+    @ PLOTOBJ DUP @ 4 * + 4 + !
+    PLOTOBJ DUP @ 4 * + 4 + OBJEKT1 !
+    1 PLOTOBJ +!
+    ELSE
+      PLOTOBJ DUP @ 4 * + 0 + @
+      OBJEKT1 @ !
+      -1 PLOTOBJ +!
+      0 OBJEKT1 !
+      0 VONSCHNAPPER !
+      0 0 KOSCHNAPPER1 2!
+      KOSCHNAPPER2 0C 0 FILL
+      ENDIF      
+  ;
+
+TAPP: E
+  SCHIFTSTELLER @ IF
+    KOSCHNAPPER1 2@ SWAP KOSCHNAPPER1 2!
+    ELSE
+      X>0? AS>0?
+      ZAHLENSALAT @ 0= IF VDUAUS ENDIF        OBJEKT1 @ 
+      BREMSER @ 0 > KOSCHNAPPER1 @ 0 > 
+      AND IF
+        KOSCHNAPPER1 4 + @ 8 + 2@ 
+        KOSCHNAPPER1 @ 8 + 2@
+        ELSE
+          ALTSCHNAPPER @ 8 + 2@ 
+          VONSCHNAPPER @ 8 + 2@
+          ENDIF
+      VDISTANZ 
+      TRANSFORM2
+      VDUEIN
+      CP
+      ENDIF
+  ;
+
+TAPP: Q ( dreht Q+AS um Q in Richtung W
+  ( also aus AS wird QW noriert
+  ( aus ZxAS wird ZxQW norm.
+  ( und aus ASx(ZxAS] wird QWx<ZxQW>
+  ( A (.,.,.] = (.,.,. ]'
+  ( A = (.,.,.]'/(.,.,.]
+
+  X>0? ASD>0?
+  ZAHLENSALAT @ 0= IF VDUAUS ENDIF
+  ( Dreherei ausrechnen 
+  KOSCHNAPPER2 4 + @ 8 + 2@
+  KOSCHNAPPER2 0 + @ 8 + 2@
+  VDISTANZ ASX V!
+  BREMSER @ 0 > KOSCHNAPPER2 @ 0 > 
+  AND IF
+    KOSCHNAPPER2 8 + @ 8 + 2@ 
+    KOSCHNAPPER2 @ 8 + 2@
+    ELSE
+      ALTSCHNAPPER @ 8 + 2@ 
+      VONSCHNAPPER @ 8 + 2@
+      ENDIF
+  VDISTANZ QWX V!
+  DREHER1
+  QWX V@ A20 2! A10 2! A00 2!
+  QWY V@ A21 2! A11 2! A01 2!
+  QWZ V@ A22 2! A12 2! A02 2!
+  ( vorher zum Nullpunkt schieben
+  OBJEKT1 @
+  VONSCHNAPPER 0 + @ 8 + 2@ VMITT
+  VONSCHNAPPER 0 + @ 8 + 2@ VMITT
+  >R >R >R >R >R >R 
+  2ROT MINUS 2ROT MINUS 2ROT MINUS
+  TRANSFORM2
+  ( und drehen
+  OBJEKT1 @
+  TRANSFORM3
+  ( und zurück zu A
+  OBJEKT1 @
+  R> R> R> R> R> R>
+  TRANSFORM2
+  ( fertig
+  VDUEIN
+  CP 
+  ;
+
+TAPP: W
+  ( also aus AS wird AS=QW
+  ( aus ASxAD wird ASxQE normiert
+  ( und aus ASx(ASxAD] wird ASx<ASxQE>
+  ( A (.,.,.] = (.,.,. ]'
+  ( A = (.,.,.]'/(.,.,.]
+( neu: AS dreht um AD
+  X>0?
+  AS>0?
+  ASD>0?
+  AS/AD?
+  AS2/AD?
+  ZAHLENSALAT @ 0= IF VDUAUS ENDIF
+  ( Dreherei ausrechnen 
+  KOSCHNAPPER2 8 + @ 8 + 2@
+  KOSCHNAPPER2 0 + @ 8 + 2@
+  VDISTANZ ASX V! ( AS )
+  KOSCHNAPPER2 4 + @ 8 + 2@
+  KOSCHNAPPER2 0 + @ 8 + 2@
+  VDISTANZ ASY V! ( ASD )
+  KOSCHNAPPER1 4 + @ 8 + 2@
+  KOSCHNAPPER1 0 + @ 8 + 2@
+  VDISTANZ QWX V! ( AS2 )
+  DREHER2
+  QWX V@ A20 2! A10 2! A00 2!
+  QWY V@ A21 2! A11 2! A01 2!
+  QWZ V@ A22 2! A12 2! A02 2!
+  ( vorher zum Nullpunkt schieben
+  OBJEKT1 @
+  VONSCHNAPPER 0 + @ 8 + 2@ VMITT
+  VONSCHNAPPER 0 + @ 8 + 2@ VMITT
+  >R >R >R >R >R >R 
+  2ROT MINUS 2ROT MINUS 2ROT MINUS
+  TRANSFORM2
+  ( und drehen
+  OBJEKT1 @
+  TRANSFORM3
+  ( und zurück zu A
+  OBJEKT1 @
+  R> R> R> R> R> R>
+  TRANSFORM2
+  ( fertig
+  VDUEIN
+  CP ;
+
+( und die erste Säge, neu mit Mehrebenensammler)
+0 VARIABLE FSÄGE
+( SOUND LINK-ON
+( : SÄGSÄG S ;
+( SOUND LINK-OFF
+
+0 VARIABLE SAMMELEBENE
+: MEHREBENENDAZU
+  DUP 4 + OVER !
+  SAMMELEBENE @ KZAHL @
+  SAMMELEBENE @ EZAHL @ + 
+  OVER @ KZAHL !
+  DUP @ KADR 0 + DP !
+  DUP @ KZAHL @ 1 DO 
+    I 0 DO I , J , LOOP LOOP
+  ;
+  
+TAPP: F
+  X>0?
+  ZAHLENSALAT @ 0= IF VDUAUS ENDIF
+  KOSCHNAPPER2 @ 0 >
+  KOSCHNAPPER1 @ 0 >
+  BREMSER @ 0= AND OR
+  OBJEKT1 @ 0 > AND IF
+    ASD>0?
+    AS/AD?
+    BREMSER @ IF
+      KOSCHNAPPER2 8 + @ 8 + 2@ VMITT
+      KOSCHNAPPER2 4 + @ 8 + 2@ VMITT
+      KOSCHNAPPER2 0 + @ 8 + 2@ VMITT
+      ELSE
+        KOSCHNAPPER1 4 + @ 8 + 2@ VMITT
+        KOSCHNAPPER1 0 + @ 8 + 2@ VMITT
+        ALTSCHNAPPER @ 8 + 2@ VMITT
+        ENDIF
+    " EBENE FSÄGE" INTERPRET
+    BREMSER @ IF
+      " FSÄGE" INTERPRET
+      VONSCHNAPPER @ 8 + 2@
+      KOSCHNAPPER2 @ 8 + 2@
+      VDISTANZ
+      TRANSFORM
+      ENDIF
+    ENDIF
+  SAMMELEBENE @ 0= IF
+    " FSÄGE"
+    INTERPRET @ SAMMELEBENE !
+    ELSE
+      SAMMELEBENE @ EZAHL @ 1 = IF
+        " FSÄGE" INTERPRET
+        @ EADR W@ KEILSÄGE @ EADR W!
+        SAMMELEBENE @
+        EADR W@ KEILSÄGE @ EADR 20 + W!
+        KEILSÄGE @ SAMMELEBENE !
+        ELSE
+          SAMMELEBENE 
+          " FSÄGE RUMPS FGT FGT"
+          INTERPRET
+          DUP @ 0= IF
+            MEHREBENENDAZU ENDIF
+          @ SAMMELEBENE !
+          ENDIF
+      ENDIF
+
+  " FSÄGE" INTERPRET @ 0 >
+  OBJEKT1 @ 0 > AND IF
+    SCHIFTSTELLER @ 0= IF
+      OBJEKT1 @ ( ohne @·@·!!! ) 
+     ( " FSÄGE" INTERPRET
+      SAMMELEBENE
+      1 -F 120 FFF SÄGSÄG
+      " ZUTSCH UUU UUU @ " INTERPRET
+      1 -F 120 1 SÄGSÄG
+      0 SAMMELEBENE !
+      DUP 0= IF
+        DROP PLOTOBJ DUP @ 4 * + @ 
+        -1 PLOTOBJ +! ENDIF
+      OBJEKT1 @ !
+      ENDIF
+    ENDIF
+  0 VONSCHNAPPER !
+  KOSCHNAPPER1 8 0 FILL
+  KOSCHNAPPER2 0C 0 FILL
+  0 SCHIFTSTELLER !
+  VDUEIN
+  CP ;
+
+( eine zweite Säge, ok geht auch,
+VEKTOR PA1
+VEKTOR DA2
+: EBENE2 ( <name>  pvektor avektor --> )
+  DA2 V! PA1 V!
+  0 VARIABLE HERE DUP 4 - !
+  1 , ( 1 Ebene
+  2 , ( 2 Verknüpfungsangaben
+  0 , ( 0 Eckpunkte zu je 28 Byte
+  0 , ( 0 Kanten zu je 10 Byte
+  ( Ebenenliste, ax-d>0 fürs innere:
+  PA1 V@ PA1 DA2 VADR* EGGT
+  >R >R 2ROT B, 2SWAP B, B, R> R> B,
+  TEBN , TEND ,
+  ;
+
+TAPP: R
+  X>0?
+  ZAHLENSALAT @ 0= IF VDUAUS ENDIF
+  VDUEIN
+  KOSCHNAPPER1 @ 0 >
+  BREMSER @ 0= OR
+  OBJEKT1 @ 0 > AND IF
+    AS>0?
+    OBJEKT1 @ ( Mmohne @·@·!!! ) 
+    BREMSER @ IF
+      KOSCHNAPPER1 0 + @ 8 + 2@
+      KOSCHNAPPER1 4 + @ 8 + 2@
+      ELSE
+        ALTSCHNAPPER @ 8 + 2@
+        VONSCHNAPPER @ 8 + 2@
+        ENDIF
+    VDISTANZ
+    2ROT MINUS 2ROT MINUS 2ROT MINUS
+    VONSCHNAPPER @ 8 + 2@ VMITT
+    " EBENE2 RSÄGE " INTERPRET
+
+  SAMMELEBENE @ 0= IF
+    " RSÄGE"
+    INTERPRET @ SAMMELEBENE !
+    ELSE
+      SAMMELEBENE @ EZAHL @ 1 = IF
+        " RSÄGE" INTERPRET
+        @ EADR W@ KEILSÄGE @ EADR W!
+        SAMMELEBENE @
+        EADR W@ KEILSÄGE @ EADR 20 + W!
+        KEILSÄGE @ SAMMELEBENE !
+        ELSE
+          SAMMELEBENE 
+          " RSÄGE RUMPS FGT FGT"
+          INTERPRET
+          DUP @ 0= IF
+            MEHREBENENDAZU ENDIF
+          @ SAMMELEBENE !
+          ENDIF
+      ENDIF
+    SCHIFTSTELLER @ 0= IF
+      SAMMELEBENE
+      1 -F 150 FFF SÄGSÄG
+      " ZUTSCH UUU UUU @ " INTERPRET
+      1 -F 120 1 SÄGSÄG
+      0 SAMMELEBENE !
+      DUP 0= IF
+        DROP PLOTOBJ DUP @ 4 * + @ 
+        -1 PLOTOBJ +! ENDIF
+      OBJEKT1 @ !
+      ENDIF
+    ENDIF
+  0 VONSCHNAPPER !
+  KOSCHNAPPER1 8 0 FILL
+  KOSCHNAPPER2 8 0 FILL
+  0 SCHIFTSTELLER !
+  VDUEIN
+  CP ;
+
+( Keilsäge braungmer nimmer
+
+( und Fräsen )
+TAPP: T
+  ZAHLENSALAT @ 0= IF VDUAUS ENDIF
+  BREMSER @ 0= IF
+    ALTSCHNAPPER @ 8 + @
+    GUCKOBJEKT
+    OBJEKT2 !
+    ENDIF  
+  X>0? Y>0? ( AND ) 1 IF
+    OBJEKT1 @ ( ohne @·@·!!! ) 
+    OBJEKT2 @ ( ohne @·@·!!! ) 
+    1 -F 180 FFF SÄGSÄG
+    SCHIFTSTELLER @ 0= IF
+      " ZUTSCH ZZZ ZZZ @ " INTERPRET
+      ELSE
+        " RUMPS ZZZ ZZZ @ " INTERPRET
+        ENDIF
+    1 -F 120 1 SÄGSÄG
+    DUP 0= IF
+      DROP PLOTOBJ DUP @ 4 * + @ 
+      -1 PLOTOBJ +! ENDIF
+    OBJEKT1 @ !
+    ENDIF
+  0 VONSCHNAPPER !
+  KOSCHNAPPER1 8 0 FILL
+  KOSCHNAPPER2 0C 0 FILL
+  0 SCHIFTSTELLER !
+  VDUEIN
+  CP ;
+
+( E0 E1 E2 E3 E4 WDACH DACH4
+( E0 @ 10 + E1 @ 10 + E2 @ 10 + DREIEBENEN CR 2DROP B... B... B...
+( E0 @ 10 + E1 @ 10 + E3 @ 10 + DREIEBENEN CR 2DROP B... B... B...
+( E0 @ 10 + E4 @ 10 + E2 @ 10 + DREIEBENEN CR 2DROP B... B... B...
+( E0 @ 10 + E4 @ 10 + E3 @ 10 + DREIEBENEN CR 2DROP B... B... B...
+( E1 @ 10 + E2 @ 10 + E3 @ 10 + DREIEBENEN CR 2DROP B... B... B...
+( E4 @ 10 + E2 @ 10 + E3 @ 10 + DREIEBENEN CR 2DROP B... B... B...
+( DACH4 @ 10 + 20 4 * +
+( DACH4 @ 10 + 20 2 * +
+( DACH4 @ 10 + 20 3 * +
+( DREIEBENEN CR 2DROP B... B... B...
+
+
+( als allerletztes noch den Draufgucker 
+0 VARIABLE MERFQ
+: DRAUFGUCKER ( adr --> )
+  DUP MERFQ ! R! {0}
+  (( R@ {0} @ CR . 
+  R@ {0} @ , R@ {0} 10 + @ ,
+  ;
+: DRAUFGUCKER ( adr --> )
+  R! {0}
+  TEIL @ PADR R@ {0} @ 28 * + 10 +
+  TEIL @ PADR R@ {0} 10 + @ 28 * + 10 +
+  VMITT
+  TEIL DURCHGUCKER 3 = IF
+    (( R@ {0} @ CR . 
+    R@ {0} @ , R@ {0} 10 + @ ,
+    ENDIF
+  ;
+
+TAPP 20 CASEOF:
+  1 SCHIFTSTELLER @ - SCHIFTSTELLER !
+  CP
+  ;
+
+TAPP: L TAPP 20 CASEOF ;
+1 BREMSER !
+TAPP: V 1 BREMSER @ - BREMSER ! ;
+
+TAPP: H
+(  4 EMIT 0 0 LOC
+(  CLI TYPE <!WFFcad>.!HELP
+(  5 EMIT
+  ;
+
+TAPP: O
+  ;
+
+TAPP: B 1 MESSFENS @ - MESSFENS ! ;
+
+REPLACE: CP ;
+
+REM
+TREXEC <!WTFFcad>.Q9-fenstern
+HEX
+( und die Fensterdefinitionen )
+
+
+: SPOOLER ( n --> )
+ ((  CLI *SPOOLON RAM:XXX
+  SPOOLON
+  ." >T " 
+  SCHIFTSTELLER @ IF 8B EMIT ENDIF
+  DUP 20 = IF DROP ASC L ENDIF
+  EMIT 20 EMIT 
+  ALTSCHNAPPER @ DUP IF 2@ ELSE 0 ENDIF B. CR
+ (( CLI *SPOOLON
+  SPOOLOFF
+  ;
+
+: QSPOOLER
+  SPOOLON
+  IN1 @ DUP COUNT TYPE CR
+  SPOOLOFF
+  ; 
+
+: CASEZOFF
+  OVER TAPP = OVER 0 > AND IF
+    DUP SPOOLER ENDIF
+  SCHIFTSTELLER @ >R
+  CASEOF SRECH ALLESREDRAW
+  R> IF
+    0 SCHIFTSTELLER ! ENDIF
+  
+  ;
+
+-1 VARIABLE KLICKICON
+cadfenster 6 EVENT: Mausklick
+  Buffer 8 + @ 2 = IF
+    1 TASTFENSTOFFEN !
+    => Tastenfenster @ Buffer !
+    WIMPGETOPEN
+    CLI *Filer_Run <!WTFFcad>.!Help
+    ENDIF
+  Buffer 8 + @ 1 = IF
+    => Tastenfenster @ Buffer !
+    KLICKICON @ ICONSELECT
+    1 KLICKICON +!
+    KLICKICON @ ICONSELECT
+    ENDIF
+  Buffer 8 + @ 4 = IF
+    cadfenster @ -1
+    0 0 -1 -1
+    R! {0-5}
+    SWI Wimp_SetCaretPosition
+    => Tastenfenster @ Buffer !
+    KLICKICON @ -1 > IF
+      KLICKICON @ Buffer 4 + !
+      Buffer R! {1}
+      SWI Wimp_GetIconState
+      Buffer 1C + @ C@ 
+      TAPP SWAP CASEZOFF
+      ELSE
+        FIXIERUNG @ 0= IF
+          2 FIXIERUNG !
+          => WUPDATE
+          1 FIXIERUNG !
+          ELSE
+            0 FIXIERUNG !
+            TAPP 0 CASEZOFF ENDIF
+        ENDIF
+    ENDIF
+  ;
+
+( ----------- Tastenfenster ----------
+
+( X
+( AS    Q
+( ASD A W
+( ASD A E
+( ASD A F
+( AS  A R
+( -Y-   C
+
+( -V- -B- -L-
+
+( 1:4  N
+( 2:3  M
+( 3:2  ,
+( 4.1  .
+
+
+( Laden und Speichern
+( restliches
+
+ HEX
+
+
+1,0 1,0 1,0 QUADER Eins
+DECIMAL   
+Eins 1 WIMPRUNDUM
+0 PLOTOBJ !
+START
+
+REMEND
+DECIMAL
+( 1,0 1,0 1,0 QUADER Eins
+
+( nochmal außerhalb REM
+HEX
+1 VARIABLE MAUSDA
+0 VARIABLE SCHIFTMERKER
+0 1 2VARIABLE KLICKPOS
+0 VARIABLE KLICKTAST
+0 VARIABLE FIXIERUNG
+: WARTEN
+  MAUSDA @ FIXIERUNG @ 0= AND IF
+    SCHIFTMERKER @ IF
+      0 SCHIFTMERKER !
+      0 SCHIFTSTELLER !
+      ENDIF
+    0 SCHIFTSTELLER @ 0= AND IF ( wenn bei WARTEN gerade SHIFT gedrückt
+      1 SCHIFTSTELLER !
+      1 SCHIFTMERKER ! ENDIF
+    SCHNAPPERGUCKER2 ( setzt NEUSCH)
+      Grafikfenster @ gUSE
+      NEUSCHNAPPERPLOTTER 
+      SCHNAPPERPLOTTER 
+    NEUSCHNAPPER @ ALTSCHNAPPER @ - 
+    NEUSCHNAPPER @ ALTSCHNAPPER !
+    NEUSCHNAPPVAR @ SCHNAPPVAR !
+    IF MESSICH ENDIF
+    ENDIF
+  ( HAUPTRECHNUNG
+  ;
+
+: ALLESREDRAW ;
+: SPOOLSTARTER
+ (( CLI *SPOOL RAM:XXX
+ (( CLI *SPOOL
+  ;
+
+: SCHIFTTASTE
+ (( 79 0 R! {0,1}
+ (( SWI OS_Byte
+ (( R@ {1} 0= 
+  0 ;
+
+: CONTROLTASTE
+ (( 79 0 R! {0,1}
+ (( SWI OS_Byte
+ (( R@ {1} 1 =
+  1 ;
+
+: SPOOLER ( n --> )
+ ((  CLI *SPOOLON RAM:XXX
+  SPOOLON
+  ." >T " 
+  SCHIFTSTELLER @ IF 8B EMIT ENDIF
+  DUP 20 = IF DROP ASC L ENDIF
+  EMIT 20 EMIT 
+  ALTSCHNAPPER @ DUP IF 2@ ELSE 0 ENDIF B. CR
+ (( CLI *SPOOLON
+  SPOOLOFF
+  ;
+
+: QSPOOLER
+  SPOOLON
+  IN1 @ DUP COUNT TYPE CR
+  SPOOLOFF
+  ; 
+
+: CASEZOFF
+  PLOTOBJ @ 0 > ALTSCHNAPPER @ 2@ DROP -10000 = NOT AND IF
+    OVER TAPP = OVER 0 > AND IF
+      DUP SPOOLER ENDIF
+    SCHIFTSTELLER @ >R
+    CASEOF SRECH ALLESREDRAW
+    R> IF
+      0 SCHIFTSTELLER ! ENDIF
+    ENDIF
+  ;
+
+( neu Zeileneingabe
+: DAZU ( kadr --> )
+  PLOTOBJ DUP @ 4 * + 4 + !
+  1 PLOTOBJ +!
+  ;
+
+: X=? ( <ausdruck>  -> a b )
+  X= IF 1FC ( 508 ) ERROR ENDIF ;
+
+VEKTOR ANLEGEPUNKT
+: >P
+  QSPOOLER
+  3 0 DO X=? LOOP 0 WORD 2DROP
+  ANLEGEPUNKT V!
+  ;
+: >Q ( <...>  --> )
+  QSPOOLER
+  ANLEGEPUNKT V@
+  3 0 DO X=? LOOP 0 WORD 2DROP
+  " QUADER QQQ QQQ VERSCHIEBEN QQQ @ DAZU " INTERPRET
+  SRECH
+ (( ALLESREDRAW
+ (( WIMPELLI ( hier auch VDUAUS !!!
+  ;
+
+: >S ( <...>  --> )
+  QSPOOLER
+  X=? 0 WORD 2DROP 
+  SCAL 2! ;
+
+: >T ( <...>  --> )
+  20 WORD 
+  1 > IF 1 SCHIFTSTELLER ! 1+ ENDIF 
+  C@
+  X=? DROP X=? DROP
+  MXY 2! 
+  SCHNAPPERGUCKER2
+  NEUSCHNAPPER @ ALTSCHNAPPER !
+  TAPP SWAP CASEZOFF
+  ;
+  
+: SPLOT
+  NEBENRECHNUNG
+  SCHNAPPKANTTLISTE
+  BEGIN DUP 8 + @ WHILE
+    DUP 08 + @ -1 = IF
+      05 WCOL
+      DUP 0C + @ OBJEKT2 @ @ = IF 03 WCOL ENDIF
+      DUP 0C + @ OBJEKT1 @ @ = IF 07 WCOL ENDIF
+      30 + ENDIF
+    >R
+    R 2@ VERSCHIEB 2@ ++ 
+    R 10 + 2@ VERSCHIEB 2@ ++ 
+    VERKÜRZ
+    1 PLOT 14 PLOT
+    R> 30 +
+    REPEAT
+  DROP
+  HAUPTRECHNUNG
+  ;
+
+: ll
+  Grafikfenster @ gUSE
+  UPDATEOFF
+  CLS
+  PLOTOBJ @ IF
+    1 MAUSDA !
+    SPLOT
+    ASDPLOTTER
+    SCHNAPPERPLOTTER
+    UPDATEON
+    MESSICH
+    ELSE UPDATEON 0 MAUSDA ! ENDIF
+  ;
+
+REPLACE: ALLESREDRAW ll ;
+  
+0 1 2VARIABLE POINTERPOS
+: POINTER 
+  2DROP
+  2DUP POINTERPOS 2!
+  VERSCHIEB 2@
+  SWAP MINUS SWAP MINUS ++
+  MXY 2!
+  WARTEN
+  ;
+
+: T  Grafikfenster @ gUSE  ALTSCHNAPPER @ 2@ VERSCHIEB 2@ ++ 06 -06 --  OVER
+ABS 4000 >  OVER ABS 4000 > OR IF 2DROP 4000 4000 ENDIF  1 PLOT  20 WORD 2DUP
+PRINT  1 > IF     1 SCHIFTSTELLER ! 1+ ENDIF   C@ TAPP SWAP CASEZOFF ;
+0 WORD: DRU ( n --> n+1 )
+  >R >R
+  0 OVER 10 * 1 PLOT
+  R> R> PRINT
+  1+
+  ;
+
+: EINGABEFENS
+  Eingabefenster @ gUSE
+  2
+  DRU X wählt ein OBJEKT X
+  DRU C kopiert OBJEKT X an die gleiche Stelle
+  DRU A wählt einen PUNKT A.
+  DRU S wählt zu A einen VEKTOR AS.
+  DRU D wählt zu AS eine EBENE ASD.
+  DRU E verschiebt X entlang AS
+  DRU Q dreht X von AS in Richtung AD
+  DRU W AS pendelt um AD bis AS2
+  DRU F EBENE ASD sägt OBJEKT X rechterhand ab
+  DRU R VEKTOR AS sägt OBJEKT X linkerhand ab
+  DRU Y wählt OBJEKT Y
+  DRU T OBJEKT Y spart OBJEKT X aus.
+  DRU mit Shifttaste ‹:
+  DRU ‹C löscht Objekt X
+  DRU ‹E dreht Vektor AS um.
+  DRU ‹R hebt Sägeebene auf bis R oder F
+  DRU ‹F hebt Sägeebene auf bis R oder F
+  DRU ‹T Durchschnitt von Objekt X und Y
+  DRU weitere Eingaben
+  DRU G zur einzelnen Darstellung X und Y
+  DRU 4 Vergrößerung (4:1)
+  DRU 3 Vergrößerung (3:2)
+  DRU 2 Verkleinerung (2:3)
+  DRU 1 Verkleinerung (1:4)
+  DRU J Blick von weiter links
+  DRU K Blick von weiter rechts
+  ;
+
+: EINGABEFENS ;
+
+: STARTEN
+      INIT
+      0 PLOTOBJ !
+[ DECIMAL ]
+      200 100 VERSCHIEB 2!
+      1 1 SCAL 2!
+      0 DREHRICHTUNG !
+      1 1 5 16 0 1 PARRA1 V!
+      0 1 5 16 1 1 PARRA2 V!
+      ( T . 0 0 )
+      00 -28 09 -28 -1 1 PARRA2 V!
+      28  28 09  28  0 1 PARRA1 V!
+      0 OBJEKT1 ! 0 OBJEKT2 !
+      0 DISPOBJEKT !
+      0 VONSCHNAPPER !
+      0 0 KOSCHNAPPER1 2!
+      KOSCHNAPPER2 12 0 FILL
+      0 SCHIFTSTELLER !
+[ HEX ] 
+      SCHNAPPKANTTLISTE 8000 0 FILL ( wegen ALTSCHNAPPER @ 8 + @ GUCKOBJEKT
+      SCHNAPPKANTTLISTE ALTSCHNAPPER !
+      SCHNAPPKANTTLISTE NEUSCHNAPPER !
+      " KONSTRUKTION LINK-OFF FORGET Eins KONSTRUKTION LINK-ON 1,0 1,0 1,0 QUADER Eins" 
+      INTERPRET
+      ( 11 EMIT ( setzt AUSG%=1 für SPOOL, neuerdings nichmehr
+      SPOOL ." 5 ANWEND!" CR ." STARTEN" CR
+(      " T . 0 0 " INTERPRET
+(  0 DREHTAPPER
+      SPOOLOFF
+      ll
+  ;
+
+TAPP: N STARTEN ;
+TAPP: O 1 SCHIFTSTELLER !
+  TAPP ASC C CASEOF ;
+TAPP: U 1 SCHIFTSTELLER !
+  TAPP ASC E CASEOF 0 SCHIFTSTELLER ! ;
+TAPP: P 1 SCHIFTSTELLER !
+  TAPP ASC R CASEOF ;
+TAPP: L 1 SCHIFTSTELLER !
+  TAPP ASC F CASEOF ;
+TAPP: V 1 SCHIFTSTELLER !
+  TAPP ASC T CASEOF ;
+
+: QUADER111
+      " >S 0,6 Vergrößerung" INTERPRET
+      " >P 0 0 0 Anlegepunkt" INTERPRET
+      " >Q 355 115 115 Hinterbalken" INTERPRET
+      " >P 130 1250 0 Anlegepunkt" INTERPRET
+      " >Q 120 370 120 Vorderbalken" INTERPRET
+      " >P -250 0 0 Anlegepunkt" INTERPRET
+      " >Q 18 1700 180 rechtesBrett" INTERPRET
+      " >P -500 0 0 Anlegepunkt" INTERPRET
+      " >Q 30 700 180 HochzuBrett" INTERPRET
+      " >P -750 0 0 Anlegepunkt" INTERPRET
+      " >Q 20 2000 20 Bügel" INTERPRET
+      " >T X 0 0" INTERPRET
+      " >T . 0 0" INTERPRET
+(  " >P 0 0 0 " INTERPRET
+(  " >Q 1 1 1 " INTERPRET
+(  " >T X 0 0 " INTERPRET
+  ;
+
+: TAB ;
+
+KONSTRUKTION VOCABULARY-END
+
+
+DECIMAL
