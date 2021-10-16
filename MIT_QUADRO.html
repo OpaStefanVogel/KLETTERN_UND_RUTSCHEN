@@ -258,6 +258,7 @@ scene.add( light );
 var cl=q.position.clone();
 var Ausrichten=0.005;
 
+var robi1=0;
 function animate() {
 	requestAnimationFrame( animate );
 
@@ -293,6 +294,7 @@ function animate() {
 
     }
     
+if (robi1!=0) {
 robi1.rotation.y=Math.sin(clock.getElapsedTime()/7);
 robi2.rotation.x=Math.sin(clock.getElapsedTime())/3+2;
 robi3.rotation.y=Math.sin(clock.getElapsedTime()/5);
@@ -301,6 +303,7 @@ robi5.rotation.y=Math.sin(clock.getElapsedTime()/3);
 robi6.rotation.x=Math.sin(clock.getElapsedTime())*2;
 robo0.children[0].rotation.y=-Math.sin(clock.getElapsedTime()/7);
 robo0.children[0].children[0].rotation.x=-Math.sin(clock.getElapsedTime())/3+2;
+  }
 
 	renderer.render( scene, camera );
 }
@@ -432,7 +435,7 @@ ok farbige Richtungstasten
 <hr/>
 <hr/>
 zum Testen: Kamera ausrichten 
-<span onclick="Ausrichten=1"><input type="radio" id="K10" name="Ausrichten" value="10"/><label for="K10">sofort</label></span>
+<span id="Ausrichten=1" onclick="Ausrichten=1"><input type="radio" id="K10" name="Ausrichten" value="10"/><label for="K10">sofort</label></span>
 <span onclick="Ausrichten=0.05"><input type="radio" id="K20" name="Ausrichten" value="20"/><label for="K20">schnell</label></span>
 <span onclick="Ausrichten=0.005"><input type="radio" id="K40" name="Ausrichten" value="40" checked="checked"/><label for="K40">langsam</label></span>
 <span onclick="Ausrichten=0"><input type="radio" id="K80" name="Ausrichten" value="80"/><label for="K80">nur bei</label></span>
@@ -490,8 +493,7 @@ function neuerDownloadtext() {
   </script>
 <div> 
 
-<script>
-
+<script>if (1==0) {
 var robi0=new THREE.Mesh( (new THREE.SphereGeometry( 0.1, 32, 32 )),(new THREE.MeshStandardMaterial( { color: "red" } )));
 robi0.position.x=-2;
 robi0.position.y=0;
@@ -562,20 +564,66 @@ robo0.position.y=0;
 robo0.position.z=-1;
 scene.add(robo0);
 
-scene.remove(robi0);
-scene.remove(robo0);
-/**/
+//scene.remove(robi0);
+//scene.remove(robo0);
+
+
+
+
+//TubeGeometry
+class CustomSinCurve extends THREE.Curve {
+  constructor(scale) {
+    super();
+    this.scale = scale;
+  }
+  getPoint(t) {
+    const tx = Math.cos(0.5 * Math.PI * t); //t * 3 - 1.5;
+    const ty = Math.sin(0.5 * Math.PI * t);
+    const tz = 0;
+    return new THREE.Vector3(tx, ty, tz).multiplyScalar(this.scale);
+  }
+}
+
+const path = new CustomSinCurve(4);
+const tubularSegments = 40;  // ui: tubularSegments
+const radius = 0.04;  // ui: radius
+const radialSegments = 8;  // ui: radialSegments
+const closed = false;  // ui: closed
+const Tgeometry = new THREE.TubeGeometry(
+    path, tubularSegments, radius, radialSegments, closed);
+var tobi=new THREE.Mesh(Tgeometry,(new THREE.MeshStandardMaterial( { color: "dimgray" } )));
+tobi.rotateX(-Math.PI/2);
+tobi.translateZ(-0.1);
+var tobic=tobi.clone();
+tobic.scale.set(0.9,0.9);
+tobic.translateZ(0);
+
+scene.add(tobi);
+scene.add(tobic);
+
 //var Logtext="";
 //for (var i in THREE) Logtext=Logtext+i+"\n"; alert(Logtext);
 Logtext="";
 //for (var i in robi1) Logtext=Logtext+i+"\n";
 //for (var i in robo0.children[0]) Logtext=Logtext+i+"\n";
 //for (var i in clock) Logtext=Logtext+i+"\n";
-//Logtext=Logtext+"\n\n\n"+JSON.stringify(robo0.toJSON());
-document.getElementById("Log").firstChild.nodeValue=Logtext;
+//for (var i in document) Logtext=Logtext+i+"\n";
+//alert(Number("0x234"));
+//alert(THREE.Curve.create);
+//for (var i in window) Logtext=Logtext+i+"\n";alert(document.getElementById("Ausrichten=1"));
+for (var i in document.getElementById("Ausrichten=1")) Logtext=Logtext+i+"\n\n";
+Logtext=Logtext+"<p>"+JSON.stringify(tobi.toJSON())+"</p>";
+document.getElementById("Log").innerHTML=Logtext.replace(/,/g,", ");
+//alert(document.URL);
+//alert(document.documentURI);
 //alert(clock.getDelta());
 //alert(THREE.CylinderGeometry);
+} </script>
 
+<script src="QWASNEU/KONSTRUK_javascript.js"></script>
+
+<script>
+//alert(qtz);
   </script>
 
 <!--dann noch
