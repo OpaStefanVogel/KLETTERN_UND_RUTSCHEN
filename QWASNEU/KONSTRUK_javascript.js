@@ -1,4 +1,4 @@
-if (1==0) {
+if (1==1) {
 //Veränderungen zu GAP:
 //1.EGGT ohne /-P[3]
 //in KFILL if (PZZS[2*PNR][1]<=PZZS[2*PNR+1][1])
@@ -402,7 +402,7 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
     PZZS=PZZT.sort(Asort);
     Logtext=Logtext+"  PZZS="+JSON.stringify(PZZS)+"\n";
     for (var PNR=0;PNR<PZZS.length/2;PNR++) /*if (PZZS[2*PNR][1]<=PZZS[2*PNR+1][1])*/ { //warum geht ohne if nicht?
-      Logtext=Logtext+"    neue Kante "+PZZS[2*PNR][1]+" "+PZZS[2*PNR+1][1]+" drin sind "+M[0]+" "+M[1]+"\n";
+      Logtext=Logtext+"    neue Kante von Punkt P"+PZZS[2*PNR][1]+" bis Punkt P"+PZZS[2*PNR+1][1]+" entlang der Schnittgeraden von Ebene E"+M[0]+" und Ebene E"+M[1]+"\n";
       OBJ[3].push([PZZS[2*PNR][1],PZZS[2*PNR+1][1],M[0],M[1]]);
       }
     }
@@ -794,6 +794,5 @@ VERSCHIEB(SCHEUNE,3650,1070,-1500);
 */
 
 Logtext=Logtext+"...KONSTRUK_javascript.js soweit geladen\n";
-document.getElementById("Log").innerHTML='<span style="white-space:pre; font-family:monospace">'+Logtext+"</span>";
 
 }

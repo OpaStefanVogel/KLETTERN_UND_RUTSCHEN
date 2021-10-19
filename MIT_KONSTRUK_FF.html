@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- verwendete Vorlage three-cookbook/.../01.05-setup-animation-loop.html -->
+    <title>01.05 - Setup animation loop</title>
+    <script src="../libs/three.js"></script>
+    <script src="../three.js/build/three.js"></script>
+    <script src="../threejs-cookbook/libs/three.js"></script>
+    <style>
+        body {
+            #margin: 0;
+            #overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="canvas"></div>
+<script>
+
+    // global variables
+    var renderer;
+    var scene;
+    var camera;
+
+    function init() {
+
+        // create a scene, that will hold all our elements such as objects, cameras and lights.
+        scene = new THREE.Scene();
+
+        // create a camera, which defines where we're looking at.
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        // create a render, sets the background color and the size
+        renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(0x000000, 1.0);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // create a cube and add to scene
+        var cubeGeometry = new THREE.BoxGeometry(0.1 /* 10 * Math.random()*/, 0.1, 0.1);
+        var cubeMaterial = new THREE.MeshNormalMaterial();
+        var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        cube.name = 'cube';
+        scene.add(cube);
+
+/*
+//create a blue LineBasicMaterial
+const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+const points = [];
+points.push( new THREE.Vector3( - 10, 0, 0 ) );
+points.push( new THREE.Vector3( 0, 10, 0 ) );
+points.push( new THREE.Vector3( 10, 0, 0 ) );
+
+alert(THREE.BufferGeometry);
+var geometry = new THREE.BufferGeometry();//.setFromPoints( points );
+var line = new THREE.Line( geometry, material );
+scene.add( line );*/
+
+
+				const geometry = new THREE.BufferGeometry();
+				const material = new THREE.LineBasicMaterial( { vertexColors: true } );
+
+				const positions = [];
+				const colors = [];
+
+const segments=6;
+const r=1;
+				for ( var i = 0; i < segments; i ++ ) {
+
+					const x = Math.random() * r - r / 2;
+					const y = Math.random() * r - r / 2;
+					const z = Math.random() * r - r / 2;
+
+					// positions
+
+					positions.push( x, y, z );
+
+					// colors
+
+					colors.push( ( x / r ) + 0.5 );
+					colors.push( ( y / r ) + 0.5 );
+					colors.push( ( z / r ) + 0.5 );
+
+				}
+
+//				geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+//				geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
+//				generateMorphTargets( geometry );
+
+//				geometry.computeBoundingSphere();
+
+				var line = new THREE.Line( geometry, material );
+//				scene.add( line );
+
+
+
+//aus three-cookbook S.100?
+var numPoints = 2;   
+var start = new THREE.Vector3(-2, 1, 0);   
+var middle = new THREE.Vector3(0, 2, 0);   
+var end = new THREE.Vector3(2, 3, 0);
+
+var curveQuad = new THREE.QuadraticBezierCurve3(start, middle, end); 
+
+var tube = new THREE.TubeGeometry(curveQuad, numPoints, 0.1, 4, false);   
+var mesh11 = new THREE.Mesh(tube, new THREE.MeshNormalMaterial({opacity: 0.6,     transparent: true   }));   
+//cube.add(mesh11);
+
+
+
+
+
+        // position and point the camera to the center of the scene
+        camera.position.x = 15;
+        camera.position.y = 16;
+        camera.position.z = 13;
+        camera.lookAt(scene.position);
+
+        // add the output of the renderer to the html element
+        document.getElementById("canvas").appendChild(renderer.domElement);
+
+        // call the render function
+        render();
+
+    weiterdann(cube);
+
+
+    }
+
+    function render() {
+        renderer.render(scene, camera);
+        scene.getObjectByName('cube').rotation.x += 0.005;
+        scene.getObjectByName('cube').rotation.y += 0.001;
+        requestAnimationFrame(render);
+    }    
+
+    // calls the init function when the window is done loading.
+    window.onload = init;
+
+</script>
+
+<div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:400px"> div</div>
+<script src="QWASNEU/KONSTRUK_javascript.js"></script>
+
+<script>
+function AddObjekt(OBJ1,OBJ2) {
+  //alert(JSON.stringify(OBJ2[3]));
+  var zoom=20;
+  for (var iK in OBJ2[3]) { var K=OBJ2[3][iK];
+    var numPoints = 2;   
+    var start = new THREE.Vector3(OBJ2[2][K[0]][3][0]/zoom, OBJ2[2][K[0]][3][1]/zoom, OBJ2[2][K[0]][3][2]/zoom);   
+    var middle = new THREE.Vector3(OBJ2[2][K[0]][3][0]/zoom, OBJ2[2][K[0]][3][1]/zoom, OBJ2[2][K[0]][3][2]/zoom);   
+    var end = new THREE.Vector3(OBJ2[2][K[1]][3][0]/zoom, OBJ2[2][K[1]][3][1]/zoom, OBJ2[2][K[1]][3][2]/zoom);
+
+/*
+var curveQuad = new THREE.QuadraticBezierCurve3(start, middle, end); 
+//var curveQuad =[start,end]; 
+   var geometry = new THREE.Geometry();
+   geometry.vertices = [start,end];
+
+//if (iK==0) alert(JSON.stringify(geometry));
+
+var tube = new THREE.TubeGeometry(curveQuad, numPoints, 0.1, 4, false);   
+  var mesh11 = new THREE.Mesh(tube, new THREE.MeshNormalMaterial({opacity: 0.6,     transparent: true   }));   
+OBJ1.add(mesh11);
+*/
+
+   var materialline = new THREE.LineBasicMaterial({ color: 0x0077f0   });
+   var geometryline = new THREE.Geometry();
+   geometryline.vertices = [start,end];
+   var line = new THREE.Line(geometryline, materialline);
+   OBJ1.add(line);
+
+    }
+  
+  }
+
+
+
+
+function weiterdann(cube) {
+
+var spline = new THREE.SplineCurve3([
+     new THREE.Vector3(-10, 2, 10),
+     new THREE.Vector3(-4, 2, 2),
+     new THREE.Vector3(0, 2, -10),
+     new THREE.Vector3(2, 2, -10),
+     new THREE.Vector3(0,0,0),
+     new THREE.Vector3(7, 2, 1),
+     new THREE.Vector3(10, 2, 3),
+     new THREE.Vector3(-10, 2, 10)]);
+
+var kreis=new THREE.ArcCurve(0,0,3);
+//alert(JSON.stringify(spline.getPoints(5)));
+//alert(JSON.stringify(kreis.getPoints(5)));
+//alert(JSON.stringify(new THREE.Vector3(0, 2, 0)));
+   var geometry = new THREE.Geometry();
+   var splinePoints = spline.getPoints(50);
+   //alert(JSON.stringify(new THREE.Vector3(-10, 2, 10)));
+//alert(JSON.stringify(splinePoints));
+   var material = new THREE.LineBasicMaterial({
+     color: 0xff00f0   });
+//   geometry.vertices = [new THREE.Vector3(0, 2, 0),new THREE.Vector3(2, 0, 2)]; //splinePoints;
+   geometry.vertices = splinePoints;
+   var line = new THREE.Line(geometry, material);
+   cube.add(line);
+
+  AddObjekt(cube,REST4);
+
+/*aus three.js/dok/edgesgeometry, will nicht gehen
+var geometry9 = new THREE.BoxGeometry( 4, 7, 9 );alert(THREE.EdgesGeometry);
+var edges9 = new THREE.EdgesGeometry( geometry9 );alert(8);
+const line9 = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+  cube.add(line9);
+*/
+//alert(THREE.ArcCurve);
+//for (var L in THREE) Logtext=Logtext+L+"\n";
+
+document.getElementById("Log").innerHTML='<span style="white-space:pre; font-family:monospace">'+Logtext+"</span>";
+  }
+
+  </script>
+
+<script>
+/*
+( nun weiter mit QUADER2
+ 0 CONSTANT TEND
+ 1 CONSTANT TEBN
+ 2 CONSTANT TAND
+ 3 CONSTANT TNOT
+ 4 CONSTANT TNOP
+: EBENE ( <bezeichnung>  p1xa p1xb p1ya p1yb p1za p1zb p2... p3...  --> )
+  0 VARIABLE HERE RAMP1 @ 1 - !
+  1 , ( 1 Ebene
+  2 , ( 2 Verknüpfungsangaben
+  0 , ( 0 Eckpunkte zu je 28 Byte
+  0 , ( 0 Kanten zu je 8 Byte
+  ( Ebenenliste, ax-d>0 fürs innere:
+  EBENE0
+  >R >R 2ROT B, 2SWAP B, B, R> R> B,
+  TEBN , TEND ,
+  ;
+
+DECIMAL
+100,0 0,0 0,0
+200,0 50,0 150,0
+200,0 0,0 100,0
+EBENE Schnitt1
+  0,0  0,0   0,0
+  2,0  0,0   0,0
+  0,0  2,0   0,0
+  EBENE E0
+  0,0  0,0   0,0
+  0,0  1,0   1,0
+  1,0  0,0   0,0
+  EBENE E1
+  1,0  0,0   0,0
+  0,0  0,0   1,0
+  1,0  1,0   0,0
+  EBENE E2
+  0,0  1,0   0,0
+  1,0  1,0   1,0
+  0,0  0,0   0,0
+  EBENE E3
+  1,0  2,0   0,0
+  1,0  1,0   1,0
+  0,0  2,0   0,0
+  EBENE E4
+HEX
+
+  */
+
+
+/*
+EINGABEFENS
+  Eingabefenster @ gUSE
+  2
+  DRU X wählt ein OBJEKT X
+  DRU C kopiert OBJEKT X an die gleiche Stelle
+  DRU A wählt einen PUNKT A.
+  DRU S wählt zu A einen VEKTOR AS.
+  DRU D wählt zu AS eine EBENE ASD.
+  DRU E verschiebt X entlang AS
+  DRU Q dreht X von AS in Richtung AD
+  DRU W AS pendelt um AD bis AS2
+  DRU F EBENE ASD sägt OBJEKT X rechterhand ab
+  DRU R VEKTOR AS sägt OBJEKT X linkerhand ab
+  DRU Y wählt OBJEKT Y
+  DRU T OBJEKT Y spart OBJEKT X aus.
+  DRU mit Shifttaste ‹:
+  DRU ‹C löscht Objekt X
+  DRU ‹E dreht Vektor AS um.
+  DRU ‹R hebt Sägeebene auf bis R oder F
+  DRU ‹F hebt Sägeebene auf bis R oder F
+  DRU ‹T Durchschnitt von Objekt X und Y
+  DRU weitere Eingaben
+  DRU G zur einzelnen Darstellung X und Y
+  DRU 4 Vergrößerung (4:1)
+  DRU 3 Vergrößerung (3:2)
+  DRU 2 Verkleinerung (2:3)
+  DRU 1 Verkleinerung (1:4)
+  DRU J Blick von weiter links
+  DRU K Blick von weiter rechts
+  ;
+
+: EINGABEFENS ;
+
+: STARTEN
+      INIT
+      0 PLOTOBJ !
+[ DECIMAL ]
+      200 100 VERSCHIEB 2!
+      1 1 SCAL 2!
+      0 DREHRICHTUNG !
+      1 1 5 16 0 1 PARRA1 V!
+      0 1 5 16 1 1 PARRA2 V!
+      ( T . 0 0 )
+      00 -28 09 -28 -1 1 PARRA2 V!
+      28  28 09  28  0 1 PARRA1 V!
+      0 OBJEKT1 ! 0 OBJEKT2 !
+      0 DISPOBJEKT !
+      0 VONSCHNAPPER !
+      0 0 KOSCHNAPPER1 2!
+      KOSCHNAPPER2 12 0 FILL
+      0 SCHIFTSTELLER !
+[ HEX ] 
+      SCHNAPPKANTTLISTE 8000 0 FILL ( wegen ALTSCHNAPPER @ 8 + @ GUCKOBJEKT
+      SCHNAPPKANTTLISTE ALTSCHNAPPER !
+      SCHNAPPKANTTLISTE NEUSCHNAPPER !
+      " KONSTRUKTION LINK-OFF FORGET Eins KONSTRUKTION LINK-ON 1,0 1,0 1,0 QUADER Eins" 
+      INTERPRET
+      ( 11 EMIT ( setzt AUSG%=1 für SPOOL, neuerdings nichmehr
+      SPOOL ." 5 ANWEND!" CR ." STARTEN" CR
+(      " T . 0 0 " INTERPRET
+(  0 DREHTAPPER
+      SPOOLOFF
+      ll
+  ;
+
+TAPP: N STARTEN ;
+TAPP: O 1 SCHIFTSTELLER !
+  TAPP ASC C CASEOF ;
+TAPP: U 1 SCHIFTSTELLER !
+  TAPP ASC E CASEOF 0 SCHIFTSTELLER ! ;
+TAPP: P 1 SCHIFTSTELLER !
+  TAPP ASC R CASEOF ;
+TAPP: L 1 SCHIFTSTELLER !
+  TAPP ASC F CASEOF ;
+TAPP: V 1 SCHIFTSTELLER !
+  TAPP ASC T CASEOF ;
+
+: QUADER111
+      " >S 0,6 Vergrößerung" INTERPRET
+      " >P 0 0 0 Anlegepunkt" INTERPRET
+      " >Q 355 115 115 Hinterbalken" INTERPRET
+      " >P 130 1250 0 Anlegepunkt" INTERPRET
+      " >Q 120 370 120 Vorderbalken" INTERPRET
+      " >P -250 0 0 Anlegepunkt" INTERPRET
+      " >Q 18 1700 180 rechtesBrett" INTERPRET
+      " >P -500 0 0 Anlegepunkt" INTERPRET
+      " >Q 30 700 180 HochzuBrett" INTERPRET
+      " >P -750 0 0 Anlegepunkt" INTERPRET
+      " >Q 20 2000 20 Bügel" INTERPRET
+      " >T X 0 0" INTERPRET
+      " >T . 0 0" INTERPRET
+(  " >P 0 0 0 " INTERPRET
+(  " >Q 1 1 1 " INTERPRET
+(  " >T X 0 0 " INTERPRET
+  ;
+
+: TAB ;
+
+
+KONSTRUKTION VOCABULARY-END
+
+
+DECIMAL
+*/
+
+
+
+
+/*
+FEHLERTEXT ( nr --> adr n )
+  DUP 500 < IF FEHLERTEXT ELSE >R
+    R 502 = IF U" OBJEKT X ist nicht markiert" ENDIF
+    R 503 = IF U" OBJEKT Y ist nicht markiert" ENDIF
+    R 504 = IF U" VEKTOR AS ist nicht markiert oder A fällt mit S zusammen" ENDIF
+    R 505 = IF U" EBENE ASD ist nicht markiert oder A fällt mit S oder D zusammen" ENDIF
+    R 506 = IF U" AS und AD sind parallel" ENDIF
+    R 507 = IF U" AS2 und AD sind parallel" ENDIF
+    R 508 = IF U" Wurzel aus negativer ganzen Zahl" ENDIF
+    R 500 = IF U" Wurzel aus negativer rationalen Zahl" ENDIF
+    R 501 = IF U" Fehler im Rechenausdruck" ENDIF
+    R 508 > IF " ???" ENDIF
+    R> DROP ENDIF
+  ;
+  */
+  </script>
+</body>
+</html>
