@@ -2,19 +2,20 @@
 <html>
 <head>
 <!-- verwendete Vorlage three-cookbook/.../01.05-setup-animation-loop.html -->
-    <title>01.05 - Setup animation loop</title>
+    <title>MIT_KONSTRUK_FF.html</title>
     <script src="../libs/three.js"></script>
     <script src="../three.js/build/three.js"></script>
     <script src="../threejs-cookbook/libs/three.js"></script>
+    <script src="../threejs-cookbook/libs/OrbitControls.js"></script>
     <style>
         body {
-            #margin: 0;
-            #overflow: hidden;
+            margin: 0;
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
-<div id="canvas"></div>
+<div style="max-width:90%" id="canvas"></div>
 <script>
 
     // global variables
@@ -29,7 +30,7 @@
 
         // create a camera, which defines where we're looking at.
         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-
+//alert(THREE.WebGLRenderer); //geht nicht bei MINT
         // create a render, sets the background color and the size
         renderer = new THREE.WebGLRenderer();
         renderer.setClearColor(0x000000, 1.0);
@@ -119,17 +120,28 @@ var mesh11 = new THREE.Mesh(tube, new THREE.MeshNormalMaterial({opacity: 0.6,   
         document.getElementById("canvas").appendChild(renderer.domElement);
 
         // call the render function
+contr = new THREE.OrbitControls( camera ,document.getElementById("canvas"));
         render();
 
     weiterdann(cube);
 
 
+//alert(contr.autoRotate);
+contr.autoRotate=true;
+//alert(contr.autoRotate);
+//alert(contr.autoRotateSpeed);
+//alert(JSON.stringify(camera.position));
+//alert(cube.rotateLeft);
+//alert(contr.update);
+
     }
 
     function render() {
         renderer.render(scene, camera);
-        scene.getObjectByName('cube').rotation.x += 0.005;
-        scene.getObjectByName('cube').rotation.y += 0.001;
+////        camera.position.x+=0.0;
+//        scene.getObjectByName('cube').rotation.x += 0.005;
+//        scene.getObjectByName('cube').rotation.y += 0.001;
+        contr.update();
         requestAnimationFrame(render);
     }    
 
@@ -213,6 +225,7 @@ const line9 = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { colo
   cube.add(line9);
 */
 //alert(THREE.ArcCurve);
+//alert(THREE.BoxGeometry);
 //for (var L in THREE) Logtext=Logtext+L+"\n";
 
 document.getElementById("Log").innerHTML='<span style="white-space:pre; font-family:monospace">'+Logtext+"</span>";
