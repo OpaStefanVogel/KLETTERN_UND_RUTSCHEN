@@ -10,57 +10,8 @@ if (1==1) {
 //ok warum in KFILL das if drinbeiben muss, ok ist raus
 
 Logtext="";
+Logflag=false;
 Logtext=Logtext+"KONSTRUK_javascript.js laden...\n";
-
-/*GAP
-#Read("Installation_für_Spartan3/QWASNEU/KONSTRUK(GAP)");
-#Aufpassen! Veränderungen gegenüber KONSTRUK:
-#PTTZ ein Punkt mehr
-#VMITT kann wohl raus
-#ok PUNKTWERT wohl andere Variablenübergabe 
-#TFIND auch
-#DRAUFGUCKER jetzt auch (war weil ich das spätzer hinzugebastelt habe
-#ok ohne DRAUFGUCKER,!!!f
-#.. Size(7) geht nicht!!!
-#ok RUMPS geht!!!!!! Suuuuuuuperrrrrr!
-#ok [0,0,0,0 ist raus!!!!
-#ok PUNKTWERT nur (EBENE,PUNKT) machen ok ist auch drin!!!
-#ok TOP=7 raus ok
-#ok vierte Koordinate geht durch
-#ok super!!!! DREIEBENEN jetzt auch für EBENE aus drei Punkten
-#ok zusätzlich, vierte Punktkoordinate 1 ergänzen
-#ok das muss dann später mit in EBENE0 eingehen als rechen
-#ok in DREIEBENEN ist schon ein Anfang und sogar fertig
-#ok aber noch Vorzeichen von +++- in ++++ umwechseln irgendwie...auch ok 
-#ok in EGGT wann *-1 nur? wegen der Ebenenrichtung...richtig, gar nicht!
-#.. und dann Transform und Plot...
-#ok TEND ist auch raus
-#ok DREIEBENEN ist noch -+-+ und nicht +-+-, ok ist egal
-#ok ist gut jetzt, eventuell mal noch QFILL2 ok ist drin!
-#ok hab xgap laufen...
-#mal merken:
-#REST1[3] sind die Eckpunkte und deren definierenden Ebenen
-#REST1[1] sind dann die Ebenen
-#REST1[2] Verknüpfung der Ebenen: 1=Ebene, 2=and, 3=not
-#REST1[4] sind die Kanten, 
-#bestehend aus zwei Eckpunkten und zwei definierenden Ebenen
-#weiter also mit der PLOT-Funktion
-#in DURCHGUCKER STAPEL rein
-#in RUMPS TRU dazuzählen bei OBJ2
-#in SCHNITTPUNKT aufsteigende Ebenenreihenfolge erhalten
-#DURCHGUCKER jetzt einfacher durch 1=innen, 2=Rand, 3=aussen
-#..in KFILL momentan alle Kanten zeichnen, da ist noch was...
-
-
-
-TEBN:=1; TAND:=2; TNOT:=3; 
-
-TSETZ:=function(A) 
-  if A<0 then return 3; fi; #draussen
-  if A=0 then return 2; fi; #Rand
-  if A>0 then return 1; fi; #innen
-  end;
-*/
 
 var TEBN=1;
 var TAND=2;
@@ -73,15 +24,7 @@ var TSETZ=function(A) {
   }
 //alert(TSETZ(-7));
 
-/*GAP
-PUNKTWERT:=function(EBENE,PUNKT) #Funktionswert der Ebenengleichung für einen Punkt P
-  return PUNKT[1]*EBENE[1]+PUNKT[2]*EBENE[2]+PUNKT[3]*EBENE[3]+PUNKT[4]*EBENE[4];
-  end;
-
-TFIND:=function(OBJ,ENR,P) 
-  return TSETZ(PUNKTWERT(OBJ[1][ENR],P)); end;
-*/
-
+//1
 var PUNKTWERT=function(EBENE,PUNKT) { //Funktionswert der Ebenengleichung für einen Punkt P
   return PUNKT[0]*EBENE[0]+PUNKT[1]*EBENE[1]+PUNKT[2]*EBENE[2]+PUNKT[3]*EBENE[3];
   }
@@ -92,24 +35,11 @@ var TFIND=function(OBJ,ENR,P) {
   }
 //alert("TFIND 3 "+TFIND([[[1,0,0,1]]],0,[-1,0,0,0]));
 
-/*GAP
-STAPEL:=[];
-DURCHGUCKER:=function(OBJ,P) # ob P im Inneren oder auf Rand von OBJ
-  local X,Y,T,ETNR;
-  X:=0; Y:=0; ETNR:=1; #ETNR für ETADR
-  for T in OBJ[2] do
-    if T=TEBN then Add(STAPEL,X); X:=TFIND(OBJ,ETNR,P); ETNR:=ETNR+1; fi; 
-    if T=TAND then X:=Maximum(X,Remove(STAPEL)); fi;
-    if T=TNOT then X:=4-X; fi;
-#Print("\n",T," ",X);
-    od;
-  return X;
-  end;
-*/
-
+//2
 var STAPEL=[];
 DURCHGUCKER=function(OBJ,P) { // ob P im Inneren oder auf Rand von OBJ
   //local X,Y,T,ETNR;
+  if (P[0]==0&P[1]==0&P[2]==0&P[3]==0) return 3;
   var X=0;
   var Y=0;
   var ETNR=0; //ETNR für ETADR
@@ -128,25 +58,7 @@ DURCHGUCKER=function(OBJ,P) { // ob P im Inneren oder auf Rand von OBJ
 //alert("DURCHGUCKER 3 "+DURCHGUCKER([[[0,-1,0,100]],[TEBN]],[0,101,0,1]));//3
 //alert(nix);
 
-/*GAP
-EGGT1:=function(E)#kürzt Ebenengleichung, gemeinsame Faktoren herausdividieren
-  local G,N,H;
-  G:=Gcd(NumeratorRat(E[1]),NumeratorRat(E[2]),NumeratorRat(E[3]),NumeratorRat(E[4]));
-  N:=Gcd(DenominatorRat(E[1]),DenominatorRat(E[2]),DenominatorRat(E[3]),DenominatorRat(E[4]));
-  return E/G*N;
-  end;
-EGGT:=function(E)#kürzt Ebenengleichung, gemeinsame Faktoren herausdividieren
-  local G,N,H;
-#  G:=Gcd(NumeratorRat(E[1]),NumeratorRat(E[2]),NumeratorRat(E[3]),NumeratorRat(E[4]));
-#  N:=Gcd(DenominatorRat(E[1]),DenominatorRat(E[2]),DenominatorRat(E[3]),DenominatorRat(E[4]));
-#  return E/G*N;
-#  return E/Gcd(Rationals,E[1],E[2],E[3],E[4]);
-  if E[4]<0 then return E/-E[4]; fi;
-  if E[4]=0 then return E; fi;
-  if E[4]>0 then return E/E[4]; fi;
-  end;
-*/
-
+//3
 var EGGT=function(E) { //kürzt Ebenengleichung, gemeinsame Faktoren herausdividieren
   if (E[3]<0) return [E[0]/E[3],E[1]/E[3],E[2]/E[3],1];
   if (E[3]==0) return E;
@@ -154,26 +66,7 @@ var EGGT=function(E) { //kürzt Ebenengleichung, gemeinsame Faktoren herausdivid
   }
 //alert("EGGT 2.5,2,1.5,1 "+EGGT([10,8,6,4]));
 	
-/*GAP
-DREIEBENEN:=function(E1,E2,E3) #Schnittpunkt dreier Ebenen
-  local RET;
-  RET:=EGGT([
-    Determinant([E1{[2,3,4]},E2{[2,3,4]},E3{[2,3,4]}]),
-    -Determinant([E1{[3,4,1]},E2{[3,4,1]},E3{[3,4,1]}]),
-    Determinant([E1{[4,1,2]},E2{[4,1,2]},E3{[4,1,2]}]),
-    -Determinant([E1{[1,2,3]},E2{[1,2,3]},E3{[1,2,3]}])
-    ]);
-  #Probe:Print("\nDREIEBENEN:",[E1,E2,E3],RET,[E1,E2,E3]*RET);
-  return RET;
-  end;
-
-EBENE:=function(P1,P2,P3)#Objekt Ebene durch drei Punkte P1, P2, P3,
-  return [[DREIEBENEN(P1,P2,P3)],[TEBN],[],[]];
-  end;
-
-SCHNITT2:=EBENE([100,0,0,1],[200,50,150,1],[200,0,90,1]);
-SCHNITT3:=EBENE([100,0,0,1],[200,0,90,1],[200,50,150,1]);
-*/
+//4
 var Determinant3=function(A) {
   return A[0][0]*A[1][1]*A[2][2]+A[0][1]*A[1][2]*A[2][0]+A[0][2]*A[1][0]*A[2][1]
         -A[0][0]*A[2][1]*A[1][2]-A[0][1]*A[1][0]*A[2][2]-A[0][2]*A[1][1]*A[2][0];
@@ -196,15 +89,7 @@ var DREIEBENEN=function(E1,E2,E3) { //Schnittpunkt dreier Ebenen
 //alert(nix);
 
 
-/*GAP
-EBENE:=function(P1,P2,P3)#Objekt Ebene durch drei Punkte P1, P2, P3,
-  return [[DREIEBENEN(P1,P2,P3)],[TEBN],[],[]];
-  end;
-
-SCHNITT2:=EBENE([100,0,0,1],[200,50,150,1],[200,0,90,1]);
-SCHNITT3:=EBENE([100,0,0,1],[200,0,90,1],[200,50,150,1]);
-*/
-
+//5
 var EBENE=function(P1,P2,P3) { //Objekt Ebene durch drei Punkte P1, P2, P3,
   return [[DREIEBENEN(P1,P2,P3)],[TEBN],[],[]];
   }
@@ -214,42 +99,7 @@ var SCHNITT2=EBENE([100,0,0,1],[200,50,150,1],[200,0,90,1]);
 var SCHNITT3=EBENE([100,0,0,1],[200,0,90,1],[200,50,150,1]);
 //alert("SCHNITT1 "+SCHNITT1.join("\n"));
 
-/*GAP
-QFILL:=function(OBJ) #Berechnet und ergänzt Koordinatenangabe
-  local i,j,k,n,P;
-  OBJ[3]:=[];OBJ[4]:=[];
-  n:=Size(OBJ[1]);
-  for i in [1..n] do
-    for j in [i+1..n] do
-      for k in [j+1..n] do
-        P:=DREIEBENEN(OBJ[1][i],OBJ[1][j],OBJ[1][k]);
-        if P[4]<0 then P:=-P; fi;
-        if DURCHGUCKER(OBJ,P)<>3 then Add(OBJ[3],[i,j,k,P]);
-          #:Print("\ngefunden: ",i," ",j," ",k," ",P," ",DURCHGUCKER(OBJ,P));
-          fi;
-        od;
-      od;
-    od;
-  return OBJ;
-  end;
-
-QUADER:=function(L,B,H) #Objekt "Quader"
-  return QFILL([
-    [[1,0,0,0],[0,1,0,0],[0,0,1,0],
-     [-1,0,0,L],[0,-1,0,B],[0,0,-1,H]],
-    [TEBN,TEBN,TAND,TEBN,TAND,TEBN,TAND,TEBN,TAND,TEBN,TAND],
-    [],[]]);
-  end;
-BALKEN1:=QUADER(200,100,150);
-
-DURCHGUCKER(BALKEN1,[0,0,0,-1]);
-DURCHGUCKER(BALKEN1,[0,0,1,1]);
-DURCHGUCKER(BALKEN1,[0,1,1,1]);
-DURCHGUCKER(BALKEN1,[1,1,1,1]);
-DURCHGUCKER(BALKEN1,[-1,1,1,1]);
-DURCHGUCKER(BALKEN1,[100,0,0,1]);
-*/
-
+//6
 var QFILL=function(OBJ) { //Berechnet und ergänzt Koordinatenangabe [ei,ej,ek,[xi,xj,xk,xl]]
   //local i,j,k,n,P;
   OBJ[2]=[];
@@ -278,9 +128,9 @@ var QUADER=function(L,B,H) { //Objekt "Quader"
     [],[]]);
   }
 var BALKEN1=QUADER(200,100,150);
-Logtext=Logtext+"BALKEN1 mit 6 Ebenen und 8 Eckpunkten:\nEbenen="+JSON.stringify(BALKEN1[0])+"\n";
-Logtext=Logtext+"Verknüpfung 1=Ebene, 2=AND, 3=NOT: "+JSON.stringify(BALKEN1[1])+"\n";
-Logtext=Logtext+"Eckpunkte [Ebene1,Ebene2,Ebene3,[x,y,z,1]]: "+JSON.stringify(BALKEN1[2])+"\n";
+if (Logflag) Logtext=Logtext+"BALKEN1 mit 6 Ebenen und 8 Eckpunkten:\nEbenen="+JSON.stringify(BALKEN1[0])+"\n";
+if (Logflag) Logtext=Logtext+"Verknüpfung 1=Ebene, 2=AND, 3=NOT: "+JSON.stringify(BALKEN1[1])+"\n";
+if (Logflag) Logtext=Logtext+"Eckpunkte [Ebene1,Ebene2,Ebene3,[x,y,z,1]]: "+JSON.stringify(BALKEN1[2])+"\n";
 
 //alert(DURCHGUCKER(BALKEN1,[0,0,0,1]));
 //alert(DURCHGUCKER(BALKEN1,[0,0,1,1]));
@@ -292,35 +142,7 @@ Logtext=Logtext+"Eckpunkte [Ebene1,Ebene2,Ebene3,[x,y,z,1]]: "+JSON.stringify(BA
 //alert(DURCHGUCKER(BALKEN1,[200,100,150,1]));
 //alert(DURCHGUCKER(BALKEN1,[200,100,151,1]));
 
-/*GAP
-PFILL:=function(OBJ) #Berechnet und ergänzt Koordinatenangabe
-  local i,j,k,n,P;
-  n:=Size(OBJ[1]);
-  for P in OBJ[3] do
-    P[4]:=DREIEBENEN(OBJ[1][P[1]],OBJ[1][P[2]],OBJ[1][P[3]]);
-    if P[4][4]<0 then P[4]:=-P[4]; fi;
-    od;
-  return OBJ;
-  end;
-
-PFILL(BALKEN1);
-Print("\nÄÄÄ");
-
-MERK12:=[];MERK:=[];
-DFILL:=function(OBJ) #füllt eine temporäre separate Liste MERK12 mit Kantenfluchtlinien
-  MERK12:=[];MERK:=[];
-  for P in OBJ[3] do
-    if not([P[1],P[2]] in MERK12) then
-      Add(MERK12,[P[1],P[2]]);Add(MERK,[P[1],P[2],P[3]]); fi;
-    if not([P[2],P[3]] in MERK12) then
-      Add(MERK12,[P[2],P[3]]);Add(MERK,[P[2],P[3],P[1]]); fi;
-    if not([P[1],P[3]] in MERK12) then
-      Add(MERK12,[P[1],P[3]]);Add(MERK,[P[1],P[3],P[2]]); fi;
-    od;
-  end;
-DFILL(BALKEN1); MERK12; MERK;
-*/
-
+//7
 //PFILL(...) weglassen
 
 var MERK12=[];
@@ -340,60 +162,19 @@ DFILL(BALKEN1);
 //alert("MERK="+JSON.stringify(MERK));
 
 
-/*GAP
-KFILL:=function(OBJ) #fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
-  local M,PNR,PZZS,PZZT;
-  DFILL(OBJ);OBJ[4]:=[];
-  for M in MERK do
-    Print("\nKantenfluchtlinie ",M);
-    PZZT:=[];
-    for PNR in [1..Size(OBJ[3])] do
-      #:Print(PNR," ");
-      if (M[1]=OBJ[3][PNR][1] and M[2]=OBJ[3][PNR][2]) then
-        Add(PZZT,[PUNKTWERT(OBJ[1][M[3]],OBJ[3][PNR][4]),PNR,OBJ[3][PNR][3]]);
-        fi;
-      if (M[1]=OBJ[3][PNR][2] and M[2]=OBJ[3][PNR][3]) then
-        Add(PZZT,[PUNKTWERT(OBJ[1][M[3]],OBJ[3][PNR][4]),PNR,OBJ[3][PNR][1]]);
-        fi;
-      if (M[1]=OBJ[3][PNR][1] and M[2]=OBJ[3][PNR][3]) then
-        Add(PZZT,[PUNKTWERT(OBJ[1][M[3]],OBJ[3][PNR][4]),PNR,OBJ[3][PNR][2]]);
-        fi;
-      od;
-    PZZS:=SortedList(PZZT);
-    Print(PZZS);
-#    for PNR in [1..Size(PZZS)-1] do
-#      Print("\nVorkante ",PZZS[PNR][2]," ",PZZS[PNR+1][2]," ");
-#      if PUNKTWERT(OBJ[1][PZZS[PNR+1][3]],OBJ[3][PZZS[PNR][2]][4])>=0 then
-#        Print("drin sind ",M[1]," ",M[2]," ");
-#        Add(OBJ[4],[PZZS[PNR][2],PZZS[PNR+1][2],M[1],M[2]]);
-#        fi;
-#      od;
-    for PNR in [1..Size(PZZS)/2] do
-      Print("\nVorkante ",PZZS[PNR][2]," ",PZZS[PNR+1][2]," ");
-      Print("drin sind ",M[1]," ",M[2]," ");
-      Add(OBJ[4],[PZZS[2*PNR-1][2],PZZS[2*PNR][2],M[1],M[2]]);
-      od;
-#    for PNR in [1..Size(PZZS)-1] do
-#      Print("\nVorkante ",PZZS[PNR][2]," ",PZZS[PNR+1][2]," ");
-#      Print("drin sind ",M[1]," ",M[2]," ");
-#      Add(OBJ[4],[PZZS[PNR][2],PZZS[PNR+1][2],M[1],M[2]]);
-#      od;
-    od;
-  end;
-      
-KFILL(BALKEN1);BALKEN1;
-*/
-
+//8
 function Zsort(a,b) {if (a<b) return -1;if (a==b) return 0; return 1}
 function Asort(a,b) {if (a[0]<b[0]) return -1;if (a[0]==b[0]) return 0; return 1}
 
 var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
   //local M,PNR,PZZS,PZZT;
   DFILL(OBJ);
+//  if (Logflag) alert(99);
   OBJ[3]=[];
   //for (var M of MERK) {
   for (var iM in MERK) { var M=MERK[iM];
-    Logtext=Logtext+"Kantenfluchtlinie "+M+"\n";
+//    if (Logflag) alert(iM+" "+MERK.length+" "+JSON.stringify(M));
+    if (Logflag) Logtext=Logtext+"Kantenfluchtlinie "+M+"\n";
     var PZZT=[];
     for (var PNR=0;PNR<OBJ[2].length;PNR++) {//alert(PNR);
       if (M[0]==OBJ[2][PNR][0]&M[1]==OBJ[2][PNR][1]) PZZT.push([PUNKTWERT(OBJ[0][M[2]],OBJ[2][PNR][3]),PNR,OBJ[2][PNR][2]]);
@@ -401,9 +182,10 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
       if (M[0]==OBJ[2][PNR][0]&M[1]==OBJ[2][PNR][2]) PZZT.push([PUNKTWERT(OBJ[0][M[2]],OBJ[2][PNR][3]),PNR,OBJ[2][PNR][1]]);
       }
     PZZS=PZZT.sort(Asort);
-    Logtext=Logtext+"  PZZS="+JSON.stringify(PZZS)+"\n";
-    for (var PNR=0;PNR<PZZS.length/2;PNR++) /*if (PZZS[2*PNR][1]<=PZZS[2*PNR+1][1])*/ { //warum geht ohne if nicht?
-      Logtext=Logtext+"    neue Kante von Punkt P"+PZZS[2*PNR][1]+" bis Punkt P"+PZZS[2*PNR+1][1]+" entlang der Schnittgeraden von Ebene E"+M[0]+" und Ebene E"+M[1]+"\n";
+//    if (Logflag) alert("PZZS="+JSON.stringify(PZZS));    
+    if (Logflag) Logtext=Logtext+"  "+PZZS.length+" PZZS="+JSON.stringify(PZZS)+"\n";
+    for (var PNR=0;PNR<(PZZS.length-1)/2;PNR++) /*if (PZZS[2*PNR][1]<=PZZS[2*PNR+1][1])*/ { //warum geht ohne if nicht?
+      if (Logflag) Logtext=Logtext+"    neue Kante von Punkt P"+PZZS[2*PNR][1]+" bis Punkt P"+PZZS[2*PNR+1][1]+" entlang der Schnittgeraden von Ebene E"+M[0]+" und Ebene E"+M[1]+"\n";
       OBJ[3].push([PZZS[2*PNR][1],PZZS[2*PNR+1][1],M[0],M[1]]);
       }
     }
@@ -412,93 +194,52 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
 KFILL(BALKEN1);
 //Logtext=Logtext+JSON.stringify(BALKEN1[0])+"\n";
 //Logtext=Logtext+JSON.stringify(BALKEN1[2])+"\n";
-Logtext=Logtext+"Kanten [Punkt1,Punkt2,Ebene1,Ebene2]: "+JSON.stringify(BALKEN1[3])+"\n";
+if (Logflag) Logtext=Logtext+"Kanten [Punkt1,Punkt2,Ebene1,Ebene2]: "+JSON.stringify(BALKEN1[3])+"\n";
 
-/*GAP
-GERADEXEBENE:=function(OBJ1,OBJ2) #Schnittpunkte der Kanten von OBJ1 mit Ebenen von OBJ2
-  local U,V,W,KANTE,EBENE,ERG,ENR;
-  ERG:=[];
-  for KANTE in OBJ1[4] do
-    for ENR in [1..Size(OBJ2[1])] do #hier ginge auch in OBJ2[1], ENR nur wegen Print
-    #
-Print("\nKante ",KANTE," und Ebene ",ENR," ");
-    U:=DREIEBENEN(OBJ1[1][KANTE[3]],OBJ1[1][KANTE[4]],OBJ2[1][ENR]);
-    if U[4]<0 then U:=-U; fi;
-    #
-Print(U," ");
-    V:=DURCHGUCKER(OBJ1,U);
-    #Print(V," ");
-    W:=DURCHGUCKER(OBJ2,U);
-    #Print(W," ");
-    if V<>3 and W<>3 then
-      Add(ERG,[KANTE[3],KANTE[4],ENR,U]);
-      Print("drin"); else Print("draußen");
-      fi;
-    od; od;
-  return ERG;
-  end;
-GERADEXEBENE(BALKEN1,SCHNITT2);
-*/
-
+//9
 var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit Ebenen von OBJ2
   //local U,V,W,KANTE,EBENE,ERG,ENR;
   var ERG=[];
   //for (var KANTE of OBJ1[3]) {
   for (var iKANTE in OBJ1[3]) { var KANTE=OBJ1[3][iKANTE]
     for (var ENR=0;ENR<OBJ2[0].length;ENR++) { //hier ginge auch in OBJ2[1], ENR nur wegen Print
-      Logtext=Logtext+"Kante "+JSON.stringify(KANTE)+" und Ebene "+JSON.stringify(ENR)+" ";
+      if (Logflag) Logtext=Logtext+"Kante "+JSON.stringify(KANTE)+" und Ebene "+JSON.stringify(ENR)+" ";
       var U=EGGT(DREIEBENEN(OBJ1[0][KANTE[2]],OBJ1[0][KANTE[3]],OBJ2[0][ENR]));
       //if U[4]<0 then U:=-U; fi;// ist jetzt EGGT
-      Logtext=Logtext+"Schnittpunkt in "+JSON.stringify(U)+" ";
+      if (Logflag) Logtext=Logtext+"Schnittpunkt in "+JSON.stringify(U)+" ";
       var V=DURCHGUCKER(OBJ1,U);
-      Logtext=Logtext+"V="+V+" ";
+      if (Logflag) Logtext=Logtext+"V="+V+" ";
       var W=DURCHGUCKER(OBJ2,U);
-      Logtext=Logtext+"W="+W+" ";
+      if (Logflag) Logtext=Logtext+"W="+W+" ";
       if ((V!=3)&(W!=3)) {
         ERG.push([KANTE[2],KANTE[3],ENR,U]);
-        Logtext=Logtext+"drin" } else Logtext=Logtext+"draußen";
-      Logtext=Logtext+"\n";
+        if (Logflag) Logtext=Logtext+"drin" } else if (Logflag) Logtext=Logtext+"draußen";
+      if (Logflag) Logtext=Logtext+"\n";
       }
     }
   return ERG;
   }
 var GX=GERADEXEBENE(BALKEN1,SCHNITT2);
-Logtext=Logtext+"GERADEXEBENE(BALKEN1,SCHNITT2)="+JSON.stringify(GX)+"\n";
-Logtext=Logtext+"DURCHGUCKER(SCHNITT2,[200,50,150.0010,1])="+DURCHGUCKER(SCHNITT2,[200,50,150.0010,1])+"\n";
-Logtext=Logtext+"DURCHGUCKER(SCHNITT2,[200,50,150.0001,1])="+DURCHGUCKER(SCHNITT2,[200,50,150.0001,1])+"\n";
-Logtext=Logtext+"DURCHGUCKER(SCHNITT2,[200,50,150.0000,1])="+DURCHGUCKER(SCHNITT2,[200,50,150.0000,1])+"\n";
-Logtext=Logtext+"DURCHGUCKER(SCHNITT2,[200,50,149.9999,1])="+DURCHGUCKER(SCHNITT2,[200,50,149.9999,1])+"\n";
-Logtext=Logtext+"DURCHGUCKER(SCHNITT2,[200,50,149.9990,1])="+DURCHGUCKER(SCHNITT2,[200,50,149.9990,1])+"\n";
+if (Logflag) Logtext=Logtext+"GERADEXEBENE(BALKEN1,SCHNITT2)="+JSON.stringify(GX)+"\n";
+if (Logflag) Logtext=Logtext+"DURCHGUCKER(SCHNITT2,[200,50,150.0010,1])="+DURCHGUCKER(SCHNITT2,[200,50,150.0010,1])+"\n";
+if (Logflag) Logtext=Logtext+"DURCHGUCKER(SCHNITT2,[200,50,150.0001,1])="+DURCHGUCKER(SCHNITT2,[200,50,150.0001,1])+"\n";
+if (Logflag) Logtext=Logtext+"DURCHGUCKER(SCHNITT2,[200,50,150.0000,1])="+DURCHGUCKER(SCHNITT2,[200,50,150.0000,1])+"\n";
+if (Logflag) Logtext=Logtext+"DURCHGUCKER(SCHNITT2,[200,50,149.9999,1])="+DURCHGUCKER(SCHNITT2,[200,50,149.9999,1])+"\n";
+if (Logflag) Logtext=Logtext+"DURCHGUCKER(SCHNITT2,[200,50,149.9990,1])="+DURCHGUCKER(SCHNITT2,[200,50,149.9990,1])+"\n";
 
 
-/*GAP
-SCHNITTPUNKTE:=function(OBJ1,OBJ2) #Schnittpunkte der Kanten eines OBJ mit Ebenen des anderen OBJ
-  local TRU,E,ERG12,ERG21,MERK;
-  TRU:=Size(OBJ1[1]);
-  ERG12:=GERADEXEBENE(OBJ1,OBJ2);
-  for E in ERG12 do E[3]:=E[3]+TRU; od;
-  ERG21:=GERADEXEBENE(OBJ2,OBJ1);
-  for E in ERG21 do 
-    E[1]:=E[1]+TRU; E[2]:=E[2]+TRU;
-    MERK:=E[3];E[3]:=E[2];E[2]:=E[1];E[1]:=MERK;#sortiert lassen
-      od;
-  return Concatenation(ERG12,ERG21);
-  end;
-
-SCHNITTPUNKTE(BALKEN1,SCHNITT2);
-*/
-
+//10
 var SCHNITTPUNKTE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten eines OBJ mit Ebenen des anderen OBJ
   //local TRU,E,ERG12,ERG21,MERK;
   var TRU=OBJ1[0].length;
-  Logtext=Logtext+"GERADEXEBENE(OBJ1,OBJ2) "+JSON.stringify(TRU)+"\n";
+  if (Logflag) Logtext=Logtext+"GERADEXEBENE(OBJ1,OBJ2) "+JSON.stringify(TRU)+"\n";
   var ERG12=GERADEXEBENE(OBJ1,OBJ2);
   //for (var E of ERG12) E[2]=E[2]+TRU;
   for (var iE in ERG12) { var E=ERG12[iE]; E[2]=E[2]+TRU}
-  Logtext=Logtext+"ERG12 "+JSON.stringify(ERG12)+"\n";
-  Logtext=Logtext+"GERADEXEBENE(OBJ2,OBJ1) "+JSON.stringify(TRU)+"\n";
+  if (Logflag) Logtext=Logtext+"ERG12 "+JSON.stringify(ERG12)+"\n";
+  if (Logflag) Logtext=Logtext+"GERADEXEBENE(OBJ2,OBJ1) "+JSON.stringify(TRU)+"\n";
   var ERG21=GERADEXEBENE(OBJ2,OBJ1);
-  Logtext=Logtext+"ERG21 "+JSON.stringify(ERG21)+"\n";
+  if (Logflag) Logtext=Logtext+"ERG21 "+JSON.stringify(ERG21)+"\n";
   //for (var E of ERG21) { 
   for (var iE in ERG21) { var E=ERG21[iE];
     E[0]=E[0]+TRU; E[1]=E[1]+TRU;
@@ -508,56 +249,25 @@ var SCHNITTPUNKTE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten eines OBJ mit
   }
 
 var SX=SCHNITTPUNKTE(BALKEN1,SCHNITT2);
-Logtext=Logtext+"SCHNITTPUNKTE(BALKEN1,SCHNITT2)="+JSON.stringify(SX)+"\n";
+if (Logflag) Logtext=Logtext+"SCHNITTPUNKTE(BALKEN1,SCHNITT2)="+JSON.stringify(SX)+"\n";
 
-/*GAP
-#so, jetzt nur noch RUMPS:
-RUMPS:=function(OBJ1,OBJ2,BIT) #Schnittkoerper (OBJ1 and OBJ2)
-  local TRU,ERG,P,PNEU;
-  TRU:=Size(OBJ1[1]);
-  ERG:=[];
-  ERG[1]:=Concatenation(OBJ1[1],OBJ2[1]);
-  ERG[2]:=Concatenation(OBJ1[2],OBJ2[2]);
-  if BIT<>0 then Add(ERG[2],TNOT); fi;
-  Add(ERG[2],TAND);
-  ERG[3]:=SCHNITTPUNKTE(OBJ1,OBJ2);
-  for P in OBJ1[3] do
-    #Print(P,"\n",P[4],"\n",DURCHGUCKER(ERG,P[4]));
-    if DURCHGUCKER(ERG,P[4])<>3 then Add(ERG[3],StructuralCopy(P)); fi;
-    od;
-  for P in OBJ2[3] do
-    PNEU:=StructuralCopy(P);
-    PNEU[1]:=PNEU[1]+TRU;
-    PNEU[2]:=PNEU[2]+TRU;
-    PNEU[3]:=PNEU[3]+TRU;
-    if DURCHGUCKER(ERG,P[4])<>3 then Add(ERG[3],PNEU); fi;
-    od;
-  KFILL(ERG);
-  return ERG;
-  end;
-
-REST1:=RUMPS(BALKEN1,SCHNITT2,0);
-Print(REST1);
-REST2:=RUMPS(BALKEN1,SCHNITT2,1);
-Print(REST2);
-REST3:=RUMPS(BALKEN1,SCHNITT3,0);
-Print(REST3);
-REST2=REST3;
-GAP*/
-
+//11
 //so, jetzt nur noch RUMPS:
 RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   //local TRU,ERG,P,PNEU;
+  if (Logflag) Logtext=Logtext+"OBJ1="+JSON.stringify(OBJ1)+"\n";
+  if (Logflag) Logtext=Logtext+"OBJ2="+JSON.stringify(OBJ2)+"\n";
   var TRU=OBJ1[0].length;
   var ERG=[];
   ERG[0]=OBJ1[0].slice().concat(OBJ2[0]);
   ERG[1]=OBJ1[1].slice().concat(OBJ2[1]);
   if (BIT) ERG[1].push(TNOT);
-  ERG[1].push(TAND);
+  ERG[1].push(TAND);  
   ERG[2]=SCHNITTPUNKTE(OBJ1,OBJ2);
+  //if (Logflag) alert(8);
   //for (var P of OBJ1[2]) {
   for (var iP in OBJ1[2]) { var P=OBJ1[2][iP];
-    Logtext=Logtext+"OBJ1 P="+JSON.stringify(P)+" drin="+DURCHGUCKER(ERG,P[3])+"\n";
+    if (Logflag) Logtext=Logtext+"OBJ1 P="+JSON.stringify(P)+" drin="+DURCHGUCKER(ERG,P[3])+"\n";
     if (DURCHGUCKER(ERG,P[3])!=3) ERG[2].push(P.slice());
     }
   //for (var P of OBJ2[2]) {
@@ -566,54 +276,26 @@ RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
     PNEU[0]=PNEU[0]+TRU;
     PNEU[1]=PNEU[1]+TRU;
     PNEU[2]=PNEU[2]+TRU;
-    Logtext=Logtext+"OBJ2 P="+JSON.stringify(P)+" drin="+DURCHGUCKER(ERG,P[3])+" als PNEU="+JSON.stringify(PNEU)+"\n";
+    if (Logflag) Logtext=Logtext+"OBJ2 P="+JSON.stringify(P)+" drin="+DURCHGUCKER(ERG,P[3])+" als PNEU="+JSON.stringify(PNEU)+"\n";
     if (DURCHGUCKER(ERG,P[3])!=3) ERG[2].push(PNEU);
     }
-  Logtext=Logtext+"Punkte="+JSON.stringify(ERG[2])+"\n";
+  //if (Logflag) alert(9);
+  if (Logflag) Logtext=Logtext+"Punkte="+JSON.stringify(ERG[2])+"\n";
+  if (Logflag) for (var i=0;i<ERG[2].length;i++) Logtext=Logtext+"P"+i+"="+JSON.stringify(ERG[2][i])+"\n";
+
   KFILL(ERG);
   return ERG;
   }
 
 var REST1=RUMPS(BALKEN1,SCHNITT2,0);
-Logtext=Logtext+"RUMPS(BALKEN1,SCHNITT2,0)="+JSON.stringify(REST1)+"\n";
+if (Logflag) Logtext=Logtext+"RUMPS(BALKEN1,SCHNITT2,0)="+JSON.stringify(REST1)+"\n";
 //var REST2=RUMPS(BALKEN1,SCHNITT2,1);
 //Logtext=Logtext+"RUMPS(BALKEN1,SCHNITT2,1)="+JSON.stringify(REST2)+"\n";
 //var REST3=RUMPS(BALKEN1,SCHNITT3,0);
 //Logtext=Logtext+"RUMPS(BALKEN1,SCHNITT3,0)="+JSON.stringify(REST3)+"\n";
 
 
-/*GAP
-TRANSFORM:=function(OBJ,A)
-  local P;
-  OBJ[1]:=StructuralCopy(OBJ[1])*A;
-  for P in OBJ[3] do
-    P[4]:=DREIEBENEN(OBJ[1][P[1]],OBJ[1][P[2]],OBJ[1][P[3]]);
-    if P[4][4]<0 then P[4]:=-P[4]; fi;
-    od;
-#  QFILL(OBJ);
-#  KFILL(OBJ);
-  return OBJ;
-  end;
-Print("\nAEAEAE");
-
-A:=[[1,0,0,-5],[0,1,0,0],[0,0,1,0],[0,0,0,1]];
-B:=[[1,0,0,5],[0,1,0,0],[0,0,1,0],[0,0,0,1]];
-
-TRANSFORM(BALKEN1,A);
-TRANSFORM(BALKEN1,B);
-Print("\nÄÄÄ");
-CDF:=[[1/2*Sqrt(3),-1/2,0,0],[1/2,1/2*Sqrt(3),0,0],[0,0,1,0],[0,0,0,1]];
-FDC:=[[1/2*Sqrt(3),1/2,0,0],[-1/2,1/2*Sqrt(3),0,0],[0,0,1,0],[0,0,0,1]];
-TRANSFORM(BALKEN1,CDF);
-TRANSFORM(BALKEN1,CDF);
-TRANSFORM(BALKEN1,CDF);
-TRANSFORM(BALKEN1,FDC);
-TRANSFORM(BALKEN1,FDC);
-TRANSFORM(BALKEN1,FDC);
-
-#TRANSFORM(RUMPS1,CDF);
-GAP*/
-
+//12
 var MMULT=function(A,T) {
   var RET=[];
   var s=0;
@@ -630,7 +312,7 @@ var MMULT=function(A,T) {
   return RET;
   }
 
-Logtext=Logtext+"MMULT(A,T)=[[8,11],[13,18]]: "+JSON.stringify(MMULT([[1,2],[2,3]],[[2,3],[3,4]]))+"\n";
+if (Logflag) Logtext=Logtext+"MMULT(A,T)=[[8,11],[13,18]]: "+JSON.stringify(MMULT([[1,2],[2,3]],[[2,3],[3,4]]))+"\n";
 
 
 var TRANSFORM=function(OBJ,A) {
@@ -654,54 +336,13 @@ TRANSFORM(REST1,A);
 var ALPHA=0.1;
 CDF=[[Math.cos(ALPHA),Math.sin(ALPHA),0,0],[-Math.sin(ALPHA),Math.cos(ALPHA),0,0],[0,0,1,0],[0,0,0,1]];
 FDC=[[Math.cos(ALPHA),-Math.sin(ALPHA),0,0],[Math.sin(ALPHA),Math.cos(ALPHA),0,0],[0,0,1,0],[0,0,0,1]];
-TRANSFORM(REST1,CDF);
+//TRANSFORM(REST1,CDF);
 //TRANSFORM(BALKEN1,CDF);
 //TRANSFORM(BALKEN1,CDF);
 //TRANSFORM(BALKEN1,FDC);
 
 
-/*GAP
-####PLOT-Funktion
-grafik:=GraphicSheet("HALLO",400,400);
-GRAFIKINHALT:=[];
-RATMACH:=function(X) 
-  local RET,Y,i,CON;
-  if IsRat(X) or IsFloat(X) then RET:=Float(X); else
-    CON:=Conductor(X);
-    Y:=ExtRepOfObj(X);
-    RET:=0;
-    for i in [1..Size(Y)] do
-      RET:=RET+Y[i]*Cos(2*FLOAT.PI*(i-1)/CON);
-      od;
-    fi;
-  return RET;
-  end;
-
-PUNKT2D:=function(x)
-  local X1,X2,X3;
-  X1:=RATMACH(x[1]);
-  X2:=RATMACH(x[2]);
-  X3:=RATMACH(x[3]);
-  return [X1+X2/2,X3+X2/2]; 
-  end;
-
-KPLOT:=function(KLISTE)
-  local KANTE,PUNKT,P1,P2,PD;
-#  FastUpdate(grafik,true);#wirkt nich
-  while GRAFIKINHALT<>[] do Delete(grafik,Remove(GRAFIKINHALT)); od;
-  for K in KLISTE do
-    for KANTE in K[4] do
-      P1:=PUNKT2D(K[3][KANTE[1]][4]);
-      P2:=PUNKT2D(K[3][KANTE[2]][4]);
-      PD:=P2-P1;
-#      Print(P1,P2,PD,"\n");
-      Add(GRAFIKINHALT,Line(grafik,10+Int(P1[1]),210-Int(P1[2]),Int(PD[1]),-Int(PD[2])));
-      od;
-    od;
-#  FastUpdate(grafik,false);
-  end;
-*/
-
+//13
 var PUNKT2D=function(x) {
   return [x[0]+x[1]/2,x[2]+x[1]/2]; 
   }

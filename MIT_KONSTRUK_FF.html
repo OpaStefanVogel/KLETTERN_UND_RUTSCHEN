@@ -119,15 +119,16 @@ var mesh11 = new THREE.Mesh(tube, new THREE.MeshNormalMaterial({opacity: 0.6,   
         // add the output of the renderer to the html element
         document.getElementById("canvas").appendChild(renderer.domElement);
 
-        // call the render function
 contr = new THREE.OrbitControls( camera ,document.getElementById("canvas"));
     weiterdann(cube);
+
+        // call the render function
         render();
 
 
 
 //alert(contr.autoRotate);
-contr.autoRotate=true;
+//contr.autoRotate=true;
 //alert(contr.autoRotate);
 //alert(contr.autoRotateSpeed);
 //alert(JSON.stringify(camera.position));
@@ -139,8 +140,8 @@ contr.autoRotate=true;
     function render() {
         renderer.render(scene, camera);
 ////        camera.position.x+=0.0;
-        scene.getObjectByName('sline').rotation.x += 0.005;
-        scene.getObjectByName('sline').rotation.y += 0.001;
+//        scene.getObjectByName('sline').rotation.x += 0.005;
+//        scene.getObjectByName('sline').rotation.y += 0.001;
         contr.update();
         requestAnimationFrame(render);
     }    
@@ -217,13 +218,34 @@ var spline = new THREE.SplineCurve3([
    sline.name='sline';
    scene.add(sline);
 
-  AddObjekt(cube,REST4);
+
+PUNKT_A=[0,0,0,1];
+var BALKEN1=QUADER(200,100,150); KFILL(BALKEN1);
+var SCHNITT2=EBENE([100,0,0,1],[200,50,150,1],[200,0,90,1]);
+var REST1=RUMPS(BALKEN1,SCHNITT2,0);
+TRANSFORM(REST1,A);
+TRANSFORM(REST1,CDF);
+var REST2=RUMPS(REST1,SCHNITT2,0);
+var BALKEN2=QUADER(60,60,60); KFILL(BALKEN2);
+var C=[[1,0,0,10],[0,1,0,10],[0,0,1,10],[0,0,0,1]];
+TRANSFORM(BALKEN2,C);
+var REST3=RUMPS(BALKEN1,BALKEN2,1);
+var REST4=RUMPS(REST1,BALKEN2,1);
+PUNKT_A=[-10,80,-10,1];
+var BALKEN3=QUADER(70,15,70); KFILL(BALKEN3);
+Logflag=true;
+var REST5=RUMPS(REST3,BALKEN3,1);
+Logtext=Logtext+"REST5="+JSON.stringify(REST5)+"\n";
+Logtext=Logtext+"BALKEN3="+JSON.stringify(BALKEN3)+"\n";
+KPLOT([REST5]);
+  AddObjekt(cube,REST5);
+
 PUNKT_A=[130,1250,0,1];
 //      " >P 130 1250 0 Anlegepunkt" INTERPRET
 //      " >Q 120 370 120 Vorderbalken" INTERPRET
-var BALKEN4=QUADER(120,370,120); KFILL(BALKEN4);
-  AddObjekt(cube,BALKEN4);
-  alert(JSON.stringify(BALKEN4));
+//var BALKEN4=QUADER(120,370,120); KFILL(BALKEN4);
+//  AddObjekt(cube,BALKEN4);
+//  alert(JSON.stringify(BALKEN4));
 
 
 
