@@ -269,10 +269,11 @@ var QFILL=function(OBJ) { //Berechnet und ergänzt Koordinatenangabe [ei,ej,ek,[
   return OBJ;
   }
 
+var PUNKT_A=[0,0,0,1];
 var QUADER=function(L,B,H) { //Objekt "Quader"
   return QFILL([
-    [[1,0,0,0],[0,1,0,0],[0,0,1,0],
-     [-1,0,0,L],[0,-1,0,B],[0,0,-1,H]],
+    [[1,0,0,-PUNKT_A[0]],[0,1,0,-PUNKT_A[1]],[0,0,1,-PUNKT_A[2]],
+     [-1,0,0,PUNKT_A[0]+L],[0,-1,0,PUNKT_A[1]+B],[0,0,-1,PUNKT_A[2]+H]],
     [TEBN,TEBN,TAND,TEBN,TAND,TEBN,TAND,TEBN,TAND,TEBN,TAND],
     [],[]]);
   }

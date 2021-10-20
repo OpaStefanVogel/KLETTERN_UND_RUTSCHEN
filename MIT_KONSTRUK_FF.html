@@ -121,9 +121,9 @@ var mesh11 = new THREE.Mesh(tube, new THREE.MeshNormalMaterial({opacity: 0.6,   
 
         // call the render function
 contr = new THREE.OrbitControls( camera ,document.getElementById("canvas"));
+    weiterdann(cube);
         render();
 
-    weiterdann(cube);
 
 
 //alert(contr.autoRotate);
@@ -139,8 +139,8 @@ contr.autoRotate=true;
     function render() {
         renderer.render(scene, camera);
 ////        camera.position.x+=0.0;
-//        scene.getObjectByName('cube').rotation.x += 0.005;
-//        scene.getObjectByName('cube').rotation.y += 0.001;
+        scene.getObjectByName('sline').rotation.x += 0.005;
+        scene.getObjectByName('sline').rotation.y += 0.001;
         contr.update();
         requestAnimationFrame(render);
     }    
@@ -201,7 +201,7 @@ var spline = new THREE.SplineCurve3([
      new THREE.Vector3(10, 2, 3),
      new THREE.Vector3(-10, 2, 10)]);
 
-var kreis=new THREE.ArcCurve(0,0,3);
+//var kreis=new THREE.ArcCurve(0,0,3);
 //alert(JSON.stringify(spline.getPoints(5)));
 //alert(JSON.stringify(kreis.getPoints(5)));
 //alert(JSON.stringify(new THREE.Vector3(0, 2, 0)));
@@ -213,10 +213,19 @@ var kreis=new THREE.ArcCurve(0,0,3);
      color: 0xff00f0   });
 //   geometry.vertices = [new THREE.Vector3(0, 2, 0),new THREE.Vector3(2, 0, 2)]; //splinePoints;
    geometry.vertices = splinePoints;
-   var line = new THREE.Line(geometry, material);
-   cube.add(line);
+   var sline = new THREE.Line(geometry, material);
+   sline.name='sline';
+   scene.add(sline);
 
   AddObjekt(cube,REST4);
+PUNKT_A=[130,1250,0,1];
+//      " >P 130 1250 0 Anlegepunkt" INTERPRET
+//      " >Q 120 370 120 Vorderbalken" INTERPRET
+var BALKEN4=QUADER(120,370,120); KFILL(BALKEN4);
+  AddObjekt(cube,BALKEN4);
+  alert(JSON.stringify(BALKEN4));
+
+
 
 /*aus three.js/dok/edgesgeometry, will nicht gehen
 var geometry9 = new THREE.BoxGeometry( 4, 7, 9 );alert(THREE.EdgesGeometry);
@@ -388,7 +397,6 @@ KONSTRUKTION VOCABULARY-END
 
 DECIMAL
 */
-
 
 
 
