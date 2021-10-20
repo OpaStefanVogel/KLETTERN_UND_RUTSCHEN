@@ -8,6 +8,7 @@ if (1==1) {
 //.. in KPLOT noch width und height anpassen
 //.. überflüssige Ebenen entfernen
 //ok warum in KFILL das if drinbeiben muss, ok ist raus
+//.. wie es zu dem U==[0,0,0,0] kommt
 //.. bei AUFDERKANTE muß wohl ein AUFDERFLAECHE auch mit dazu
 
 Logtext="";
