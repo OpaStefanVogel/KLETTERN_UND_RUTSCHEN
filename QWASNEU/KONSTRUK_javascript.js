@@ -8,6 +8,7 @@ if (1==1) {
 //.. in KPLOT noch width und height anpassen
 //.. überflüssige Ebenen entfernen
 //ok warum in KFILL das if drinbeiben muss, ok ist raus
+//.. bei AUFDERKANTE muß wohl ein AUFDERFLAECHE auch mit dazu
 
 Logtext="";
 Logflag=false;
@@ -197,6 +198,18 @@ KFILL(BALKEN1);
 if (Logflag) Logtext=Logtext+"Kanten [Punkt1,Punkt2,Ebene1,Ebene2]: "+JSON.stringify(BALKEN1[3])+"\n";
 
 //9
+
+var ABSTAND=function(A,B) {
+  return Math.sqrt((B[0]-A[0])*(B[0]-A[0])+(B[1]-A[1])*(B[1]-A[1])+(B[2]-A[2])*(B[2]-A[2]));
+  }
+
+var AUFDERKANTE=function(A,B,C) {
+  var ab=ABSTAND(A,B);
+  var bc=ABSTAND(B,C);
+  var ac=ABSTAND(A,C);
+  if (Math.abs(ab+bc-ac)<0.1) return 1; else return 3;
+  }
+
 var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit Ebenen von OBJ2
   //local U,V,W,KANTE,EBENE,ERG,ENR;
   var ERG=[];
@@ -211,7 +224,9 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
       if (Logflag) Logtext=Logtext+"V="+V+" ";
       var W=DURCHGUCKER(OBJ2,U);
       if (Logflag) Logtext=Logtext+"W="+W+" ";
-      if ((V!=3)&(W!=3)) {
+      var AK=AUFDERKANTE(OBJ1[2][KANTE[0]][3],U,OBJ1[2][KANTE[1]][3]);
+      if (Logflag) Logtext=Logtext+"AK="+AK+" ";
+      if ((V==2)&(W==2)&(AK!=3)) {
         ERG.push([KANTE[2],KANTE[3],ENR,U]);
         if (Logflag) Logtext=Logtext+"drin" } else if (Logflag) Logtext=Logtext+"draußen";
       if (Logflag) Logtext=Logtext+"\n";
