@@ -39,7 +39,7 @@ var TFIND=function(OBJ,ENR,P) {
 
 //2
 var STAPEL=[];
-DURCHGUCKER=function(OBJ,P,IL) { // ob P im Inneren oder auf Rand von OBJ
+DURCHGUCKER=function(OBJ,P) { // ob P im Inneren oder auf Rand von OBJ
   //außerdem, wenn IL gegeben ist, nur die Ebenen in IL auswerten
   //local X,Y,T,ETNR;
   if (P[0]==0&P[1]==0&P[2]==0&P[3]==0) return 3;
@@ -49,13 +49,9 @@ DURCHGUCKER=function(OBJ,P,IL) { // ob P im Inneren oder auf Rand von OBJ
   for (var i in OBJ[1]) { var T=OBJ[1][i]
   //for (var T of OBJ[1]) { 
     //alert("TFIND\n"+OBJ+"\n"+ETNR+"\n"+P+"\n"+TFIND(OBJ,ETNR,P));
-    if (T==TEBN) {
-      STAPEL.push(X);
-      if ((IL!=undefined)&&(IL.indexOf(ETNR)==-1)) X=0; else X=TFIND(OBJ,ETNR,P); 
-      ETNR=ETNR+1
-      }
-    if (T==TAND) if (X>0) X=Math.max(X,STAPEL.pop()); else X=STAPEL.pop();
-    if (T==TNOT) if (X>0) X=4-X;
+    if (T==TEBN) { STAPEL.push(X); X=TFIND(OBJ,ETNR,P); ETNR=ETNR+1 }
+    if (T==TAND) X=Math.max(X,STAPEL.pop());
+    if (T==TNOT) X=4-X;
     //alert(ETNR+" "+T+" "+STAPEL);
     }
   return X;
@@ -218,8 +214,8 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
       var V=3;
       //var V=DURCHGUCKER(OBJ1,U);
       //var V=DURCHGUCKER(OBJ1,U,[KANTE[3],KANTE[4]]);
-      var F=DURCHGUCKER(OBJ1,U,[KANTE[4],KANTE[5]]);
-      if (Logflag) Logtext=Logtext+"IL=["+[KANTE[4],KANTE[5]]+"] F="+F+" ";
+      //var F=DURCHGUCKER(OBJ1,U,[KANTE[4],KANTE[5]]);
+      //if (Logflag) Logtext=Logtext+"IL=["+[KANTE[4],KANTE[5]]+"] F="+F+" ";
       if ((TFIND(OBJ1,KANTE[4],U)+TFIND(OBJ1,KANTE[4],OBJ1[2][KANTE[1]][3])!=4)&(TFIND(OBJ1,KANTE[5],U)+TFIND(OBJ1,KANTE[5],OBJ1[2][KANTE[0]][3])!=4)) V=2;
       if (Logflag) Logtext=Logtext+"V="+V+" ";
       var W=DURCHGUCKER(OBJ2,U);
@@ -229,7 +225,7 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
         ERG.push([KANTE[2],KANTE[3],ENR,U]);
         if (Logflag) Logtext=Logtext+"♥ drin" 
         } else if (Logflag) Logtext=Logtext+"draußen";
-      if ((F<3)&(V==3)) if (Logflag) Logtext=Logtext+"----------";
+      //if ((F<3)&(V==3)) if (Logflag) Logtext=Logtext+"----------";
       if (Logflag) Logtext=Logtext+"\n";
       }
     }
