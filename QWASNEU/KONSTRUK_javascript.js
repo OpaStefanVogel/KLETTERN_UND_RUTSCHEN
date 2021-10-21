@@ -208,7 +208,7 @@ var AUFDERKANTE=function(A,B,C) {
   var ab=ABSTAND(A,B);
   var bc=ABSTAND(B,C);
   var ac=ABSTAND(A,C);
-  if (Math.abs(ab+bc-ac)<0.1) return 1; else return 3;
+  if (Math.abs(ab+bc-ac)<0.1) return 2; else return 3;
   }
 
 var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit Ebenen von OBJ2
@@ -221,8 +221,9 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
       var U=EGGT(DREIEBENEN(OBJ1[0][KANTE[2]],OBJ1[0][KANTE[3]],OBJ2[0][ENR]));
       //if U[4]<0 then U:=-U; fi;// ist jetzt EGGT
       if (Logflag) Logtext=Logtext+"Schnittpunkt in "+JSON.stringify(U)+" ";
-      var V=DURCHGUCKER(OBJ1,U);
-      if (Logflag) Logtext=Logtext+"V="+V+" ";
+      var V=2;
+      //var V=DURCHGUCKER(OBJ1,U);
+      //if (Logflag) Logtext=Logtext+"V="+V+" ";
       var W=DURCHGUCKER(OBJ2,U);
       if (Logflag) Logtext=Logtext+"W="+W+" ";
       var AK=AUFDERKANTE(OBJ1[2][KANTE[0]][3],U,OBJ1[2][KANTE[1]][3]);
