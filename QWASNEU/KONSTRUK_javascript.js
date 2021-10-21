@@ -188,7 +188,7 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
     if (Logflag) Logtext=Logtext+"  "+PZZS.length+" PZZS="+JSON.stringify(PZZS)+"\n";
     for (var PNR=0;PNR<(PZZS.length-1)/2;PNR++) /*if (PZZS[2*PNR][1]<=PZZS[2*PNR+1][1])*/ { //warum geht ohne if nicht?
       if (Logflag) Logtext=Logtext+"    neue Kante von Punkt P"+PZZS[2*PNR][1]+" bis Punkt P"+PZZS[2*PNR+1][1]+" entlang der Schnittgeraden von Ebene E"+M[0]+" und Ebene E"+M[1]+"\n";
-      OBJ[3].push([PZZS[2*PNR][1],PZZS[2*PNR+1][1],M[0],M[1]]);
+      OBJ[3].push([PZZS[2*PNR][1],PZZS[2*PNR+1][1],M[0],M[1],PZZS[2*PNR][2],PZZS[2*PNR+1][2]]);
       }
     }
   }
@@ -199,36 +199,24 @@ KFILL(BALKEN1);
 if (Logflag) Logtext=Logtext+"Kanten [Punkt1,Punkt2,Ebene1,Ebene2]: "+JSON.stringify(BALKEN1[3])+"\n";
 
 //9
-
-var ABSTAND=function(A,B) {
-  return Math.sqrt((B[0]-A[0])*(B[0]-A[0])+(B[1]-A[1])*(B[1]-A[1])+(B[2]-A[2])*(B[2]-A[2]));
-  }
-
-var AUFDERKANTE=function(A,B,C) {
-  var ab=ABSTAND(A,B);
-  var bc=ABSTAND(B,C);
-  var ac=ABSTAND(A,C);
-  if (Math.abs(ab+bc-ac)<0.1) return 2; else return 3;
-  }
-
 var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit Ebenen von OBJ2
   //local U,V,W,KANTE,EBENE,ERG,ENR;
   var ERG=[];
   //for (var KANTE of OBJ1[3]) {
   for (var iKANTE in OBJ1[3]) { var KANTE=OBJ1[3][iKANTE]
     for (var ENR=0;ENR<OBJ2[0].length;ENR++) { //hier ginge auch in OBJ2[1], ENR nur wegen Print
-      if (Logflag) Logtext=Logtext+"Kante "+JSON.stringify(KANTE)+" und Ebene "+JSON.stringify(ENR)+" ";
+      if (Logflag) Logtext=Logtext+"Kante k"+iKANTE+"="+JSON.stringify(KANTE)+" und Ebene em="+JSON.stringify(ENR)+" ";
       var U=EGGT(DREIEBENEN(OBJ1[0][KANTE[2]],OBJ1[0][KANTE[3]],OBJ2[0][ENR]));
       //if U[4]<0 then U:=-U; fi;// ist jetzt EGGT
       if (Logflag) Logtext=Logtext+"Schnittpunkt in "+JSON.stringify(U)+" ";
-      var V=2;
+      var V=3;
       //var V=DURCHGUCKER(OBJ1,U);
-      //if (Logflag) Logtext=Logtext+"V="+V+" ";
+      //var V=DURCHGUCKER(OBJ1,U,[KANTE[3],KANTE[4]]);
+      if ((TFIND(OBJ1,KANTE[4],U)==TFIND(OBJ1,KANTE[4],OBJ1[2][KANTE[1]][3]))&(TFIND(OBJ1,KANTE[5],U)==TFIND(OBJ1,KANTE[5],OBJ1[2][KANTE[0]][3]))) V=2;
+      if (Logflag) Logtext=Logtext+"V="+V+" ";
       var W=DURCHGUCKER(OBJ2,U);
       if (Logflag) Logtext=Logtext+"W="+W+" ";
-      var AK=AUFDERKANTE(OBJ1[2][KANTE[0]][3],U,OBJ1[2][KANTE[1]][3]);
-      if (Logflag) Logtext=Logtext+"AK="+AK+" ";
-      if ((V==2)&(W==2)&(AK!=3)) {
+      if ((V==2)&(W==2)) {
         ERG.push([KANTE[2],KANTE[3],ENR,U]);
         if (Logflag) Logtext=Logtext+"drin" } else if (Logflag) Logtext=Logtext+"draußen";
       if (Logflag) Logtext=Logtext+"\n";
@@ -268,12 +256,26 @@ var SCHNITTPUNKTE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten eines OBJ mit
 var SX=SCHNITTPUNKTE(BALKEN1,SCHNITT2);
 if (Logflag) Logtext=Logtext+"SCHNITTPUNKTE(BALKEN1,SCHNITT2)="+JSON.stringify(SX)+"\n";
 
+//10a KDUMP
+
+KDUMP=function(OBJ) { 
+  Logtext=Logtext+"  Ebenen: ei=[nx,ny,nz,w]\n";
+  for (var i in OBJ[0]) Logtext=Logtext+"    e"+i+"="+JSON.stringify(OBJ[0][i])+"\n";
+  Logtext=Logtext+"  Punkte pi=[ei,ej,ek,[x,y,z,1]]:\n";
+  for (var i in OBJ[2]) Logtext=Logtext+"    p"+i+"="+JSON.stringify(OBJ[2][i])+"\n";
+  Logtext=Logtext+"  Kanten ki=[pi,pj,ek,el,evon,ebis]:\n";
+  for (var i in OBJ[3]) Logtext=Logtext+"    k"+i+"="+JSON.stringify(OBJ[3][i])+"\n";
+  }
+
 //11
 //so, jetzt nur noch RUMPS:
 RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   //local TRU,ERG,P,PNEU;
-  if (Logflag) Logtext=Logtext+"OBJ1="+JSON.stringify(OBJ1)+"\n";
-  if (Logflag) Logtext=Logtext+"OBJ2="+JSON.stringify(OBJ2)+"\n";
+  if (Logflag) Logtext=Logtext+"OBJ1=\n";
+  if (Logflag) KDUMP(OBJ1);
+  if (Logflag) Logtext=Logtext+"OBJ2=\n";
+  if (Logflag) KDUMP(OBJ2);
+  //if (Logflag) Logtext=Logtext+"OBJ2="+JSON.stringify(OBJ2)+"\n";
   var TRU=OBJ1[0].length;
   var ERG=[];
   ERG[0]=OBJ1[0].slice().concat(OBJ2[0]);
