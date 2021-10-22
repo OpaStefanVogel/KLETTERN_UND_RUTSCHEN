@@ -390,18 +390,18 @@ var KPLOT=function(KLISTE) {
   Logtext=Logtext+'</svg>\n';
   }
 
-KPLOT([REST1]);
+if (Logflag) KPLOT([REST1]);
 var REST2=RUMPS(REST1,SCHNITT2,0);
-KPLOT([REST2]);
+if (Logflag) KPLOT([REST2]);
 
 //var BALKEN1=QUADER(200,100,150);
 var BALKEN2=QUADER(60,60,60); KFILL(BALKEN2);
 var C=[[1,0,0,10],[0,1,0,10],[0,0,1,10],[0,0,0,1]];
 TRANSFORM(BALKEN2,C);
 var REST3=RUMPS(BALKEN1,BALKEN2,1);
-KPLOT([REST3]);
+if (Logflag) KPLOT([REST3]);
 var REST4=RUMPS(REST2,BALKEN2,1);
-KPLOT([REST4]);
+if (Logflag) KPLOT([REST4]);
 
 
 //var REST4=RUMPS2(REST2,BALKEN1,0,1);
