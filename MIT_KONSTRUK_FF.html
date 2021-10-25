@@ -8,7 +8,10 @@
     <script src="../three.js/build/three.js"></script>
     <script src="../threejs-cookbook/libs/three.js"></script>
     <script src="../threejs-cookbook/libs/OrbitControls.js"></script>
+    <script src="../threejs-cookbook/libs/Projector.js"></script>
+    <script src="../threejs-cookbook/libs/dat.gui.min.js"></script>
     <style>
+        body     <style>
         body {
             margin: 1;
             overflow: hidden;
@@ -25,6 +28,9 @@ button {font-size:200%}
     var renderer;
     var scene;
     var camera;
+    var raycaster, mouse = { x : 0, y : 0 }; 
+    var Castlist=[];
+    var q; //PUNKT_A;
 
     function init() {
 
@@ -44,7 +50,16 @@ button {font-size:200%}
         var cubeMaterial = new THREE.MeshNormalMaterial();
         var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
         cube.name = 'cube';
+        cube.position.x=0;
         scene.add(cube);
+
+var qGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
+var qMaterial = new THREE.MeshNormalMaterial( { color: 0x00dddd } );
+q = new THREE.Mesh( qGeometry, qMaterial );
+q.position.x=205/20;
+q.position.z=150/20;
+scene.add( q );
+//Knoten.push(q.position.clone());
 
 /*
 //create a blue LineBasicMaterial
@@ -54,7 +69,6 @@ points.push( new THREE.Vector3( - 10, 0, 0 ) );
 points.push( new THREE.Vector3( 0, 10, 0 ) );
 points.push( new THREE.Vector3( 10, 0, 0 ) );
 
-alert(THREE.BufferGeometry);
 var geometry = new THREE.BufferGeometry();//.setFromPoints( points );
 var line = new THREE.Line( geometry, material );
 scene.add( line );*/
@@ -148,7 +162,10 @@ Logtext=Logtext+"REST5="+JSON.stringify(REST5)+"\n";
 Logtext=Logtext+"BALKEN3="+JSON.stringify(BALKEN3)+"\n";
 KPLOT([REST4]);
 KPLOT([REST5]);
+Castlist.push(REST5);
+cube.geometry.faces[0].color = new THREE.Color(0x000000); 
   AddObjekt(cube,REST5);
+Logtext=JSON.stringify(cube.geometry.faces)+Logtext;
 
 PUNKT_A=[130,1250,0,1];
 //      " >P 130 1250 0 Anlegepunkt" INTERPRET
@@ -162,6 +179,13 @@ document.getElementById("Log").innerHTML='<span style="white-space:pre; font-fam
 //var xm=new XMLSerializer();
 //alert(xm.serializeToString(renderer.domElement));
 //alert(renderer.domElement);
+
+
+//aus three.js.pdf:
+     raycaster = new THREE.Raycaster();
+     renderer.domElement.addEventListener( 'click', raycast, false );
+     //Next setup code there. }
+//alert(JSON.stringify(raycaster));
 
     function render() {
         renderer.render(scene, camera);
@@ -190,6 +214,49 @@ document.getElementById("Log").innerHTML='<span style="white-space:pre; font-fam
 
     // calls the init function when the window is done loading.
     // window.onload = init;
+
+function raycast ( e ) {
+//alert(JSON.stringify(camera.projectionMatrix*(new THREE.vector4(0,0,0,1))));
+  //raycaster.setFromCamera( mouse, camera ) aus three.pdf geht nicht
+  //1. sets the mouse position with a coordinate system where the center
+  //   of the screen is the origin
+//alert("e.clientX="+e.clientX+" "+e.clientY);
+  mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
+  mouse.z = 1;
+/*alert("mouse="+JSON.stringify(mouse));
+  var tv=new THREE.Vector3(205/20,0,150/20);
+  //var tv=scene.getObjectByName('cube').position;
+alert("tv="+JSON.stringify(tv));
+alert("tv.project(camera)="+JSON.stringify(tv.project(camera)));
+  var width = window.innerWidth, height = window.innerHeight;
+  var widthHalf = width / 2, heightHalf = height / 2;
+
+  tv.x = ( tv.x * widthHalf ) + widthHalf;
+  tv.y = -( tv.y * heightHalf ) + heightHalf;
+alert("tv="+JSON.stringify(tv));
+*/
+  var cmin=0;
+  var dmin=0;
+  var pmin=[0,0,0,1];
+  for (var c in Castlist) {
+    var mindist=Infinity;
+    for (var d in Castlist[c][2]) {
+      var p=Castlist[c][2][d][3];
+//      var dist=Knoten[i].clone().project(camera).distanceToSquared(mouse);
+//      alert(d+"\n"+p+"\n"+JSON.stringify((new THREE.Vector3(p[0],p[1],p[2])).project(camera).distanceToSquared(mouse)));//.project(camera)));
+//alert(dist);
+      var dist=(new THREE.Vector3(p[0]/20,p[1]/20,p[2]/20)).project(camera).distanceToSquared(mouse);
+      if (dist<mindist) {mindist=dist; cmin=c; dmin=d; pmin=p.slice();}
+      }
+    }
+  //alert("cmin="+cmin+", dmin="+dmin+",pmin="+JSON.stringify(pmin)+", mindist="+mindist);
+  q.position.x=pmin[0]/20;
+  q.position.y=pmin[1]/20;
+  q.position.z=pmin[2]/20;
+  }
+
+
 
 </script>
 
