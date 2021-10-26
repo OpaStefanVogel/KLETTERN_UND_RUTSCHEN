@@ -22,6 +22,7 @@
 <body onload="init()">
 <div style="display:flex; flex-direction:column; max-width:90%; min-height:100%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt render.domElement rein</div>
 <button onclick="init()">Rest5</button>
+<button onclick='alert(PA);PA.position.x=q.position.x;PA.position.y=q.position.y;PA.position.z=q.position.z;alert(PA.position.x)'>PA</button>
 <button onclick='alert(document.getElementById("canvas").scrollHeight)'>Test</button>
 
 <script>//globale Variablen
@@ -30,7 +31,10 @@ var scene;
 var camera;
 var raycaster, mouse = { x : 0, y : 0 }; 
 var Castlist=[];
-var q; //PUNKT_A;
+var q; //PUNKT_Q;
+var PA;
+var VAS;
+var EASD;
 var canvas_height=0;
 var canvas_width=0;
 var zoom=20;
@@ -70,6 +74,13 @@ function init() {
   q.position.z=150/zoom;
   scene.add( q );
   //Knoten.push(q.position.clone());
+
+  var AGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
+  var AMater2ial = new THREE.MeshBasicMaterial( { color: 0x0 } );
+  PA = new THREE.Mesh( AGeometry, AMaterial );
+  PA.position.x=20/zoom;
+  PA.position.z=10/zoom;
+  scene.add( PA );
 
   var geometry = new THREE.BufferGeometry();
   var material = new THREE.LineBasicMaterial( { vertexColors: true } );
