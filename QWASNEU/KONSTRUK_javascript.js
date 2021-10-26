@@ -4,6 +4,7 @@ if (1==1) {
 //in KFILL if (PZZS[2*PNR][1]<=PZZS[2*PNR+1][1])
 //in TFIND if (Math.abs(A)<0.00001) return 2; //Rand
 //ok neues EGGT normalisiert und gerichtet, bisheriges EGGT ist jetzt PGGT.
+//..
 //sonst zu machen noch:
 //.. in KPLOT noch width und height anpassen
 //.. überflüssige Ebenen entfernen
