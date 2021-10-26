@@ -1,9 +1,9 @@
 if (1==1) {
 //Veränderungen zu GAP:
-//1.EGGT ohne /-P[3]
+//1.PGGT ohne /-P[3]
 //in KFILL if (PZZS[2*PNR][1]<=PZZS[2*PNR+1][1])
 //in TFIND if (Math.abs(A)<0.00001) return 2; //Rand
-//.. extra EBENE normalisiert und gerichtet, SCHNITT3=-SCHNITT1
+//ok neues EGGT normalisiert und gerichtet, bisheriges EGGT ist jetzt PGGT.
 //sonst zu machen noch:
 //.. in KPLOT noch width und height anpassen
 //.. überflüssige Ebenen entfernen
@@ -62,12 +62,18 @@ DURCHGUCKER=function(OBJ,P) { // ob P im Inneren oder auf Rand von OBJ
 //alert(nix);
 
 //3
-var EGGT=function(E) { //kürzt Ebenengleichung, gemeinsame Faktoren herausdividieren
+var PGGT=function(E) { //kürzt Punktkoordinaten, gemeinsame Faktoren herausdividieren
   if (E[3]<0) return [E[0]/E[3],E[1]/E[3],E[2]/E[3],1];
   if (E[3]==0) return E;
   if (E[3]>0) return [E[0]/E[3],E[1]/E[3],E[2]/E[3],1];
   }
-//alert("EGGT 2.5,2,1.5,1 "+EGGT([10,8,6,4]));
+//alert("PGGT 2.5,2,1.5,1 "+PGGT([10,8,6,4]));
+	
+var EGGT=function(E) { //kürzt Ebenengleichung, gemeinsame Faktoren herausdividieren
+  var len=Math.sqrt(E[0]*E[0]*E[1]*E[1]+E[2]*E[2]);
+  return [E[0]/len,E[1]/len,E[2]/len,E[3]/len];
+  }
+//alert("PGGT 2.5,2,1.5,1 "+PGGT([10,8,6,4]));
 	
 //4
 var Determinant3=function(A) {
@@ -77,7 +83,7 @@ var Determinant3=function(A) {
 //alert("Determinant -3 "+Determinant3([[1,2,3],[2,3,3],[3,3,3]]));
 
 var DREIEBENEN=function(E1,E2,E3) { //Schnittpunkt dreier Ebenen
-  var RET=EGGT([
+  var RET=PGGT([
     Determinant3( [[E1[1],E1[2],E1[3]],[E2[1],E2[2],E2[3]],[E3[1],E3[2],E3[3]]]),
     -Determinant3([[E1[2],E1[3],E1[0]],[E2[2],E2[3],E2[0]],[E3[2],E3[3],E3[0]]]),
     Determinant3( [[E1[3],E1[0],E1[1]],[E2[3],E2[0],E2[1]],[E3[3],E3[0],E3[1]]]),
@@ -91,10 +97,21 @@ var DREIEBENEN=function(E1,E2,E3) { //Schnittpunkt dreier Ebenen
 //alert("\nDREIEBENEN:0,100,0,1 "+DREIEBENEN([1,0,0,0],[0,0,1,0],[0,-1,0,100]));
 //alert(nix);
 
+var DREIPUNKTE=function(E1,E2,E3) { //Ebene durch drei Punkte
+  var RET=EGGT([
+    Determinant3( [[E1[1],E1[2],E1[3]],[E2[1],E2[2],E2[3]],[E3[1],E3[2],E3[3]]]),
+    -Determinant3([[E1[2],E1[3],E1[0]],[E2[2],E2[3],E2[0]],[E3[2],E3[3],E3[0]]]),
+    Determinant3( [[E1[3],E1[0],E1[1]],[E2[3],E2[0],E2[1]],[E3[3],E3[0],E3[1]]]),
+    -Determinant3([[E1[0],E1[1],E1[2]],[E2[0],E2[1],E2[2]],[E3[0],E3[1],E3[2]]])
+    ]);
+  //alert([[E1[0],E1[1],E1[2]],[E2[0],E2[1],E2[2]],[E3[0],E3[1],E3[2]]].join("\n"));
+  //alert(RET);
+  return RET;
+  }
 
 //5
 var EBENE=function(P1,P2,P3) { //Objekt Ebene durch drei Punkte P1, P2, P3,
-  return [[DREIEBENEN(P1,P2,P3)],[TEBN],[],[]];
+  return [[DREIPUNKTE(P1,P2,P3)],[TEBN],[],[]];
   }
 
 var SCHNITT1=EBENE([1,0,0,1],[0,1,0,1],[0,0,0,1]);
@@ -207,8 +224,8 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
   for (var iKANTE in OBJ1[3]) { var KANTE=OBJ1[3][iKANTE]
     for (var ENR=0;ENR<OBJ2[0].length;ENR++) { //hier ginge auch in OBJ2[1], ENR nur wegen Print
       if (Logflag) Logtext=Logtext+"Kante k"+iKANTE+"="+JSON.stringify(KANTE)+" und Ebene e"+JSON.stringify(ENR)+" ";
-      var U=EGGT(DREIEBENEN(OBJ1[0][KANTE[2]],OBJ1[0][KANTE[3]],OBJ2[0][ENR]));
-      //if U[4]<0 then U:=-U; fi;// ist jetzt EGGT
+      var U=PGGT(DREIEBENEN(OBJ1[0][KANTE[2]],OBJ1[0][KANTE[3]],OBJ2[0][ENR]));
+      //if U[4]<0 then U:=-U; fi;// ist jetzt PGGT
       if (Math.abs(U[3])<0.0001) {if (Logflag) Logtext=Logtext+"parallel\n"; continue}
       if (Logflag) Logtext=Logtext+"Schnittpunkt in "+JSON.stringify(U)+" ";
       var V=3;
@@ -346,8 +363,8 @@ var TRANSFORM=function(OBJ,A) {
   OBJ[0]=MMULT(OBJ[0],A);
   //for (var P of OBJ[2]) {
   for (var iP in OBJ[2]) { var P=OBJ[2][iP];
-    P[3]=EGGT(DREIEBENEN(OBJ[0][P[0]],OBJ[0][P[1]],OBJ[0][P[2]]));
-    //if (P[3][3]<0) P[3]=[-P[4]; fi; //ist jetzt EGGT
+    P[3]=PGGT(DREIEBENEN(OBJ[0][P[0]],OBJ[0][P[1]],OBJ[0][P[2]]));
+    //if (P[3][3]<0) P[3]=[-P[4]; fi; //ist jetzt PGGT
     }
   //QFILL(OBJ);
   //KFILL(OBJ);
