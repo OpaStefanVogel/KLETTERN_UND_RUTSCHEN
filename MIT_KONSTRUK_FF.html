@@ -23,19 +23,18 @@
     </style>
   </head>
 <body onload="init()">
-<div style="display:flex; flex-direction:column; max-width:90%; min-height:100%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt render.domElement rein</div>
+<div style="max-width:90%; min-height:100%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt render.domElement rein</div>
 <button onclick="init()">Rest5</button>
 <button onclick='PA.position.set(q.position.x,q.position.y,q.position.z)'>PA</button>
 <button onclick='PS.position.copy(q.position); VAS.geometry.verticesNeedUpdate = true;'>PS</button>
 <button onclick='PD.position.copy(q.position); EASD.geometry.verticesNeedUpdate = true;'>PD</button>
 <button onclick=''>SchnittASD</button>
 <button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
-<button onclick='scene.remove(REST5[4]); REST5=RUMPS(REST5,EBENE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1]),0);KDUMP(REST5);KPLOT([REST5]);AddObjekt(scene,REST5);Logfile()'>RUMPS</button>
-
-<script src="QWASNEU/KONSTRUK_javascript.js"></script>
+<button onclick='scene.remove(REST5[4]); var cind=Castlist.indexOf(REST5); REST5=RUMPS(REST5,EBENE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1]),0);KDUMP(REST5);KPLOT([REST5]);AddObjekt(scene,REST5);Castlist[cind]=REST5;Logfile()'>RUMPS</button>
 
 <div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:400px"> div</div>
 
+<script src="QWASNEU/KONSTRUK_javascript.js"></script>
 
 <script>//globale Variablen
 var renderer;
@@ -170,10 +169,10 @@ function init() {
 PUNKT_A=[0,0,0,1];
 var BALKEN1=QUADER(200,100,150); KFILL(BALKEN1);
 var SCHNITT2=EBENE([100,0,0,1],[200,50,150,1],[200,0,90,1]);
-var REST1=RUMPS(BALKEN1,SCHNITT2,0);
+var REST1=RUMPS(BALKEN1,SCHNITT2,1);
 TRANSFORM(REST1,A);
 TRANSFORM(SCHNITT2,CDF);
-var REST2=RUMPS(REST1,SCHNITT2,0);
+var REST2=RUMPS(REST1,SCHNITT2,1);
 var BALKEN2=QUADER(60,60,60); KFILL(BALKEN2);
 var C=[[1,0,0,10],[0,1,0,10],[0,0,1,10],[0,0,0,1]];
 TRANSFORM(BALKEN2,C);
@@ -183,7 +182,7 @@ PUNKT_A=[-10,75,-10,1];
 var BALKEN3=QUADER(100,15,100); KFILL(BALKEN3);
 Logflag=true;
 REST5=RUMPS(REST4,BALKEN3,1);
-REST5=BALKEN1;
+REST5=REST5;
 Logtext=Logtext+"REST5="+JSON.stringify(REST5)+"\n";
 Logtext=Logtext+"BALKEN3="+JSON.stringify(BALKEN3)+"\n";
 KPLOT([REST1]);

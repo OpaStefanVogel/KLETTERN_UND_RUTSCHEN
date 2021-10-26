@@ -70,7 +70,7 @@ var PGGT=function(E) { //kürzt Punktkoordinaten, gemeinsame Faktoren herausdivi
 //alert("PGGT 2.5,2,1.5,1 "+PGGT([10,8,6,4]));
 	
 var EGGT=function(E) { //kürzt Ebenengleichung, gemeinsame Faktoren herausdividieren
-  var len=Math.sqrt(E[0]*E[0]*E[1]*E[1]+E[2]*E[2]);
+  var len=Math.sqrt(E[0]*E[0]+E[1]*E[1]+E[2]*E[2]);
   return [E[0]/len,E[1]/len,E[2]/len,E[3]/len];
   }
 //alert("PGGT 2.5,2,1.5,1 "+PGGT([10,8,6,4]));
