@@ -23,8 +23,17 @@
 <div style="display:flex; flex-direction:column; max-width:90%; min-height:100%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt render.domElement rein</div>
 <button onclick="init()">Rest5</button>
 <button onclick='PA.position.set(q.position.x,q.position.y,q.position.z)'>PA</button>
-<button onclick='VAS.geometry.verticesNeedUpdate = true;'>VAS</button>
-<button onclick='alert(document.getElementById("canvas").scrollHeight)'>Test</button>
+<button onclick='PS.position.copy(q.position); VAS.geometry.verticesNeedUpdate = true;'>PS</button>
+<button onclick='PD.position.copy(q.position); EASD.geometry.verticesNeedUpdate = true;'>PD</button>
+<button onclick=''>SchnittASD</button>
+<button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
+<button onclick='scene.remove(REST5[4])'>Remove(REST5)</button>
+<button onclick='scene.add(REST5[4])'>Add(REST5)</button>
+
+<script src="QWASNEU/KONSTRUK_javascript.js"></script>
+
+<div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:400px"> div</div>
+
 
 <script>//globale Variablen
 var renderer;
@@ -33,12 +42,14 @@ var camera;
 var raycaster, mouse = { x : 0, y : 0 }; 
 var Castlist=[];
 var q; //PUNKT_Q;
-var PA;
+var PA,PS,PD;
 var VAS;
 var EASD;
 var canvas_height=0;
 var canvas_width=0;
 var zoom=20;
+var cube;
+var REST5;
   </script>
 
 <script>
@@ -62,7 +73,7 @@ function init() {
   // create a cube and add to scene
   var cubeGeometry = new THREE.BoxGeometry(0.1 /* 10 * Math.random()*/, 0.1, 0.1);
   var cubeMaterial = new THREE.MeshNormalMaterial();
-  var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+  cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
   cube.name = 'cube';
   cube.position.x=0;
   scene.add(cube);
@@ -82,14 +93,34 @@ function init() {
   PA.position.x=20/zoom;
   PA.position.z=10/zoom;
   scene.add( PA );
+  
+  var SGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
+  var SMaterial = new THREE.MeshBasicMaterial( { color: 0x0000FF } );
+  PS = new THREE.Mesh( SGeometry, SMaterial );
+  PS.position.x=30/zoom;
+  PS.position.z=20/zoom;
+  scene.add( PS );
+
+  var DGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
+  var DMaterial = new THREE.MeshBasicMaterial( { color: 0xFF0000 } );
+  PD = new THREE.Mesh( DGeometry, DMaterial );
+  PD.position.x=40/zoom;
+  PD.position.z=30/zoom;
+  scene.add( PD );
 
   var VASmaterial = new THREE.LineBasicMaterial({ color: 0x778899, linewidth:4});
   var VASgeometry = new THREE.Geometry();
-  VASgeometry.vertices = [PA.position,q.position];
+  VASgeometry.vertices = [PA.position,PS.position];
   //var geometryline = new THREE.BufferGeometry().setFromPoints( [start,end] );
   VAS = new THREE.Line(VASgeometry, VASmaterial);
   scene.add( VAS );
-  //OBJ1.add(obj2line);
+
+  var EASDmaterial = new THREE.LineBasicMaterial({ color: 0x996633, linewidth:3});
+  var EASDgeometry = new THREE.Geometry();
+  EASDgeometry.vertices = [PA.position,PD.position];
+  //var geometryline = new THREE.BufferGeometry().setFromPoints( [start,end] );
+  EASD = new THREE.Line(EASDgeometry, EASDmaterial);
+  scene.add( EASD );
 
   var geometry = new THREE.BufferGeometry();
   var material = new THREE.LineBasicMaterial( { vertexColors: true } );
@@ -149,15 +180,15 @@ var REST4=RUMPS(REST2,BALKEN2,1);
 PUNKT_A=[-10,75,-10,1];
 var BALKEN3=QUADER(100,15,100); KFILL(BALKEN3);
 Logflag=true;
-var REST5=RUMPS(REST4,BALKEN3,1);
+REST5=RUMPS(REST4,BALKEN3,1);
 Logtext=Logtext+"REST5="+JSON.stringify(REST5)+"\n";
 Logtext=Logtext+"BALKEN3="+JSON.stringify(BALKEN3)+"\n";
 KPLOT([REST4]);
 KPLOT([REST5]);
 Castlist.push(REST5);
 cube.geometry.faces[0].color = new THREE.Color(0x000000); 
-  AddObjekt(cube,REST5);
-Logtext=JSON.stringify(cube.geometry.faces)+Logtext;
+AddObjekt(scene,REST5);
+Logtext=JSON.stringify(cube.geometry.faces)+"\n"+Logtext;
 
 PUNKT_A=[130,1250,0,1];
 //      " >P 130 1250 0 Anlegepunkt" INTERPRET
@@ -167,7 +198,11 @@ PUNKT_A=[130,1250,0,1];
 //  alert(JSON.stringify(BALKEN4));
 
   //gesammelten Logtext ausgeben
-  document.getElementById("Log").innerHTML='<span style="white-space:pre; font-family:monospace">'+Logtext+"</span>";
+  function Logfile(Logtext) {
+    document.getElementById("Log").innerHTML='<span style="white-space:pre; font-family:monospace">'+Logtext+"</span>";
+    Logtext="";
+    }
+  Logfile(Logtext);
   
   //var xm=new XMLSerializer();
   //alert(xm.serializeToString(renderer.domElement));
@@ -228,7 +263,7 @@ function raycast ( e ) {
   }
 </script>
 
-<!--script>//sonstige Versuche
+<!--script>//sonstige bisher vergebliche Versuche
 
 //create a blue LineBasicMaterial
 const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
@@ -253,12 +288,13 @@ cube.add(mesh11);
 
   </script-->
 
-<div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:400px"> div</div>
-<script src="QWASNEU/KONSTRUK_javascript.js"></script>
-
 <script>
 //alert(THREE.LineBasicMaterial);
 function AddObjekt(OBJ1,OBJ2) {
+  var temp_material = new THREE.LineBasicMaterial({ color: 0x0077f0, linewidth:2});
+  var temp_geometry = new THREE.Geometry();
+  temp_geometry.vertices = [new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0)];
+  var temp = new THREE.Line(temp_geometry, temp_material);
   for (var iK in OBJ2[3]) { var K=OBJ2[3][iK];
     var numPoints = 2;   
     var start = new THREE.Vector3(OBJ2[2][K[0]][3][0]/zoom, OBJ2[2][K[0]][3][1]/zoom, OBJ2[2][K[0]][3][2]/zoom);   
@@ -268,7 +304,7 @@ function AddObjekt(OBJ1,OBJ2) {
     var curveQuad = new THREE.QuadraticBezierCurve3(start, middle, end); 
     var tube = new THREE.TubeGeometry(curveQuad, numPoints, 0.05, 33, false);   
     var mesh11 = new THREE.Mesh(tube, new THREE.MeshNormalMaterial({opacity: 0.99,     transparent: true   }));   
-    OBJ1.add(mesh11);
+    temp.add(mesh11);
 
 /*
     var materialline = new THREE.LineBasicMaterial({ color: 0x0077f0, linewidth:2});
@@ -279,7 +315,9 @@ function AddObjekt(OBJ1,OBJ2) {
     //OBJ1.add(obj2line);
     */
 
-    }  
+    }
+  OBJ2[4]=temp;
+  OBJ1.add(temp);
   }
   </script>
 
