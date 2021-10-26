@@ -22,7 +22,8 @@
 <body onload="init()">
 <div style="display:flex; flex-direction:column; max-width:90%; min-height:100%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt render.domElement rein</div>
 <button onclick="init()">Rest5</button>
-<button onclick='alert(PA);PA.position.x=q.position.x;PA.position.y=q.position.y;PA.position.z=q.position.z;alert(PA.position.x)'>PA</button>
+<button onclick='PA.position.set(q.position.x,q.position.y,q.position.z)'>PA</button>
+<button onclick='VAS.geometry.verticesNeedUpdate = true;'>VAS</button>
 <button onclick='alert(document.getElementById("canvas").scrollHeight)'>Test</button>
 
 <script>//globale Variablen
@@ -76,11 +77,19 @@ function init() {
   //Knoten.push(q.position.clone());
 
   var AGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
-  var AMater2ial = new THREE.MeshBasicMaterial( { color: 0x0 } );
+  var AMaterial = new THREE.MeshBasicMaterial( { color: 0x000000 } );
   PA = new THREE.Mesh( AGeometry, AMaterial );
   PA.position.x=20/zoom;
   PA.position.z=10/zoom;
   scene.add( PA );
+
+  var VASmaterial = new THREE.LineBasicMaterial({ color: 0x778899, linewidth:4});
+  var VASgeometry = new THREE.Geometry();
+  VASgeometry.vertices = [PA.position,q.position];
+  //var geometryline = new THREE.BufferGeometry().setFromPoints( [start,end] );
+  VAS = new THREE.Line(VASgeometry, VASmaterial);
+  scene.add( VAS );
+  //OBJ1.add(obj2line);
 
   var geometry = new THREE.BufferGeometry();
   var material = new THREE.LineBasicMaterial( { vertexColors: true } );
