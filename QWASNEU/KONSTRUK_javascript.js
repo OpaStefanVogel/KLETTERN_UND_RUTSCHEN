@@ -12,6 +12,7 @@ if (1==1) {
 //.. wie es zu dem U==[0,0,0,0] kommt
 //.. bei AUFDERKANTE muß wohl ein AUFDERFLAECHE auch mit dazu
 //.. wenn sich mehr als 3 Ebenen in einem Punkt schneiden ist nur behelfsweise gelöst
+//.. Keil auch nur behelfsmäßig in GERADEXEBENE
 
 Logtext="";
 Logflag=false;
@@ -234,10 +235,25 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
   //local U,V,W,KANTE,EBENE,ERG,ENR;
   var ERG=[];
   //for (var KANTE of OBJ1[3]) {
+  if (OBJ1[0].length==2) {//Keil
+    for (var ENR=0;ENR<OBJ2[0].length;ENR++) {
+      if (Logflag) Logtext=Logtext+"Kante k"+0+"="+JSON.stringify("...")+" und Ebene e"+JSON.stringify(ENR)+" ";
+      var U=DREIEBENEN(OBJ1[0][0],OBJ1[0][1],OBJ2[0][ENR]);
+      if (Logflag) Logtext=Logtext+"Schnittpunkt in "+JSON.stringify(U)+" ";
+      var W=DURCHGUCKER(OBJ2,U);
+      if (Logflag) Logtext=Logtext+"W="+W+" ";
+      if (W==2) {
+        ERG.push([0,1,ENR,U]);
+        if (Logflag) Logtext=Logtext+"♥ drin" 
+        } else if (Logflag) Logtext=Logtext+"draußen";
+      if (Logflag) Logtext=Logtext+"\n";      
+      }
+    
+    }
   for (var iKANTE in OBJ1[3]) { var KANTE=OBJ1[3][iKANTE]
     for (var ENR=0;ENR<OBJ2[0].length;ENR++) { //hier ginge auch in OBJ2[1], ENR nur wegen Print
       if (Logflag) Logtext=Logtext+"Kante k"+iKANTE+"="+JSON.stringify(KANTE)+" und Ebene e"+JSON.stringify(ENR)+" ";
-      var U=PGGT(DREIEBENEN(OBJ1[0][KANTE[2]],OBJ1[0][KANTE[3]],OBJ2[0][ENR]));
+      var U=DREIEBENEN(OBJ1[0][KANTE[2]],OBJ1[0][KANTE[3]],OBJ2[0][ENR]);
       //if U[4]<0 then U:=-U; fi;// ist jetzt PGGT
       if (Math.abs(U[3])<0.0001) {if (Logflag) Logtext=Logtext+"parallel\n"; continue}
       if (Logflag) Logtext=Logtext+"Schnittpunkt in "+JSON.stringify(U)+" ";

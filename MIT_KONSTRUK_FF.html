@@ -4,6 +4,7 @@
   <!-- verwendete Vorlage: three-cookbook/.../01.05-setup-animation-loop.html -->
   <!-- was noch nicht geht:
 .. Reihenfolge ASD soll positive Seite der Ebene bestimmen
+.. die stimmt aber nicht beim Keil, deshalb auch -ASD
     -->
   <meta charset="utf-8"/>
   <title>MIT_KONSTRUK_FF.html</title>
@@ -13,6 +14,7 @@
   <script src="../threejs-cookbook/libs/OrbitControls.js"></script>
   <script src="../threejs-cookbook/libs/Projector.js"></script>
   <script src="../threejs-cookbook/libs/dat.gui.min.js"></script>
+  <script src="../threejs-cookbook/libs/clock.js"></script>
   <style>
      body {
        margin: 1;
@@ -23,19 +25,39 @@
     </style>
   </head>
 <body onload="init()">
+<canvas id="Uhr"> </canvas>
 <div style="max-width:90%; min-height:100%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt render.domElement rein</div>
 <button onclick="init()">Rest5</button>
 <button onclick='PA.position.set(q.position.x,q.position.y,q.position.z)'>A</button>
 <button onclick='PS.position.copy(q.position); VAS.geometry.verticesNeedUpdate = true;'>S</button>
 <button onclick='PD.position.copy(q.position); EASD.geometry.verticesNeedUpdate = true;'>D</button>
+<button onclick='SAMMELEBENE=[[EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x*zoom+(PA.position.y-PS.position.y)*PA.position.y*zoom+(PA.position.z-PS.position.z)*PA.position.z*zoom)])],[1],[],[]]'>AS</button>
+
+<button onclick='SAMMELEBENE=[[EGGT([PS.position.x-PA.position.x,PS.position.y-PA.position.y,PS.position.z-PA.position.z,-((PS.position.x-PA.position.x)*PA.position.x*zoom+(PS.position.y-PA.position.y)*PA.position.y*zoom+(PS.position.z-PA.position.z)*PA.position.z*zoom)])],[1],[],[]]'>-AS</button>
+
+<button onclick='SAMMELEBENE[0].push(DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);KFILL(SAMMELEBENE); Logtext=JSON.stringify(SAMMELEBENE)+"\n";Logfile()'>ASD</button>
+
+<button onclick='SAMMELEBENE[0].push(DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);Logtext=JSON.stringify(SAMMELEBENE)+"\n";Logfile()'>-ASD</button>
+
+<button onclick='scene.remove(REST5[4]); var cind=Castlist.indexOf(REST5); REST5=RUMPS(REST5,SAMMELEBENE,1);KDUMP(REST5);KPLOT([REST5]);AddObjekt(scene,REST5);Castlist[cind]=REST5;Logfile();SAMMELEBENE=[[],[],[],[]]'>Schnitt</button>
+<span id="Pdisp">...</span>;
+  </div>
+
+<div>
 <button onclick='scene.remove(REST5[4]); var cind=Castlist.indexOf(REST5); var SCHNITT_AS=[[EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x*zoom+(PA.position.y-PS.position.y)*PA.position.y*zoom+(PA.position.z-PS.position.z)*PA.position.z*zoom)])],[1],[],[]]; /*alert(JSON.stringify(SCHNITT_AS));*/ REST5=RUMPS(REST5,SCHNITT_AS,0);KDUMP(REST5);KPLOT([REST5]);AddObjekt(scene,REST5);Castlist[cind]=REST5;Logfile()'>AS</button>
+<button onclick='scene.remove(REST5[4]); var cind=Castlist.indexOf(REST5); var SCHNITT_AS=[[EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x*zoom+(PA.position.y-PS.position.y)*PA.position.y*zoom+(PA.position.z-PS.position.z)*PA.position.z*zoom)])],[1],[],[]]; /*alert(JSON.stringify(SCHNITT_AS));*/ REST5=RUMPS(REST5,SCHNITT_AS,1);KDUMP(REST5);KPLOT([REST5]);AddObjekt(scene,REST5);Castlist[cind]=REST5;Logfile()'>-AS</button>
 <button onclick='scene.remove(REST5[4]); var cind=Castlist.indexOf(REST5); REST5=RUMPS(REST5,EBENE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1]),0);KDUMP(REST5);KPLOT([REST5]);AddObjekt(scene,REST5);Castlist[cind]=REST5;Logfile()'>ASD</button>
 <button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
-<span id="Pdisp">...</span>;
-
+  </div>
 <div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:400px"> div</div>
 
 <script src="QWASNEU/KONSTRUK_javascript.js"></script>
+
+<script>
+//var Uhr = document.getElementById('Uhr'); 
+//Uhr.width=51; Uhr.height=51; 
+//clock(Uhr);
+  </script>
 
 <script>//globale Variablen
 var renderer;
@@ -52,6 +74,9 @@ var canvas_width=0;
 var zoom=20;
 var cube;
 var REST5;
+var SCHNITTEBENE;
+var SAMMELEBENE=[[],[],[],[]];
+SAMMELEBENE=[[[-0.8846517369293828,-0.14744195615489714,-0.4423258684646914,17.693034738587656],[-0.3841106397986879,-0.7682212795973759,-0.5121475197315839,38.41106397986879]],[1,1,2],[],[]];
   </script>
 
 <script>
@@ -72,8 +97,14 @@ function init() {
   renderer.setClearColor(0xCCCC00, 1.0);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
+        // add light
+        var light = new THREE.DirectionalLight();
+        light.position.set(1200, 1200, 1200);
+        scene.add(light);
+
   // create a cube and add to scene
   var cubeGeometry = new THREE.BoxGeometry(0.1 /* 10 * Math.random()*/, 0.1, 0.1);
+//alert(JSON.stringify(cubeGeometry.faces));
   var cubeMaterial = new THREE.MeshNormalMaterial();
   cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
   cube.name = 'cube';
@@ -81,7 +112,8 @@ function init() {
   scene.add(cube);
 
   //Pointer Q
-  var qGeometry = new THREE.SphereGeometry( 0.14, 32, 32 );
+  //var qGeometry = new THREE.SphereGeometry( 0.14, 32, 32 );
+  var qGeometry = new THREE.BoxGeometry(0.16, 0.16, 0.16);
   var qMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFF00 } );
   q = new THREE.Mesh( qGeometry, qMaterial );
   q.position.x=205/zoom;
@@ -99,6 +131,7 @@ function init() {
   var SGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
   var SMaterial = new THREE.MeshBasicMaterial( { color: 0x0000FF } );
   PS = new THREE.Mesh( SGeometry, SMaterial );
+  PS.position.x=10/zoom;
   PS.position.y=30/zoom;
   PS.position.z=10/zoom;
   scene.add( PS );
@@ -183,7 +216,7 @@ PUNKT_A=[-10,75,-10,1];
 var BALKEN3=QUADER(100,15,100); KFILL(BALKEN3);
 Logflag=true;
 REST5=RUMPS(REST4,BALKEN3,1);
-REST5=REST5;
+REST5=BALKEN1;
 Logtext=Logtext+"REST5="+JSON.stringify(REST5)+"\n";
 Logtext=Logtext+"BALKEN3="+JSON.stringify(BALKEN3)+"\n";
 KPLOT([REST1]);
