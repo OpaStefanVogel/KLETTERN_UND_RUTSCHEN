@@ -61,7 +61,7 @@ function init() {
   canvas_width=window.innerWidth;  //document.getElementById("canvas").clientWidth;
   //alert(canvas_width+" "+canvas_height);
 
-  // create a camera, which defines where we're looking at.
+  // create a camera, which defines where we‘re looking at.
   //camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera = new THREE.PerspectiveCamera(45, canvas_width / canvas_height, 0.1, 1000);
   //alert(THREE.WebGLRenderer); //geht nicht bei MINT
@@ -164,7 +164,7 @@ function init() {
 
   contr = new THREE.OrbitControls( camera ,document.getElementById("canvas"));
 
-  weiterdann(cube);
+  scene.add(Testspline());
 
 PUNKT_A=[0,0,0,1];
 var BALKEN1=QUADER(200,100,150); KFILL(BALKEN1);
@@ -182,7 +182,7 @@ PUNKT_A=[-10,75,-10,1];
 var BALKEN3=QUADER(100,15,100); KFILL(BALKEN3);
 Logflag=true;
 REST5=RUMPS(REST4,BALKEN3,1);
-REST5=REST5;
+REST5=BALKEN1;
 Logtext=Logtext+"REST5="+JSON.stringify(REST5)+"\n";
 Logtext=Logtext+"BALKEN3="+JSON.stringify(BALKEN3)+"\n";
 KPLOT([REST1]);
@@ -296,6 +296,12 @@ var tube = new THREE.TubeGeometry(curveQuad, numPoints, 0.1, 44, false);
 var mesh11 = new THREE.Mesh(tube, new THREE.MeshNormalMaterial({opacity: 0.6,     transparent: true   }));   
 cube.add(mesh11);
 
+/*aus three.js/dok/edgesgeometry, will nicht gehen
+var geometry9 = new THREE.BoxGeometry( 4, 7, 9 );alert(THREE.EdgesGeometry);
+var edges9 = new THREE.EdgesGeometry( geometry9 );alert(8);
+const line9 = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+  cube.add(line9);
+*/
   </script-->
 
 <script>
@@ -332,7 +338,7 @@ function AddObjekt(OBJ1,OBJ2) {
   </script>
 
 <script>
-function weiterdann(cube) {
+function Testspline() {
 
 var spline = new THREE.SplineCurve3([
      new THREE.Vector3(-10, -2, 10),
@@ -351,22 +357,7 @@ var spline = new THREE.SplineCurve3([
    geometry.vertices = splinePoints;
    var sline = new THREE.Line(geometry, material);
    sline.name='sline';
-   scene.add(sline);
-
-
-
-
-
-/*aus three.js/dok/edgesgeometry, will nicht gehen
-var geometry9 = new THREE.BoxGeometry( 4, 7, 9 );alert(THREE.EdgesGeometry);
-var edges9 = new THREE.EdgesGeometry( geometry9 );alert(8);
-const line9 = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
-  cube.add(line9);
-*/
-//alert(THREE.ArcCurve);
-//alert(THREE.BoxGeometry);
-//for (var L in THREE) Logtext=Logtext+L+"\n";
-
+   return sline;
   }
 
   </script>

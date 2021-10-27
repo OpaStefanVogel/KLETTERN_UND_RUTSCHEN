@@ -11,6 +11,7 @@ if (1==1) {
 //ok warum in KFILL das if drinbeiben muss, ok ist raus
 //.. wie es zu dem U==[0,0,0,0] kommt
 //.. bei AUFDERKANTE muß wohl ein AUFDERFLAECHE auch mit dazu
+//.. wenn sich mehr als 3 Ebenen in einem Punkt schneiden ist nur behelfsweise gelöst
 
 Logtext="";
 Logflag=false;
@@ -202,7 +203,10 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
       if (M[0]==OBJ[2][PNR][1]&M[1]==OBJ[2][PNR][2]) PZZT.push([PUNKTWERT(OBJ[0][M[2]],OBJ[2][PNR][3]),PNR,OBJ[2][PNR][0]]);
       if (M[0]==OBJ[2][PNR][0]&M[1]==OBJ[2][PNR][2]) PZZT.push([PUNKTWERT(OBJ[0][M[2]],OBJ[2][PNR][3]),PNR,OBJ[2][PNR][1]]);
       }
-    PZZS=PZZT.sort(Asort);
+    var PZZS=PZZT.sort(Asort);
+    var PZZR=[PZZS[0]];
+    for (var i=1;i<PZZS.length;i++) if (PZZS[i][0]-PZZS[i-1][0]>=0.0001) PZZR.push(PZZS[i]);
+    PZZS=PZZR;
 //    if (Logflag) alert("PZZS="+JSON.stringify(PZZS));    
     if (Logflag) Logtext=Logtext+"  "+PZZS.length+" PZZS="+JSON.stringify(PZZS)+"\n";
     for (var PNR=0;PNR<(PZZS.length-1)/2;PNR++) /*if (PZZS[2*PNR][1]<=PZZS[2*PNR+1][1])*/ { //warum geht ohne if nicht?
