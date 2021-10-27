@@ -31,6 +31,7 @@
 <button onclick='scene.remove(REST5[4]); var cind=Castlist.indexOf(REST5); var SCHNITT_AS=[[EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x*zoom+(PA.position.y-PS.position.y)*PA.position.y*zoom+(PA.position.z-PS.position.z)*PA.position.z*zoom)])],[1],[],[]]; /*alert(JSON.stringify(SCHNITT_AS));*/ REST5=RUMPS(REST5,SCHNITT_AS,0);KDUMP(REST5);KPLOT([REST5]);AddObjekt(scene,REST5);Castlist[cind]=REST5;Logfile()'>AS</button>
 <button onclick='scene.remove(REST5[4]); var cind=Castlist.indexOf(REST5); REST5=RUMPS(REST5,EBENE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1]),0);KDUMP(REST5);KPLOT([REST5]);AddObjekt(scene,REST5);Castlist[cind]=REST5;Logfile()'>ASD</button>
 <button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
+<span id="Pdisp">...</span>;
 
 <div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:400px"> div</div>
 
@@ -80,8 +81,8 @@ function init() {
   scene.add(cube);
 
   //Pointer Q
-  var qGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
-  var qMaterial = new THREE.MeshNormalMaterial( { color: 0x00dddd } );
+  var qGeometry = new THREE.SphereGeometry( 0.14, 32, 32 );
+  var qMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFF00 } );
   q = new THREE.Mesh( qGeometry, qMaterial );
   q.position.x=205/zoom;
   q.position.z=150/zoom;
@@ -182,7 +183,7 @@ PUNKT_A=[-10,75,-10,1];
 var BALKEN3=QUADER(100,15,100); KFILL(BALKEN3);
 Logflag=true;
 REST5=RUMPS(REST4,BALKEN3,1);
-REST5=BALKEN1;
+REST5=REST5;
 Logtext=Logtext+"REST5="+JSON.stringify(REST5)+"\n";
 Logtext=Logtext+"BALKEN3="+JSON.stringify(BALKEN3)+"\n";
 KPLOT([REST1]);
@@ -247,13 +248,14 @@ function raycast ( e ) {
 
   var cmin=0;
   var dmin=0;
+  var pk="p";
   var pmin=[[0,0,0,1],[0,0,0,1]];
   for (var c in Castlist) {
     var mindist=Infinity;
     for (var d in Castlist[c][2]) {
       var p=Castlist[c][2][d][3];
       var dist=(new THREE.Vector3(p[0]/20,p[1]/20,p[2]/20)).project(camera).distanceToSquared(mouse);
-      if (dist<mindist) {mindist=dist; cmin=c; dmin=d; pmin=[p.slice(),p.slice()];}
+      if (dist<mindist) {pk="p"; mindist=dist; cmin=c; dmin=d; pmin=[p.slice(),p.slice()];}
       }
     for (var d in Castlist[c][3]) {
       var p=Castlist[c][2];
@@ -263,13 +265,14 @@ function raycast ( e ) {
         (p[k[0]][3][1]+p[k[1]][3][1])/2/20,
         (p[k[0]][3][2]+p[k[1]][3][2])/2/20
         )).project(camera).distanceToSquared(mouse);
-      if (dist<mindist) {mindist=dist; cmin=c; dmin=d; pmin=[p[k[0]][3].slice(),p[k[1]][3].slice()];}
+      if (dist<mindist) {pk="k"; mindist=dist; cmin=c; dmin=d; pmin=[p[k[0]][3].slice(),p[k[1]][3].slice()];}
       }
     }
   //alert("cmin="+cmin+", dmin="+dmin+",pmin="+JSON.stringify(pmin)+", mindist="+mindist);
-  q.position.x=(pmin[0][0]+pmin[1][0])/2/20;
-  q.position.y=(pmin[0][1]+pmin[1][1])/2/20;
-  q.position.z=(pmin[0][2]+pmin[1][2])/2/20;
+  q.position.x=(pmin[0][0]+pmin[1][0])/2/zoom;
+  q.position.y=(pmin[0][1]+pmin[1][1])/2/zoom;
+  q.position.z=(pmin[0][2]+pmin[1][2])/2/zoom;
+  document.getElementById("Pdisp").firstChild.nodeValue=pk+dmin+"=["+[(q.position.x*zoom).toFixed(2),(q.position.y*zoom).toFixed(2),(q.position.z*zoom).toFixed(2)]+"]";
   }
 </script>
 
