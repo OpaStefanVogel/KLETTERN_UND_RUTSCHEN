@@ -24,10 +24,11 @@
     button {font-size:200%}
     </style>
   </head>
-<body onload="init(BeispREST5)">
+<body onload="Beispiel2()">
 <canvas id="Uhr"> </canvas>
 <div style="max-width:90%; min-height:100%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt render.domElement rein</div>
-<button onclick="init(BeispREST5)">REST5</button>
+<button onclick="Beispiel1()">REST5</button>
+<button onclick="Beispiel2()">GOKART</button>
 <button onclick='PA.position.set(q.position.x,q.position.y,q.position.z)'>A</button>
 <button onclick='PS.position.copy(q.position); VAS.geometry.verticesNeedUpdate = true;'>S</button>
 <button onclick='PD.position.copy(q.position); EASD.geometry.verticesNeedUpdate = true;'>D</button>
@@ -66,6 +67,7 @@ var EASD;
 var canvas_height=0;
 var canvas_width=0;
 var zoom=20;
+var Linientyp=0;
 var cube;
 var REST5;
 var SCHNITTEBENE;
@@ -75,7 +77,7 @@ var SAMMELEBENE=[[],[],[],[]];
   </script>
 
 <script>
-function init(Beispiel) {
+function init() {
   // create a scene, that will hold all our elements such as objects, cameras and lights.
   scene = new THREE.Scene();
   canvas_height=window.innerHeight;//document.getElementById("canvas").clientHeight;
@@ -165,29 +167,16 @@ function init(Beispiel) {
   contr = new THREE.OrbitControls( camera ,document.getElementById("canvas"));
 
   scene.add(Testspline());
-
-  Beispiel();
-  
-  //var xm=new XMLSerializer();
-  //alert(xm.serializeToString(renderer.domElement));
-  //alert(renderer.domElement);
- 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufnen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    contr.update();
-    requestAnimationFrame(render);
-    }    
-
-  render();
   }
-
   </script>
 
 <script>
-BeispREST5=function() {
-PUNKT_A=[0,0,0,1];
+var Beispiel1=function() {
+  init();
+  zoom=20;
+  Linientyp=0;
+  PUNKT_A=[0,0,0,1];
+
 var BALKEN1=QUADER(200,100,150); KFILL(BALKEN1);
 var SCHNITT2=EBENE([100,0,0,1],[200,50,150,1],[200,0,90,1]);
 var REST1=RUMPS(BALKEN1,SCHNITT2,1);
@@ -214,23 +203,81 @@ cube.geometry.faces[0].color = new THREE.Color(0x000000);
 AddObjekt(scene,REST5);
 Logtext=JSON.stringify(cube.geometry.faces)+"\n"+Logtext;
 
-PUNKT_A=[130,1250,0,1];
+  Logfile(Logtext);
+
+  //var xm=new XMLSerializer();
+  //alert(xm.serializeToString(renderer.domElement));
+  //alert(renderer.domElement);
+ 
+  function render() {
+    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
+    renderer.render(scene, camera);
+    ////camera.position.x+=0.0;
+    contr.update();
+    requestAnimationFrame(render);
+    }    
+
+  render();
+  }
+
+  </script>
+
+<script>
+var Beispiel2=function() {
+  init();
+  zoom=200;
+  Linientyp=1;
+  
+var neuen_Balken_plazieren=function(x,y,z,l,b,h) {
+  PUNKT_A=[x,y,z,1];
+  var RET=QUADER(l,b,h);
+  KFILL(RET);
+  KDUMP(RET);
+  KPLOT([RET]);
+  AddObjekt(scene,RET);
+  return RET;
+  }
+
+//      " >P 0 0 0 Anlegepunkt" INTERPRET
+//      " >Q 355 115 115 Hinterbalken" INTERPRET
+var Hinterbalken=neuen_Balken_plazieren(0,0,0,355,115,115);
+
 //      " >P 130 1250 0 Anlegepunkt" INTERPRET
 //      " >Q 120 370 120 Vorderbalken" INTERPRET
-//var BALKEN4=QUADER(120,370,120); KFILL(BALKEN4);
-//  AddObjekt(cube,BALKEN4);
-//  alert(JSON.stringify(BALKEN4));
+var Vorderbalken=neuen_Balken_plazieren(130,1250,0,120,370,120);
 
-  Logfile(Logtext);
+//      " >P -250 0 0 Anlegepunkt" INTERPRET
+//      " >Q 18 1700 180 rechtesBrett" INTERPRET
+var rechtes_Brett=neuen_Balken_plazieren(-250,0,0,18,1700,180);
+//      " >P -500 0 0 Anlegepunkt" INTERPRET
+//      " >Q 30 700 180 HochzuBrett" INTERPRET
+var Hochzubrett=neuen_Balken_plazieren(-500,0,0,30,700,180);
+//      " >P -750 0 0 Anlegepunkt" INTERPRET
+//      " >Q 20 2000 20 Bügel" INTERPRET
+var Buegel=neuen_Balken_plazieren(-750,0,0,20,2000,20);
+Castlist=[Hinterbalken];
+
+
+  Logfile("das war Beispiel2");
+
+  function render() {
+    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
+    renderer.render(scene, camera);
+    ////camera.position.x+=0.0;
+    contr.update();
+    requestAnimationFrame(render);
+    }    
+  render();
   }
-  </script>  
-  
+  </script>
+
 <script>//Logfile
-  //gesammelten Logtext ausgeben
-  function Logfile() {
-    document.getElementById("Log").innerHTML='<span style="white-space:pre; font-family:monospace">'+Logtext+"</span>";
-    Logtext="";
-    }
+//gesammelten Logtext ausgeben
+function Logfile(Resttext) {
+  if (!Resttext) var Resttext="";
+  document.getElementById("Log").innerHTML='<span style="white-space:pre; font-family:monospace">'+Logtext+Resttext+"</span>";
+  Logtext="";
+  }
 
   </script>
   
@@ -353,19 +400,19 @@ function AddObjekt(OBJ1,OBJ2) {
     var middle = new THREE.Vector3(OBJ2[2][K[0]][3][0]/zoom, OBJ2[2][K[0]][3][1]/zoom, OBJ2[2][K[0]][3][2]/zoom);   
     var end = new THREE.Vector3(OBJ2[2][K[1]][3][0]/zoom, OBJ2[2][K[1]][3][1]/zoom, OBJ2[2][K[1]][3][2]/zoom);
 
-    var curveQuad = new THREE.QuadraticBezierCurve3(start, middle, end); 
-    var tube = new THREE.TubeGeometry(curveQuad, numPoints, 0.05, 33, false);   
-    var mesh11 = new THREE.Mesh(tube, new THREE.MeshNormalMaterial({opacity: 0.99,     transparent: true   }));   
-    temp.add(mesh11);
-
-/*
-    var materialline = new THREE.LineBasicMaterial({ color: 0x0077f0, linewidth:2});
-    var geometryline = new THREE.Geometry();
-    geometryline.vertices = [start,end];
-    //var geometryline = new THREE.BufferGeometry().setFromPoints( [start,end] );
-    var obj2line = new THREE.Line(geometryline, materialline);
-    //OBJ1.add(obj2line);
-    */
+    if (Linientyp==0) {
+      var curveQuad = new THREE.QuadraticBezierCurve3(start, middle, end); 
+      var tube = new THREE.TubeGeometry(curveQuad, numPoints, 0.05, 33, false);   
+      var mesh11 = new THREE.Mesh(tube, new THREE.MeshNormalMaterial({opacity: 0.99,     transparent: true   }));   
+      temp.add(mesh11);
+      } else {
+        var materialline = new THREE.LineBasicMaterial({ color: 0x0077f0, linewidth:2});
+        var geometryline = new THREE.Geometry();
+        geometryline.vertices = [start,end];
+        //var geometryline = new THREE.BufferGeometry().setFromPoints( [start,end] );
+        var obj2line = new THREE.Line(geometryline, materialline);
+        temp.add(obj2line);
+        }
 
     }
   OBJ2[4]=temp;
