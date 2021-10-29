@@ -39,7 +39,7 @@
 
 <button onclick='SAMMELEBENE[0].push(DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);Logtext="SAMMELEBENE nach ASD:\n";KDUMP(SAMMELEBENE);Logfile()'>ASD</button>
 
-<button onclick='scene.remove(REST5[4]); var cind=Castlist.indexOf(REST5); REST5=RUMPS(REST5,SAMMELEBENE,1);KDUMP(REST5);KPLOT([REST5]);AddObjekt(scene,REST5);Castlist[cind]=REST5;Logfile();SAMMELEBENE=[[],[],[],[]]'>Schnitt</button>
+<button onclick='scene.remove(OBJ_X[4]); var cind=Castlist.indexOf(OBJ_X); OBJ_X=RUMPS(OBJ_X,SAMMELEBENE,1);KDUMP(OBJ_X);KPLOT([OBJ_X]);AddObjekt(scene,OBJ_X);Castlist.pop(); Castlist[cind]=OBJ_X;Logfile();SAMMELEBENE=[[],[],[],[]]'>Schnitt</button>
 <span id="Pdisp">...</span>;
 <button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
   </div>
@@ -70,6 +70,8 @@ var zoom=20;
 var Linientyp=0;
 var cube;
 var REST5;
+var cmin=0;
+var OBJ_X=cmin;
 var SCHNITTEBENE;
 var SAMMELEBENE=[[],[],[],[]];
 //SAMMELEBENE=[[[-0.8846517369293828,-0.14744195615489714,-0.4423258684646914,17.693034738587656]],[1],[],[]];
@@ -78,6 +80,11 @@ var SAMMELEBENE=[[],[],[],[]];
 
 <script>
 function init() {
+  zoom=20;
+  Linientyp=0;
+  PUNKT_A=[0,0,0,1];
+  Castlist=[];
+
   // create a scene, that will hold all our elements such as objects, cameras and lights.
   scene = new THREE.Scene();
   canvas_height=window.innerHeight;//document.getElementById("canvas").clientHeight;
@@ -171,11 +178,20 @@ function init() {
   </script>
 
 <script>
+var neuen_Balken_plazieren=function(x,y,z,l,b,h) {
+  PUNKT_A=[x,y,z,1];
+  var RET=QUADER(l,b,h);
+  KFILL(RET);
+  KDUMP(RET);
+  KPLOT([RET]);
+  AddObjekt(scene,RET);
+  return RET;
+  }
+  </script>
+
+<script>
 var Beispiel1=function() {
   init();
-  zoom=20;
-  Linientyp=0;
-  PUNKT_A=[0,0,0,1];
 
 var BALKEN1=QUADER(200,100,150); KFILL(BALKEN1);
 var SCHNITT2=EBENE([100,0,0,1],[200,50,150,1],[200,0,90,1]);
@@ -216,7 +232,6 @@ Logtext=JSON.stringify(cube.geometry.faces)+"\n"+Logtext;
     contr.update();
     requestAnimationFrame(render);
     }    
-
   render();
   }
 
@@ -228,16 +243,6 @@ var Beispiel2=function() {
   zoom=200;
   Linientyp=1;
   
-var neuen_Balken_plazieren=function(x,y,z,l,b,h) {
-  PUNKT_A=[x,y,z,1];
-  var RET=QUADER(l,b,h);
-  KFILL(RET);
-  KDUMP(RET);
-  KPLOT([RET]);
-  AddObjekt(scene,RET);
-  return RET;
-  }
-
 //      " >P 0 0 0 Anlegepunkt" INTERPRET
 //      " >Q 355 115 115 Hinterbalken" INTERPRET
 var Hinterbalken=neuen_Balken_plazieren(0,0,0,355,115,115);
@@ -249,14 +254,14 @@ var Vorderbalken=neuen_Balken_plazieren(130,1250,0,120,370,120);
 //      " >P -250 0 0 Anlegepunkt" INTERPRET
 //      " >Q 18 1700 180 rechtesBrett" INTERPRET
 var rechtes_Brett=neuen_Balken_plazieren(-250,0,0,18,1700,180);
+
 //      " >P -500 0 0 Anlegepunkt" INTERPRET
 //      " >Q 30 700 180 HochzuBrett" INTERPRET
 var Hochzubrett=neuen_Balken_plazieren(-500,0,0,30,700,180);
+
 //      " >P -750 0 0 Anlegepunkt" INTERPRET
 //      " >Q 20 2000 20 Bügel" INTERPRET
 var Buegel=neuen_Balken_plazieren(-750,0,0,20,2000,20);
-Castlist=[Hinterbalken];
-
 
   Logfile("das war Beispiel2");
 
@@ -294,24 +299,24 @@ function raycast ( e ) {
   mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / window.innerHeight/*event.target.height*/ ) * 2 + 1;
   mouse.z = 1;
 
-  var cmin=0;
+  cmin=0;
   var dmin=0;
   var pk="p";
   var pmin=[[0,0,0,1],[0,0,0,1]];
+  var mindist=Infinity;
   for (var c in Castlist) {
-    var mindist=Infinity;
     for (var d in Castlist[c][2]) {
       var p=Castlist[c][2][d][3];
-      var dist=(new THREE.Vector3(p[0]/20,p[1]/20,p[2]/20)).project(camera).distanceToSquared(mouse);
+      var dist=(new THREE.Vector3(p[0]/zoom,p[1]/zoom,p[2]/zoom)).project(camera).distanceToSquared(mouse);
       if (dist<mindist) {pk="p"; mindist=dist; cmin=c; dmin=d; pmin=[p.slice(),p.slice()];}
       }
     for (var d in Castlist[c][3]) {
       var p=Castlist[c][2];
       var k=Castlist[c][3][d];
       var dist=(new THREE.Vector3(
-        (p[k[0]][3][0]+p[k[1]][3][0])/2/20,
-        (p[k[0]][3][1]+p[k[1]][3][1])/2/20,
-        (p[k[0]][3][2]+p[k[1]][3][2])/2/20
+        (p[k[0]][3][0]+p[k[1]][3][0])/2/zoom,
+        (p[k[0]][3][1]+p[k[1]][3][1])/2/zoom,
+        (p[k[0]][3][2]+p[k[1]][3][2])/2/zoom
         )).project(camera).distanceToSquared(mouse);
       if (dist<mindist) {pk="k"; mindist=dist; cmin=c; dmin=d; pmin=[p[k[0]][3].slice(),p[k[1]][3].slice()];}
       }
@@ -320,6 +325,7 @@ function raycast ( e ) {
   q.position.x=(pmin[0][0]+pmin[1][0])/2/zoom;
   q.position.y=(pmin[0][1]+pmin[1][1])/2/zoom;
   q.position.z=(pmin[0][2]+pmin[1][2])/2/zoom;
+  OBJ_X=Castlist[cmin];
   document.getElementById("Pdisp").firstChild.nodeValue=pk+dmin+"=["+[(q.position.x*zoom).toFixed(2),(q.position.y*zoom).toFixed(2),(q.position.z*zoom).toFixed(2)]+"]";
   }
 
@@ -417,6 +423,7 @@ function AddObjekt(OBJ1,OBJ2) {
     }
   OBJ2[4]=temp;
   OBJ1.add(temp);
+  Castlist.push(OBJ2);
   }
   </script>
 
