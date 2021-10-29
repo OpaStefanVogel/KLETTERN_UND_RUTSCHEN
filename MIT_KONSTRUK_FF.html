@@ -40,6 +40,9 @@
 <button onclick='SAMMELEBENE[0].push(DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);Logtext="SAMMELEBENE nach ASD:\n";KDUMP(SAMMELEBENE);Logfile()'>ASD</button>
 
 <button onclick='scene.remove(OBJ_X[4]); var cind=Castlist.indexOf(OBJ_X); OBJ_X=RUMPS(OBJ_X,SAMMELEBENE,1);KDUMP(OBJ_X);KPLOT([OBJ_X]);AddObjekt(scene,OBJ_X);Castlist.pop(); Castlist[cind]=OBJ_X;Logfile();SAMMELEBENE=[[],[],[],[]]'>Schnitt</button>
+
+<button onclick='scene.remove(OBJ_X[4]); var cind=Castlist.indexOf(OBJ_X); OBJ_X=TRANSFORM(OBJ_X,[[1,0,0,(PA.position.x-PS.position.x)*zoom],[0,1,0,(PA.position.y-PS.position.y)*zoom],[0,0,1,(PA.position.z-PS.position.z)*zoom],[0,0,0,1]]);KDUMP(OBJ_X);KPLOT([OBJ_X]);AddObjekt(scene,OBJ_X);Castlist.pop(); Castlist[cind]=OBJ_X;Logfile();SAMMELEBENE=[[],[],[],[]]'>MOVE</button>
+
 <span id="Pdisp">...</span>;
 <button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
   </div>
