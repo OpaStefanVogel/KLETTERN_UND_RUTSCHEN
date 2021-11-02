@@ -18,15 +18,14 @@
   <style>
      body {
        margin: 1;
-       overflow: hidden;
+       overflow: auto;
        }
 
     button {font-size:200%}
     </style>
   </head>
 <body onload="Beispiel2()">
-<canvas id="Uhr"> </canvas>
-<div style="max-width:90%; min-height:100%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt render.domElement rein</div>
+<!--canvas id="Uhr"> </canvas-->
 <button onclick="Beispiel1()">REST5</button>
 <button onclick="Beispiel2()">GOKART</button>
 <button onclick='PA.position.set(q.position.x,q.position.y,q.position.z)'>A</button>
@@ -43,6 +42,9 @@
 
 <button onclick='scene.remove(OBJ_X[4]); var cind=Castlist.indexOf(OBJ_X); OBJ_X=TRANSFORM(OBJ_X,[[1,0,0,(PA.position.x-PS.position.x)*zoom],[0,1,0,(PA.position.y-PS.position.y)*zoom],[0,0,1,(PA.position.z-PS.position.z)*zoom],[0,0,0,1]]);KDUMP(OBJ_X);KPLOT([OBJ_X]);AddObjekt(scene,OBJ_X);Castlist.pop(); Castlist[cind]=OBJ_X;Logfile();SAMMELEBENE=[[],[],[],[]]'>MOVE</button>
 
+<button onclick='scene.remove(OBJ_X[4]); var cind=Castlist.indexOf(OBJ_X); var alpha=-Math.atan2(PD.position.z-PA.position.z,PD.position.x-PA.position.x)+Math.atan2(PS.position.z-PA.position.z,PS.position.x-PA.position.x); var ca=Math.cos(alpha); var sa=Math.sin(alpha); OBJ_X=TRANSFORM(OBJ_X,[[ca,0,-sa,0],[0,1,0,0],[sa,0,ca,0],[0,0,0,1]]);KDUMP(OBJ_X);KPLOT([OBJ_X]);AddObjekt(scene,OBJ_X);Castlist.pop(); Castlist[cind]=OBJ_X;Logfile();SAMMELEBENE=[[],[],[],[]]'>Drehen</button>
+
+<div style="max-width:90%; min-height:100%; max-height:400px; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt render.domElement rein</div>
 <span id="Pdisp">...</span>;
 <button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
   </div>
@@ -81,7 +83,7 @@ var SAMMELEBENE=[[],[],[],[]];
 //SAMMELEBENE=[[[-0.8846517369293828,-0.14744195615489714,-0.4423258684646914,17.693034738587656],[-0.3841106397986879,-0.7682212795973759,-0.5121475197315839,38.41106397986879]],[1,1,2],[],[]];
   </script>
 
-<script>
+<script>//globale Funktionen
 function init() {
   zoom=20;
   Linientyp=0;
@@ -246,25 +248,44 @@ var Beispiel2=function() {
   zoom=200;
   Linientyp=1;
   
+  // position and point the camera to the center of the scene
+  camera.position.x = -5; //5; //15;
+  camera.position.y = 5; //5; //16;
+  camera.position.z = -12; //-12; //13
+  camera.lookAt(scene.position);
+
+  PA.position.x=0/zoom;
+  PA.position.y=0/zoom;
+  PA.position.z=0/zoom;
+
+  PS.position.x=0/zoom;
+  PS.position.y=0/zoom;
+  PS.position.z=1700/zoom;
+
+  PD.position.x=130/zoom;
+  PD.position.y=120/zoom;
+  PD.position.z=1250/zoom;
+
 //      " >P 0 0 0 Anlegepunkt" INTERPRET
 //      " >Q 355 115 115 Hinterbalken" INTERPRET
 var Hinterbalken=neuen_Balken_plazieren(0,0,0,355,115,115);
 
 //      " >P 130 1250 0 Anlegepunkt" INTERPRET
 //      " >Q 120 370 120 Vorderbalken" INTERPRET
-var Vorderbalken=neuen_Balken_plazieren(130,1250,0,120,370,120);
+var Vorderbalken=neuen_Balken_plazieren(130,0,1250,120,120,370);
 
 //      " >P -250 0 0 Anlegepunkt" INTERPRET
 //      " >Q 18 1700 180 rechtesBrett" INTERPRET
-var rechtes_Brett=neuen_Balken_plazieren(-250,0,0,18,1700,180);
+//var rechtes_Brett=neuen_Balken_plazieren(-250,0,0,18,180,1700);
+var rechtes_Brett=neuen_Balken_plazieren(-18,0,0,18,180,1700);
 
 //      " >P -500 0 0 Anlegepunkt" INTERPRET
 //      " >Q 30 700 180 HochzuBrett" INTERPRET
-var Hochzubrett=neuen_Balken_plazieren(-500,0,0,30,700,180);
+var Hochzubrett=neuen_Balken_plazieren(-500,0,0,30,180,700);
 
 //      " >P -750 0 0 Anlegepunkt" INTERPRET
 //      " >Q 20 2000 20 Bügel" INTERPRET
-var Buegel=neuen_Balken_plazieren(-750,0,0,20,2000,20);
+var Buegel=neuen_Balken_plazieren(-750,0,0,20,20,2000);
 
   Logfile("das war Beispiel2");
 
