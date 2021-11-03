@@ -38,13 +38,13 @@
 
 <button onclick='TEbeneASD()'>ASD</button>
 
+<button onclick='TKopieren()'>Kopieren</button>
+<button onclick='TVerschieben()'>Verschieben</button>
+<button onclick='TDrehen()'>Drehen</button>
 <button onclick='TSchnitt()'>Schnitt</button>
 
-<button onclick='TVerschieben()'>MOVE</button>
 
-<button onclick='TDrehen()'>Drehen</button>
 
-<button onclick='TKopieren()'>Kopieren</button>
 
 <div style="max-width:90%; min-height:100%; max-height:400px; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt das render.domElement rein</div>
 <span id="Pdisp">...</span>;
@@ -83,7 +83,7 @@ var OBJ_X=cmin;
 var OBJ_Y=cmin;
 var SCHNITTEBENE;
 var SAMMELEBENE=[[],[],[],[]];
-var Logtext2="";
+var Logtext2=[];
   </script>
 
 <script>//globale Funktionen
@@ -127,22 +127,22 @@ function init() {
   //Pointer Q
   //var qGeometry = new THREE.SphereGeometry( 0.14, 32, 32 );
   var qGeometry = new THREE.BoxGeometry(0.17, 0.17, 0.17);
-  var qMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFF00 } );
+  var qMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFF00, opacity:0.5, transparent:true } );
   q = new THREE.Mesh( qGeometry, qMaterial );
   q.position.x=205/zoom;
   q.position.z=150/zoom;
   scene.add( q );
   //Knoten.push(q.position.clone());
 
-  var AGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
-  var AMaterial = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+  var AGeometry = new THREE.SphereGeometry( 0.09, 32, 32 );
+  var AMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, opacity:0.5, transparent:true } );
   PA = new THREE.Mesh( AGeometry, AMaterial );
   PA.position.x=20/zoom;
   PA.position.z=0/zoom;
   scene.add( PA );
   
-  var SGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
-  var SMaterial = new THREE.MeshBasicMaterial( { color: 0x0000FF } );
+  var SGeometry = new THREE.SphereGeometry( 0.095, 32, 32 );
+  var SMaterial = new THREE.MeshBasicMaterial( { color: 0x0000FF, opacity:0.5, transparent:true } );
   PS = new THREE.Mesh( SGeometry, SMaterial );
   PS.position.x=10/zoom;
   PS.position.y=30/zoom;
@@ -150,7 +150,7 @@ function init() {
   scene.add( PS );
 
   var DGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
-  var DMaterial = new THREE.MeshBasicMaterial( { color: 0xFF0000 } );
+  var DMaterial = new THREE.MeshBasicMaterial( { color: 0xFF0000, opacity:0.5, transparent:true } );
   PD = new THREE.Mesh( DGeometry, DMaterial );
   PD.position.x=0/zoom;
   PD.position.z=40/zoom;
@@ -408,7 +408,7 @@ TQ(-750,20,0,4);
 TQ(-750,20,0,4);
 TQ(-750,20,0,4);
 TA();
-TQ(87.50000000000004,700,-29.999999999999986,3);
+TQ(87.5,700,-29.999999999999986,3);
 TS();
 TQ(-730,0,1000,4);
 TKopieren();
@@ -456,7 +456,7 @@ TDrehen();*/
 
 <script>//Eingabefunktionen für Log2
 var TQ=function(x,y,z,cmin) {//setzt Koordinaten von q und damit OBJ_X
-  Logtext2=Logtext2+"TQ("+x+","+y+","+z+","+cmin+");\n";
+  Logtext2.push("TQ("+x+","+y+","+z+","+cmin+");");
   q.position.x=x/zoom;
   q.position.y=y/zoom;
   q.position.z=z/zoom;
@@ -465,25 +465,25 @@ var TQ=function(x,y,z,cmin) {//setzt Koordinaten von q und damit OBJ_X
   }
 
 var TA=function() {//setzt Punkt A auf Punkt Q
-  Logtext2=Logtext2+"TA();\n";
+  Logtext2.push("TA();");
   PA.position.copy(q.position); OBJ_Y=OBJ_X;
   Logfile2();  
   }
 
 var TS=function() {//setzt Punkt S auf Punkt Q
-  Logtext2=Logtext2+"TS();\n";
+  Logtext2.push("TS();");
   PS.position.copy(q.position); VAS.geometry.verticesNeedUpdate = true;
   Logfile2();  
   }
 
 var TD=function() {//setzt Punkt D auf Punkt Q
-  Logtext2=Logtext2+"TD();\n";
+  Logtext2.push("TD();");
   PD.position.copy(q.position); EASD.geometry.verticesNeedUpdate = true;
   Logfile2();  
   }
 
 var TKopieren=function() {//verschiebt OBJ_X um Vektor AS
-  Logtext2=Logtext2+"TKopieren();\n";
+  Logtext2.push("TKopieren();");
   //OBJ_X=OBJ_X.slice();
   //OBJ_X[4]=[]; 
   OBJ_X=JSON.parse(JSON.stringify(OBJ_X.slice(0,4)));
@@ -496,7 +496,7 @@ var TKopieren=function() {//verschiebt OBJ_X um Vektor AS
   }
 
 var TVerschieben=function() {//verschiebt OBJ_X um Vektor AS
-  Logtext2=Logtext2+"TVerschieben();\n";
+  Logtext2.push("TVerschieben();");
   scene.remove(OBJ_X[4]); 
   var cind=Castlist.indexOf(OBJ_X); 
   OBJ_X=TRANSFORM(OBJ_X,[[1,0,0,(PA.position.x-PS.position.x)*zoom],[0,1,0,(PA.position.y-PS.position.y)*zoom],[0,0,1,(PA.position.z-PS.position.z)*zoom],[0,0,0,1]]);
@@ -509,7 +509,7 @@ var TVerschieben=function() {//verschiebt OBJ_X um Vektor AS
   }
 
 var TDrehen=function() {//dreht OBJ_X aus Vektor AS in Richtung AD erst yaw dann pitch
-  Logtext2=Logtext2+"TDrehen();\n";
+  Logtext2.push("TDrehen();");
   scene.remove(OBJ_X[4]);
   var cind=Castlist.indexOf(OBJ_X);
   OBJ_X=DrehenASD(OBJ_X);
@@ -523,7 +523,7 @@ var TDrehen=function() {//dreht OBJ_X aus Vektor AS in Richtung AD erst yaw dann
   }
 
 var TEbeneASD=function() {//legt Ebene ASD fest
-  Logtext2=Logtext2+"TEbeneASD();\n";
+  Logtext2.push("TEbeneASD();");
   SAMMELEBENE[0].push(DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1]));
   SAMMELEBENE[1].push(TEBN);
   if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);
@@ -534,7 +534,7 @@ var TEbeneASD=function() {//legt Ebene ASD fest
   }
 
 var TSchnitt=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
-  Logtext2=Logtext2+"TSchnitt();\n";
+  Logtext2.push("TSchnitt();");
   scene.remove(OBJ_X[4]);
   var cind=Castlist.indexOf(OBJ_X);
   OBJ_X=RUMPS(OBJ_X,SAMMELEBENE,1);
@@ -559,7 +559,7 @@ function Logfile(Resttext) {
 
 function Logfile2(Resttext) {
   if (!Resttext) var Resttext="";
-  document.getElementById("Log2").innerHTML='<span style="white-space:pre; font-family:monospace">'+Logtext2+Resttext+"</span>";
+  document.getElementById("Log2").innerHTML='<span style="white-space:pre; font-family:monospace">'+Logtext2.join("\n")+Resttext+"</span>";
   }
   </script>
   
