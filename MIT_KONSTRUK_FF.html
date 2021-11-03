@@ -28,28 +28,29 @@
 <!--canvas id="Uhr"> </canvas-->
 <button onclick="Beispiel1()">REST5</button>
 <button onclick="Beispiel2()">GOKART</button>
-<button onclick='PA.position.set(q.position.x,q.position.y,q.position.z); OBJ_Y=OBJ_X'>A</button>
-<button onclick='PS.position.copy(q.position); VAS.geometry.verticesNeedUpdate = true;'>S</button>
-<button onclick='PD.position.copy(q.position); EASD.geometry.verticesNeedUpdate = true;'>D</button>
+<button onclick='TA()'>A</button>
+<button onclick='TS()'>S</button>
+<button onclick='TD()'>D</button>
 
 <button onclick='SAMMELEBENE[0].push(EGGT([PS.position.x-PA.position.x,PS.position.y-PA.position.y,PS.position.z-PA.position.z,-((PS.position.x-PA.position.x)*PA.position.x*zoom+(PS.position.y-PA.position.y)*PA.position.y*zoom+(PS.position.z-PA.position.z)*PA.position.z*zoom)]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);Logtext="SAMMELEBENE nach AS:\n";KDUMP(SAMMELEBENE);Logfile()'>AS</button>
 
 <button onclick='SAMMELEBENE[0].push(EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x*zoom+(PA.position.y-PS.position.y)*PA.position.y*zoom+(PA.position.z-PS.position.z)*PA.position.z*zoom)]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);Logtext="SAMMELEBENE nach -AS:\n";KDUMP(SAMMELEBENE);Logfile()'>-AS</button>
 
-<button onclick='SAMMELEBENE[0].push(DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);Logtext="SAMMELEBENE nach ASD:\n";KDUMP(SAMMELEBENE);Logfile()'>ASD</button>
+<button onclick='TEbeneASD()'>ASD</button>
 
-<button onclick='scene.remove(OBJ_X[4]); var cind=Castlist.indexOf(OBJ_X); OBJ_X=RUMPS(OBJ_X,SAMMELEBENE,1);KDUMP(OBJ_X);KPLOT([OBJ_X]);AddObjekt(scene,OBJ_X);Castlist.pop(); Castlist[cind]=OBJ_X;Logfile();SAMMELEBENE=[[],[],[],[]]'>Schnitt</button>
+<button onclick='TSchnitt()'>Schnitt</button>
 
-<button onclick='scene.remove(OBJ_X[4]); var cind=Castlist.indexOf(OBJ_X); OBJ_X=TRANSFORM(OBJ_X,[[1,0,0,(PA.position.x-PS.position.x)*zoom],[0,1,0,(PA.position.y-PS.position.y)*zoom],[0,0,1,(PA.position.z-PS.position.z)*zoom],[0,0,0,1]]);KDUMP(OBJ_X);KPLOT([OBJ_X]);AddObjekt(scene,OBJ_X);Castlist.pop(); Castlist[cind]=OBJ_X;Logfile();SAMMELEBENE=[[],[],[],[]]'>MOVE</button>
+<button onclick='TVerschieben()'>MOVE</button>
 
-<button onclick='scene.remove(OBJ_X[4]); var cind=Castlist.indexOf(OBJ_X); OBJ_X=DrehenASD(OBJ_X); KDUMP(OBJ_X);KPLOT([OBJ_X]);AddObjekt(scene,OBJ_X);Castlist.pop(); Castlist[cind]=OBJ_X;Logfile();SAMMELEBENE=[[],[],[],[]]'>Drehen</button>
+<button onclick='TDrehen()'>Drehen</button>
 
-<button onclick='OBJ_X=OBJ_X.slice(); OBJ_X[4]=[]; OBJ_X=JSON.parse(JSON.stringify(OBJ_X)); KDUMP(OBJ_X); KPLOT([OBJ_X]); AddObjekt(scene,OBJ_X); Logfile(); SAMMELEBENE=[[],[],[],[]]'>Kopieren</button>
+<button onclick='TKopieren()'>Kopieren</button>
 
 <div style="max-width:90%; min-height:100%; max-height:400px; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt das render.domElement rein</div>
 <span id="Pdisp">...</span>;
 <button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
   </div>
+<div id="Log2" style="display:flex; overflow:auto; border:solid; width:90%; height:400px"> div</div>
 <div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:400px"> div</div>
 
 <script src="QWASNEU/KONSTRUK_javascript.js"></script>
@@ -82,8 +83,7 @@ var OBJ_X=cmin;
 var OBJ_Y=cmin;
 var SCHNITTEBENE;
 var SAMMELEBENE=[[],[],[],[]];
-//SAMMELEBENE=[[[-0.8846517369293828,-0.14744195615489714,-0.4423258684646914,17.693034738587656]],[1],[],[]];
-//SAMMELEBENE=[[[-0.8846517369293828,-0.14744195615489714,-0.4423258684646914,17.693034738587656],[-0.3841106397986879,-0.7682212795973759,-0.5121475197315839,38.41106397986879]],[1,1,2],[],[]];
+var Logtext2="";
   </script>
 
 <script>//globale Funktionen
@@ -316,6 +316,130 @@ var Hochzubrett=neuen_Balken_plazieren(-500,0,0,30,180,700);
 //      " >P -750 0 0 Anlegepunkt" INTERPRET
 //      " >Q 20 2000 20 Bügel" INTERPRET
 var Buegel=neuen_Balken_plazieren(-750,0,0,20,20,2000);
+TQ(-232,0,0,2);
+TA();
+TQ(0,0,0,0);
+TS();
+TQ(-250,180,1700,2);
+TKopieren();
+TVerschieben();
+TQ(-250,0,0,2);
+TA();
+TQ(355,0,0,0);
+TS();
+TQ(-232,180,1700,2);
+TVerschieben();
+TQ(0,0,0,0);
+TA();
+TQ(0,0,1700,5);
+TS();
+TQ(130,0,1250,1);
+TD();
+TQ(-18,180,1700,5);
+TDrehen();
+TQ(130,120,1250,1);
+TS();
+TQ(130,0,1250,1);
+TD();
+TQ(250,120,1620,1);
+TEbeneASD();
+TSchnitt();
+TQ(177.5,115,0,0);
+TEbeneASD();
+TSchnitt();
+TQ(355,0,0,0);
+TA();
+TQ(355,0,1700,2);
+TS();
+TQ(250,0,1250,1);
+TD();
+TQ(373,180,1700,2);
+TDrehen();
+TQ(250,0,1250,1);
+TS();
+TQ(250,60,1620,1);
+TQ(250,120,1620,1);
+TQ(250,120,1250,1);
+TD();
+TEbeneASD();
+TQ(250,0,1435,1);
+TQ(190,120,1250,1);
+TSchnitt();
+TQ(183.48,0,115,0);
+TEbeneASD();
+TSchnitt();
+TQ(193.7,120,1620,1);
+TA();
+TQ(218.92,60,1620,1);
+TS();
+TQ(212.70114787936444,90,1694.0339538170856,2);
+TQ(168.48000000000002,60,1620,1);
+TD();
+TQ(212.70114787936444,180,1694.0339538170856,2);
+TEbeneASD();
+TSchnitt();
+TQ(157.94811390479882,0,1692.7422701976568,5);
+TEbeneASD();
+TSchnitt();
+TQ(-500,90,0,3);
+TA();
+TQ(177.5,0,0,0);
+TS();
+TQ(-485,180,0,3);
+TVerschieben();
+TQ(177.5,0,0,0);
+TA();
+TQ(177.5,0,700,3);
+TS();
+TQ(177.5,90,0,3);
+TD();
+TQ(177.5,-90,0,3);
+TDrehen();
+TQ(177.5,5.5109105961630896e-15,-90,3);
+TS();
+TQ(-17.903438603818543,0,1.8619576147971277,5);
+TQ(0,0,0,0);
+TD();
+TQ(207.5,350,90.00000000000003,3);
+TDrehen();
+TQ(-750,0,0,4);
+TA();
+TQ(-750,20,0,4);
+TQ(-750,20,0,4);
+TQ(-750,20,0,4);
+TA();
+TQ(87.50000000000004,700,-29.999999999999986,3);
+TS();
+TQ(-730,0,1000,4);
+TKopieren();
+TVerschieben();
+TQ(-730,20,0,4);
+TA();
+TQ(267.50000000000006,700,-30.000000000000018,3);
+TS();
+TQ(-730,0,1000,4);
+TVerschieben();
+/*TQ(87.5,700,-29.99999999999999,6);
+TA();
+TQ(87.5,700,1970,6);
+TS();
+TQ(168.48000000000002,120,1620,1);
+TD();
+TQ(87.5,700,1970,6);
+TDrehen();
+TQ(267.5000000000001,700,-30.000000000000014,4);
+TA();
+TQ(267.5000000000001,700,1970,4);
+TS();
+TQ(218.92,120,1620,1);
+TD();
+TQ(247.5000000000001,680,970,4);
+TDrehen();*/
+
+
+
+//TQ(177.5,115,0,0);
+
 
   Logfile("das war Beispiel2");
 
@@ -330,6 +454,101 @@ var Buegel=neuen_Balken_plazieren(-750,0,0,20,20,2000);
   }
   </script>
 
+<script>//Eingabefunktionen für Log2
+var TQ=function(x,y,z,cmin) {//setzt Koordinaten von q und damit OBJ_X
+  Logtext2=Logtext2+"TQ("+x+","+y+","+z+","+cmin+");\n";
+  q.position.x=x/zoom;
+  q.position.y=y/zoom;
+  q.position.z=z/zoom;
+  OBJ_X=Castlist[cmin];
+  Logfile2();  
+  }
+
+var TA=function() {//setzt Punkt A auf Punkt Q
+  Logtext2=Logtext2+"TA();\n";
+  PA.position.copy(q.position); OBJ_Y=OBJ_X;
+  Logfile2();  
+  }
+
+var TS=function() {//setzt Punkt S auf Punkt Q
+  Logtext2=Logtext2+"TS();\n";
+  PS.position.copy(q.position); VAS.geometry.verticesNeedUpdate = true;
+  Logfile2();  
+  }
+
+var TD=function() {//setzt Punkt D auf Punkt Q
+  Logtext2=Logtext2+"TD();\n";
+  PD.position.copy(q.position); EASD.geometry.verticesNeedUpdate = true;
+  Logfile2();  
+  }
+
+var TKopieren=function() {//verschiebt OBJ_X um Vektor AS
+  Logtext2=Logtext2+"TKopieren();\n";
+  //OBJ_X=OBJ_X.slice();
+  //OBJ_X[4]=[]; 
+  OBJ_X=JSON.parse(JSON.stringify(OBJ_X.slice(0,4)));
+  KDUMP(OBJ_X);
+  KPLOT([OBJ_X]);
+  AddObjekt(scene,OBJ_X);
+  SAMMELEBENE=[[],[],[],[]];
+  Logfile();
+  Logfile2();  
+  }
+
+var TVerschieben=function() {//verschiebt OBJ_X um Vektor AS
+  Logtext2=Logtext2+"TVerschieben();\n";
+  scene.remove(OBJ_X[4]); 
+  var cind=Castlist.indexOf(OBJ_X); 
+  OBJ_X=TRANSFORM(OBJ_X,[[1,0,0,(PA.position.x-PS.position.x)*zoom],[0,1,0,(PA.position.y-PS.position.y)*zoom],[0,0,1,(PA.position.z-PS.position.z)*zoom],[0,0,0,1]]);
+  KDUMP(OBJ_X);KPLOT([OBJ_X]);
+  AddObjekt(scene,OBJ_X); Castlist.pop(); 
+  Castlist[cind]=OBJ_X;
+  SAMMELEBENE=[[],[],[],[]];
+  Logfile();
+  Logfile2();  
+  }
+
+var TDrehen=function() {//dreht OBJ_X aus Vektor AS in Richtung AD erst yaw dann pitch
+  Logtext2=Logtext2+"TDrehen();\n";
+  scene.remove(OBJ_X[4]);
+  var cind=Castlist.indexOf(OBJ_X);
+  OBJ_X=DrehenASD(OBJ_X);
+  KDUMP(OBJ_X);
+  KPLOT([OBJ_X]);
+  AddObjekt(scene,OBJ_X);Castlist.pop();
+  Castlist[cind]=OBJ_X;
+  SAMMELEBENE=[[],[],[],[]]
+  Logfile();
+  Logfile2();  
+  }
+
+var TEbeneASD=function() {//legt Ebene ASD fest
+  Logtext2=Logtext2+"TEbeneASD();\n";
+  SAMMELEBENE[0].push(DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1]));
+  SAMMELEBENE[1].push(TEBN);
+  if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);
+  Logtext="SAMMELEBENE nach ASD:\n";
+  KDUMP(SAMMELEBENE);
+  Logfile();
+  Logfile2();  
+  }
+
+var TSchnitt=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
+  Logtext2=Logtext2+"TSchnitt();\n";
+  scene.remove(OBJ_X[4]);
+  var cind=Castlist.indexOf(OBJ_X);
+  OBJ_X=RUMPS(OBJ_X,SAMMELEBENE,1);
+  KDUMP(OBJ_X);
+  KPLOT([OBJ_X]);
+  AddObjekt(scene,OBJ_X);Castlist.pop();
+  Castlist[cind]=OBJ_X;
+  SAMMELEBENE=[[],[],[],[]];
+  Logfile();
+  Logfile2();  
+  }
+
+  </script>
+
 <script>//Logfile
 //gesammelten Logtext ausgeben
 function Logfile(Resttext) {
@@ -338,6 +557,10 @@ function Logfile(Resttext) {
   Logtext="";
   }
 
+function Logfile2(Resttext) {
+  if (!Resttext) var Resttext="";
+  document.getElementById("Log2").innerHTML='<span style="white-space:pre; font-family:monospace">'+Logtext2+Resttext+"</span>";
+  }
   </script>
   
   
@@ -376,10 +599,7 @@ function raycast ( e ) {
       }
     }
   //alert("cmin="+cmin+", dmin="+dmin+",pmin="+JSON.stringify(pmin)+", mindist="+mindist);
-  q.position.x=(pmin[0][0]+pmin[1][0])/2/zoom;
-  q.position.y=(pmin[0][1]+pmin[1][1])/2/zoom;
-  q.position.z=(pmin[0][2]+pmin[1][2])/2/zoom;
-  OBJ_X=Castlist[cmin];
+  TQ((pmin[0][0]+pmin[1][0])/2,(pmin[0][1]+pmin[1][1])/2,(pmin[0][2]+pmin[1][2])/2,cmin);
   document.getElementById("Pdisp").firstChild.nodeValue=pk+dmin+"=["+[(q.position.x*zoom).toFixed(2),(q.position.y*zoom).toFixed(2),(q.position.z*zoom).toFixed(2)]+"]";
   }
 
