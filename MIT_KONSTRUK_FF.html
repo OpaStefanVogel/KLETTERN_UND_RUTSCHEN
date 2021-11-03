@@ -28,7 +28,7 @@
 <!--canvas id="Uhr"> </canvas-->
 <button onclick="Beispiel1()">REST5</button>
 <button onclick="Beispiel2()">GOKART</button>
-<button onclick='PA.position.set(q.position.x,q.position.y,q.position.z)'>A</button>
+<button onclick='PA.position.set(q.position.x,q.position.y,q.position.z); OBJ_Y=OBJ_X'>A</button>
 <button onclick='PS.position.copy(q.position); VAS.geometry.verticesNeedUpdate = true;'>S</button>
 <button onclick='PD.position.copy(q.position); EASD.geometry.verticesNeedUpdate = true;'>D</button>
 
@@ -43,6 +43,8 @@
 <button onclick='scene.remove(OBJ_X[4]); var cind=Castlist.indexOf(OBJ_X); OBJ_X=TRANSFORM(OBJ_X,[[1,0,0,(PA.position.x-PS.position.x)*zoom],[0,1,0,(PA.position.y-PS.position.y)*zoom],[0,0,1,(PA.position.z-PS.position.z)*zoom],[0,0,0,1]]);KDUMP(OBJ_X);KPLOT([OBJ_X]);AddObjekt(scene,OBJ_X);Castlist.pop(); Castlist[cind]=OBJ_X;Logfile();SAMMELEBENE=[[],[],[],[]]'>MOVE</button>
 
 <button onclick='scene.remove(OBJ_X[4]); var cind=Castlist.indexOf(OBJ_X); OBJ_X=DrehenASD(OBJ_X); KDUMP(OBJ_X);KPLOT([OBJ_X]);AddObjekt(scene,OBJ_X);Castlist.pop(); Castlist[cind]=OBJ_X;Logfile();SAMMELEBENE=[[],[],[],[]]'>Drehen</button>
+
+<button onclick='OBJ_X=OBJ_X.slice(); OBJ_X[4]=[]; OBJ_X=JSON.parse(JSON.stringify(OBJ_X)); KDUMP(OBJ_X); KPLOT([OBJ_X]); AddObjekt(scene,OBJ_X); Logfile(); SAMMELEBENE=[[],[],[],[]]'>Kopieren</button>
 
 <div style="max-width:90%; min-height:100%; max-height:400px; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt das render.domElement rein</div>
 <span id="Pdisp">...</span>;
@@ -77,6 +79,7 @@ var cube;
 var REST5;
 var cmin=0;
 var OBJ_X=cmin;
+var OBJ_Y=cmin;
 var SCHNITTEBENE;
 var SAMMELEBENE=[[],[],[],[]];
 //SAMMELEBENE=[[[-0.8846517369293828,-0.14744195615489714,-0.4423258684646914,17.693034738587656]],[1],[],[]];
@@ -186,6 +189,7 @@ function init() {
 var DrehenASD=function(OBJ_X) {
   var RET=TRANSFORM(OBJ_X,[[1,0,0,PA.position.x*zoom],[0,1,0,PA.position.y*zoom],[0,0,1,PA.position.z*zoom],[0,0,0,1]]);
 
+  //var PDA=PD.sub(PA);alert(PDA);
   var alpha=0; 
   if(((PD.position.z-PA.position.z)**2+(PD.position.x-PA.position.x)**2>0.00001)&&((PS.position.z-PA.position.z)**2+(PS.position.x-PA.position.x)**2>0.00001)) {
     alpha=-Math.atan2(PD.position.z-PA.position.z,PD.position.x-PA.position.x);
@@ -279,6 +283,7 @@ var Beispiel2=function() {
   camera.position.z = -12; //-12; //13
   camera.lookAt(scene.position);
 
+/*
   PA.position.x=0/zoom;
   PA.position.y=0/zoom;
   PA.position.z=0/zoom;
@@ -290,6 +295,7 @@ var Beispiel2=function() {
   PD.position.x=130/zoom;
   PD.position.y=120/zoom;
   PD.position.z=1250/zoom;
+*/
 
 //      " >P 0 0 0 Anlegepunkt" INTERPRET
 //      " >Q 355 115 115 Hinterbalken" INTERPRET
@@ -301,8 +307,7 @@ var Vorderbalken=neuen_Balken_plazieren(130,0,1250,120,120,370);
 
 //      " >P -250 0 0 Anlegepunkt" INTERPRET
 //      " >Q 18 1700 180 rechtesBrett" INTERPRET
-//var rechtes_Brett=neuen_Balken_plazieren(-250,0,0,18,180,1700);
-var rechtes_Brett=neuen_Balken_plazieren(-18,0,0,18,180,1700);
+var rechtes_Brett=neuen_Balken_plazieren(-250,0,0,18,180,1700);
 
 //      " >P -500 0 0 Anlegepunkt" INTERPRET
 //      " >Q 30 700 180 HochzuBrett" INTERPRET
