@@ -42,9 +42,9 @@
 
 <button onclick='scene.remove(OBJ_X[4]); var cind=Castlist.indexOf(OBJ_X); OBJ_X=TRANSFORM(OBJ_X,[[1,0,0,(PA.position.x-PS.position.x)*zoom],[0,1,0,(PA.position.y-PS.position.y)*zoom],[0,0,1,(PA.position.z-PS.position.z)*zoom],[0,0,0,1]]);KDUMP(OBJ_X);KPLOT([OBJ_X]);AddObjekt(scene,OBJ_X);Castlist.pop(); Castlist[cind]=OBJ_X;Logfile();SAMMELEBENE=[[],[],[],[]]'>MOVE</button>
 
-<button onclick='scene.remove(OBJ_X[4]); var cind=Castlist.indexOf(OBJ_X); var alpha=-Math.atan2(PD.position.z-PA.position.z,PD.position.x-PA.position.x)+Math.atan2(PS.position.z-PA.position.z,PS.position.x-PA.position.x); var ca=Math.cos(alpha); var sa=Math.sin(alpha); OBJ_X=TRANSFORM(OBJ_X,[[ca,0,-sa,0],[0,1,0,0],[sa,0,ca,0],[0,0,0,1]]);KDUMP(OBJ_X);KPLOT([OBJ_X]);AddObjekt(scene,OBJ_X);Castlist.pop(); Castlist[cind]=OBJ_X;Logfile();SAMMELEBENE=[[],[],[],[]]'>Drehen</button>
+<button onclick='scene.remove(OBJ_X[4]); var cind=Castlist.indexOf(OBJ_X); OBJ_X=DrehenASD(OBJ_X); KDUMP(OBJ_X);KPLOT([OBJ_X]);AddObjekt(scene,OBJ_X);Castlist.pop(); Castlist[cind]=OBJ_X;Logfile();SAMMELEBENE=[[],[],[],[]]'>Drehen</button>
 
-<div style="max-width:90%; min-height:100%; max-height:400px; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt render.domElement rein</div>
+<div style="max-width:90%; min-height:100%; max-height:400px; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt das render.domElement rein</div>
 <span id="Pdisp">...</span>;
 <button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
   </div>
@@ -179,6 +179,31 @@ function init() {
   contr = new THREE.OrbitControls( camera ,document.getElementById("canvas"));
 
   scene.add(Testspline());
+  }
+  </script>
+
+<script>
+var DrehenASD=function(OBJ_X) {
+  var RET=TRANSFORM(OBJ_X,[[1,0,0,PA.position.x*zoom],[0,1,0,PA.position.y*zoom],[0,0,1,PA.position.z*zoom],[0,0,0,1]]);
+
+  var alpha=0; 
+  if(((PD.position.z-PA.position.z)**2+(PD.position.x-PA.position.x)**2>0.00001)&&((PS.position.z-PA.position.z)**2+(PS.position.x-PA.position.x)**2>0.00001)) {
+    alpha=-Math.atan2(PD.position.z-PA.position.z,PD.position.x-PA.position.x);
+    alpha=alpha+Math.atan2(PS.position.z-PA.position.z,PS.position.x-PA.position.x);
+    }
+  var ca=Math.cos(alpha); 
+  var sa=Math.sin(alpha); 
+  RET=TRANSFORM(RET,[[ca,0,-sa,0],[0,1,0,0],[sa,0,ca,0],[0,0,0,1]]); 
+  var beta=0;
+  if(((PD.position.z-PA.position.z)**2+(PD.position.y-PA.position.y)**2>0.00001)&&((PS.position.z-PA.position.z)**2+(PS.position.y-PA.position.y)**2>0.00001)) {
+    beta=-Math.atan2(PD.position.z-PA.position.z,PD.position.y-PA.position.y);
+    beta=beta+Math.atan2(PS.position.z-PA.position.z,PS.position.y-PA.position.y);
+    }
+  var cb=Math.cos(beta); 
+  var sb=Math.sin(beta); 
+  RET=TRANSFORM(RET,[[1,0,0,0],[0,cb,-sb,0],[0,sb,cb,0],[0,0,0,1]]);
+  RET=TRANSFORM(RET,[[1,0,0,-PA.position.x*zoom],[0,1,0,-PA.position.y*zoom],[0,0,1,-PA.position.z*zoom],[0,0,0,1]]); 
+  return RET;
   }
   </script>
 
