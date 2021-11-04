@@ -34,8 +34,7 @@
 <button onclick='TS()'>TS()</button>
 <button onclick='TD()'>TD()</button>
 
-<button onclick='SAMMELEBENE[0].push(EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x*zoom+(PA.position.y-PS.position.y)*PA.position.y*zoom+(PA.position.z-PS.position.z)*PA.position.z*zoom)]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);Logtext="SAMMELEBENE nach -AS:\n";KDUMP(SAMMELEBENE);Logfile()'>Umdrehen</button>
-
+<button onclick='TUmdrehen()'>Umdrehen</button>
 <button onclick='TMerken()'>Merken</button>
 <button onclick='TKopieren()'>Kopieren</button>
 <button onclick='TVerschieben()'>Verschieben</button>
@@ -46,11 +45,12 @@
 
 
 
-<div style="max-width:90%; min-height:100%; max-height:400px; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt das render.domElement rein</div>
+<div style="max-width:90%; min-height:100%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt das render.domElement rein</div>
 <span id="Pdisp">...</span>;
 <button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
+<button onclick='contr.target.copy(q.position)'>Zentrieren</button>
   </div>
-<div id="Log2" style="display:flex; overflow:auto; border:solid; width:90%; height:400px"> div</div>
+<div id="Log2" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
 <div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:400px"> div</div>
 
 <script src="QWASNEU/KONSTRUK_javascript.js"></script>
@@ -576,6 +576,31 @@ var TD=function() {//setzt Punkt D auf Punkt Q
   Logfile2();  
   }
 
+var TUmdrehen=function() {//AS oder AD umdrehen
+  Logtext2.push("TUmdrehen()");
+  if (SCHNITTVEKTOR_AS!=0) {
+    SCHNITTVEKTOR_AS[0][0][0]=-SCHNITTVEKTOR_AS[0][0][0];
+    SCHNITTVEKTOR_AS[0][0][1]=-SCHNITTVEKTOR_AS[0][0][1];
+    SCHNITTVEKTOR_AS[0][0][2]=-SCHNITTVEKTOR_AS[0][0][2];
+    SCHNITTVEKTOR_AS[0][0][3]=-SCHNITTVEKTOR_AS[0][0][3];
+    PS.position.x=2*PA.position.x-PS.position.x;
+    PS.position.y=2*PA.position.y-PS.position.y;
+    PS.position.z=2*PA.position.z-PS.position.z;
+    VAS.geometry.verticesNeedUpdate = true;
+    Logtext="SCHNITTVEKTOR_AS nach -AS:\n";KDUMP(SCHNITTVEKTOR_AS);Logfile();
+    } else if (SCHNITTEBENE_ASD!=0) {
+      SCHNITTEBENE_ASD[0][0][0]=-SCHNITTEBENE_ASD[0][0][0];
+      SCHNITTEBENE_ASD[0][0][1]=-SCHNITTEBENE_ASD[0][0][1];
+      SCHNITTEBENE_ASD[0][0][2]=-SCHNITTEBENE_ASD[0][0][2];
+      SCHNITTEBENE_ASD[0][0][3]=-SCHNITTEBENE_ASD[0][0][3];
+      PD.position.x=2*PA.position.x-PD.position.x;
+      PD.position.y=2*PA.position.y-PD.position.y;
+      PD.position.z=2*PA.position.z-PD.position.z;
+      EASD.geometry.verticesNeedUpdate = true;
+      Logtext="SCHNITTEBENE_ASD nach -AD:\n";KDUMP(SCHNITTEBENE_ASD);Logfile();
+      }
+  }
+
 var TMerken_Hilfsfunktion=function() {//
   if (SCHNITTVEKTOR_AS!=0) {
     MERKOBJEKT[0].push(SCHNITTVEKTOR_AS[0][0]);
@@ -877,58 +902,6 @@ var spline = new THREE.SplineCurve3([
 
 <script>
 /*
-( nun weiter mit QUADER2
- 0 CONSTANT TEND
- 1 CONSTANT TEBN
- 2 CONSTANT TAND
- 3 CONSTANT TNOT
- 4 CONSTANT TNOP
-: EBENE ( <bezeichnung>  p1xa p1xb p1ya p1yb p1za p1zb p2... p3...  --> )
-  0 VARIABLE HERE RAMP1 @ 1 - !
-  1 , ( 1 Ebene
-  2 , ( 2 Verknüpfungsangaben
-  0 , ( 0 Eckpunkte zu je 28 Byte
-  0 , ( 0 Kanten zu je 8 Byte
-  ( Ebenenliste, ax-d>0 fürs innere:
-  EBENE0
-  >R >R 2ROT B, 2SWAP B, B, R> R> B,
-  TEBN , TEND ,
-  ;
-
-DECIMAL
-100,0 0,0 0,0
-200,0 50,0 150,0
-200,0 0,0 100,0
-EBENE Schnitt1
-  0,0  0,0   0,0
-  2,0  0,0   0,0
-  0,0  2,0   0,0
-  EBENE E0
-  0,0  0,0   0,0
-  0,0  1,0   1,0
-  1,0  0,0   0,0
-  EBENE E1
-  1,0  0,0   0,0
-  0,0  0,0   1,0
-  1,0  1,0   0,0
-  EBENE E2
-  0,0  1,0   0,0
-  1,0  1,0   1,0
-  0,0  0,0   0,0
-  EBENE E3
-  1,0  2,0   0,0
-  1,0  1,0   1,0
-  0,0  2,0   0,0
-  EBENE E4
-HEX
-
-  */
-
-
-/*
-EINGABEFENS
-  Eingabefenster @ gUSE
-  2
   DRU X wählt ein OBJEKT X
   DRU C kopiert OBJEKT X an die gleiche Stelle
   DRU A wählt einen PUNKT A.
@@ -956,79 +929,6 @@ EINGABEFENS
   DRU J Blick von weiter links
   DRU K Blick von weiter rechts
   ;
-
-: EINGABEFENS ;
-
-: STARTEN
-      INIT
-      0 PLOTOBJ !
-[ DECIMAL ]
-      200 100 VERSCHIEB 2!
-      1 1 SCAL 2!
-      0 DREHRICHTUNG !
-      1 1 5 16 0 1 PARRA1 V!
-      0 1 5 16 1 1 PARRA2 V!
-      ( T . 0 0 )
-      00 -28 09 -28 -1 1 PARRA2 V!
-      28  28 09  28  0 1 PARRA1 V!
-      0 OBJEKT1 ! 0 OBJEKT2 !
-      0 DISPOBJEKT !
-      0 VONSCHNAPPER !
-      0 0 KOSCHNAPPER1 2!
-      KOSCHNAPPER2 12 0 FILL
-      0 SCHIFTSTELLER !
-[ HEX ] 
-      SCHNAPPKANTTLISTE 8000 0 FILL ( wegen ALTSCHNAPPER @ 8 + @ GUCKOBJEKT
-      SCHNAPPKANTTLISTE ALTSCHNAPPER !
-      SCHNAPPKANTTLISTE NEUSCHNAPPER !
-      " KONSTRUKTION LINK-OFF FORGET Eins KONSTRUKTION LINK-ON 1,0 1,0 1,0 QUADER Eins" 
-      INTERPRET
-      ( 11 EMIT ( setzt AUSG%=1 für SPOOL, neuerdings nichmehr
-      SPOOL ." 5 ANWEND!" CR ." STARTEN" CR
-(      " T . 0 0 " INTERPRET
-(  0 DREHTAPPER
-      SPOOLOFF
-      ll
-  ;
-
-TAPP: N STARTEN ;
-TAPP: O 1 SCHIFTSTELLER !
-  TAPP ASC C CASEOF ;
-TAPP: U 1 SCHIFTSTELLER !
-  TAPP ASC E CASEOF 0 SCHIFTSTELLER ! ;
-TAPP: P 1 SCHIFTSTELLER !
-  TAPP ASC R CASEOF ;
-TAPP: L 1 SCHIFTSTELLER !
-  TAPP ASC F CASEOF ;
-TAPP: V 1 SCHIFTSTELLER !
-  TAPP ASC T CASEOF ;
-
-: QUADER111
-      " >S 0,6 Vergrößerung" INTERPRET
-      " >P 0 0 0 Anlegepunkt" INTERPRET
-      " >Q 355 115 115 Hinterbalken" INTERPRET
-      " >P 130 1250 0 Anlegepunkt" INTERPRET
-      " >Q 120 370 120 Vorderbalken" INTERPRET
-      " >P -250 0 0 Anlegepunkt" INTERPRET
-      " >Q 18 1700 180 rechtesBrett" INTERPRET
-      " >P -500 0 0 Anlegepunkt" INTERPRET
-      " >Q 30 700 180 HochzuBrett" INTERPRET
-      " >P -750 0 0 Anlegepunkt" INTERPRET
-      " >Q 20 2000 20 Bügel" INTERPRET
-      " >T X 0 0" INTERPRET
-      " >T . 0 0" INTERPRET
-(  " >P 0 0 0 " INTERPRET
-(  " >Q 1 1 1 " INTERPRET
-(  " >T X 0 0 " INTERPRET
-  ;
-
-: TAB ;
-
-
-KONSTRUKTION VOCABULARY-END
-
-
-DECIMAL
 */
 
 
