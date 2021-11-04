@@ -30,11 +30,11 @@
   <button onclick="Beispiel1()">REST5</button> und
   <button onclick="Beispiel2()">GOKART</button>.
   </div>
-<button onclick='TA()'>A</button>
-<button onclick='TS()'>S</button>
-<button onclick='TD()'>D</button>
+<button onclick='TA()'>TA()</button>
+<button onclick='TS()'>TS()</button>
+<button onclick='TD()'>TD()</button>
 
-<button onclick='SAMMELEBENE[0].push(EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x*zoom+(PA.position.y-PS.position.y)*PA.position.y*zoom+(PA.position.z-PS.position.z)*PA.position.z*zoom)]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);Logtext="SAMMELEBENE nach -AS:\n";KDUMP(SAMMELEBENE);Logfile()'>-</button>
+<button onclick='SAMMELEBENE[0].push(EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x*zoom+(PA.position.y-PS.position.y)*PA.position.y*zoom+(PA.position.z-PS.position.z)*PA.position.z*zoom)]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);Logtext="SAMMELEBENE nach -AS:\n";KDUMP(SAMMELEBENE);Logfile()'>Umdrehen</button>
 
 <button onclick='TMerken()'>Merken</button>
 <button onclick='TKopieren()'>Kopieren</button>
@@ -231,6 +231,7 @@ var neuen_Balken_plazieren=function(x,y,z,l,b,h) {
 <script>
 var Beispiel1=function() {
   init();
+  Linientyp=0; //Röhren
   Logtext2=[];
   OBJ_Y=0;
 
@@ -258,7 +259,14 @@ KPLOT([REST5]);
 Castlist.push(REST5);
 cube.geometry.faces[0].color = new THREE.Color(0x000000); 
 AddObjekt(scene,REST5);
+TQ(20,0,0,0);
+TA();
+TQ(10,30,10,0);
+TS();
+TQ(0,0,40,0);
+TD();
 TQ(50,0,0,0);
+
 Logtext=JSON.stringify(cube.geometry.faces)+"\n"+Logtext;
 
   Logfile();
@@ -284,7 +292,7 @@ Logtext=JSON.stringify(cube.geometry.faces)+"\n"+Logtext;
 var Beispiel2=function() {
   init();
   zoom=200;
-  Linientyp=1;
+  Linientyp=1; //dünne Linie
   Logtext2=[];
   
   // position and point the camera to the center of the scene
@@ -516,14 +524,13 @@ LT=[
 //for (var li in LT) eval(LT[li]);
 
 
-
-
   Logfile("das war Beispiel2");
 
   function render() {
     //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
     renderer.render(scene, camera);
     ////camera.position.x+=0.0;
+    cube.position.copy(contr.target);
     contr.update();
     requestAnimationFrame(render);
     }    
