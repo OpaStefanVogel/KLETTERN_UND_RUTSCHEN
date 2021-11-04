@@ -12,7 +12,7 @@ if (1==1) {
 //.. wie es zu dem U==[0,0,0,0] kommt
 //.. bei AUFDERKANTE muß wohl ein AUFDERFLAECHE auch mit dazu
 //.. wenn sich mehr als 3 Ebenen in einem Punkt schneiden ist nur behelfsweise gelöst
-//.. Keil auch nur behelfsmäßig in GERADEXEBENE
+//.. Keil auch nur behelfsmäßig in GERADEXEBENE, bis jetzt nuf 2 Ebenen
 //.. doppeltes TEbeneASD() vermeiden
 
 Logtext="";
@@ -243,7 +243,7 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
       if (Logflag) Logtext=Logtext+"Schnittpunkt in "+JSON.stringify(U)+" ";
       var W=DURCHGUCKER(OBJ2,U);
       if (Logflag) Logtext=Logtext+"W="+W+" ";
-      if (W==2) {
+      if (W==2&&Math.abs(U[3])>0.0001) {
         ERG.push([0,1,ENR,U]);
         if (Logflag) Logtext=Logtext+"♥ drin" 
         } else if (Logflag) Logtext=Logtext+"draußen";
@@ -312,7 +312,7 @@ if (Logflag) Logtext=Logtext+"SCHNITTPUNKTE(BALKEN1,SCHNITT2)="+JSON.stringify(S
 
 //10a KDUMP
 
-KDUMP=function(OBJ) { 
+var KDUMP=function(OBJ) { 
   Logtext=Logtext+"  Ebenen: ei=[nx,ny,nz,w]\n";
   for (var i in OBJ[0]) Logtext=Logtext+"    e"+i+"="+JSON.stringify(OBJ[0][i])+"\n";
   Logtext=Logtext+"  Verknüpfung: T="+JSON.stringify(OBJ[1])+"\n";
@@ -324,7 +324,7 @@ KDUMP=function(OBJ) {
 
 //11
 //so, jetzt nur noch RUMPS:
-RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
+var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   //local TRU,ERG,P,PNEU;
   if (Logflag) Logtext=Logtext+"OBJ1=\n";
   if (Logflag) KDUMP(OBJ1);
