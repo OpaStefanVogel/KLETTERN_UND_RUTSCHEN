@@ -36,8 +36,7 @@
 
 <button onclick='SAMMELEBENE[0].push(EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x*zoom+(PA.position.y-PS.position.y)*PA.position.y*zoom+(PA.position.z-PS.position.z)*PA.position.z*zoom)]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);Logtext="SAMMELEBENE nach -AS:\n";KDUMP(SAMMELEBENE);Logfile()'>-</button>
 
-<button onclick='TEbeneASD()'>Merken</button>
-
+<button onclick='TMerken()'>Merken</button>
 <button onclick='TKopieren()'>Kopieren</button>
 <button onclick='TVerschieben()'>Verschieben</button>
 <button onclick='TDrehen()'>Drehen</button>
@@ -88,6 +87,7 @@ var Logtext2=[];
 var LT=[];
 var SCHNITTVEKTOR_AS=0;
 var SCHNITTEBENE_ASD=0;
+var MERKOBJEKT=[[],[],[],[]];
   </script>
 
 <script>//globale Funktionen
@@ -358,10 +358,8 @@ LT=[
 "TQ(130,0,1250,1)",
 "TD()",
 "TQ(250,120,1620,1)",
-"TEbeneASD()",
 "TSchneiden()",
 "TQ(177.5,115,0,0)",
-"TEbeneASD()",
 "TSchneiden()",
 "TQ(355,0,0,0)",
 "TA()",
@@ -375,11 +373,9 @@ LT=[
 "TS()",
 "TQ(250,120,1250,1)",
 "TD()",
-"TEbeneASD()",
 "TQ(190,120,1250,1)",
 "TSchneiden()",
 "TQ(183.48,0,115,0)",
-"TEbeneASD()",
 "TSchneiden()",
 "TQ(193.7,120,1620,1)",
 "TA()",
@@ -388,10 +384,8 @@ LT=[
 "TQ(168.48000000000002,60,1620,1)",
 "TD()",
 "TQ(212.70114787936444,180,1694.0339538170856,2)",
-"TEbeneASD()",
 "TSchneiden()",
 "TQ(157.94811390479882,0,1692.7422701976568,5)",
-"TEbeneASD()",
 "TSchneiden()",
 "TQ(-500,90,0,3)",
 "TA()",
@@ -451,10 +445,8 @@ LT=[
 "TQ(218.92,120,1620,1)",
 "TD()",
 "TQ(179.84152492372203,28.027354163578536,1851.495630083249,6)",
-"TEbeneASD()",
 "TSchneiden()",
 "TQ(211.96875676696882,37.008623401441696,1856.0961575648632,4)",
-"TEbeneASD()",
 "TSchneiden()",
 "TQ(87.50000000000001,700.0000000000001,-29.999999999999943,6)",
 "TA()",
@@ -473,10 +465,8 @@ LT=[
 "TQ(87.5,5.5109105961630896e-15,-14.999999999999984,3)",
 "TD()",
 "TQ(106.82640744221679,662.2585408272132,-44.215211390840565,6)",
-"TEbeneASD()",
 "TSchneiden()",
 "TQ(247.89889529823643,662.261730646168,-43.84267751008141,4)",
-"TEbeneASD()",
 "TSchneiden()",
 "TQ(118.27229099826182,651.8166393945107,-14.999999999999993,6)",
 "TA()",
@@ -492,15 +482,12 @@ LT=[
 "TS()",
 "TQ(193.7,0,1620,1)",
 "TD()",
-"TEbeneASD()",
 "TQ(233.0867389713242,387.27802396613663,799.0393306224815,4)",
 "TSchneiden()",
 "TQ(193.7,0,1620,1)",
 "TS()",
 "TQ(190,120,1250,1)",
 "TD()",
-"TEbeneASD()",
-"TEbeneASD()",
 "TQ(156.715966119015,376.4729549040578,768.305309326288,6)",
 "TSchneiden()",
 "TQ(193.7,0,1620,1)",
@@ -566,7 +553,7 @@ var TS=function() {//setzt Punkt S auf Punkt Q
   PS.position.copy(q.position);
   VAS.geometry.verticesNeedUpdate = true;
   OBJ_Y=0;
-  SCHNITTVEKTOR_AS=[[EGGT([PS.position.x-PA.position.x,PS.position.y-PA.position.y,PS.position.z-PA.position.z,-((PS.position.x-PA.position.x)*PA.position.x*zoom+(PS.position.y-PA.position.y)*PA.position.y*zoom+(PS.position.z-PA.position.z)*PA.position.z*zoom)])],[TEBN],[],[]];
+  SCHNITTVEKTOR_AS=[[EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x+(PA.position.y-PS.position.y)*PA.position.y+(PA.position.z-PS.position.z)*PA.position.z)*zoom])],[TEBN],[],[]];
   KDUMP(SCHNITTVEKTOR_AS);
   Logfile();
   Logfile2();  
@@ -579,6 +566,27 @@ var TD=function() {//setzt Punkt D auf Punkt Q
   OBJ_Y=0;
   SCHNITTVEKTOR_AS=0;
   SCHNITTEBENE_ASD=[[DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1])],[TEBN],[],[]];
+  Logfile2();  
+  }
+
+var TMerken_Hilfsfunktion=function() {//
+  if (SCHNITTVEKTOR_AS!=0) {
+    MERKOBJEKT[0].push(SCHNITTVEKTOR_AS[0][0]);
+    MERKOBJEKT[1].push(TEBN);
+    if (MERKOBJEKT[0].length>1) MERKOBJEKT[1].push(TAND);
+    } else if (SCHNITTEBENE_ASD!=0) {
+      MERKOBJEKT[0].push(SCHNITTEBENE_ASD[0][0]);
+      MERKOBJEKT[1].push(TEBN);
+      if (MERKOBJEKT[0].length>1) MERKOBJEKT[1].push(TAND);
+      }
+  }
+
+var TMerken=function() {//legt Ebene ASD fest
+  Logtext2.push("TMerken()");
+  TMerken_Hilfsfunktion();
+  Logtext="MERKEBENE nach TMerken():\n";
+  KDUMP(MERKOBJEKT);
+  Logfile();
   Logfile2();  
   }
 
@@ -622,33 +630,20 @@ var TDrehen=function() {//dreht OBJ_X aus Vektor AS in Richtung AD erst yaw dann
   Logfile2();  
   }
 
-var TEbeneASD=function() {//legt Ebene ASD fest
-  Logtext2.push("TEbeneASD()");
-  SAMMELEBENE[0].push(DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1]));
-  SAMMELEBENE[1].push(TEBN);
-  if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);
-  Logtext="SAMMELEBENE nach ASD:\n";
-  KDUMP(SAMMELEBENE);
-  Logfile();
-  Logfile2();  
-  }
-
 var TSchneiden=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
   Logtext2.push("TSchneiden()");
   scene.remove(OBJ_X[4]);
   var cind=Castlist.indexOf(OBJ_X);
-  if (OBJ_Y!=0) SAMMELEBENE=OBJ_Y; 
-    else if (SCHNITTVEKTOR_AS!=0)
-      SAMMELEBENE=SCHNITTVEKTOR_AS;
-      else if (SCHNITTEBENE_ASD!=0)
-        SAMMELEBENE=SCHNITTEBENE_ASD;
-        
+  if (OBJ_Y!=0) SAMMELEBENE=OBJ_Y; else {
+    TMerken_Hilfsfunktion();
+    SAMMELEBENE=MERKOBJEKT;
+    }        
   OBJ_X=RUMPS(OBJ_X,SAMMELEBENE,1);
   KDUMP(OBJ_X);
   KPLOT([OBJ_X]);
   AddObjekt(scene,OBJ_X);Castlist.pop();
   Castlist[cind]=OBJ_X;
-  SAMMELEBENE=[[],[],[],[]];
+  MERKOBJEKT=[[],[],[],[]];
   Logfile();
   Logfile2();  
   }
