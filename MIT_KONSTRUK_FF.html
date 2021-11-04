@@ -26,8 +26,10 @@
   </head>
 <body onload="Beispiel2()">
 <!--canvas id="Uhr"> </canvas-->
-<button onclick="Beispiel1()">REST5</button>
-<button onclick="Beispiel2()">GOKART</button>
+<div>2 Eingabebeispiele: 
+  <button onclick="Beispiel1()">REST5</button> und
+  <button onclick="Beispiel2()">GOKART</button>.
+  </div>
 <button onclick='TA()'>A</button>
 <button onclick='TS()'>S</button>
 <button onclick='TD()'>D</button>
@@ -198,18 +200,19 @@ var DrehenASD=function(OBJ_X) {
     }
   var ca=Math.cos(alpha); 
   var sa=Math.sin(alpha); 
-  RET=TRANSFORM(RET,[[ca,0,-sa,0],[0,1,0,0],[sa,0,ca,0],[0,0,0,1]]); 
   var beta=0;
   if(((PD.position.z-PA.position.z)**2+(PD.position.y-PA.position.y)**2>0.00001)&&((PS.position.z-PA.position.z)**2+(PS.position.y-PA.position.y)**2>0.00001)) {
-    beta=-Math.atan2(PD.position.z-PA.position.z,PD.position.y-PA.position.y);
-    beta=beta+Math.atan2(PS.position.z-PA.position.z,PS.position.y-PA.position.y);
+    beta=-Math.atan2(Math.sqrt((PD.position.z-PA.position.z)**2+(PD.position.x-PA.position.x)**2),PD.position.y-PA.position.y);
+    beta=beta+Math.atan2(Math.sqrt((PS.position.z-PA.position.z)**2+(PS.position.x-PA.position.x)**2),PS.position.y-PA.position.y);
     }
   var cb=Math.cos(beta); 
   var sb=Math.sin(beta); 
   RET=TRANSFORM(RET,[[1,0,0,0],[0,cb,-sb,0],[0,sb,cb,0],[0,0,0,1]]);
+  RET=TRANSFORM(RET,[[ca,0,-sa,0],[0,1,0,0],[sa,0,ca,0],[0,0,0,1]]); 
   RET=TRANSFORM(RET,[[1,0,0,-PA.position.x*zoom],[0,1,0,-PA.position.y*zoom],[0,0,1,-PA.position.z*zoom],[0,0,0,1]]); 
   return RET;
   }
+
   </script>
 
 <script>
@@ -227,6 +230,7 @@ var neuen_Balken_plazieren=function(x,y,z,l,b,h) {
 <script>
 var Beispiel1=function() {
   init();
+  Logtext2=[];
 
 var BALKEN1=QUADER(200,100,150); KFILL(BALKEN1);
 var SCHNITT2=EBENE([100,0,0,1],[200,50,150,1],[200,0,90,1]);
@@ -254,7 +258,8 @@ cube.geometry.faces[0].color = new THREE.Color(0x000000);
 AddObjekt(scene,REST5);
 Logtext=JSON.stringify(cube.geometry.faces)+"\n"+Logtext;
 
-  Logfile(Logtext);
+  Logfile();
+  Logfile2();
 
   //var xm=new XMLSerializer();
   //alert(xm.serializeToString(renderer.domElement));
@@ -277,6 +282,7 @@ var Beispiel2=function() {
   init();
   zoom=200;
   Linientyp=1;
+  Logtext2=[];
   
   // position and point the camera to the center of the scene
   camera.position.x = -5; //5; //15;
@@ -317,6 +323,8 @@ var Hochzubrett=neuen_Balken_plazieren(-500,0,0,30,180,700);
 //      " >P -750 0 0 Anlegepunkt" INTERPRET
 //      " >Q 20 2000 20 Bügel" INTERPRET
 var Buegel=neuen_Balken_plazieren(-750,0,0,20,20,2000);
+
+
 
 
 LT=[
@@ -361,12 +369,9 @@ LT=[
 "TDrehen()",
 "TQ(250,0,1250,1)",
 "TS()",
-"TQ(250,60,1620,1)",
-"TQ(250,120,1620,1)",
 "TQ(250,120,1250,1)",
 "TD()",
 "TEbeneASD()",
-"TQ(250,0,1435,1)",
 "TQ(190,120,1250,1)",
 "TSchnitt()",
 "TQ(183.48,0,115,0)",
@@ -376,7 +381,6 @@ LT=[
 "TA()",
 "TQ(218.92,60,1620,1)",
 "TS()",
-"TQ(212.70114787936444,90,1694.0339538170856,2)",
 "TQ(168.48000000000002,60,1620,1)",
 "TD()",
 "TQ(212.70114787936444,180,1694.0339538170856,2)",
@@ -401,15 +405,12 @@ LT=[
 "TDrehen()",
 "TQ(177.5,5.5109105961630896e-15,-90,3)",
 "TS()",
-"TQ(-17.903438603818543,0,1.8619576147971277,5)",
 "TQ(0,0,0,0)",
 "TD()",
 "TQ(207.5,350,90.00000000000003,3)",
 "TDrehen()",
 "TQ(-750,0,0,4)",
 "TA()",
-"TQ(-750,20,0,4)",
-"TQ(-750,20,0,4)",
 "TQ(-750,20,0,4)",
 "TA()",
 "TQ(87.5,700,-29.999999999999986,3)",
@@ -422,8 +423,76 @@ LT=[
 "TQ(267.50000000000006,700,-30.000000000000018,3)",
 "TS()",
 "TQ(-730,0,1000,4)",
-"TVerschieben()"
+"TVerschieben()",
+"TQ(87.5,700,-29.99999999999999,6)",
+"TA()",
+"TQ(87.5,700,1970,6)",
+"TS()",
+"TQ(168.48000000000002,120,1620,1)",
+"TD()",
+"TQ(87.5,700,1970,6)",
+"TDrehen()",
+"TQ(267.5000000000001,700,-30.000000000000014,4)",
+"TA()",
+"TQ(267.5000000000001,700,1970,4)",
+"TS()",
+"TQ(218.92,120,1620,1)",
+"TD()",
+"TQ(267.5000000000001,700,1970,4)",
+"TDrehen()",
+"TQ(190,120,1250,1)",
+"TA()",
+"TQ(193.7,120,1620,1)",
+"TS()",
+"TQ(218.92,120,1620,1)",
+"TD()",
+"TQ(179.84152492372203,28.027354163578536,1851.495630083249,6)",
+"TEbeneASD()",
+"TSchnitt()",
+"TQ(211.96875676696882,37.008623401441696,1856.0961575648632,4)",
+"TEbeneASD()",
+"TEbeneASD()",
+"TSchnitt()",
+"TQ(87.50000000000001,700.0000000000001,-29.999999999999943,6)",
+"TA()",
+"TQ(97.1632037211084,681.1292704136066,-37.10760569542027,6)",
+"TS()",
+"TVerschieben()",
+"TQ(267.50000000000006,700,-30.000000000000018,3)",
+"TA()",
+"TQ(257.69944764911827,681.130865323084,-36.92133875504069,4)",
+"TS()",
+"TVerschieben()",
+"TQ(267.50000000000006,700,-15.000000000000018,3)",
+"TA()",
+"TQ(87.50000000000004,700,-14.999999999999984,3)",
+"TS()",
+"TQ(87.5,5.5109105961630896e-15,-14.999999999999984,3)",
+"TD()",
+"TQ(106.82640744221679,662.2585408272132,-44.215211390840565,6)",
+"TEbeneASD()",
+"TSchnitt()",
+"TQ(247.89889529823643,662.261730646168,-43.84267751008141,4)",
+"TEbeneASD()",
+"TSchnitt()",
+"TQ(118.27229099826182,651.8166393945107,-14.999999999999993,6)",
+"TA()",
+"TQ(177.50000000000006,700,-4.733165431326071e-30,3)",
+"TSchnitt()",
+"TQ(237.04536360786378,652.0196427372484,-15.000000000000014,4)",
+"TA()",
+"TQ(177.50000000000006,700,-4.733165431326071e-30,3)",
+"TSchnitt()",
+"TQ(267.5,-5.510910596163088e-15,-30.000000000000018,3)"
 ];
+  
+  
+  
+  
+  
+  
+  
+  
   
   LTeval(LT,0);
 //for (var li in LT) eval(LT[li]);
@@ -446,6 +515,7 @@ LT=[
 
 <script>//Eingabefunktionen für Log2
 var TQ=function(x,y,z,cmin) {//setzt Koordinaten von q und damit OBJ_X
+  if ((Logtext2.length>0)&&(Logtext2[Logtext2.length-1]).slice(0,2)=="TQ") Logtext2.pop();
   Logtext2.push("TQ("+x+","+y+","+z+","+cmin+")");
   q.position.x=x/zoom;
   q.position.y=y/zoom;
@@ -554,7 +624,13 @@ function Logfile(Resttext) {
 
 function Logfile2(Resttext) {
   if (!Resttext) var Resttext="";
-  document.getElementById("Log2").innerHTML='<span style="white-space:pre; font-family:monospace">\nLT=[\n"'+Logtext2.join('",\n"')+Resttext+'"\n];\n\  \n  </span>';
+  var Log2element=document.getElementById("Log2");
+  Log2element.innerHTML='<span style="white-space:pre; font-family:monospace">\nLT=[\n"'+Logtext2.join('",\n"')+Resttext+'"\n];\n\  \n  </span>';
+/*  Log2element.scrollTo({//mit dem geht Kopieren nicht
+    top: 100000,
+    left: 0,
+    //behavior: 'smooth'
+    });*/
   selectText("Log2");
   }
 
@@ -579,7 +655,7 @@ function selectText(element) { //Quelle: https://gist.github.com/gubatron/659936
 var LTeval=function(LT,ltind) {
   eval(LT[ltind]);
   ltind=ltind+1;
-  if (ltind<LT.length) setTimeout(LTeval,100,LT,ltind);
+  if (ltind<LT.length) setTimeout(LTeval,20,LT,ltind);
   }
   </script>
   
