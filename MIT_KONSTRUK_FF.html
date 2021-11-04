@@ -43,7 +43,8 @@
 <button onclick='TKopieren()'>Kopieren</button>
 <button onclick='TVerschieben()'>Verschieben</button>
 <button onclick='TDrehen()'>Drehen</button>
-<button onclick='TSchnitt()'>Schnitt</button>
+<button onclick='TSchneiden()'>Schneiden</button>
+<button onclick='TLoeschen()'>Löschen</button>
 
 
 
@@ -327,6 +328,7 @@ var Buegel=neuen_Balken_plazieren(-750,0,0,20,20,2000);
 
 
 
+
 LT=[
 "TQ(-232,0,0,2)",
 "TA()",
@@ -355,10 +357,10 @@ LT=[
 "TD()",
 "TQ(250,120,1620,1)",
 "TEbeneASD()",
-"TSchnitt()",
+"TSchneiden()",
 "TQ(177.5,115,0,0)",
 "TEbeneASD()",
-"TSchnitt()",
+"TSchneiden()",
 "TQ(355,0,0,0)",
 "TA()",
 "TQ(355,0,1700,2)",
@@ -373,10 +375,10 @@ LT=[
 "TD()",
 "TEbeneASD()",
 "TQ(190,120,1250,1)",
-"TSchnitt()",
+"TSchneiden()",
 "TQ(183.48,0,115,0)",
 "TEbeneASD()",
-"TSchnitt()",
+"TSchneiden()",
 "TQ(193.7,120,1620,1)",
 "TA()",
 "TQ(218.92,60,1620,1)",
@@ -385,10 +387,10 @@ LT=[
 "TD()",
 "TQ(212.70114787936444,180,1694.0339538170856,2)",
 "TEbeneASD()",
-"TSchnitt()",
+"TSchneiden()",
 "TQ(157.94811390479882,0,1692.7422701976568,5)",
 "TEbeneASD()",
-"TSchnitt()",
+"TSchneiden()",
 "TQ(-500,90,0,3)",
 "TA()",
 "TQ(177.5,0,0,0)",
@@ -448,11 +450,10 @@ LT=[
 "TD()",
 "TQ(179.84152492372203,28.027354163578536,1851.495630083249,6)",
 "TEbeneASD()",
-"TSchnitt()",
+"TSchneiden()",
 "TQ(211.96875676696882,37.008623401441696,1856.0961575648632,4)",
 "TEbeneASD()",
-"TEbeneASD()",
-"TSchnitt()",
+"TSchneiden()",
 "TQ(87.50000000000001,700.0000000000001,-29.999999999999943,6)",
 "TA()",
 "TQ(97.1632037211084,681.1292704136066,-37.10760569542027,6)",
@@ -471,20 +472,47 @@ LT=[
 "TD()",
 "TQ(106.82640744221679,662.2585408272132,-44.215211390840565,6)",
 "TEbeneASD()",
-"TSchnitt()",
+"TSchneiden()",
 "TQ(247.89889529823643,662.261730646168,-43.84267751008141,4)",
 "TEbeneASD()",
-"TSchnitt()",
+"TSchneiden()",
 "TQ(118.27229099826182,651.8166393945107,-14.999999999999993,6)",
 "TA()",
 "TQ(177.50000000000006,700,-4.733165431326071e-30,3)",
-"TSchnitt()",
+"TSchneiden()",
 "TQ(237.04536360786378,652.0196427372484,-15.000000000000014,4)",
 "TA()",
 "TQ(177.50000000000006,700,-4.733165431326071e-30,3)",
-"TSchnitt()",
-"TQ(267.5,-5.510910596163088e-15,-30.000000000000018,3)"
+"TSchneiden()",
+"TQ(190,0,1250,1)",
+"TA()",
+"TQ(190,120,1250,1)",
+"TS()",
+"TQ(193.7,0,1620,1)",
+"TD()",
+"TEbeneASD()",
+"TQ(233.0867389713242,387.27802396613663,799.0393306224815,4)",
+"TSchneiden()",
+"TQ(193.7,0,1620,1)",
+"TS()",
+"TQ(190,120,1250,1)",
+"TD()",
+"TEbeneASD()",
+"TQ(156.715966119015,376.4729549040578,768.305309326288,6)",
+"TSchneiden()",
+"TQ(193.7,0,1620,1)",
+"TA()",
+"TQ(138.19571096632518,387.24369123077435,798.9461971522918,6)",
+"TA()",
+"TQ(193.7,0,1620,1)",
+"TSchneiden()",
+"TQ(233.0867389713242,387.27802396613663,799.0393306224815,4)",
+"TA()",
+"TQ(193.7,0,1620,1)",
+"TSchneiden()",
 ];
+  
+  
   
   
   
@@ -597,8 +625,8 @@ var TEbeneASD=function() {//legt Ebene ASD fest
   Logfile2();  
   }
 
-var TSchnitt=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
-  Logtext2.push("TSchnitt()");
+var TSchneiden=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
+  Logtext2.push("TSchneiden()");
   scene.remove(OBJ_X[4]);
   var cind=Castlist.indexOf(OBJ_X);
   if (OBJ_Y!=0) SAMMELEBENE=OBJ_Y;
@@ -607,6 +635,16 @@ var TSchnitt=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
   KPLOT([OBJ_X]);
   AddObjekt(scene,OBJ_X);Castlist.pop();
   Castlist[cind]=OBJ_X;
+  SAMMELEBENE=[[],[],[],[]];
+  Logfile();
+  Logfile2();  
+  }
+
+var TLoeschen=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
+  Logtext2.push("TLoeschen()");
+  scene.remove(OBJ_X[4]);
+  var cind=Castlist.indexOf(OBJ_X);
+  Castlist[cind]=Castlist.pop();
   SAMMELEBENE=[[],[],[],[]];
   Logfile();
   Logfile2();  
@@ -625,7 +663,7 @@ function Logfile(Resttext) {
 function Logfile2(Resttext) {
   if (!Resttext) var Resttext="";
   var Log2element=document.getElementById("Log2");
-  Log2element.innerHTML='<span style="white-space:pre; font-family:monospace">\nLT=[\n"'+Logtext2.join('",\n"')+Resttext+'"\n];\n\  \n  </span>';
+  Log2element.innerHTML='<span style="white-space:pre; font-family:monospace">\nLT=[\n"'+Logtext2.join('",\n"')+Resttext+'",\n];\n\  \n  </span>';
 /*  Log2element.scrollTo({//mit dem geht Kopieren nicht
     top: 100000,
     left: 0,

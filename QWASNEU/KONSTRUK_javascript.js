@@ -13,6 +13,7 @@ if (1==1) {
 //.. bei AUFDERKANTE muß wohl ein AUFDERFLAECHE auch mit dazu
 //.. wenn sich mehr als 3 Ebenen in einem Punkt schneiden ist nur behelfsweise gelöst
 //.. Keil auch nur behelfsmäßig in GERADEXEBENE
+//.. doppeltes TEbeneASD() vermeiden
 
 Logtext="";
 Logflag=false;
