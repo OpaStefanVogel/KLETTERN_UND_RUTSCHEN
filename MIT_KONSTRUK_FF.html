@@ -34,11 +34,9 @@
 <button onclick='TS()'>S</button>
 <button onclick='TD()'>D</button>
 
-<button onclick='SAMMELEBENE[0].push(EGGT([PS.position.x-PA.position.x,PS.position.y-PA.position.y,PS.position.z-PA.position.z,-((PS.position.x-PA.position.x)*PA.position.x*zoom+(PS.position.y-PA.position.y)*PA.position.y*zoom+(PS.position.z-PA.position.z)*PA.position.z*zoom)]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);Logtext="SAMMELEBENE nach AS:\n";KDUMP(SAMMELEBENE);Logfile()'>AS</button>
+<button onclick='SAMMELEBENE[0].push(EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x*zoom+(PA.position.y-PS.position.y)*PA.position.y*zoom+(PA.position.z-PS.position.z)*PA.position.z*zoom)]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);Logtext="SAMMELEBENE nach -AS:\n";KDUMP(SAMMELEBENE);Logfile()'>-</button>
 
-<button onclick='SAMMELEBENE[0].push(EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x*zoom+(PA.position.y-PS.position.y)*PA.position.y*zoom+(PA.position.z-PS.position.z)*PA.position.z*zoom)]));SAMMELEBENE[1].push(TEBN);if (SAMMELEBENE[0].length>1) SAMMELEBENE[1].push(TAND);Logtext="SAMMELEBENE nach -AS:\n";KDUMP(SAMMELEBENE);Logfile()'>-AS</button>
-
-<button onclick='TEbeneASD()'>ASD</button>
+<button onclick='TEbeneASD()'>Merken</button>
 
 <button onclick='TKopieren()'>Kopieren</button>
 <button onclick='TVerschieben()'>Verschieben</button>
@@ -88,6 +86,8 @@ var SCHNITTEBENE;
 var SAMMELEBENE=[[],[],[],[]];
 var Logtext2=[];
 var LT=[];
+var SCHNITTVEKTOR_AS=0;
+var SCHNITTEBENE_ASD=0;
   </script>
 
 <script>//globale Funktionen
@@ -232,6 +232,7 @@ var neuen_Balken_plazieren=function(x,y,z,l,b,h) {
 var Beispiel1=function() {
   init();
   Logtext2=[];
+  OBJ_Y=0;
 
 var BALKEN1=QUADER(200,100,150); KFILL(BALKEN1);
 var SCHNITT2=EBENE([100,0,0,1],[200,50,150,1],[200,0,90,1]);
@@ -257,6 +258,7 @@ KPLOT([REST5]);
 Castlist.push(REST5);
 cube.geometry.faces[0].color = new THREE.Color(0x000000); 
 AddObjekt(scene,REST5);
+TQ(50,0,0,0);
 Logtext=JSON.stringify(cube.geometry.faces)+"\n"+Logtext;
 
   Logfile();
@@ -564,6 +566,9 @@ var TS=function() {//setzt Punkt S auf Punkt Q
   PS.position.copy(q.position);
   VAS.geometry.verticesNeedUpdate = true;
   OBJ_Y=0;
+  SCHNITTVEKTOR_AS=[[EGGT([PS.position.x-PA.position.x,PS.position.y-PA.position.y,PS.position.z-PA.position.z,-((PS.position.x-PA.position.x)*PA.position.x*zoom+(PS.position.y-PA.position.y)*PA.position.y*zoom+(PS.position.z-PA.position.z)*PA.position.z*zoom)])],[TEBN],[],[]];
+  KDUMP(SCHNITTVEKTOR_AS);
+  Logfile();
   Logfile2();  
   }
 
@@ -572,6 +577,8 @@ var TD=function() {//setzt Punkt D auf Punkt Q
   PD.position.copy(q.position);
   EASD.geometry.verticesNeedUpdate = true;
   OBJ_Y=0;
+  SCHNITTVEKTOR_AS=0;
+  SCHNITTEBENE_ASD=[[DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1])],[TEBN],[],[]];
   Logfile2();  
   }
 
@@ -630,7 +637,12 @@ var TSchneiden=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
   Logtext2.push("TSchneiden()");
   scene.remove(OBJ_X[4]);
   var cind=Castlist.indexOf(OBJ_X);
-  if (OBJ_Y!=0) SAMMELEBENE=OBJ_Y;
+  if (OBJ_Y!=0) SAMMELEBENE=OBJ_Y; 
+    else if (SCHNITTVEKTOR_AS!=0)
+      SAMMELEBENE=SCHNITTVEKTOR_AS;
+      else if (SCHNITTEBENE_ASD!=0)
+        SAMMELEBENE=SCHNITTEBENE_ASD;
+        
   OBJ_X=RUMPS(OBJ_X,SAMMELEBENE,1);
   KDUMP(OBJ_X);
   KPLOT([OBJ_X]);
