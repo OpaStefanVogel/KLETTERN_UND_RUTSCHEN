@@ -45,10 +45,10 @@
 
 
 
-<div style="max-width:90%; min-height:100%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt das render.domElement rein</div>
-<span id="Pdisp">...</span>;
+<div style="max-width:90%;max-height:80%; height:450px; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt das render.domElement rein</div>
 <button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
 <button onclick='contr.target.copy(q.position)'>Zentrieren</button>
+<span id="Pdisp">...</span>;
   </div>
 <div id="Log2" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
 <div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:400px"> div</div>
@@ -508,7 +508,22 @@ LT=[
 "TA()",
 "TQ(193.7,0,1620,1)",
 "TSchneiden()",
-];
+
+"TQ(900,0,0,0)",
+"TNeu(160,210,2,'Schusterburg neues Dachfenster')",
+"TQ(0,0,0,0)",
+"TA()",
+"TQ(0,115,0,0)",
+"TS()",
+"TQ(5.98,115,57.5,0)",
+"TD()",
+"TQ(900,0,2,7)",
+"TDrehen()",
+"TQ(-900,0,0,0)",
+"TNeu(200,500,5,'neuer Putz')",
+"TQ(-900,0,5,0)",
+"TNeu(5,500,2000,'neuer Putz')",
+  ];
   
   
   
@@ -685,11 +700,21 @@ var TLoeschen=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
   scene.remove(OBJ_X[4]);
   var cind=Castlist.indexOf(OBJ_X);
   Castlist[cind]=Castlist.pop();
-  SAMMELEBENE=[[],[],[],[]];
+  MERKOBJEKT=[[],[],[],[]];
   Logfile();
   Logfile2();  
   }
 
+var TNeu=function(l,b,h,name) {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
+  Logtext2.push("TNeu("+l+","+b+","+h+")");
+  PUNKT_A=[q.position.x*zoom,q.position.y*zoom,q.position.z*zoom,1];
+  var NEU=QUADER(l,b,h); 
+  KFILL(NEU); 
+  NEU[5]=name;
+  AddObjekt(scene,NEU);
+  Logfile();
+  Logfile2();  
+  }
   </script>
 
 <script>//Logfile
@@ -774,7 +799,7 @@ function raycast ( e ) {
     }
   //alert("cmin="+cmin+", dmin="+dmin+",pmin="+JSON.stringify(pmin)+", mindist="+mindist);
   TQ((pmin[0][0]+pmin[1][0])/2,(pmin[0][1]+pmin[1][1])/2,(pmin[0][2]+pmin[1][2])/2,cmin);
-  document.getElementById("Pdisp").firstChild.nodeValue=pk+dmin+"=["+[(q.position.x*zoom).toFixed(2),(q.position.y*zoom).toFixed(2),(q.position.z*zoom).toFixed(2)]+"]";
+  document.getElementById("Pdisp").firstChild.nodeValue=pk+dmin+"=["+[(q.position.x*zoom).toFixed(2),(q.position.y*zoom).toFixed(2),(q.position.z*zoom).toFixed(2)]+'] in "'+Castlist[cmin][5]+'"';
   }
 
   </script>
