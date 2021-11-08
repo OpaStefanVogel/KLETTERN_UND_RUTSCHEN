@@ -197,26 +197,38 @@ function init() {
 
 <script>
 var DrehenASD=function(OBJ_X) {
+
   var RET=TRANSFORM(OBJ_X,[[1,0,0,PA.position.x*zoom],[0,1,0,PA.position.y*zoom],[0,0,1,PA.position.z*zoom],[0,0,0,1]]);
 
-  //var PDA=PD.sub(PA);alert(PDA);
   var alpha=0; 
-  if(((PD.position.z-PA.position.z)**2+(PD.position.x-PA.position.x)**2>0.00001)&&((PS.position.z-PA.position.z)**2+(PS.position.x-PA.position.x)**2>0.00001)) {
-    alpha=-Math.atan2(PD.position.z-PA.position.z,PD.position.x-PA.position.x);
-    alpha=alpha+Math.atan2(PS.position.z-PA.position.z,PS.position.x-PA.position.x);
+  if((PS.position.z-PA.position.z)**2+(PS.position.x-PA.position.x)**2>0.00001) {
+    alpha=-Math.atan2(PS.position.x-PA.position.x,PS.position.z-PA.position.z);
     }
+  if (Logflag==true) alert("Drehen mit alpha="+(alpha*180/Math.PI));
   var ca=Math.cos(alpha); 
   var sa=Math.sin(alpha); 
+  RET=TRANSFORM(RET,[[ca,0,-sa,0],[0,1,0,0],[sa,0,ca,0],[0,0,0,1]]); 
+
   var beta=0;
-  if(((PD.position.z-PA.position.z)**2+(PD.position.y-PA.position.y)**2>0.00001)&&((PS.position.z-PA.position.z)**2+(PS.position.y-PA.position.y)**2>0.00001)) {
+  if(((PD.position.z-PA.position.z)**2+(PD.position.y-PA.position.y)**2>0.00001)/*&&((PS.position.z-PA.position.z)**2+(PS.position.y-PA.position.y)**2>0.00001)*/) {
     beta=-Math.atan2(Math.sqrt((PD.position.z-PA.position.z)**2+(PD.position.x-PA.position.x)**2),PD.position.y-PA.position.y);
     beta=beta+Math.atan2(Math.sqrt((PS.position.z-PA.position.z)**2+(PS.position.x-PA.position.x)**2),PS.position.y-PA.position.y);
     }
+  if (Logflag==true) alert("beta="+(beta*180/Math.PI));
   var cb=Math.cos(beta); 
   var sb=Math.sin(beta); 
   RET=TRANSFORM(RET,[[1,0,0,0],[0,cb,-sb,0],[0,sb,cb,0],[0,0,0,1]]);
-  RET=TRANSFORM(RET,[[ca,0,-sa,0],[0,1,0,0],[sa,0,ca,0],[0,0,0,1]]); 
+
+  var gamma=0; 
+  if((PD.position.z-PA.position.z)**2+(PD.position.x-PA.position.x)**2>0.00001) {
+    gamma=Math.atan2(PD.position.x-PA.position.x,PD.position.z-PA.position.z);
+    }
+  var cc=Math.cos(gamma); 
+  var sc=Math.sin(gamma); 
+  RET=TRANSFORM(RET,[[cc,0,-sc,0],[0,1,0,0],[sc,0,cc,0],[0,0,0,1]]); 
+
   RET=TRANSFORM(RET,[[1,0,0,-PA.position.x*zoom],[0,1,0,-PA.position.y*zoom],[0,0,1,-PA.position.z*zoom],[0,0,0,1]]); 
+
   return RET;
   }
 
@@ -602,6 +614,10 @@ var Dach=[[
 var Balken=neuen_Balken_plazieren(0,0,50,2500,24,12);
 
 
+
+
+
+
 LT=[
 "TQ(0,0,500,0)",
 "TA()",
@@ -624,7 +640,106 @@ LT=[
 "TD()",
 "TQ(0,0,0,2)",
 "TDrehen()",
+"TQ(0,0,-250,0)",
+"TA()",
+"TA()",
+"TQ(2000,0,-250,0)",
+"TS()",
+"TQ(1749.9999999999998,750.0000000000001,-250.00000000000003,0)",
+"TD()",
+"TQ(758.0210021315283,2261.3350843332273,-749.5357207572898,2)",
+"TSchneiden()",
+"TQ(0,24,56,1)",
+"TKopieren()",
+"TA()",
+"TQ(0,0,-500,0)",
+"TS()",
+"TQ(0,24,62,1)",
+"TVerschieben()",
+"TQ(0,0,-500,0)",
+"TA()",
+"TQ(2500,0,-500,1)",
+"TS()",
+"TQ(2500,0,-494,1)",
+"TA()",
+"TQ(0,0,-500,0)",
+"TA()",
+"TQ(2500,0,-500,1)",
+"TS()",
+"TS()",
+"TS()",
+"TS()",
+"TQ(250.00000000000003,750.0000000000001,-250.00000000000003,0)",
+"TD()",
+"TQ(2500,-24,-500,1)",
+"TDrehen()",
+"TQ(0,0,-250,0)",
+"TA()",
+"TA()",
+"TA()",
+"TQ(1749.9999999999998,750.0000000000001,-250.00000000000003,0)",
+"TS()",
+"TQ(2000,0,-250,0)",
+"TD()",
+"TQ(758.0210021315286,2261.3350843332273,249.53572075728977,1)",
+"TSchneiden()",
+"TQ(0,24,56,3)",
+"TA()",
+"TQ(249.9999999999999,749.9999999999998,-250,2)",
+"TS()",
+"TQ(2500,24,62,3)",
+"TKopieren()",
+"TVerschieben()",
+"TQ(249.9999999999999,749.9999999999997,-244,4)",
+"TA()",
+"TQ(249.9999999999999,725.9999999999997,-244,4)",
+"TS()",
+"TVerschieben()",
+"TQ(249.9999999999999,725.9999999999995,-244,4)",
+"TA()",
+"TQ(249.9999999999999,713.9999999999995,-244,4)",
+"TS()",
+"TVerschieben()",
+"TVerschieben()",
+"TQ(1749.9999999999998,750.0000000000001,-250.00000000000003,0)",
+"TA()",
+"TQ(999.9999999999999,750.0000000000001,-250.00000000000003,0)",
+"TS()",
+"TQ(2750,677.9999999999995,-244,4)",
+"TSchneiden()",
+"TQ(249.9999999999999,701.9999999999995,-244,4)",
+"TA()",
+"TQ(-4.242640687119296,-1.4210854715202004e-14,-4.7573593128807,2)",
+"TSchneiden()",
+"TQ(-4.242640687119296,-1.4210854715202004e-14,-495.7573593128807,1)",
+"TSchneiden()",
+"TQ(0,0,0,0)",
+"TA()",
+"TQ(999.9999999999999,750.0000000000001,-250.00000000000003,0)",
+"TS()",
+"TQ(1875,375.00000000000006,-125.00000000000001,0)",
+"TD()",
+"TQ(11.107810890484668,-10.233634385069301,-19.593092264723236,2)",
+"TSchneiden()",
+"TQ(0,0,-250,0)",
+"TA()",
+"TQ(250.00000000000003,750,-250.00000000000006,1)",
+"TS()",
+"TQ(0,0,0,0)",
+"TD()",
+"TQ(-4.242640687119285,-6.661338147750939e-16,-4.242640687119286,2)",
+"TSchneiden()",
+"TQ(4.242640687119284,-2.842170943040401e-14,-504.2426406871193,1)",
+"TSchneiden()",
 ];
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   
