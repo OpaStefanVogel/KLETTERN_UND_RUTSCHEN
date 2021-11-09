@@ -31,9 +31,9 @@
   </head>
 <body onload="Beispiel3()">
 <!--canvas id="Uhr"> </canvas-->
-<div>2 Eingabebeispiele: 
-  <button onclick="Beispiel1()">REST5</button> und
-  <button onclick="Beispiel2()">GOKART</button>.
+<div>zur Zeit 3 Eingabebeispiele: 
+  <button onclick="Beispiel1()">REST5</button>,
+  <button onclick="Beispiel2()">GOKART</button> und
   <button onclick="Beispiel3()">DACH</button>.
   </div>
 <button onclick='TA()'>TA()</button>
@@ -94,6 +94,7 @@ var LT=[];
 var SCHNITTVEKTOR_AS=0;
 var SCHNITTEBENE_ASD=0;
 var MERKOBJEKT=[[],[],[],[]];
+var History=[];
   </script>
 
 <script>//globale Funktionen
@@ -252,6 +253,7 @@ var Beispiel1=function() {
   Linientyp=0; //Röhren
   Logtext2=[];
   OBJ_Y=0;
+  History=[];
 
 var BALKEN1=QUADER(200,100,150); KFILL(BALKEN1);
 var SCHNITT2=EBENE([100,0,0,1],[200,50,150,1],[200,0,90,1]);
@@ -312,6 +314,8 @@ var Beispiel2=function() {
   zoom=200;
   Linientyp=1; //dünne Linie
   Logtext2=[];
+  History=[];
+  Logflag=false;
   
   // position and point the camera to the center of the scene
   camera.position.x = -5; //5; //15;
@@ -577,11 +581,13 @@ var Beispiel3=function() {
   zoom=20;
   Linientyp=1; //dünne Linie
   Logtext2=[];
+  Logflag=false;
+  History=[];
   
   // position and point the camera to the center of the scene
-  camera.position.x = -15; //5; //15;
-  camera.position.y = 5; //5; //16;
-  camera.position.z = 12; //-12; //13
+  camera.position.x = -70; //5; //15;
+  camera.position.y = 30; //5; //16;
+  camera.position.z = 60; //-12; //13
   camera.lookAt(scene.position);
 
 /*
@@ -612,6 +618,8 @@ var Dach=[[
   AddObjekt(scene,Dach);
 
 var Balken=neuen_Balken_plazieren(0,0,50,2500,24,12);
+
+
 
 
 
@@ -852,42 +860,108 @@ LT=[
 "/*229*/ TQ(5.168210837322399,-6.273901016294456,-13.653492211560968,6)",
 "/*230*/ TSchneiden()",
 "/*231*/ TQ(2750,677.9999999999995,-244,9)",
+"/*232*/ TLoeschen()",
+"/*233*/ TQ(1000,0,0,0)",
+"/*234*/ TA()",
+"/*235*/ TA()",
+"/*236*/ TQ(1999.9999999999998,-1.8941398230550248e-14,-1.016845989170083e-12,1)",
+"/*237*/ TS()",
+"/*238*/ TQ(0,0,0,0)",
+"/*239*/ TD()",
+"/*240*/ TQ(19.593092264723055,-13.220723205830382,-25.593092264723154,9)",
+"/*241*/ TDrehen()",
+"/*242*/ TQ(2634.7965461323615,356.3896383970846,-140.79654613236158,10)",
+"/*243*/ TDrehen()",
+"/*244*/ TQ(19.593092264723055,10.779276794169618,-25.116418343310798,6)",
+"/*245*/ TA()",
+"/*246*/ TQ(19.593092264723055,10.779276794169618,-13.593092264723154,6)",
+"/*247*/ TS()",
+"/*248*/ TQ(19.593092264723055,-6.505712323711844,-13.593092264723156,6)",
+"/*249*/ TD()",
+"/*250*/ TQ(-519.593092264723,10.779276794169618,25.593092264721655,9)",
+"/*251*/ TSchneiden()",
+"/*252*/ TQ(134.79654613236147,356.3896383970846,-140.31987221094903,6)",
+"/*253*/ TA()",
+"/*254*/ TQ(134.79654613236147,356.3896383970846,-128.79654613236158,6)",
+"/*255*/ TS()",
+"/*256*/ TQ(134.79654613236147,339.1046492792034,-128.79654613236158,6)",
+"/*257*/ TD()",
+"/*258*/ TQ(-634.7965461323616,332.3896383970846,140.79654613235996,10)",
+"/*259*/ TSchneiden()",
+"/*260*/ TQ(1000,0,0,0)",
+"/*261*/ TA()",
+"/*262*/ TQ(1999.9999999999998,1.1425957100746156e-13,-6.301387192917563e-13,1)",
+"/*263*/ TS()",
+"/*264*/ TQ(0,0,0,0)",
+"/*265*/ TD()",
+"/*266*/ TQ(19.593092264723055,-1.2207232058303816,13.593092264722186,9)",
+"/*267*/ TDrehen()",
+"/*268*/ TQ(134.79654613234865,332.3896383970846,134.79654613236073,10)",
+"/*269*/ TDrehen()",
+"/*270*/ TQ(1865.2034538676512,356.3896383970846,-128.79654613236008,10)",
+"/*271*/ TA()",
+"/*272*/ TQ(1866.9004132336818,373.84291617624064,-124.61430539208087,1)",
+"/*273*/ TSchneiden()",
+"/*274*/ TQ(1980.406907735277,10.779276794169618,-13.593092264721435,9)",
+"/*275*/ TA()",
+"/*276*/ TQ(1992.2861078416015,-2.314167647519357,0.7713892158392235,1)",
+"/*277*/ TSchneiden()",
+"/*278*/ TQ(999.9999999999999,750.0000000000001,-250.00000000000003,0)",
+"/*279*/ TA()",
+"/*280*/ TQ(1750.0000000000002,750.0000000000013,-250.00000000000102,1)",
+"/*281*/ TS()",
+"/*282*/ TQ(250.00000000000006,750.0000000000002,-250,5)",
+"/*283*/ TD()",
+"/*284*/ TQ(134.79654613236178,332.3896383970846,-140.79654613236312,10)",
+"/*285*/ TKopieren()",
+"/*286*/ TDrehen()",
+"/*287*/ TQ(19.5930922647231,-13.220723205830382,-25.593092264724874,9)",
+"/*288*/ TKopieren()",
+"/*289*/ TDrehen()",
+"/*290*/ TQ(19.593092264723076,-13.220723205830382,-474.4069077352801,12)",
+"/*291*/ TA()",
+"/*292*/ TQ(-0.7713892158398657,-2.3141676475196067,-492.2861078416015,5)",
+"/*293*/ TSchneiden()",
+"/*294*/ TQ(134.79654613234857,332.3896383970846,-359.2034538676412,11)",
+"/*295*/ TA()",
+"/*296*/ TQ(120.37166470496079,361.1149941148824,-371.14305392080075,5)",
+"/*297*/ TSchneiden()",
+"/*298*/ TQ(1865.2034538676382,344.3896383970846,-359.2034538676357,11)",
+"/*299*/ TA()",
+"/*300*/ TQ(1866.9004132336809,373.8429161762398,-375.38569460792036,2)",
+"/*301*/ TSchneiden()",
+"/*302*/ TQ(1980.4069077352772,-13.220723205830382,-474.4069077352738,12)",
+"/*303*/ TA()",
+"/*304*/ TQ(1980.4069077352765,-10.23363438506948,-488.8921891095152,2)",
+"/*305*/ TSchneiden()",
+"/*306*/ TQ(2500,24,62,3)",
+"/*307*/ TLoeschen()",
+"/*308*/ TQ(1000.0000000000065,356.3896383970846,-140.79654613236158,10)",
+"/*309*/ TA()",
+"/*310*/ TQ(994.0000000000002,375,-125.00000000000003,7)",
+"/*311*/ TSchneiden()",
+"/*312*/ TQ(999.9999999999934,356.3896383970846,-371.2034538676385,11)",
+"/*313*/ TA()",
+"/*314*/ TQ(993.9999999999998,375,-375,8)",
+"/*315*/ TSchneiden()",
+"/*316*/ TQ(1000,10.779276794169618,-13.593092264723154,9)",
+"/*317*/ TA()",
+"/*318*/ TQ(1006,-7.589466384404116,-22.768399153212336,7)",
+"/*319*/ TSchneiden()",
+"/*320*/ TQ(1000.0000000000001,10.779276794169618,-474.40690773527695,3)",
+"/*321*/ TA()",
+"/*322*/ TQ(1000.0000000000001,10.779276794169618,-486.40690773527695,3)",
+"/*323*/ TSchneiden()",
+"/*324*/ TQ(994,-7.58946638440412,-477.2316008467877,8)",
+"/*325*/ TSchneiden()",
 ];
   
   
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
   
   LTeval(LT,0);
-//for (var li in LT) eval(LT[li]);
-
-
   Logfile("das war Beispiel2");
 
   function render() {
@@ -910,12 +984,14 @@ var TQ=function(x,y,z,cmin) {//setzt Koordinaten von q und damit OBJ_X
   q.position.y=y/zoom;
   q.position.z=z/zoom;
   OBJ_X=Castlist[cmin];
+  History_update();
   Logfile2();  
   }
 
 var TA=function() {//setzt Punkt A auf Punkt Q
   Logtext2.push("TA()");
   PA.position.copy(q.position); OBJ_Y=OBJ_X;
+  History_update();
   Logfile2();  
   }
 
@@ -926,6 +1002,7 @@ var TS=function() {//setzt Punkt S auf Punkt Q
   OBJ_Y=0;
   SCHNITTVEKTOR_AS=[[EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x+(PA.position.y-PS.position.y)*PA.position.y+(PA.position.z-PS.position.z)*PA.position.z)*zoom])],[TEBN],[],[]];
   KDUMP(SCHNITTVEKTOR_AS);
+  History_update();
   Logfile();
   Logfile2();  
   }
@@ -937,6 +1014,7 @@ var TD=function() {//setzt Punkt D auf Punkt Q
   OBJ_Y=0;
   SCHNITTVEKTOR_AS=0;
   SCHNITTEBENE_ASD=[[DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1])],[TEBN],[],[]];
+  History_update();
   Logfile2();  
   }
 
@@ -963,6 +1041,7 @@ var TUmdrehen=function() {//AS oder AD umdrehen
       EASD.geometry.verticesNeedUpdate = true;
       Logtext="SCHNITTEBENE_ASD nach -AD:\n";KDUMP(SCHNITTEBENE_ASD);Logfile();
       }
+  History_update();
   }
 
 var TMerken_Hilfsfunktion=function() {//
@@ -982,6 +1061,7 @@ var TMerken=function() {//legt Ebene ASD fest
   TMerken_Hilfsfunktion();
   Logtext="MERKEBENE nach TMerken():\n";
   KDUMP(MERKOBJEKT);
+  History_update();
   Logfile();
   Logfile2();  
   }
@@ -995,6 +1075,7 @@ var TKopieren=function() {//verschiebt OBJ_X um Vektor AS
   KPLOT([OBJ_X]);
   AddObjekt(scene,OBJ_X);
   SAMMELEBENE=[[],[],[],[]];
+  History_update();
   Logfile();
   Logfile2();  
   }
@@ -1008,6 +1089,7 @@ var TVerschieben=function() {//verschiebt OBJ_X um Vektor AS
   AddObjekt(scene,OBJ_X); Castlist.pop(); 
   Castlist[cind]=OBJ_X;
   SAMMELEBENE=[[],[],[],[]];
+  History_update();
   Logfile();
   Logfile2();  
   }
@@ -1022,6 +1104,7 @@ var TDrehen=function() {//dreht OBJ_X aus Vektor AS in Richtung AD erst yaw dann
   AddObjekt(scene,OBJ_X);Castlist.pop();
   Castlist[cind]=OBJ_X;
   SAMMELEBENE=[[],[],[],[]]
+  History_update();
   Logfile();
   Logfile2();  
   }
@@ -1040,6 +1123,7 @@ var TSchneiden=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
   AddObjekt(scene,OBJ_X);Castlist.pop();
   Castlist[cind]=OBJ_X;
   MERKOBJEKT=[[],[],[],[]];
+  History_update();
   Logfile();
   Logfile2();  
   }
@@ -1050,17 +1134,19 @@ var TLoeschen=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
   var cind=Castlist.indexOf(OBJ_X);
   Castlist[cind]=Castlist.pop();
   MERKOBJEKT=[[],[],[],[]];
+  History_update();
   Logfile();
   Logfile2();  
   }
 
-var TNeu=function(l,b,h,name) {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
+var TNeu=function(l,b,h,name) {
   Logtext2.push("TNeu("+l+","+b+","+h+")");
   PUNKT_A=[q.position.x*zoom,q.position.y*zoom,q.position.z*zoom,1];
   var NEU=QUADER(l,b,h); 
   KFILL(NEU); 
   NEU[5]=name;
   AddObjekt(scene,NEU);
+  History_update();
   Logfile();
   Logfile2();  
   }
@@ -1078,7 +1164,7 @@ function Logfile2(Resttext) {
   if (!Resttext) var Resttext="";
   var Log2element=document.getElementById("Log2");
   var Log2element_innerHTML='<span style="white-space:pre; font-family:monospace">\nLT=[\n';
-  for (t in Logtext2) Log2element_innerHTML=Log2element_innerHTML+'<span onclick="alert('+t+')">"/*'+t+"*/ "+Logtext2[t]+'",</span>\n';
+  for (t in Logtext2) Log2element_innerHTML=Log2element_innerHTML+'<span onclick="History_t('+t+')">"/*'+t+"*/ "+Logtext2[t]+'",</span>\n';
   Log2element_innerHTML=Log2element_innerHTML+Resttext+'];\n\  \n  </span>';
   Log2element.innerHTML=Log2element_innerHTML;
   Log2element.scrollTo({//mit dem geht Kopieren nicht
@@ -1113,7 +1199,6 @@ var LTeval=function(LT,ltind) {
   if (ltind<LT.length) setTimeout(LTeval,20,LT,ltind);
   }
   </script>
-  
   
 <script>//raycast
 function raycast ( e ) {
@@ -1154,6 +1239,21 @@ function raycast ( e ) {
   document.getElementById("Pdisp").firstChild.nodeValue=pk+dmin+"=["+[(q.position.x*zoom).toFixed(2),(q.position.y*zoom).toFixed(2),(q.position.z*zoom).toFixed(2)]+'] in "'+Castlist[cmin][5]+'"';
   }
 
+  </script>
+  
+<script>//History
+var History_update=function() {
+  var hist="";
+  for (var i in Castlist) hist=hist+"AddObjekt(scene,"+JSON.stringify(Castlist[i].slice(0,4))+");\n";
+  History.push(hist);
+  return hist;
+  }
+  
+var History_t=function(t) {
+  for (var i in Castlist) scene.remove(Castlist[i][4]);
+  Castlist=[];  
+  eval(History[t]);
+  }
   </script>
 
 <!--script>//sonstige bisher vergebliche Versuche
