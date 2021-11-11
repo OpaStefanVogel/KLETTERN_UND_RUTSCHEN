@@ -6,13 +6,13 @@ if (1==1) {
 //ok neues EGGT normalisiert und gerichtet, bisheriges EGGT ist jetzt PGGT.
 //..
 //sonst zu machen noch:
-//.. in KPLOT noch width und height anpassen
+//.. in svg-KPLOT noch width und height anpassen
 //.. überflüssige Ebenen entfernen
 //ok warum in KFILL das if drinbeiben muss, ok ist raus
-//.. wie es zu dem U==[0,0,0,0] kommt
+//.. wie es zu dem U==[0,0,0,0] kommt, parrallel vielleicht?
 //.. bei AUFDERKANTE muß wohl ein AUFDERFLAECHE auch mit dazu
 //.. wenn sich mehr als 3 Ebenen in einem Punkt schneiden ist nur behelfsweise gelöst
-//.. Keil auch nur behelfsmäßig in GERADEXEBENE, bis jetzt nuf 2 Ebenen
+//.. Keil auch nur behelfsmäßig in GERADEXEBENE, bis jetzt nur 2 Ebenen
 //.. doppeltes TEbeneASD() vermeiden
 
 Logtext="";
