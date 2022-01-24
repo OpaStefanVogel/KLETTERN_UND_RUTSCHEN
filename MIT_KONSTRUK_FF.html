@@ -29,7 +29,7 @@
     button {font-size:200%}
     </style>
   </head>
-<body onload="Beispiel3()">
+<body onload="Beispiel2()">
 <!--canvas id="Uhr"> </canvas-->
 <div>zur Zeit 3 Eingabebeispiele: 
   <button onclick="Beispiel1()">REST5</button>,
@@ -54,6 +54,7 @@
 <div style="max-width:90%;max-height:80%; height:550px; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt das render.domElement rein</div>
 <button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
 <button onclick='contr.target.copy(q.position)'>Zentrieren</button>
+<button onclick='Einzelobjekt()'>einzeln</button>
 <span id="Pdisp">...</span>;
   </div>
 <div id="Log2" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
@@ -1243,6 +1244,18 @@ var TNeu=function(l,b,h,name) {
   History_update();
   Logfile();
   Logfile2();  
+  }
+  </script>
+
+<script>//nur ein enes Objekt zeigen
+var einzeln=0;
+function Einzelobjekt() {
+  //alert(Castlist[3]);
+  for (var i=0;i<Castlist.length;i++) {
+    if (einzeln==0) if (i!=cmin) Castlist[i][4].visible=false;
+    if (einzeln==1) Castlist[i][4].visible=true;
+    }
+  einzeln=1-einzeln;
   }
   </script>
 

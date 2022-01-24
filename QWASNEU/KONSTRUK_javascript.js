@@ -14,6 +14,7 @@ if (1==1) {
 //.. wenn sich mehr als 3 Ebenen in einem Punkt schneiden ist nur behelfsweise gelöst
 //.. Keil auch nur behelfsmäßig in GERADEXEBENE, bis jetzt nur 2 Ebenen
 //.. doppeltes TEbeneASD() vermeiden
+//.. und fast übereinanderliegende Ebenen zusammenfassen
 
 Logtext="";
 Logflag=false;
