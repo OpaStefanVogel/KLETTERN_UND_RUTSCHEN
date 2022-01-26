@@ -286,7 +286,27 @@ TQ(10,30,10,0);
 TS();
 TQ(0,0,40,0);
 TD();
-TQ(50,0,0,0);
+/*6*/ TQ(73.0598058481,54.6307707698,36.8107501871,0);
+/*7*/ TA();
+/*8*/ TQ(5,50,150,0);
+/*9*/ TS();
+/*10*/ TQ(50,0,25,0);
+/*11*/ TD();
+/*12*/ TMerken();
+/*13*/ TQ(47.5,75,90,0);
+/*14*/ TA();
+/*15*/ TQ(45.9008335412,75,41.8945745584,0);
+/*16*/ TS();
+/*17*/ TQ(82.1589723069,17.1307707698,0,0);
+/*18*/ TD();
+/*19*/ TSchneiden();
+/*20*/ TQ(25.4504167706,75,26.0311116505,0);
+/*21*/ TA();
+/*22*/ TQ(86.5448886333,87.9124259819,90,0);
+/*23*/ TS();
+/*24*/ TQ(67.6002792229,95,84.4040152164,0);
+/*25*/ TD();
+/*26*/ //TSchneiden();
 
 Logtext=JSON.stringify(cube.geometry.faces)+"\n"+Logtext;
 
@@ -361,7 +381,7 @@ var Buegel=neuen_Balken_plazieren(-750,0,0,20,20,2000);
 
 
 
-
+//Logflag=true;
 LT=[
 "TQ(-232,0,0,2)",
 "TA()",
@@ -1079,7 +1099,10 @@ var TQ=function(x,y,z,cmin) {//setzt Koordinaten von q und damit OBJ_X
   q.position.y=y/zoom;
   q.position.z=z/zoom;
   OBJ_X=Castlist[cmin];
+  KDUMP(OBJ_X);
+  KPLOT([OBJ_X]);
   History_update();
+  Logfile();
   Logfile2();  
   }
 
@@ -1534,5 +1557,9 @@ FEHLERTEXT ( nr --> adr n )
   ;
   */
   </script>
+<svg height="300px">
+<path d="M0,0 L100,100 L100,200 L0,0 L200,100 L100,100 L0,0 L200,200 L200,100 L0,0 L200,200 L100,200 L0,0 L130,180 L150,120 L0,0 L170,180 L130,180 L0,0 L170,180 L150,120 L0,0 Z" stroke="none" fill="orange" fill-rule="evenodd"/>
+<path d="M10,10 L20,10 M20,20 L20,20 L10,20" stroke="green" fill="orange" fill-rule="evenodd"/>
+  </svg>
 </body>
 </html>

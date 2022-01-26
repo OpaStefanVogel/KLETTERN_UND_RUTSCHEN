@@ -210,7 +210,8 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
     //var PZZR=[PZZS[0]];
     //for (var i=1;i<PZZS.length;i++) if (PZZS[i][0]-PZZS[i-1][0]>=0.0001) PZZR.push(PZZS[i]);
     //PZZS=PZZR;
-//    if (Logflag) alert("PZZS="+JSON.stringify(PZZS));    
+//    if (Logflag) alert("PZZS="+JSON.stringify(PZZS));
+//    if (PZZS.length%2==1) alert("PZZS.length ist ungerade");
     if (Logflag) Logtext=Logtext+"  "+PZZS.length+" PZZS="+JSON.stringify(PZZS)+"\n";
 //    for (var PNR=0;PNR<(PZZS.length-1)/2;PNR++) /*if (PZZS[2*PNR][1]<=PZZS[2*PNR+1][1])*/ { //warum geht ohne if nicht?
 //      if (Logflag) Logtext=Logtext+"    neue Kante von Punkt P"+PZZS[2*PNR][1]+" bis Punkt P"+PZZS[2*PNR+1][1]+" entlang der Schnittgeraden von Ebene E"+M[0]+" und Ebene E"+M[1]+"\n";
