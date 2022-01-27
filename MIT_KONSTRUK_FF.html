@@ -1371,6 +1371,19 @@ function raycast ( e ) {
 
   </script>
   
+<script>//markObj war in KONSTRUK_javascript.js vordefiniert als alert
+markObj=function(cmin,ekpi,i,value) {
+  //alert("Hallo "+[cmin,ekpi,i,value].join("---"));
+  if (ekpi==2) TQ(value[3][0],value[3][1],value[3][2],cmin);
+  if (ekpi==1) {
+    TQ(Castlist[cmin][2][value[0]][3][0],Castlist[cmin][2][value[0]][3][1],Castlist[cmin][2][value[0]][3][2],cmin);
+    TA();
+    TQ(Castlist[cmin][2][value[1]][3][0],Castlist[cmin][2][value[1]][3][1],Castlist[cmin][2][value[1]][3][2],cmin);
+    TS();
+    }
+  }
+  </script>
+  
 <script>//History
 var History_update=function() {
   var hist="";

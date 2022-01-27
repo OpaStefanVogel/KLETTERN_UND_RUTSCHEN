@@ -313,21 +313,23 @@ var SX=SCHNITTPUNKTE(BALKEN1,SCHNITT2);
 if (Logflag) Logtext=Logtext+"SCHNITTPUNKTE(BALKEN1,SCHNITT2)="+JSON.stringify(SX)+"\n";
 
 //10a KDUMP
-
-var spanObj=function(cmin,ekp,i) {
-  var ret='<span onclick="alert(['+cmin+','+ekp+','+i+'])">'+"ekp"[ekp]+i+"</span>";
+var markObj=function(cmin,ekp,i,value) {
+  alert([cmin,ekp,i,value].join("+"));
+  }
+var spanObj=function(cmin,ekp,i,value) {
+  var ret='<span onclick="markObj('+cmin+','+ekp+','+i+','+value+')">'+"ekp"[ekp]+i+"="+value+"</span>";
   return ret;
   }
 
 //cmin ist globale Variable in MIT_KONSTRUK_FF.html
 var KDUMP=function(OBJ) {
   Logtext=Logtext+"  Ebenen: ei=[nx,ny,nz,w]\n";
-  for (var i in OBJ[0]) Logtext=Logtext+"    "+spanObj(cmin,0,i)+"="+JSON.stringify(OBJ[0][i])+"\n";
+  for (var i in OBJ[0]) Logtext=Logtext+"    "+spanObj(cmin,0,i,JSON.stringify(OBJ[0][i]))+"\n";
   Logtext=Logtext+"  Verknüpfung: T="+JSON.stringify(OBJ[1])+"\n";
   Logtext=Logtext+"  Punkte pi=[ei,ej,ek,[x,y,z,1]]:\n";
-  for (var i in OBJ[2]) Logtext=Logtext+"    p"+i+"="+JSON.stringify(OBJ[2][i])+"\n";
+  for (var i in OBJ[2]) Logtext=Logtext+"    "+spanObj(cmin,2,i,JSON.stringify(OBJ[2][i]))+"\n";
   Logtext=Logtext+"  Kanten ki=[pi,pj,ek,el,evon,ebis]:\n";
-  for (var i in OBJ[3]) Logtext=Logtext+"    k"+i+"="+JSON.stringify(OBJ[3][i])+"\n";
+  for (var i in OBJ[3]) Logtext=Logtext+"    "+spanObj(cmin,1,i,JSON.stringify(OBJ[3][i]))+"\n";
   }
 
 //11
