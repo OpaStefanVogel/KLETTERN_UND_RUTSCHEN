@@ -314,9 +314,15 @@ if (Logflag) Logtext=Logtext+"SCHNITTPUNKTE(BALKEN1,SCHNITT2)="+JSON.stringify(S
 
 //10a KDUMP
 
-var KDUMP=function(OBJ) { 
+var spanObj=function(cmin,ekp,i) {
+  var ret='<span onclick="alert(['+cmin+','+ekp+','+i+'])">'+"ekp"[ekp]+i+"</span>";
+  return ret;
+  }
+
+//cmin ist globale Variable in MIT_KONSTRUK_FF.html
+var KDUMP=function(OBJ) {
   Logtext=Logtext+"  Ebenen: ei=[nx,ny,nz,w]\n";
-  for (var i in OBJ[0]) Logtext=Logtext+"    e"+i+"="+JSON.stringify(OBJ[0][i])+"\n";
+  for (var i in OBJ[0]) Logtext=Logtext+"    "+spanObj(cmin,0,i)+"="+JSON.stringify(OBJ[0][i])+"\n";
   Logtext=Logtext+"  Verknüpfung: T="+JSON.stringify(OBJ[1])+"\n";
   Logtext=Logtext+"  Punkte pi=[ei,ej,ek,[x,y,z,1]]:\n";
   for (var i in OBJ[2]) Logtext=Logtext+"    p"+i+"="+JSON.stringify(OBJ[2][i])+"\n";
