@@ -29,7 +29,7 @@
     button {font-size:200%}
     </style>
   </head>
-<body onload="Beispiel2()">
+<body onload="Beispiel1()">
 <!--canvas id="Uhr"> </canvas-->
 <div>zur Zeit 3 Eingabebeispiele: 
   <button onclick="Beispiel1()">REST5</button>,
@@ -1374,12 +1374,34 @@ function raycast ( e ) {
 <script>//markObj war in KONSTRUK_javascript.js vordefiniert als alert
 markObj=function(cmin,ekpi,i,value) {
   //alert("Hallo "+[cmin,ekpi,i,value].join("---"));
+  var OBJC=Castlist[cmin];
+  var PC=OBJC[2]; //Punkte
+  var KC=OBJC[3]; //Kanten
+  var EC=OBJC[0]; //Ebenen
   if (ekpi==2) TQ(value[3][0],value[3][1],value[3][2],cmin);
   if (ekpi==1) {
-    TQ(Castlist[cmin][2][value[0]][3][0],Castlist[cmin][2][value[0]][3][1],Castlist[cmin][2][value[0]][3][2],cmin);
+    TQ(PC[value[0]][3][0],Castlist[cmin][2][value[0]][3][1],Castlist[cmin][2][value[0]][3][2],cmin);
     TA();
     TQ(Castlist[cmin][2][value[1]][3][0],Castlist[cmin][2][value[1]][3][1],Castlist[cmin][2][value[1]][3][2],cmin);
     TS();
+    }
+  if (ekpi==0) { 
+    var KLISTE=[];
+    var PLISTE=[];
+    var d="M0,0 ";
+    for (var j=0;j<KC.length;j++) {
+      if (KC[j][2]==i||KC[j][3]==i) {
+        KLISTE.push(j); 
+        PLISTE.push([KC[j][0],KC[j][1]]);
+        var P1=PUNKT2D(PC[KC[j][0]][3]);
+        var P2=PUNKT2D(PC[KC[j][1]][3]);
+        d=d+"L"+P1[0]+","+P1[1]+" L"+P2[0]+","+P2[1]+" L0,0 ";
+        }
+      }
+    //alert(KLISTE);
+    //alert(PLISTE.join("\n"));
+    d=d+"Z";
+    document.getElementById("Eiderdaus").setAttribute("d",d);    
     }
   }
   </script>

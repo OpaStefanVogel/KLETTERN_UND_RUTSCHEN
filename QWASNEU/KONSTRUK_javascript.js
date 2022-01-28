@@ -444,7 +444,7 @@ var KPLOT=function(KLISTE) {
       Logtext=Logtext+'<line x1="'+P1[0]+'" y1="'+P1[1]+'" x2="'+P2[0]+'" y2="'+P2[1]+'"/>\n';
       }
     }
-  Logtext=Logtext+'</svg>\n';
+  Logtext=Logtext+'<path id="Eiderdaus" d="M0,0 L40,0 L40,40 Z" fill="orange" fill-rule="evenodd" stroke="none"/></svg>\n';
   }
 
 if (Logflag) KPLOT([REST1]);
