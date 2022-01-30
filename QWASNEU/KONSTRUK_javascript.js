@@ -334,6 +334,22 @@ var KDUMP=function(OBJ) {
 
 //11
 //so, jetzt nur noch RUMPS:
+var KRED=function(OBJ) {
+  var verwendet=[];
+  for (var i=0;i<OBJ[2].length;i++) {
+    verwendet[OBJ[2][i][0]]=1;
+    verwendet[OBJ[2][i][1]]=1;
+    verwendet[OBJ[2][i][2]]=1;
+    }
+  var sum=0;
+  for (var i=0;i<OBJ[0].length;i++) if (verwendet[i]) {
+    OBJ[0][sum]=OBJ[0][i];
+    verwendet[i]=sum; 
+    sum=sum+1;
+    }
+  alert(verwendet);
+  }
+
 var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   //local TRU,ERG,P,PNEU;
   if (Logflag) Logtext=Logtext+"OBJ1=\n";
@@ -368,6 +384,7 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   if (Logflag) for (var i=0;i<ERG[2].length;i++) Logtext=Logtext+"P"+i+"="+JSON.stringify(ERG[2][i])+"\n";
 
   KFILL(ERG);
+  KRED(ERG);
   return ERG;
   }
 
