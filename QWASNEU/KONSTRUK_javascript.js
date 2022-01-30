@@ -431,8 +431,9 @@ var PUNKT2D=function(x) {
   return [x[0]+x[1]/2,x[2]+x[1]/2]; 
   }
 
+var KPLOTtext="";
 var KPLOT=function(KLISTE) {
-  Logtext=Logtext+'<svg width="400" height="300" stroke="blue">\n';
+  KPLOTtext='<svg width="400" height="300" stroke="blue">\n';
   //for (var K of KLISTE) {
   for (var iK in KLISTE) { var K=KLISTE[iK];
     //for (var KANTE of K[3]) {
@@ -441,10 +442,10 @@ var KPLOT=function(KLISTE) {
       var P2=PUNKT2D(K[2][KANTE[1]][3]);
       //PD=P2-P1;
       //Logtext=Logtext+"KPLOT von "+JSON.stringify(P1)+" nach "+JSON.stringify(P2)+"\n";
-      Logtext=Logtext+'<line x1="'+P1[0]+'" y1="'+P1[1]+'" x2="'+P2[0]+'" y2="'+P2[1]+'"/>\n';
+      KPLOTtext=KPLOTtext+'<line x1="'+P1[0]+'" y1="'+P1[1]+'" x2="'+P2[0]+'" y2="'+P2[1]+'"/>\n';
       }
     }
-  Logtext=Logtext+'<path id="Eiderdaus" d="M0,0 L40,0 L40,40 Z" fill="orange" fill-rule="evenodd" stroke="none"/></svg>\n';
+  KPLOTtext=KPLOTtext+'<path id="Eiderdaus" d="M0,0 L40,0 L40,40 Z" fill="orange" fill-rule="evenodd" stroke="none"/></svg>\n';
   }
 
 if (Logflag) KPLOT([REST1]);

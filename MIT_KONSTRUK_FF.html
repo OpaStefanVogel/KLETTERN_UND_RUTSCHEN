@@ -58,7 +58,8 @@
 <span id="Pdisp">...</span>;
   </div>
 <div id="Log2" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
-<div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:400px"> div</div>
+<div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
+<div id="KPLOTelement">KPLOT</div>
 
 <script src="QWASNEU/KONSTRUK_javascript.js"></script>
 
@@ -1103,14 +1104,14 @@ var TQ=function(x,y,z,cmin) {//setzt Koordinaten von q und damit OBJ_X
   KPLOT([OBJ_X]);
   History_update();
   Logfile();
-  Logfile2();  
+  Logfile2();
   }
 
 var TA=function() {//setzt Punkt A auf Punkt Q
   Logtext2.push("TA()");
   PA.position.copy(q.position); OBJ_Y=OBJ_X;
   History_update();
-  Logfile2();  
+  Logfile2();
   }
 
 var TS=function() {//setzt Punkt S auf Punkt Q
@@ -1122,7 +1123,7 @@ var TS=function() {//setzt Punkt S auf Punkt Q
   KDUMP(SCHNITTVEKTOR_AS);
   History_update();
   Logfile();
-  Logfile2();  
+  Logfile2();
   }
 
 var TD=function() {//setzt Punkt D auf Punkt Q
@@ -1133,7 +1134,7 @@ var TD=function() {//setzt Punkt D auf Punkt Q
   SCHNITTVEKTOR_AS=0;
   SCHNITTEBENE_ASD=[[DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1])],[TEBN],[],[]];
   History_update();
-  Logfile2();  
+  Logfile2();
   }
 
 var TUmdrehen=function() {//AS oder AD umdrehen
@@ -1181,7 +1182,7 @@ var TMerken=function() {//legt Ebene ASD fest
   KDUMP(MERKOBJEKT);
   History_update();
   Logfile();
-  Logfile2();  
+  Logfile2();
   }
 
 var TKopieren=function() {//verschiebt OBJ_X um Vektor AS
@@ -1195,7 +1196,7 @@ var TKopieren=function() {//verschiebt OBJ_X um Vektor AS
   SAMMELEBENE=[[],[],[],[]];
   History_update();
   Logfile();
-  Logfile2();  
+  Logfile2();
   }
 
 var TVerschieben=function() {//verschiebt OBJ_X um Vektor AS
@@ -1209,7 +1210,7 @@ var TVerschieben=function() {//verschiebt OBJ_X um Vektor AS
   SAMMELEBENE=[[],[],[],[]];
   History_update();
   Logfile();
-  Logfile2();  
+  Logfile2();
   }
 
 var TDrehen=function() {//dreht OBJ_X aus Vektor AS in Richtung AD erst yaw dann pitch
@@ -1224,7 +1225,7 @@ var TDrehen=function() {//dreht OBJ_X aus Vektor AS in Richtung AD erst yaw dann
   SAMMELEBENE=[[],[],[],[]]
   History_update();
   Logfile();
-  Logfile2();  
+  Logfile2();
   }
 
 var TSchneiden=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
@@ -1243,7 +1244,7 @@ var TSchneiden=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
   MERKOBJEKT=[[],[],[],[]];
   History_update();
   Logfile();
-  Logfile2();  
+  Logfile2();
   }
 
 var TLoeschen=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
@@ -1254,7 +1255,7 @@ var TLoeschen=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
   MERKOBJEKT=[[],[],[],[]];
   History_update();
   Logfile();
-  Logfile2();  
+  Logfile2();
   }
 
 var TNeu=function(l,b,h,name) {
@@ -1266,7 +1267,7 @@ var TNeu=function(l,b,h,name) {
   AddObjekt(scene,NEU);
   History_update();
   Logfile();
-  Logfile2();  
+  Logfile2();
   }
   </script>
 
@@ -1288,6 +1289,7 @@ function Logfile(Resttext) {
   if (!Resttext) var Resttext="";
   document.getElementById("Log").innerHTML='<span style="white-space:pre; font-family:monospace">'+Logtext+Resttext+"</span>";
   Logtext="";
+  document.getElementById("KPLOTelement").innerHTML=KPLOTtext;
   }
 
 function Logfile2(Resttext) {
