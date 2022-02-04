@@ -383,7 +383,7 @@ var Buegel=neuen_Balken_plazieren(-750,0,0,20,20,2000);
 
 
 //Logflag=true;
-Testflag=true;
+//Testflag=true;
 LT=[
 "TQ(-232,0,0,2)",
 "TA()",
@@ -547,12 +547,12 @@ LT=[
 "TA()",
 "TQ(138.19571096632518,387.24369123077435,798.9461971522918,6)",
 "TA()",
-"TQ(193.7,0,1620,1);KREDflag=true",
-/*"TSchneiden()",
+"TQ(193.7,0,1620,1)",
+"TSchneiden()",
 "TQ(233.0867389713242,387.27802396613663,799.0393306224815,4)",
 "TA()",
-"TQ(193.7,0,1620,1);TSchneidenflag=true;RUMPSflag=true;KREDflag=true",
-/*"TSchneiden()",
+"TQ(193.7,0,1620,1)",
+"TSchneiden()",
 
 "TQ(900,0,0,0)",
 "TNeu(160,210,2,'Schusterburg neues Dachfenster')",
@@ -567,7 +567,7 @@ LT=[
 "TQ(-900,0,0,0)",
 "TNeu(200,500,5,'neuer Putz')",
 "TQ(-900,0,5,0)",
-"TNeu(5,500,2000,'neuer Putz')",*/
+"TNeu(5,500,2000,'neuer Putz')",
   ];
   
   
@@ -1229,7 +1229,6 @@ var TDrehen=function() {//dreht OBJ_X aus Vektor AS in Richtung AD erst yaw dann
   Logfile2();
   }
 
-var TSchneidenflag=false;
 var TSchneiden=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
   Logtext2.push("TSchneiden()");
   scene.remove(OBJ_X[4]);
@@ -1238,9 +1237,7 @@ var TSchneiden=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
     TMerken_Hilfsfunktion();
     SAMMELEBENE=MERKOBJEKT;
     }
-  if (TSchneidenflag) alert("TSchneiden1");
   OBJ_X=RUMPS(OBJ_X,SAMMELEBENE,1);
-  if (TSchneidenflag) alert("TSchneiden2");
   KDUMP(OBJ_X);
   KPLOT([OBJ_X]);
   AddObjekt(scene,OBJ_X);Castlist.pop();
