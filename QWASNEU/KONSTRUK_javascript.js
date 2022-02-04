@@ -343,11 +343,28 @@ var KRED=function(OBJ) {
     }
   var sum=0;
   for (var i=0;i<OBJ[0].length;i++) if (verwendet[i]) {
-    OBJ[0][sum]=OBJ[0][i];
+    //OBJ[0][sum]=OBJ[0][i];
     verwendet[i]=sum; 
     sum=sum+1;
     }
-  alert(verwendet);
+  var T1neu=OBJ[1].slice();
+  var sum=0;
+  var vsum=0;
+  while (sum<OBJ[0].length) {
+    while(T1neu[vsum]!=1) vsum=vsum+1;
+    if (verwendet[sum]>=0) ; else T1neu[vsum]=0;
+    vsum=vsum+1;
+    sum=sum+1;
+    }
+  var Stapel=[];
+  var T2neu=[];
+  for (var i=0;i<T1neu.length;i++) {
+    if (T1neu[i]==0) Stapel.push(0);
+    if (T1neu[i]==1) {Stapel.push(1);T2neu.push(1)}
+    if (T1neu[i]==3) if (Stapel.pop()==1) {Stapel.push(1);T2neu.push(3)}
+    if (T1neu[i]==2) if (Stapel.pop()==1) if (Stapel.pop()==1) {Stapel.push(1);T2neu.push(2)} else Stapel.push(1);
+    }
+  if (T1neu.length>45) alert(verwendet+"\n"+OBJ[1]+"\n"+T1neu+"\n"+T2neu);
   }
 
 var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
