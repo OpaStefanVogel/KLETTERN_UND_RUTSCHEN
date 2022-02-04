@@ -19,6 +19,7 @@ if (1==1) {
 Logtext="";
 Logflag=false;
 Logtext=Logtext+"KONSTRUK_javascript.js laden...\n";
+var Testflag=false;
 
 var TEBN=1;
 var TAND=2;
@@ -334,19 +335,14 @@ var KDUMP=function(OBJ) {
 
 //11
 //so, jetzt nur noch RUMPS:
-var KRED=function(OBJ) {
+var KRED=function(OBJ) { if (Testflag) {
   var verwendet=[];
   for (var i=0;i<OBJ[2].length;i++) {
     verwendet[OBJ[2][i][0]]=1;
     verwendet[OBJ[2][i][1]]=1;
     verwendet[OBJ[2][i][2]]=1;
     }
-  var sum=0;
-  for (var i=0;i<OBJ[0].length;i++) if (verwendet[i]) {
-    //OBJ[0][sum]=OBJ[0][i];
-    verwendet[i]=sum; 
-    sum=sum+1;
-    }
+  var T0neu=OBJ[1].slice();
   var T1neu=OBJ[1].slice();
   var sum=0;
   var vsum=0;
@@ -361,11 +357,32 @@ var KRED=function(OBJ) {
   for (var i=0;i<T1neu.length;i++) {
     if (T1neu[i]==0) Stapel.push(0);
     if (T1neu[i]==1) {Stapel.push(1);T2neu.push(1)}
-    if (T1neu[i]==3) if (Stapel.pop()==1) {Stapel.push(1);T2neu.push(3)}
+    if (T1neu[i]==3) if (Stapel.pop()==1) {Stapel.push(1);T2neu.push(3)} else Stapel.push(0);
     if (T1neu[i]==2) if (Stapel.pop()==1) if (Stapel.pop()==1) {Stapel.push(1);T2neu.push(2)} else Stapel.push(1);
     }
-  if (T1neu.length>45) alert(verwendet+"\n"+OBJ[1]+"\n"+T1neu+"\n"+T2neu);
-  }
+  OBJ[1]=T2neu;
+  var sum=0;
+  for (var i=0;i<OBJ[0].length;i++) if (verwendet[i]) {
+    OBJ[0][sum]=OBJ[0][i];
+    verwendet[i]=sum; 
+    sum=sum+1;
+    }
+  for (var i=sum;i<OBJ[0].length;i++) OBJ[0].pop();
+  for (var i=0;i<OBJ[2].length;i++) {
+    var x=OBJ[2][i];
+    x[0]=verwendet[x[0]];
+    x[1]=verwendet[x[1]];
+    x[2]=verwendet[x[2]];
+    }
+  for (var i=0;i<OBJ[3].length;i++) {
+    var x=OBJ[3][i];
+    x[2]=verwendet[x[2]];
+    x[3]=verwendet[x[3]];
+    x[4]=verwendet[x[4]];
+    x[5]=verwendet[x[5]];
+    }
+  alert(verwendet+"\n"+T0neu+"\n"+T1neu+"\n"+T2neu);
+  } }
 
 var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   //local TRU,ERG,P,PNEU;

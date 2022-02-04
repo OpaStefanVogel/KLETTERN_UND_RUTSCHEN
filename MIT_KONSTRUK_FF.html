@@ -29,7 +29,7 @@
     button {font-size:200%}
     </style>
   </head>
-<body onload="Beispiel1()">
+<body onload="Beispiel2()">
 <!--canvas id="Uhr"> </canvas-->
 <div>zur Zeit 3 Eingabebeispiele: 
   <button onclick="Beispiel1()">REST5</button>,
@@ -383,6 +383,7 @@ var Buegel=neuen_Balken_plazieren(-750,0,0,20,20,2000);
 
 
 //Logflag=true;
+Testflag=true;
 LT=[
 "TQ(-232,0,0,2)",
 "TA()",
@@ -525,7 +526,7 @@ LT=[
 "TQ(177.50000000000006,700,-4.733165431326071e-30,3)",
 "TSchneiden()",
 "TQ(237.04536360786378,652.0196427372484,-15.000000000000014,4)",
-"TA()",
+"TA();//Testflag=true",
 "TQ(177.50000000000006,700,-4.733165431326071e-30,3)",
 "TSchneiden()",
 "TQ(190,0,1250,1)",
@@ -551,7 +552,7 @@ LT=[
 "TQ(233.0867389713242,387.27802396613663,799.0393306224815,4)",
 "TA()",
 "TQ(193.7,0,1620,1)",
-"TSchneiden()",
+/*"TSchneiden()",
 
 "TQ(900,0,0,0)",
 "TNeu(160,210,2,'Schusterburg neues Dachfenster')",
@@ -566,7 +567,7 @@ LT=[
 "TQ(-900,0,0,0)",
 "TNeu(200,500,5,'neuer Putz')",
 "TQ(-900,0,5,0)",
-"TNeu(5,500,2000,'neuer Putz')",
+"TNeu(5,500,2000,'neuer Putz')",*/
   ];
   
   
@@ -1076,7 +1077,7 @@ LT=[
 
   
   LTeval(LT,0);
-  Logfile("das war Beispiel2");
+  Logfile("das war Beispiel3");
 
   function render() {
     //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
@@ -1202,7 +1203,7 @@ var TKopieren=function() {//verschiebt OBJ_X um Vektor AS
 var TVerschieben=function() {//verschiebt OBJ_X um Vektor AS
   Logtext2.push("TVerschieben()");
   scene.remove(OBJ_X[4]); 
-  var cind=Castlist.indexOf(OBJ_X); 
+  var cind=Castlist.indexOf(OBJ_X);
   OBJ_X=TRANSFORM(OBJ_X,[[1,0,0,(PA.position.x-PS.position.x)*zoom],[0,1,0,(PA.position.y-PS.position.y)*zoom],[0,0,1,(PA.position.z-PS.position.z)*zoom],[0,0,0,1]]);
   KDUMP(OBJ_X);KPLOT([OBJ_X]);
   AddObjekt(scene,OBJ_X); Castlist.pop(); 
