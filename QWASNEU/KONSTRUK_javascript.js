@@ -335,7 +335,9 @@ var KDUMP=function(OBJ) {
 
 //11
 //so, jetzt nur noch RUMPS:
+var KREDflag=false;
 var KRED=function(OBJ) { if (Testflag) {
+  if (KREDflag) alert("KRED 0");
   var verwendet=[];
   for (var i=0;i<OBJ[2].length;i++) {
     verwendet[OBJ[2][i][0]]=1;
@@ -346,6 +348,8 @@ var KRED=function(OBJ) { if (Testflag) {
   var T1neu=OBJ[1].slice();
   var sum=0;
   var vsum=0;
+  if (KREDflag) alert("KRED 1");
+  if (KREDflag) alert(verwendet+"\n"+T0neu+"\n"+T1neu);
   while (sum<OBJ[0].length) {
     while(T1neu[vsum]!=1) vsum=vsum+1;
     if (verwendet[sum]>=0) ; else T1neu[vsum]=0;
@@ -354,6 +358,7 @@ var KRED=function(OBJ) { if (Testflag) {
     }
   var Stapel=[];
   var T2neu=[];
+  if (KREDflag) alert("KRED 2");
   for (var i=0;i<T1neu.length;i++) {
     if (T1neu[i]==0) Stapel.push(0);
     if (T1neu[i]==1) {Stapel.push(1);T2neu.push(1)}
@@ -362,12 +367,16 @@ var KRED=function(OBJ) { if (Testflag) {
     }
   OBJ[1]=T2neu;
   var sum=0;
+  if (KREDflag) alert("KRED 3");
   for (var i=0;i<OBJ[0].length;i++) if (verwendet[i]) {
     OBJ[0][sum]=OBJ[0][i];
     verwendet[i]=sum; 
     sum=sum+1;
     }
+  if (KREDflag) alert(OBJ[0].length+" sum="+sum);
+  OBJ[0]=OBJ[0].slice(0,sum);
   for (var i=sum;i<OBJ[0].length;i++) OBJ[0].pop();
+  if (KREDflag) alert(OBJ[0].length+" sum="+sum);
   for (var i=0;i<OBJ[2].length;i++) {
     var x=OBJ[2][i];
     x[0]=verwendet[x[0]];
@@ -381,15 +390,18 @@ var KRED=function(OBJ) { if (Testflag) {
     x[4]=verwendet[x[4]];
     x[5]=verwendet[x[5]];
     }
-  alert(verwendet+"\n"+T0neu+"\n"+T1neu+"\n"+T2neu);
+  if (KREDflag) alert(verwendet+"\n"+T0neu+"\n"+T1neu+"\n"+T2neu);
   } }
 
+var RUMPSflag=false;
 var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   //local TRU,ERG,P,PNEU;
   if (Logflag) Logtext=Logtext+"OBJ1=\n";
   if (Logflag) KDUMP(OBJ1);
   if (Logflag) Logtext=Logtext+"OBJ2=\n";
   if (Logflag) KDUMP(OBJ2);
+  if (RUMPSflag) alert("RUMPS 1");
+  
   //if (Logflag) Logtext=Logtext+"OBJ2="+JSON.stringify(OBJ2)+"\n";
   var TRU=OBJ1[0].length;
   var ERG=[];
@@ -400,11 +412,13 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   ERG[2]=SCHNITTPUNKTE(OBJ1,OBJ2);
   //if (Logflag) alert(8);
   //for (var P of OBJ1[2]) {
+  if (RUMPSflag) alert("RUMPS 2");
   for (var iP in OBJ1[2]) { var P=OBJ1[2][iP];
     if (Logflag) Logtext=Logtext+"OBJ1 P="+JSON.stringify(P)+" drin="+DURCHGUCKER(ERG,P[3])+"\n";
     if (DURCHGUCKER(ERG,P[3])!=3) ERG[2].push(P.slice());
     }
   //for (var P of OBJ2[2]) {
+  if (RUMPSflag) alert("RUMPS 3");
   for (var iP in OBJ2[2]) { var P=OBJ2[2][iP];
     var PNEU=P.slice();
     PNEU[0]=PNEU[0]+TRU;
@@ -414,11 +428,13 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
     if (DURCHGUCKER(ERG,P[3])!=3) ERG[2].push(PNEU);
     }
   //if (Logflag) alert(9);
+  if (RUMPSflag) alert("RUMPS 4");
   if (Logflag) Logtext=Logtext+"Punkte="+JSON.stringify(ERG[2])+"\n";
   if (Logflag) for (var i=0;i<ERG[2].length;i++) Logtext=Logtext+"P"+i+"="+JSON.stringify(ERG[2][i])+"\n";
 
   KFILL(ERG);
-  KRED(ERG);
+  if (RUMPSflag) alert("RUMPS 5");
+  if (RUMPSflag==false) KRED(ERG);
   return ERG;
   }
 
