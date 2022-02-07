@@ -485,7 +485,7 @@ var PUNKT2D=function(x) {
 
 var KPLOTtext="";
 var KPLOT=function(KLISTE) {
-  KPLOTtext='<svg width="400" height="300" stroke="blue">\n';
+  KPLOTtext='<svg width="100%" height="800" stroke="blue">\n';
   //for (var K of KLISTE) {
   for (var iK in KLISTE) { var K=KLISTE[iK];
     //for (var KANTE of K[3]) {
