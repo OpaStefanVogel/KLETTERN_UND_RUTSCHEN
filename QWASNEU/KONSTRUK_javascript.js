@@ -333,8 +333,24 @@ var KDUMP=function(OBJ) {
   for (var i in OBJ[3]) Logtext=Logtext+"    "+spanObj(cmin,1,i,JSON.stringify(OBJ[3][i]))+"\n";
   }
 
-//11
-//so, jetzt nur noch RUMPS:
+//vor 11
+//KASP fasst nahe Punkte zusammen:
+var dist=function(A,B) { return Math.sqrt((A[0]-B[0])*(A[0]-B[0])+(A[1]-B[1])*(A[1]-B[1])+(A[2]-B[2])*(A[2]-B[2])) }
+
+var KASPflag=false;
+var KASP=function(OBJ) {
+  var P=OBJ[2];
+  var Q=[];
+  for (var i=0;i<P.length;i++) {
+    var imin=i;
+    P[imin][4]=[];
+    for (var j=i;j>=0;j--) if (dist(P[j][3],P[i][3])<0.001) imin=j;
+    P[imin][4].push(i);
+    }
+  }
+
+
+//KRED reduziert die Anzahl der Ebenen:
 var KRED=function(OBJ) {
   var verwendet=[];
   for (var i=0;i<OBJ[2].length;i++) {
@@ -384,6 +400,8 @@ var KRED=function(OBJ) {
   //alert(verwendet+"\n"+T0neu+"\n"+T1neu+"\n"+T2neu);
   }
 
+//11
+//so, jetzt nur noch RUMPS:
 var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   //local TRU,ERG,P,PNEU;
   if (Logflag) Logtext=Logtext+"OBJ1=\n";
@@ -419,6 +437,7 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   if (Logflag) for (var i=0;i<ERG[2].length;i++) Logtext=Logtext+"P"+i+"="+JSON.stringify(ERG[2][i])+"\n";
 
   KFILL(ERG);
+  KASP(ERG);
   KRED(ERG);
   return ERG;
   }
