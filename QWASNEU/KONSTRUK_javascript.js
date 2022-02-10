@@ -178,9 +178,15 @@ var DFILL=function(OBJ) { //füllt eine temporäre separate Liste MERK12 mit Kan
   MERK=[];
   //for (P of OBJ[2]) {//alert(JSON.stringify(P));
   for (var iP in OBJ[2]) {var P=OBJ[2][iP]
-    if (MERK12.indexOf("["+[P[0],P[1]]+"]")==-1) {MERK12.push("["+[P[0],P[1]]+"]"); MERK.push([P[0],P[1],P[2]])}
-    if (MERK12.indexOf("["+[P[1],P[2]]+"]")==-1) {MERK12.push("["+[P[1],P[2]]+"]"); MERK.push([P[1],P[2],P[0]])}
-    if (MERK12.indexOf("["+[P[0],P[2]]+"]")==-1) {MERK12.push("["+[P[0],P[2]]+"]"); MERK.push([P[0],P[2],P[1]])}
+    if (P[5]) ; else P[5]=[P[0],P[1],P[2]];
+    for (var i=1; i<P[5].length;i++) for (var j=0;j<i;j++) if (MERK12.indexOf("["+[P[5][j],P[5][i]]+"]")==-1) {
+      MERK12.push("["+[P[5][j],P[5][i]]+"]");
+      var M=[P[5][j],P[5][i]];
+      if (j==0&&i==1) M.push(P[5][2]);
+      if (j==0&&i>1) M.push(P[5][1]);
+      if (j>0) M.push(P[5][0]);
+      MERK.push(M);
+      }
     }
   }
 DFILL(BALKEN1); 
@@ -202,10 +208,15 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
 //    if (Logflag) alert(iM+" "+MERK.length+" "+JSON.stringify(M));
     if (Logflag) Logtext=Logtext+"Kantenfluchtlinie "+M+"\n";
     var PZZT=[];
-    for (var PNR=0;PNR<OBJ[2].length;PNR++) {//alert(PNR);
-      if (M[0]==OBJ[2][PNR][0]&M[1]==OBJ[2][PNR][1]) PZZT.push([PUNKTWERT(OBJ[0][M[2]],OBJ[2][PNR][3]),PNR,OBJ[2][PNR][2]]);
-      if (M[0]==OBJ[2][PNR][1]&M[1]==OBJ[2][PNR][2]) PZZT.push([PUNKTWERT(OBJ[0][M[2]],OBJ[2][PNR][3]),PNR,OBJ[2][PNR][0]]);
-      if (M[0]==OBJ[2][PNR][0]&M[1]==OBJ[2][PNR][2]) PZZT.push([PUNKTWERT(OBJ[0][M[2]],OBJ[2][PNR][3]),PNR,OBJ[2][PNR][1]]);
+    for (var PNR=0;PNR<OBJ[2].length;PNR++) {
+      var P=OBJ[2][PNR];//alert(PNR);
+      if (P[5]) ; else P[5]=[P[0],P[1],P[2]];
+      for (var i=0; i<P[5].length;i++) for (var j=0;j<i;j++) 
+        if (M[0]==P[5][i]&M[1]==P[5][j]||M[1]==P[5][i]&M[0]==P[5][j]) {
+          if (j==0&&i==1) PZZT.push([PUNKTWERT(OBJ[0][M[2]],P[3]),PNR,P[5][2]]);
+          if (j==0&&i>1) PZZT.push([PUNKTWERT(OBJ[0][M[2]],P[3]),PNR,P[5][1]]);
+          if (j>0) PZZT.push([PUNKTWERT(OBJ[0][M[2]],P[3]),PNR,P[5][0]]);
+          }
       }
     var PZZS=PZZT.sort(Asort);
     //var PZZR=[PZZS[0]];
@@ -333,12 +344,11 @@ var KDUMP=function(OBJ) {
   for (var i in OBJ[3]) Logtext=Logtext+"    "+spanObj(cmin,1,i,JSON.stringify(OBJ[3][i]))+"\n";
   }
 
-//vor 11
-//KASP fasst nahe Punkte zusammen:
+//vor 11 RUMPS:
 var dist=function(A,B) { return Math.sqrt((A[0]-B[0])*(A[0]-B[0])+(A[1]-B[1])*(A[1]-B[1])+(A[2]-B[2])*(A[2]-B[2])) }
 
 var KASPflag=false;
-var KASP=function(OBJ) {
+var KASP=function(OBJ) {//KASP fasst nahe Punkte zusammen:
   var P=OBJ[2];
   var K=OBJ[3];
   if (KASPflag) alert("P="+P.join("\n"));
@@ -348,6 +358,7 @@ var KASP=function(OBJ) {
   for (var i=0;i<P.length;i++) {
     var imin=i;
     P[imin][4]=[];
+    if (P[i][5]) ; else P[i][5]=[P[i][0],P[i][1],P[i][2]];
     for (var j=i;j>=0;j--) if (dist(P[j][3],P[i][3])<0.001) imin=j;
     P[imin][4].push(i);
     }
@@ -356,6 +367,15 @@ var KASP=function(OBJ) {
   if (KASPflag) alert(Pneu.join("\n"));
   for (var i=0;i<Pneu.length;i++) for (var j=0;j<Pneu[i][4].length;j++) Q[Pneu[i][4][j]]=i;
   if (KASPflag) alert(Q);
+  for (var i=0;i<Pneu.length;i++) { //alle bisherigen bestimmenden Ebenen sammeln
+    var EL=[]; //Ebenenliste
+    for (var j=0;j<Pneu[i][4].length;j++) {
+      var PJ=P[Pneu[i][4][j]];//alert(P[5]);
+      for (var k=0;k<PJ[5].length;k++) if (EL.indexOf(PJ[5][k])==-1) EL.push(PJ[5][k]);
+      }
+    delete Pneu[i][4];
+    Pneu[i][5]=EL;
+    }
   if (KASPflag) alert(K.join("\n"));
   for (var i=0;i<K.length;i++) {
     K[i][0]=Q[K[i][0]];
@@ -442,9 +462,11 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   //for (var P of OBJ2[2]) {
   for (var iP in OBJ2[2]) { var P=OBJ2[2][iP];
     var PNEU=P.slice();
+    if (PNEU[5]) ; else PNEU[5]=[PNEU[0],PNEU[1],PNEU[2]];
     PNEU[0]=PNEU[0]+TRU;
     PNEU[1]=PNEU[1]+TRU;
     PNEU[2]=PNEU[2]+TRU;
+    for (var i=0;i<PNEU[5].length;i++) PNEU[5][i]=PNEU[5][i]+TRU;
     if (Logflag) Logtext=Logtext+"OBJ2 P="+JSON.stringify(P)+" drin="+DURCHGUCKER(ERG,P[3])+" als PNEU="+JSON.stringify(PNEU)+"\n";
     if (DURCHGUCKER(ERG,P[3])!=3) ERG[2].push(PNEU);
     }
@@ -453,8 +475,8 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   if (Logflag) for (var i=0;i<ERG[2].length;i++) Logtext=Logtext+"P"+i+"="+JSON.stringify(ERG[2][i])+"\n";
 
   KFILL(ERG);
-  KRED(ERG);
-  KASP(ERG);
+//  KRED(ERG);
+//  KASP(ERG);
   return ERG;
   }
 
