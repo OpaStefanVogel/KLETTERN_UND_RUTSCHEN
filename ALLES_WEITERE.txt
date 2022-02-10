@@ -1,0 +1,3 @@
+ok MERK12 wird gar nicht verwendet (nur für Logfile?), doch, für .indexOf
+.. ob if (P[5]) noch notwendig ist
+.. bei DACH ist zwischenzeitlich eine verkehrte Querlinie drin

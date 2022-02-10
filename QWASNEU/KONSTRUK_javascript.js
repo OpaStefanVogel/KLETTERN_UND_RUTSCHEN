@@ -390,10 +390,12 @@ var KASP=function(OBJ) {//KASP fasst nahe Punkte zusammen:
 var KRED=function(OBJ) {
   var verwendet=[];
   for (var i=0;i<OBJ[2].length;i++) {
-    verwendet[OBJ[2][i][0]]=1;
-    verwendet[OBJ[2][i][1]]=1;
-    verwendet[OBJ[2][i][2]]=1;
-    }
+    var x=OBJ[2][i];
+    verwendet[x[0]]=1;
+    verwendet[x[1]]=1;
+    verwendet[x[2]]=1;
+    if (x[5]) for (var j=0;j<x[5].length;j++) verwendet[x[5][j]]=1;
+   }
   var T0neu=OBJ[1].slice();
   var T1neu=OBJ[1].slice();
   var sum=0;
@@ -425,6 +427,7 @@ var KRED=function(OBJ) {
     x[0]=verwendet[x[0]];
     x[1]=verwendet[x[1]];
     x[2]=verwendet[x[2]];
+    if (x[5]) for (var j=0;j<x[5].length;j++) x[5][j]=verwendet[x[5][j]];
     }
   for (var i=0;i<OBJ[3].length;i++) {
     var x=OBJ[3][i];
@@ -476,7 +479,7 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   if (Logflag) for (var i=0;i<ERG[2].length;i++) Logtext=Logtext+"P"+i+"="+JSON.stringify(ERG[2][i])+"\n";
 
   KFILL(ERG);
-//  KRED(ERG);
+  KRED(ERG);
   KASP(ERG);
   return ERG;
   }
