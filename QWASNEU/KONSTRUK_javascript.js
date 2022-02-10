@@ -463,6 +463,7 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   for (var iP in OBJ2[2]) { var P=OBJ2[2][iP];
     var PNEU=P.slice();
     if (PNEU[5]) ; else PNEU[5]=[PNEU[0],PNEU[1],PNEU[2]];
+    PNEU[5]=PNEU[5].slice();
     PNEU[0]=PNEU[0]+TRU;
     PNEU[1]=PNEU[1]+TRU;
     PNEU[2]=PNEU[2]+TRU;
@@ -476,7 +477,7 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
 
   KFILL(ERG);
 //  KRED(ERG);
-//  KASP(ERG);
+  KASP(ERG);
   return ERG;
   }
 
