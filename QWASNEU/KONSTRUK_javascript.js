@@ -385,6 +385,30 @@ var KASP=function(OBJ) {//KASP fasst nahe Punkte zusammen:
   OBJ[2]=Pneu;
   }
 
+var KANZflag=false;
+var KANZ=function(OBJ) {//KASP fasst gleiche Kanten zusammen:
+  var P=OBJ[2];
+  var K=OBJ[3];
+  if (KANZflag) alert("P="+P.join("\n"));
+  if (KANZflag) alert("K="+K.join("\n"));
+  var Q=[];
+  for (var i=0;i<K.length;i++) {
+    var imin=i;
+    K[imin][6]=[];
+    if (K[i][7]) ; else K[i][7]=[K[i][2],K[i][3]];
+    for (var j=i;j>=0;j--) if (K[j][0]==K[i][0]&&K[j][1]==K[i][1]||K[j][0]==K[i][1]&&K[j][1]==K[i][0]) imin=j;
+    K[imin][6].push(i);
+    if (K[imin][7].indexOf(K[i][2])==-1) K[imin][7].push(K[i][2]);
+    if (K[imin][7].indexOf(K[i][3])==-1) K[imin][7].push(K[i][3]);
+    }
+  var KNEU=[];
+  for (var i=0;i<K.length;i++) if (K[i][6].length>0) KNEU.push(K[i].slice());
+  OBJ[3]=KNEU;
+  for (var i=0;i<OBJ[3].length;i++) {
+    delete OBJ[3][i][6];
+    OBJ[3][i][7]=OBJ[3][i][7].slice();
+    }
+  }
 
 //KRED reduziert die Anzahl der Ebenen:
 var KRED=function(OBJ) {
@@ -479,8 +503,9 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   if (Logflag) for (var i=0;i<ERG[2].length;i++) Logtext=Logtext+"P"+i+"="+JSON.stringify(ERG[2][i])+"\n";
 
   KFILL(ERG);
-  KRED(ERG);
-  KASP(ERG);
+  KRED(ERG); //unbenutzte Ebenen weg
+  KASP(ERG); //gleiche Punkte zusammenfassen
+  KANZ(ERG); //gleiche Kanten zusammenfassen
   return ERG;
   }
 
