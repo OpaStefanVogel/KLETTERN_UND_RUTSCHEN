@@ -229,7 +229,7 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
 //      if (Logflag) Logtext=Logtext+"    neue Kante von Punkt P"+PZZS[2*PNR][1]+" bis Punkt P"+PZZS[2*PNR+1][1]+" entlang der Schnittgeraden von Ebene E"+M[0]+" und Ebene E"+M[1]+"\n";
 //      OBJ[3].push([PZZS[2*PNR][1],PZZS[2*PNR+1][1],M[0],M[1],PZZS[2*PNR][2],PZZS[2*PNR+1][2]]);
 //      }
-    for (var PNR=1;PNR<PZZS.length;PNR++) if ((PZZS[PNR][0]-PZZS[PNR-1][0]>=0.0001)&&(DURCHGUCKER(OBJ,[
+    for (var PNR=1;PNR<PZZS.length;PNR++) if ((DURCHGUCKER(OBJ,[
     (OBJ[2][PZZS[PNR][1]][3][0]+OBJ[2][PZZS[PNR-1][1]][3][0])/2,
     (OBJ[2][PZZS[PNR][1]][3][1]+OBJ[2][PZZS[PNR-1][1]][3][1])/2,
     (OBJ[2][PZZS[PNR][1]][3][2]+OBJ[2][PZZS[PNR-1][1]][3][2])/2,
@@ -402,7 +402,7 @@ var KANZ=function(OBJ) {//KASP fasst gleiche Kanten zusammen:
     if (K[imin][7].indexOf(K[i][3])==-1) K[imin][7].push(K[i][3]);
     }
   var KNEU=[];
-  for (var i=0;i<K.length;i++) if (K[i][6].length>0) KNEU.push(K[i].slice());
+  for (var i=0;i<K.length;i++) if (K[i][6].length>0&&K[i][0]!=K[i][1]) KNEU.push(K[i].slice());
   OBJ[3]=KNEU;
   for (var i=0;i<OBJ[3].length;i++) {
     delete OBJ[3][i][6];
@@ -503,9 +503,9 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   if (Logflag) for (var i=0;i<ERG[2].length;i++) Logtext=Logtext+"P"+i+"="+JSON.stringify(ERG[2][i])+"\n";
 
   KFILL(ERG);
-  KRED(ERG); //unbenutzte Ebenen weg
   KASP(ERG); //gleiche Punkte zusammenfassen
   KANZ(ERG); //gleiche Kanten zusammenfassen
+  KRED(ERG); //unbenutzte Ebenen weg
   return ERG;
   }
 

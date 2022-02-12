@@ -3,4 +3,4 @@ ok MERK12 wird gar nicht verwendet (nur für Logfile?), doch, für .indexOf
 .. bei DACH ist zwischenzeitlich eine verkehrte Querlinie drin
 .. für die Kantenfluchtlinien auch alle ei,ej durchgehen
 ok gleiche Kanten zusammenfassen auch wieder mit bestimmenden Ebenen und dann die überflüssigen raus
-
+ok deshalb KRED() unbenutzte Ebenen entfernen erst am Schluß
