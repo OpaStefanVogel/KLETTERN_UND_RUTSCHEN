@@ -1,6 +1,16 @@
 ok MERK12 wird gar nicht verwendet (nur für Logfile?), doch, für .indexOf
-.. ob if (P[5]) noch notwendig ist
-.. bei DACH ist zwischenzeitlich eine verkehrte Querlinie drin
-.. für die Kantenfluchtlinien auch alle ei,ej durchgehen
+ok bei DACH ist zwischenzeitlich eine verkehrte Querlinie drin. ok jetzt nach neuem Ebenen entfernen ok
 ok gleiche Kanten zusammenfassen auch wieder mit bestimmenden Ebenen und dann die überflüssigen raus
 ok deshalb KRED() unbenutzte Ebenen entfernen erst am Schluß
+ok in jedem Punkt die überflüssigen Ebenen entfernen und
+ok in jeder Kante die überflüssigen Ebenen entfernen beides gleichzeitig mit
+  ok zu jedem Punkt die davon ausgehenden Kanten suchen
+  ok zu je zwei dieser Kanten die gemeinsamen Ebenen bestimmen
+  ok davon die Ebene mit kleinstem Index in "verwendet" merken
+  ok Fehlersuch Ebenennummern in P und K nahezu neu bestimmen
+  .. "verwendet2" wieder raus und x[2]=x[2]+100 auch
+.. überhaupt P[0..2] raus oder auch nicht
+.. Punkte ohne Kanten auch löschen
+.. bei Klick auf k0 die Ausgabe nicht durch Ebene ersetzen
+.. ob if (P[5]) noch notwendig ist
+.. für die Kantenfluchtlinien auch alle ei,ej durchgehen
