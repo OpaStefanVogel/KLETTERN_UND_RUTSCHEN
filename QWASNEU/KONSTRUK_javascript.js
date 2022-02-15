@@ -413,29 +413,17 @@ var KANZ=function(OBJ) {//KASP fasst gleiche Kanten zusammen:
 //KRED reduziert die Anzahl der Ebenen:
 var KRED=function(OBJ) {
   var verwendet=[];
-  var verwendet2=[];
   var KANTEN=OBJ[3];
   for (var i=0;i<OBJ[2].length;i++) {
     var x=OBJ[2][i];
-    verwendet[x[0]]=1;
-    verwendet[x[1]]=1;
-    verwendet[x[2]]=1;
-    if (x[5]) for (var j=0;j<x[5].length;j++) verwendet[x[5][j]]=1;
     //die von P ausgehenden Kanten bestimmen
     var P=OBJ[2][i];
     var KK=[]
     for (var j=0;j<KANTEN.length;j++) if (KANTEN[j][0]==i||KANTEN[j][1]==i) KK.push(j);
-    //if (KK.length>3) alert(KK);
     var KKK=[];      
     for (var j=0;j<KK.length;j++) KKK=KKK.concat(KANTEN[KK[j]][7]);
-    //if (KK.length>3) alert(KKK);
-    for (var j=0;j<KKK.length;j++) if (KKK.indexOf(KKK[j],j+1)>-1) verwendet2[KKK[j]]=1;
-    //if (KK.length>3) alert(verwendet);
-    
+    for (var j=0;j<KKK.length;j++) if (KKK.indexOf(KKK[j],j+1)>-1) verwendet[KKK[j]]=1;
     }
-  //alert("verwendet=\n"+verwendet+"\n"+verwendet2);
-  verwendet=verwendet2;
-  var T0neu=OBJ[1].slice();
   var T1neu=OBJ[1].slice();
   var sum=0;
   var vsum=0;
@@ -467,34 +455,27 @@ var KRED=function(OBJ) {
     if (verwendet[x[0]]) x[0]=verwendet[x[0]];
     if (verwendet[x[1]]) x[1]=verwendet[x[1]];
     if (verwendet[x[2]]) x[2]=verwendet[x[2]];
-    if (x[5]) {
-      var xneu=[];
-      for (var j=0;j<x[5].length;j++) if (verwendet[x[5][j]]>-1) xneu.push(verwendet[x[5][j]]);
-      x[5]=xneu.slice();
-      x[0]=x[5][0];
-      x[1]=x[5][1];
-      x[2]=x[5][2];
-      }
+    if (x[5]) ; else alert("kein x[5]");
+    var xneu=[];
+    for (var j=0;j<x[5].length;j++) if (verwendet[x[5][j]]>-1) xneu.push(verwendet[x[5][j]]);
+    x[5]=xneu.slice();
+    x[0]=x[5][0];
+    x[1]=x[5][1];
+    x[2]=x[5][2];
     }
   for (var i=0;i<OBJ[3].length;i++) {
     var x=OBJ[3][i];
-    if (verwendet[x[2]]) x[2]=verwendet[x[2]]; else x[2]=x[2]+100; 
-    if (verwendet[x[3]]) x[3]=verwendet[x[3]]; else x[3]=x[3]+100; 
-    if (verwendet[x[4]]) x[4]=verwendet[x[4]]; else x[4]=x[4]+100; 
-    if (verwendet[x[5]]) x[5]=verwendet[x[5]]; else x[5]=x[5]+100; 
-    if (x[7]) {
-      var xneu=[];
-      for (var j=0;j<x[7].length;j++) if (verwendet[x[7][j]]>-1) xneu.push(verwendet[x[7][j]]);
-      x[7]=xneu;
-      x[2]=x[7][0];
-      x[3]=x[7][1];
-      for (var j=0;j<3;j++) {
-        if (x[7].indexOf(OBJ[2][x[0]][j])==-1) x[4]=OBJ[2][x[0]][j];
-        if (x[7].indexOf(OBJ[2][x[1]][j])==-1) x[5]=OBJ[2][x[1]][j];
-        }
+    if (x[7]) ; else alert("kein x[7]");
+    var xneu=[];
+    for (var j=0;j<x[7].length;j++) if (verwendet[x[7][j]]>-1) xneu.push(verwendet[x[7][j]]);
+    x[7]=xneu;
+    x[2]=x[7][0];
+    x[3]=x[7][1];
+    for (var j=0;j<3;j++) {
+      if (x[7].indexOf(OBJ[2][x[0]][j])==-1) x[4]=OBJ[2][x[0]][j];
+      if (x[7].indexOf(OBJ[2][x[1]][j])==-1) x[5]=OBJ[2][x[1]][j];
       }
-   }
-  //alert(verwendet+"\n"+T0neu+"\n"+T1neu+"\n"+T2neu);
+    }
   }
 
 //11
