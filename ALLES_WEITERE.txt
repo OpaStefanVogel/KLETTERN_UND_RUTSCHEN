@@ -9,11 +9,13 @@ ok in jeder Kante die überflüssigen Ebenen entfernen beides gleichzeitig mit
   ok davon die Ebene mit kleinstem Index in "verwendet" merken
   ok Fehlersuch Ebenennummern in P und K nahezu neu bestimmen
   ok "verwendet2" wieder raus und x[2]=x[2]+100 auch und if (x[7]) und if (x[5])
-.. so gehts weiter: Punkte zusammenfassen schon vor Kanten bestimmen, so gehts weiter
+ok bei Klick auf k0 die Ausgabe nicht durch Ebene ersetzen, ok jetzt TQ als Kantenmitte.
+ok zur Objektbenennung auch die Objektnummer
+.. so gehts weiter: Punkte zusammenfassen schon vor Kanten bestimmen.
 .. überhaupt P[0..2] raus oder auch nicht
 .. Punkte ohne Kanten auch löschen
-.. bei Klick auf k0 die Ausgabe nicht durch Ebene ersetzen
 .. ob if (P[5]) noch notwendig ist, irgendwann alert("kein...") wieder heraus
 .. für die Kantenfluchtlinien auch alle ei,ej durchgehen
 .. SVG noch etwas einpassen
-.. zur Objektbenennung auch die Objektnummer.
+.. Klick e0 und k0 auch ins SVG zeichnen
+.. Button "merken" mit mehr als 2 Ebenen
