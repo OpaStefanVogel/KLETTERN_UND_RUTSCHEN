@@ -11,7 +11,7 @@ ok in jeder Kante die überflüssigen Ebenen entfernen beides gleichzeitig mit
   ok "verwendet2" wieder raus und x[2]=x[2]+100 auch und if (x[7]) und if (x[5])
 ok bei Klick auf k0 die Ausgabe nicht durch Ebene ersetzen, ok jetzt TQ als Kantenmitte.
 ok zur Objektbenennung auch die Objektnummer
-.. so gehts weiter: Punkte zusammenfassen schon vor Kanten bestimmen.
+ok so gehts weiter: Punkte zusammenfassen schon vor Kanten bestimmen, und schon ok
 .. überhaupt P[0..2] raus oder auch nicht
 .. Punkte ohne Kanten auch löschen
 .. ob if (P[5]) noch notwendig ist, irgendwann alert("kein...") wieder heraus

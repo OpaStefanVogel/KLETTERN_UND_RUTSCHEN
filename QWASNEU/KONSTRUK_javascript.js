@@ -350,11 +350,7 @@ var dist=function(A,B) { return Math.sqrt((A[0]-B[0])*(A[0]-B[0])+(A[1]-B[1])*(A
 var KASPflag=false;
 var KASP=function(OBJ) {//KASP fasst nahe Punkte zusammen:
   var P=OBJ[2];
-  var K=OBJ[3];
   if (KASPflag) alert("P="+P.join("\n"));
-  if (KASPflag) alert("K="+K.join("\n"));
-//  if (KASPflag) return;
-  var Q=[];
   for (var i=0;i<P.length;i++) {
     var imin=i;
     P[imin][4]=[];
@@ -364,9 +360,8 @@ var KASP=function(OBJ) {//KASP fasst nahe Punkte zusammen:
     }
   var Pneu=[];
   for (var i=0;i<P.length;i++) if (P[i][4].length>0) Pneu.push(P[i]);
-  if (KASPflag) alert(Pneu.join("\n"));
+  var Q=[];
   for (var i=0;i<Pneu.length;i++) for (var j=0;j<Pneu[i][4].length;j++) Q[Pneu[i][4][j]]=i;
-  if (KASPflag) alert(Q);
   for (var i=0;i<Pneu.length;i++) { //alle bisherigen bestimmenden Ebenen sammeln
     var EL=[]; //Ebenenliste
     for (var j=0;j<Pneu[i][4].length;j++) {
@@ -376,12 +371,6 @@ var KASP=function(OBJ) {//KASP fasst nahe Punkte zusammen:
     delete Pneu[i][4];
     Pneu[i][5]=EL;
     }
-  if (KASPflag) alert(K.join("\n"));
-  for (var i=0;i<K.length;i++) {
-    K[i][0]=Q[K[i][0]];
-    K[i][1]=Q[K[i][1]];
-    }
-  if (KASPflag) alert(K.join("\n"));
   OBJ[2]=Pneu;
   }
 
@@ -517,8 +506,8 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   if (Logflag) Logtext=Logtext+"Punkte="+JSON.stringify(ERG[2])+"\n";
   if (Logflag) for (var i=0;i<ERG[2].length;i++) Logtext=Logtext+"P"+i+"="+JSON.stringify(ERG[2][i])+"\n";
 
-  KFILL(ERG);
   KASP(ERG); //gleiche Punkte zusammenfassen
+  KFILL(ERG);
   KANZ(ERG); //gleiche Kanten zusammenfassen
   KRED(ERG); //unbenutzte Ebenen weg
   return ERG;
