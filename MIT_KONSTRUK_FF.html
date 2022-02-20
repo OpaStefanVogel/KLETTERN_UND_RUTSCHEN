@@ -29,7 +29,7 @@
     button {font-size:200%}
     </style>
   </head>
-<body onload="Beispiel4()">
+<body onload="Beispiel2()">
 <!--canvas id="Uhr"> </canvas-->
 <div>zur Zeit 3 Eingabebeispiele: 
   <button onclick="Beispiel1()">REST5</button>,
@@ -98,6 +98,7 @@ var SCHNITTVEKTOR_AS=0;
 var SCHNITTEBENE_ASD=0;
 var MERKOBJEKT=[[],[],[],[]];
 var History=[];
+var QASDzoom=10;
   </script>
 
 <script>//globale Funktionen
@@ -111,6 +112,8 @@ function init() {
   scene = new THREE.Scene();
   canvas_height=window.innerHeight;//document.getElementById("canvas").clientHeight;
   canvas_width=window.innerWidth;  //document.getElementById("canvas").clientWidth;
+  canvas_height=512;
+  canvas_width=1024;
   //alert(canvas_width+" "+canvas_height);
 
   // create a camera, which defines where we‘re looking at.
@@ -121,7 +124,7 @@ function init() {
   // create a render, sets the background color and the size
   renderer = new THREE.WebGLRenderer();
   renderer.setClearColor(0xCCCC00, 1.0);
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(canvas_width, canvas_height);
   renderer.domElement.addEventListener( 'click', raycast, false );
 
         // add light
@@ -130,7 +133,7 @@ function init() {
         scene.add(light);
 
   // create a cube and add to scene
-  var cubeGeometry = new THREE.BoxGeometry(0.1 /* 10 * Math.random()*/, 0.1, 0.1);
+  var cubeGeometry = new THREE.BoxGeometry(0.1/QASDzoom /* 10 * Math.random()*/, 0.1/QASDzoom, 0.1/QASDzoom);
 //alert(JSON.stringify(cubeGeometry.faces));
   var cubeMaterial = new THREE.MeshNormalMaterial();
   cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
@@ -140,7 +143,7 @@ function init() {
 
   //Pointer Q
   //var qGeometry = new THREE.SphereGeometry( 0.14, 32, 32 );
-  var qGeometry = new THREE.BoxGeometry(0.17, 0.17, 0.17);
+  var qGeometry = new THREE.BoxGeometry(0.17/QASDzoom, 0.17/QASDzoom, 0.17/QASDzoom);
   var qMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFF00, opacity:0.5, transparent:true } );
   q = new THREE.Mesh( qGeometry, qMaterial );
   q.position.x=205/zoom;
@@ -148,14 +151,14 @@ function init() {
   scene.add( q );
   //Knoten.push(q.position.clone());
 
-  var AGeometry = new THREE.SphereGeometry( 0.09, 32, 32 );
+  var AGeometry = new THREE.SphereGeometry( 0.09/QASDzoom, 32, 32 );
   var AMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, opacity:0.5, transparent:true } );
   PA = new THREE.Mesh( AGeometry, AMaterial );
   PA.position.x=20/zoom;
   PA.position.z=0/zoom;
   scene.add( PA );
   
-  var SGeometry = new THREE.SphereGeometry( 0.095, 32, 32 );
+  var SGeometry = new THREE.SphereGeometry( 0.095/QASDzoom, 32, 32 );
   var SMaterial = new THREE.MeshBasicMaterial( { color: 0x0000FF, opacity:0.5, transparent:true } );
   PS = new THREE.Mesh( SGeometry, SMaterial );
   PS.position.x=10/zoom;
@@ -163,7 +166,7 @@ function init() {
   PS.position.z=10/zoom;
   scene.add( PS );
 
-  var DGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
+  var DGeometry = new THREE.SphereGeometry( 0.1/QASDzoom, 32, 32 );
   var DMaterial = new THREE.MeshBasicMaterial( { color: 0xFF0000, opacity:0.5, transparent:true } );
   PD = new THREE.Mesh( DGeometry, DMaterial );
   PD.position.x=0/zoom;
@@ -548,7 +551,7 @@ LT=[
 "TA()",
 "TQ(193.7,0,1620,1)",
 "TSchneiden()",
-
+/*
 "TQ(900,0,0,0)",
 "TNeu(160,210,2,'Schusterburg neues Dachfenster')",
 "TQ(0,0,0,0)",
@@ -562,7 +565,7 @@ LT=[
 "TQ(-900,0,0,0)",
 "TNeu(200,500,5,'neuer Putz')",
 "TQ(-900,0,5,0)",
-"TNeu(5,500,2000,'neuer Putz')",
+"TNeu(5,500,2000,'neuer Putz')",*/
   ];
   
   
@@ -1481,10 +1484,10 @@ function raycast ( e ) {
   //for (var i in e) alert(i);
   //mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
   //mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
-  mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / window.innerWidth ) * 2 - 1;
-  mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / window.innerHeight/*event.target.height*/ ) * 2 + 1;
+  mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / canvas_width/*window.innerWidth*/ ) * 2 - 1;
+  mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / canvas_height/*window.innerHeight/*event.target.height*/ ) * 2 + 1;
   mouse.z = 1;
-
+//alert(JSON.stringify(camera.matrix.elements[8]));
   cmin=0;
   var dmin=0;
   var pk="p";
@@ -1507,7 +1510,8 @@ function raycast ( e ) {
       if (dist<mindist) {pk="k"; mindist=dist; cmin=c; dmin=d; pmin=[p[k[0]][3].slice(),p[k[1]][3].slice()];}
       }
     }
-  //alert("cmin="+cmin+", dmin="+dmin+",pmin="+JSON.stringify(pmin)+", mindist="+mindist);
+//alert("cmin="+cmin+", dmin="+dmin+",pmin="+JSON.stringify(pmin)+", mindist="+mindist);
+//alert(JSON.stringify((new THREE.Vector3((pmin[0][0]+pmin[1][0])/2/zoom,(pmin[0][1]+pmin[1][1])/2/zoom,(pmin[0][2]+pmin[1][2])/2/zoom)).project(camera))); 
   TQ((pmin[0][0]+pmin[1][0])/2,(pmin[0][1]+pmin[1][1])/2,(pmin[0][2]+pmin[1][2])/2,cmin);
   document.getElementById("Pdisp").firstChild.nodeValue=pk+dmin+"=["+[(q.position.x*zoom).toFixed(2),(q.position.y*zoom).toFixed(2),(q.position.z*zoom).toFixed(2)]+'] in "'+cmin+" "+Castlist[cmin][5]+'"';
   }
