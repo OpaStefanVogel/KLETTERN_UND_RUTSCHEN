@@ -29,13 +29,14 @@
     button {font-size:200%}
     </style>
   </head>
-<body onload="Beispiel2()">
+<body onload="Beispiel5()">
 <!--canvas id="Uhr"> </canvas-->
 <div>zur Zeit 3 Eingabebeispiele: 
   <button onclick="Beispiel1()">REST5</button>,
   <button onclick="Beispiel2()">GOKART</button> und
   <button onclick="Beispiel3()">DACH</button>.
   <button onclick="Beispiel4()">QUADER</button>.
+  <button onclick="Beispiel5()">FLÄCHEN</button>.
   </div>
 <button onclick='TA()'>TA()</button>
 <button onclick='TS()'>TS()</button>
@@ -56,6 +57,7 @@
 <button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
 <button onclick='contr.target.copy(q.position)'>Zentrieren</button>
 <button onclick='Einzelobjekt()'>einzeln</button>
+camera.position=[<span id="camerapos">...</span>];
 <span id="Pdisp">...</span>;
   </div>
 <div id="Log2" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
@@ -98,7 +100,7 @@ var SCHNITTVEKTOR_AS=0;
 var SCHNITTEBENE_ASD=0;
 var MERKOBJEKT=[[],[],[],[]];
 var History=[];
-var QASDzoom=10;
+var QASDzoom=1;
   </script>
 
 <script>//globale Funktionen
@@ -146,8 +148,8 @@ function init() {
   var qGeometry = new THREE.BoxGeometry(0.17/QASDzoom, 0.17/QASDzoom, 0.17/QASDzoom);
   var qMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFF00, opacity:0.5, transparent:true } );
   q = new THREE.Mesh( qGeometry, qMaterial );
-  q.position.x=205/zoom;
-  q.position.z=150/zoom;
+  //q.position.x=205/zoom;
+  //q.position.z=150/zoom;
   scene.add( q );
   //Knoten.push(q.position.clone());
 
@@ -551,7 +553,7 @@ LT=[
 "TA()",
 "TQ(193.7,0,1620,1)",
 "TSchneiden()",
-/*
+
 "TQ(900,0,0,0)",
 "TNeu(160,210,2,'Schusterburg neues Dachfenster')",
 "TQ(0,0,0,0)",
@@ -565,7 +567,7 @@ LT=[
 "TQ(-900,0,0,0)",
 "TNeu(200,500,5,'neuer Putz')",
 "TQ(-900,0,5,0)",
-"TNeu(5,500,2000,'neuer Putz')",*/
+"TNeu(5,500,2000,'neuer Putz')",
   ];
   
   
@@ -1172,6 +1174,8 @@ LT=[
 
 <script>
 var Beispiel5=function() {
+  QASDzoom=3;
+
   init();
   zoom=200;
   Linientyp=1; //dünne Linie
@@ -1179,39 +1183,39 @@ var Beispiel5=function() {
   History=[];
   Logflag=false;
   
+
   // position and point the camera to the center of the scene
-  camera.position.x = -5; //5; //15;
-  camera.position.y = 5; //5; //16;
-  camera.position.z = -12; //-12; //13
+  camera.position.x = -0.84; //5; //15;
+  camera.position.y = 2.62; //5; //16;
+  camera.position.z = 3.38; //-12; //13
   camera.lookAt(scene.position);
 
 //      " >P 0 0 0 Anlegepunkt" INTERPRET
 //      " >Q 355 115 115 Hinterbalken" INTERPRET
-var Hinterbalken=neuen_Balken_plazieren(0,0,0,355,115,115);
+//var Hinterbalken=neuen_Balken_plazieren(0,0,0,355,115,115);
 
 //      " >P 130 1250 0 Anlegepunkt" INTERPRET
 //      " >Q 120 370 120 Vorderbalken" INTERPRET
-var Vorderbalken=neuen_Balken_plazieren(130,0,1250,120,120,370);
+//var Vorderbalken=neuen_Balken_plazieren(130,0,1250,120,120,370);
 
 //Logflag=true;
-//Testflag=true;
+//Testflag=true';
+
 LT=[
-"/*0*/ TQ(0,0,0,0)",
-"/*1*/ TA()",
-"/*2*/ TQ(130,120,1250,1)",
-"/*3*/ TS()",
-"/*4*/ TQ(130,0,1250,1)",
-"/*5*/ TD()",
-"/*6*/ TQ(177.5,0,0,0)",
-"/*7*/ TSchneiden()",
-"/*8*/ TQ(355,0,0,0)",
-"/*9*/ TA()",
-"/*10*/ TQ(250,0,1250,1)",
-"/*11*/ TS()",
-"/*12*/ TQ(250,120,1250,1)",
-"/*13*/ TD()",
-"/*14*/ TQ(177.5,0,0,0)",
-"/*15*/ TSchneiden()",
+"/*0*/ TNeu(300,100,200)",
+"/*1*/ TQ(60-5,65,50,0)",
+"/*2*/ TNeu(100+0,50,60)",
+"/*3*/ TQ(60,70,100,0)",
+"/*4*/ TNeu(100,50,60)",
+"/*5*/ TQ(60,70,40,1)",
+"/*6*/ TA()",
+"/*7*/ TQ(0,0,0,0)",
+"/*8*/ TSchneiden()",
+"/*9*/ TQ(60,120,160,2)",
+"/*10*/ TA()",
+"/*11*/ TQ(0,0,0,0)",
+"/*12*/ TSchneiden()",
+"/*13*/ TQ(0,0,0,0);TA();TS();TD()",
 ];  
 
 
@@ -1228,6 +1232,7 @@ LT=[
     cube.position.copy(contr.target);
     contr.update();
     requestAnimationFrame(render);
+    document.getElementById("camerapos").firstChild.nodeValue=camera.position.x.toFixed(2)+","+camera.position.y.toFixed(2)+","+camera.position.z.toFixed(2);
     }    
   render();
   }
@@ -1536,7 +1541,7 @@ markObj=function(cmin,ekpi,i,value) {
     var PLISTE=[];
     var d="M0,0 ";
     for (var j=0;j<KC.length;j++) {
-      if (KC[j][2]==i||KC[j][3]==i) {
+      if (KC[j][7].indexOf(i)>-1) {
         KLISTE.push(j); 
         PLISTE.push([KC[j][0],KC[j][1]]);
         var P1=PUNKT2D(PC[KC[j][0]][3]);

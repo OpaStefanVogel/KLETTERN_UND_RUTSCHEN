@@ -14,11 +14,15 @@ ok zur Objektbenennung auch die Objektnummer
 ok so gehts weiter: Punkte zusammenfassen schon vor Kanten bestimmen, und schon ok
 ok SVG noch etwas einpassen, ok mit viewBox erstmal
 .. GOKART enthält Kanten mit drei bestimmenden Ebenen
+  ok A Q S D kleiner zeichnen ok mit QASDzoom
+  ok Kameraposition kopierbar machen
+  ok Beispiel5() mit zwei fast aneinanderliegenden Schneidquadern
+    .. ergibt bei dx=0 auch schon eine überflüssige Kante
+  .. Anfangswerte schon vor init() setzen
   .. Eingabe schrittweise weitergehen
-  .. Punkte anklicken scheint ungenau zu sein
+  .. Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten
     .. dazu in raycast minimaler Winkel statt minimaler Abstand
   .. das Zoomen mit Maus mit event.preventDefault()
-  ok A Q S D kleiner und übersichtlicher zeichnen ok mit QASDzoom
 .. überhaupt P[0..2] raus oder auch nicht
 .. Punkte ohne Kanten auch löschen
 .. ob if (P[5]) noch notwendig ist, irgendwann alert("kein...") wieder heraus
