@@ -360,6 +360,7 @@ var KASP=function(OBJ) {//KASP fasst nahe Punkte zusammen:
     }
   var Pneu=[];
   for (var i=0;i<P.length;i++) if (P[i][4].length>0) Pneu.push(P[i]);
+  //for (var i=0;i<P.length;i++) if ((P[i][4].length%2)!=0) Pneu.push(P[i]);
   var Q=[];
   for (var i=0;i<Pneu.length;i++) for (var j=0;j<Pneu[i][4].length;j++) Q[Pneu[i][4][j]]=i;
   for (var i=0;i<Pneu.length;i++) { //alle bisherigen bestimmenden Ebenen sammeln
@@ -368,7 +369,7 @@ var KASP=function(OBJ) {//KASP fasst nahe Punkte zusammen:
       var PJ=P[Pneu[i][4][j]];//alert(P[5]);
       for (var k=0;k<PJ[5].length;k++) if (EL.indexOf(PJ[5][k])==-1) EL.push(PJ[5][k]);
       }
-    delete Pneu[i][4];
+    //delete Pneu[i][4];
     Pneu[i][5]=EL;
     }
   OBJ[2]=Pneu;
