@@ -407,6 +407,8 @@ var KANZ=function(OBJ) {//KASP fasst gleiche Kanten zusammen:
 
 //KRED reduziert die Anzahl der Ebenen:
 var KRED=function(OBJ) {
+  //if (Logflag==true) alert("Hier geht KRED los");
+  if (Logflag==true) Logtext=Logtext+"\n\n\nKRED:\n"+OBJ[3].join("\n");
   var verwendet=[];
   var KANTEN=OBJ[3];
   for (var i=0;i<OBJ[2].length;i++) {
@@ -511,7 +513,6 @@ var KENT=function(OBJ) { //Entgraten
   OBJ[2]=PNEU;
   //und Kanten neu bestimmen
   OBJ[3]=[];
-  KFILL(OBJ);
   if (Logflag) Logtext=Logtext+"zweites KFILL beendet mit "+DURCHGUCKER(OBJ,[107.5,100,50,1])+"\n";
   }
 
@@ -558,9 +559,12 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   KFILL(ERG);
   KANZ(ERG); //gleiche Kanten zusammenfassen
   if (Logflag) Logtext=Logtext+"♦♦♦vor KRED: "+DURCHGUCKER(ERG,[70,100,50,1])+"\n";
-  if (Logflag==false) KRED(ERG); //unbenutzte Ebenen weg
+  //if (Logflag==false) KRED(ERG); //unbenutzte Ebenen weg
+  //KRED(ERG);
   if (Logflag) Logtext=Logtext+"♦♦♦nach KRED: "+DURCHGUCKER(ERG,[70,100,50,1])+"\n";
   KENT(ERG); //Entgraten
+  KFILL(ERG);
+  KANZ(ERG);
   return ERG;
   }
 
