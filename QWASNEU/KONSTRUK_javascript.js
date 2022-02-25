@@ -229,13 +229,18 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
 //      if (Logflag) Logtext=Logtext+"    neue Kante von Punkt P"+PZZS[2*PNR][1]+" bis Punkt P"+PZZS[2*PNR+1][1]+" entlang der Schnittgeraden von Ebene E"+M[0]+" und Ebene E"+M[1]+"\n";
 //      OBJ[3].push([PZZS[2*PNR][1],PZZS[2*PNR+1][1],M[0],M[1],PZZS[2*PNR][2],PZZS[2*PNR+1][2]]);
 //      }
-    for (var PNR=1;PNR<PZZS.length;PNR++) if ((DURCHGUCKER(OBJ,[
+    for (var PNR=1;PNR<PZZS.length;PNR++) {
+      var PNT=[
     (OBJ[2][PZZS[PNR][1]][3][0]+OBJ[2][PZZS[PNR-1][1]][3][0])/2,
     (OBJ[2][PZZS[PNR][1]][3][1]+OBJ[2][PZZS[PNR-1][1]][3][1])/2,
     (OBJ[2][PZZS[PNR][1]][3][2]+OBJ[2][PZZS[PNR-1][1]][3][2])/2,
-    1])==2)) {
-      if (Logflag) Logtext=Logtext+"    neue Kante von Punkt P"+PZZS[PNR-1][1]+" bis Punkt P"+PZZS[PNR][1]+" entlang der Schnittgeraden von Ebene E"+M[0]+" und Ebene E"+M[1]+"\n";
-      OBJ[3].push([PZZS[PNR-1][1],PZZS[PNR][1],M[0],M[1],PZZS[PNR-1][2],PZZS[PNR][2]]);
+    1];
+      var DU=DURCHGUCKER(OBJ,PNT);
+      if (Logflag) Logtext=Logtext+"    PNT=["+PNT+"] DU="+DU+"\n";
+      if (DU==2) {
+        if (Logflag) Logtext=Logtext+"    neue Kante von Punkt P"+PZZS[PNR-1][1]+" bis Punkt P"+PZZS[PNR][1]+" entlang der Schnittgeraden von Ebene E"+M[0]+" und Ebene E"+M[1]+"\n";
+        OBJ[3].push([PZZS[PNR-1][1],PZZS[PNR][1],M[0],M[1],PZZS[PNR-1][2],PZZS[PNR][2]]);
+        }
       }
     }
   }
@@ -481,6 +486,9 @@ var KENT=function(OBJ) { //Entgraten
     for (var j=0;j<i;j++) if (dist4(E[i],E[i-j-1])<0.0001) F[i]=i-j-1;
     }
   for (var i=0;i<P.length;i++) { //Ebenennummern austauschen
+    P[i][0]=F[P[i][0]];
+    P[i][1]=F[P[i][1]];
+    P[i][2]=F[P[i][2]];
     var P5neu=[];
     for (var j=0;j<P[i][5].length;j++) if (P5neu.indexOf(F[P[i][5][j]])==-1) P5neu.push(F[P[i][5][j]]);
     P[i][5]=P5neu;
@@ -496,9 +504,15 @@ var KENT=function(OBJ) { //Entgraten
       }
     if (Dneu.length>0) G.push(i);
     }
-  if (Logflag==true) alert("Entgraten:\nfast gleiche Ebenen=["+F+"]\nGratpunkte=["+G+"]\n");
-  //hier noch Gratpunkte entfernen
+  //if (Logflag==true) alert("Entgraten:\nfast gleiche Ebenen=["+F+"]\nGratpunkte=["+G+"]\n");
+  //jetzt die Gratpunkte entfernen
+  var PNEU=[];
+  for (var i=0;i<P.length;i++) if (G.indexOf(i)==-1) PNEU.push(P[i].slice());
+  OBJ[2]=PNEU;
   //und Kanten neu bestimmen
+  OBJ[3]=[];
+  KFILL(OBJ);
+  if (Logflag) Logtext=Logtext+"zweites KFILL beendet mit "+DURCHGUCKER(OBJ,[107.5,100,50,1])+"\n";
   }
 
 //11
@@ -543,7 +557,9 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   KASP(ERG); //gleiche Punkte zusammenfassen
   KFILL(ERG);
   KANZ(ERG); //gleiche Kanten zusammenfassen
-  KRED(ERG); //unbenutzte Ebenen weg
+  if (Logflag) Logtext=Logtext+"♦♦♦vor KRED: "+DURCHGUCKER(ERG,[70,100,50,1])+"\n";
+  if (Logflag==false) KRED(ERG); //unbenutzte Ebenen weg
+  if (Logflag) Logtext=Logtext+"♦♦♦nach KRED: "+DURCHGUCKER(ERG,[70,100,50,1])+"\n";
   KENT(ERG); //Entgraten
   return ERG;
   }
