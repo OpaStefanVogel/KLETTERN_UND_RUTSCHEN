@@ -468,6 +468,39 @@ var KRED=function(OBJ) {
     }
   }
 
+var dist4=function(A,B) { return Math.sqrt((A[0]-B[0])*(A[0]-B[0])+(A[1]-B[1])*(A[1]-B[1])+(A[2]-B[2])*(A[2]-B[2])+(A[3]-B[3])*(A[3]-B[3])) }
+
+var KENT=function(OBJ) { //Entgraten
+  var E=OBJ[0];
+  var P=OBJ[2];
+  var K=OBJ[3]; 
+  var F=[]; //fast gleiche Ebenen
+  var G=[]; //Gratpunkte
+  for (var i=0;i<E.length;i++) { //fast gleiche Ebenen finden
+    F[i]=i;
+    for (var j=0;j<i;j++) if (dist4(E[i],E[i-j-1])<0.0001) F[i]=i-j-1;
+    }
+  for (var i=0;i<P.length;i++) { //Ebenennummern austauschen
+    var P5neu=[];
+    for (var j=0;j<P[i][5].length;j++) if (P5neu.indexOf(F[P[i][5][j]])==-1) P5neu.push(F[P[i][5][j]]);
+    P[i][5]=P5neu;
+    }
+  for (var i=0;i<P.length;i++) { //alle Punkte
+    var D=F.slice(); //Durchschnittsmenge
+    for (var j=0;j<K.length;j++) { //alle Kanten
+      if (K[j][0]==i||K[j][1]==i) { //wenn K[j] von P[i] ausgeht
+        var Dneu=[]; //neuer Durchschnitt
+        for (var k=0;k<K[j][7].length;k++) if (D.indexOf(F[K[j][7][k]])>-1) Dneu.push(F[K[j][7][k]]);
+        D=Dneu;
+        }
+      }
+    if (Dneu.length>0) G.push(i);
+    }
+  if (Logflag==true) alert("Entgraten:\nfast gleiche Ebenen=["+F+"]\nGratpunkte=["+G+"]\n");
+  //hier noch Gratpunkte entfernen
+  //und Kanten neu bestimmen
+  }
+
 //11
 //so, jetzt nur noch RUMPS:
 var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
@@ -511,6 +544,7 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   KFILL(ERG);
   KANZ(ERG); //gleiche Kanten zusammenfassen
   KRED(ERG); //unbenutzte Ebenen weg
+  KENT(ERG); //Entgraten
   return ERG;
   }
 
