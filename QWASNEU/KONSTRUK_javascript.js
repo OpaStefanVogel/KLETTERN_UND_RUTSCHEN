@@ -350,12 +350,32 @@ var KDUMP=function(OBJ) {
   }
 
 //vor 11 RUMPS:
-var KEBN=function(OBJ) {
+var dist=function(A,B) { return Math.sqrt((A[0]-B[0])*(A[0]-B[0])+(A[1]-B[1])*(A[1]-B[1])+(A[2]-B[2])*(A[2]-B[2])) }
+var dist4=function(A,B) { return Math.sqrt((A[0]-B[0])*(A[0]-B[0])+(A[1]-B[1])*(A[1]-B[1])+(A[2]-B[2])*(A[2]-B[2])+(A[3]-B[3])*(A[3]-B[3])) }
+var dist4M=function(A,B) { return Math.sqrt((A[0]+B[0])*(A[0]+B[0])+(A[1]+B[1])*(A[1]+B[1])+(A[2]+B[2])*(A[2]+B[2])+(A[3]+B[3])*(A[3]+B[3])) }
+
+var KEBN=function(OBJ) { //fast gleiche Ebenen finden
   var E=OBJ[0];
-  for (var i=0;i<E.length;i++) E[i][10]=0;
+  for (var i=0;i<E.length;i++) {
+    E[i][4]=i;
+    for (var j=0;j<i;j++) {
+      if (dist4(E[i],E[i-j-1])<0.0001) E[i][4]=i-j-1;
+      if (dist4M(E[i],E[i-j-1])<0.0001) E[i][4]=-(i-j-1)-1;
+      }
+    }
   }
 
-var dist=function(A,B) { return Math.sqrt((A[0]-B[0])*(A[0]-B[0])+(A[1]-B[1])*(A[1]-B[1])+(A[2]-B[2])*(A[2]-B[2])) }
+var KPBN=function(OBJ) { //Ebenen aus Punkten entfernen
+  var E=OBJ[0];
+  var P=OBJ[2];
+  for (var i=0;i<P.length;i++) { var p=P[i];
+    var p5neu=[];
+    for (var j=0;j<p[5].length;j++) {
+      if (p5neu.indexOf(E[p[5][j]][4])==-1) p5neu.push(E[p[5][j]][4]);
+      }
+    p[5]=p5neu;
+    }  
+  }
 
 var KASPflag=false;
 var KASP=function(OBJ) {//KASP fasst nahe Punkte zusammen:
@@ -480,38 +500,25 @@ var KRED=function(OBJ) {
     }
   }
 
-var dist4=function(A,B) { return Math.sqrt((A[0]-B[0])*(A[0]-B[0])+(A[1]-B[1])*(A[1]-B[1])+(A[2]-B[2])*(A[2]-B[2])+(A[3]-B[3])*(A[3]-B[3])) }
-
 var KENT=function(OBJ) { //Entgraten
   var E=OBJ[0];
   var P=OBJ[2];
   var K=OBJ[3]; 
-  var F=[]; //fast gleiche Ebenen
   var G=[]; //Gratpunkte
-  for (var i=0;i<E.length;i++) { //fast gleiche Ebenen finden
-    F[i]=i;
-    for (var j=0;j<i;j++) if (dist4(E[i],E[i-j-1])<0.0001) F[i]=i-j-1;
-    }
-  for (var i=0;i<P.length;i++) { //Ebenennummern austauschen
-    P[i][0]=F[P[i][0]];
-    P[i][1]=F[P[i][1]];
-    P[i][2]=F[P[i][2]];
-    var P5neu=[];
-    for (var j=0;j<P[i][5].length;j++) if (P5neu.indexOf(F[P[i][5][j]])==-1) P5neu.push(F[P[i][5][j]]);
-    P[i][5]=P5neu;
-    }
   for (var i=0;i<P.length;i++) { //alle Punkte
-    var D=F.slice(); //Durchschnittsmenge
+    var D=[]; //Durchschnittsmenge
+    for (var k=0;k<E.length;k++) D.push(k);
     for (var j=0;j<K.length;j++) { //alle Kanten
       if (K[j][0]==i||K[j][1]==i) { //wenn K[j] von P[i] ausgeht
         var Dneu=[]; //neuer Durchschnitt
-        for (var k=0;k<K[j][7].length;k++) if (D.indexOf(F[K[j][7][k]])>-1) Dneu.push(F[K[j][7][k]]);
+        for (var k=0;k<K[j][7].length;k++) if (D.indexOf(K[j][7][k])>-1) Dneu.push(K[j][7][k]);
         D=Dneu;
+//  if (Logflag==true) alert("Dneu=["+Dneu+"]\n");
         }
       }
     if (Dneu.length>0) G.push(i);
     }
-  //if (Logflag==true) alert("Entgraten:\nfast gleiche Ebenen=["+F+"]\nGratpunkte=["+G+"]\n");
+  if (Logflag==true) alert("Entgraten:\nGratpunkte=["+G+"]\n");
   //jetzt die Gratpunkte entfernen
   var PNEU=[];
   for (var i=0;i<P.length;i++) if (G.indexOf(i)==-1) PNEU.push(P[i].slice());
@@ -560,13 +567,14 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   if (Logflag) Logtext=Logtext+"Punkte="+JSON.stringify(ERG[2])+"\n";
   if (Logflag) for (var i=0;i<ERG[2].length;i++) Logtext=Logtext+"P"+i+"="+JSON.stringify(ERG[2][i])+"\n";
 
-  KEBN (ERG); //gleiche Ebenen bestimmen
+  KEBN(ERG); //gleiche Ebenen bestimmen
   KASP(ERG); //gleiche Punkte zusammenfassen
+  KPBN(ERG); //Ebenen aus Punkten entfernen
   KFILL(ERG);
-//  KANZ(ERG); //gleiche Kanten zusammenfassen
-  //KRED(ERG); Ebenen entfernen muß ganz weg
-//  KENT(ERG); //Entgraten
-//  KFILL(ERG);
+  KANZ(ERG); //gleiche Kanten zusammenfassen
+  //KRED(ERG); Ebenen selbst entfernen nicht mehr machen
+  KENT(ERG); //Entgraten
+  KFILL(ERG);
 //  KANZ(ERG);
   return ERG;
   }
@@ -587,7 +595,7 @@ var MMULT=function(A,T) {
     RET[i]=[];
     for (var j=0;j<T.length;j++) {
       s=0;
-      for (var k=0;k<4/*A[0].length*/;k++) {
+      for (var k=0;k<4/*A[0].length*/;k++) {//vorübergehend nur k=0,2,3 wegen KEBN()
         s=s+A[i][k]*T[k][j];
         }
       RET[i][j]=s;
