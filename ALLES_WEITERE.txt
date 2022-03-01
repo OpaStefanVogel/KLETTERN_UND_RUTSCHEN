@@ -16,8 +16,9 @@ ok SVG noch etwas einpassen, ok mit viewBox erstmal
 .. GOKART enthält Kanten mit drei bestimmenden Ebenen
   ok A Q S D kleiner zeichnen ok mit QASDzoom
   ok Kameraposition kopierbar machen
-  ok Beispiel5() mit zwei fast aneinanderliegenden Schneidquadern
-    .. ergibt bei dx=0 auch schon eine überflüssige Kante
+  .. Beispiel5() mit zwei fast aneinanderliegenden Schneidquadern
+    .. ergibt bei dx=0 auch schon eine überflüssige Kante, klar warum: P1 P2 P3 P5 liegen alle in 2 Ebenen.
+    .. überflüssige Ebenen nicht mehr entfernen, sondern als nicht verwendet markieren
   .. Anfangswerte schon vor init() setzen
   .. Eingabe schrittweise weitergehen
   .. Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten

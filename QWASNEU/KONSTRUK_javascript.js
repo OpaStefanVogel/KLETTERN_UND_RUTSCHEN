@@ -350,6 +350,11 @@ var KDUMP=function(OBJ) {
   }
 
 //vor 11 RUMPS:
+var KEBN=function(OBJ) {
+  var E=OBJ[0];
+  for (var i=0;i<E.length;i++) E[i][10]=0;
+  }
+
 var dist=function(A,B) { return Math.sqrt((A[0]-B[0])*(A[0]-B[0])+(A[1]-B[1])*(A[1]-B[1])+(A[2]-B[2])*(A[2]-B[2])) }
 
 var KASPflag=false;
@@ -555,16 +560,14 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   if (Logflag) Logtext=Logtext+"Punkte="+JSON.stringify(ERG[2])+"\n";
   if (Logflag) for (var i=0;i<ERG[2].length;i++) Logtext=Logtext+"P"+i+"="+JSON.stringify(ERG[2][i])+"\n";
 
+  KEBN (ERG); //gleiche Ebenen bestimmen
   KASP(ERG); //gleiche Punkte zusammenfassen
   KFILL(ERG);
-  KANZ(ERG); //gleiche Kanten zusammenfassen
-  if (Logflag) Logtext=Logtext+"♦♦♦vor KRED: "+DURCHGUCKER(ERG,[70,100,50,1])+"\n";
-  //if (Logflag==false) KRED(ERG); //unbenutzte Ebenen weg
-  //KRED(ERG);
-  if (Logflag) Logtext=Logtext+"♦♦♦nach KRED: "+DURCHGUCKER(ERG,[70,100,50,1])+"\n";
-  KENT(ERG); //Entgraten
-  KFILL(ERG);
-  KANZ(ERG);
+//  KANZ(ERG); //gleiche Kanten zusammenfassen
+  //KRED(ERG); Ebenen entfernen muß ganz weg
+//  KENT(ERG); //Entgraten
+//  KFILL(ERG);
+//  KANZ(ERG);
   return ERG;
   }
 
@@ -584,7 +587,7 @@ var MMULT=function(A,T) {
     RET[i]=[];
     for (var j=0;j<T.length;j++) {
       s=0;
-      for (var k=0;k<A[0].length;k++) {
+      for (var k=0;k<4/*A[0].length*/;k++) {
         s=s+A[i][k]*T[k][j];
         }
       RET[i][j]=s;
@@ -650,7 +653,6 @@ var KPLOT=function(KLISTE) {
       KPLOTtext=KPLOTtext+'<line x1="'+P1[0]+'" y1="'+P1[1]+'" x2="'+P2[0]+'" y2="'+P2[1]+'"/>\n';
       }
     }
-  //alert(xmin+" "+xmax+" "+ymin+" "+ymax);
   KPLOTtext='<svg width="100%" height="400" viewBox="'+xmin+" "+ymin+" "+(xmax-xmin)+" "+(ymax-ymin)+'" stroke="blue">\n'+KPLOTtext;
   KPLOTtext=KPLOTtext+'<path id="Eiderdaus" d="M0,0 L40,0 L40,40 Z" fill="orange" fill-rule="evenodd" stroke="none"/></svg>\n';
   }
