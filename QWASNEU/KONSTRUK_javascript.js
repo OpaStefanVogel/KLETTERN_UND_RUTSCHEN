@@ -518,13 +518,13 @@ var KENT=function(OBJ) { //Entgraten
       }
     if (Dneu.length>0) G.push(i);
     }
-  if (Logflag==true) alert("Entgraten:\nGratpunkte=["+G+"]\n");
+  //if (Logflag==true) alert("Entgraten:\nGratpunkte=["+G+"]\n");
   //jetzt die Gratpunkte entfernen
   var PNEU=[];
   for (var i=0;i<P.length;i++) if (G.indexOf(i)==-1) PNEU.push(P[i].slice());
   OBJ[2]=PNEU;
   //und Kanten neu bestimmen
-  OBJ[3]=[];
+  //OBJ[3]=[];
   if (Logflag) Logtext=Logtext+"zweites KFILL beendet mit "+DURCHGUCKER(OBJ,[107.5,100,50,1])+"\n";
   }
 
@@ -572,10 +572,10 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   KPBN(ERG); //Ebenen aus Punkten entfernen
   KFILL(ERG);
   KANZ(ERG); //gleiche Kanten zusammenfassen
-  //KRED(ERG); Ebenen selbst entfernen nicht mehr machen
+  //KRED(ERG); Ebenen selbst entfernen nicht mehr
   KENT(ERG); //Entgraten
   KFILL(ERG);
-//  KANZ(ERG);
+  KANZ(ERG);
   return ERG;
   }
 
