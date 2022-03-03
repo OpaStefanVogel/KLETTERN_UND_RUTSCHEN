@@ -360,7 +360,7 @@ var KEBN=function(OBJ) { //fast gleiche Ebenen finden
     E[i][4]=i;
     for (var j=0;j<i;j++) {
       if (dist4(E[i],E[i-j-1])<0.0001) E[i][4]=i-j-1;
-      if (dist4M(E[i],E[i-j-1])<0.0001) E[i][4]=-(i-j-1)-1;
+      if (dist4M(E[i],E[i-j-1])<0.0001) E[i][4]=i-j-1;//-(i-j-1)-1;
       }
     }
   }
@@ -528,6 +528,32 @@ var KENT=function(OBJ) { //Entgraten
   if (Logflag) Logtext=Logtext+"zweites KFILL beendet mit "+DURCHGUCKER(OBJ,[107.5,100,50,1])+"\n";
   }
 
+var MADD=function(p1,p2) {return [p1[0]+p2[0],p1[1]+p2[1],p1[2]+p2[2],1]}
+
+var KRWG=function(OBJ) { //Kanten entfernen räumlich
+  var E=OBJ[0];
+  var P=OBJ[2];
+  var K=OBJ[3];
+  var W=[]; //zu entfernende Kanten
+  var KNEU=[];
+  for (var i=0;i<K.length;i++) {
+    var p1=P[K[i][0]][3];
+    var p2=P[K[i][1]][3];
+    var M=[(p1[0]+p2[0])/2,(p1[1]+p2[1])/2,(p1[2]+p2[2])/2]; //Kantenmittelpunkt
+    var flag=true;
+    var f1=DURCHGUCKER(OBJ,MADD(M,[0.01,0.01,0.01,1]));
+    if (DURCHGUCKER(OBJ,MADD(M,[0.01,0.01,-0.01,1]))!=f1) flag=false;
+    if (DURCHGUCKER(OBJ,MADD(M,[0.01,-0.01,0.01,1]))!=f1) flag=false;
+    if (DURCHGUCKER(OBJ,MADD(M,[0.01,-0.01,-0.01,1]))!=f1) flag=false;
+    if (DURCHGUCKER(OBJ,MADD(M,[-0.01,0.01,0.01,1]))!=f1) flag=false;
+    if (DURCHGUCKER(OBJ,MADD(M,[-0.01,0.01,-0.01,1]))!=f1) flag=false;
+    if (DURCHGUCKER(OBJ,MADD(M,[-0.01,-0.01,0.01,1]))!=f1) flag=false;
+    if (DURCHGUCKER(OBJ,MADD(M,[-0.01,-0.01,-0.01,1]))!=f1) flag=false;
+    if (flag==false) KNEU.push(K[i]); 
+    }
+  OBJ[3]=KNEU;
+  }
+
 //11
 //so, jetzt nur noch RUMPS:
 var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
@@ -576,6 +602,7 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   KENT(ERG); //Entgraten
   KFILL(ERG);
   KANZ(ERG);
+  KRWG(ERG); //Kanten entfernen räumlich
   return ERG;
   }
 
