@@ -19,8 +19,8 @@ ok SVG noch etwas einpassen, ok mit viewBox erstmal
   .. Beispiel5() mit zwei fast aneinanderliegenden Schneidquadern
     ok doppelte Ebenen nur einfach verwenden, entgegengesetzt doppelte als pj=-pj-1 laufen mit durch
     ok ergibt bei dx=0 auch schon eine überflüssige Kante, klar warum: P1 P2 P3 P5 liegen alle in 2 Ebenen.ok dx=0 geht
-    .. dz=0 wie da weiter? Keine Idee.
-    .. überflüssige Ebenen nicht mehr entfernen, sondern als nicht verwendet markieren
+    ok überflüssige Ebenen nicht mehr entfernen, sondern als nicht verwendet markieren, ok durch Anzahl der daraufliegenden Kanten
+    .. dz=0 wie da weiter? Keine Idee. Aha in KRWG() die bestimmenden Ebenen bestimmen und wenn weniger 2 dann Kante weg.
   .. Anfangswerte schon vor init() setzen
   .. Eingabe schrittweise weitergehen
   .. Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten

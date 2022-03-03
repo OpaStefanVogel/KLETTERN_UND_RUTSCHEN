@@ -551,7 +551,10 @@ var KRWG=function(OBJ) { //Kanten entfernen räumlich
     if (DURCHGUCKER(OBJ,MADD(M,[-0.01,-0.01,-0.01,1]))!=f1) flag=false;
     if (flag==false) KNEU.push(K[i]); 
     }
-  OBJ[3]=KNEU;
+  OBJ[3]=KNEU;K=KNEU;
+  for (var i=0;i<E.length;i++) E[i][5]=0;
+  for (var i=0;i<K.length;i++) for (var j=0;j<K[i][7].length;j++) E[K[i][7][j]][5]=E[K[i][7][j]][5]+1;
+
   }
 
 //11
