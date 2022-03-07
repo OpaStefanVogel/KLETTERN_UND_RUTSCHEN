@@ -530,26 +530,31 @@ var KENT=function(OBJ) { //Entgraten
 
 var MADD=function(p1,p2) {return [p1[0]+p2[0],p1[1]+p2[1],p1[2]+p2[2],1]}
 
+var KREUZ=function(a,b) { //Kreuzprodukkt
+  return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0],1];
+  }
+
 var KRWG=function(OBJ) { //Kanten entfernen räumlich
   var E=OBJ[0];
   var P=OBJ[2];
   var K=OBJ[3];
   var W=[]; //zu entfernende Kanten
+  var eps=0.01;
   var KNEU=[];
   for (var i=0;i<K.length;i++) {
     var p1=P[K[i][0]][3];
     var p2=P[K[i][1]][3];
     var M=[(p1[0]+p2[0])/2,(p1[1]+p2[1])/2,(p1[2]+p2[2])/2]; //Kantenmittelpunkt
-    var flag=false;
-    var f1=DURCHGUCKER(OBJ,MADD(M,[0.01,0.01,0.01,1]));
-    if (DURCHGUCKER(OBJ,MADD(M,[0.01,0.01,-0.01,1]))!=f1) flag=false;
-    if (DURCHGUCKER(OBJ,MADD(M,[0.01,-0.01,0.01,1]))!=f1) flag=false;
-    if (DURCHGUCKER(OBJ,MADD(M,[0.01,-0.01,-0.01,1]))!=f1) flag=false;
-    if (DURCHGUCKER(OBJ,MADD(M,[-0.01,0.01,0.01,1]))!=f1) flag=false;
-    if (DURCHGUCKER(OBJ,MADD(M,[-0.01,0.01,-0.01,1]))!=f1) flag=false;
-    if (DURCHGUCKER(OBJ,MADD(M,[-0.01,-0.01,0.01,1]))!=f1) flag=false;
-    if (DURCHGUCKER(OBJ,MADD(M,[-0.01,-0.01,-0.01,1]))!=f1) flag=false;
-    if (flag==false) KNEU.push(K[i]); 
+    var d=dist(p1,p2);
+    var V=[(p2[0]-p1[0])/d*eps,(p2[1]-p1[1])/d*eps,(p2[2]-p1[2])/d*eps]; //Kantentangente*eps
+    Logtext=Logtext+"KRWG "+i+" d="+d+" ["+K[i][7]+"] V="+V+"\n";
+    var ezahl=0; //Anzahl verwendeter Ebenen
+    for (var j=0;j<K[i][7].length;j++) {
+      Logtext=Logtext+"  E"+K[i][7][j]+" VxE=["+KREUZ(V,E[K[i][7][j]])+"]\n";
+      if ((DURCHGUCKER(OBJ,MADD(M,KREUZ(V,E[K[i][7][j]])))==2)||(DURCHGUCKER(OBJ,MADD(M,KREUZ(E[K[i][7][j]],V)))==2)) ezahl=ezahl+1;
+      }
+    if (ezahl>1) KNEU.push(K[i]);
+    Logtext=Logtext+"    "+ezahl+"\n";
     }
   OBJ[3]=KNEU;K=KNEU;
   for (var i=0;i<E.length;i++) E[i][5]=0;
