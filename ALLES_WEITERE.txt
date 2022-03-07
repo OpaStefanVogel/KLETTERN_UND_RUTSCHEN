@@ -22,7 +22,9 @@ ok SVG noch etwas einpassen, ok mit viewBox erstmal
     ok überflüssige Ebenen nicht mehr entfernen, sondern als nicht verwendet markieren, ok durch Anzahl der daraufliegenden Kanten
     .. dz=0 wie da weiter? Keine Idee. Aha in KRWG() die bestimmenden Ebenen bestimmen und wenn weniger 2 dann Kante weg.
       ok zumindestens schon GOKART geht damit
-      .. Beispiel5() aber nicht, jetzt noch umschreiben auf zwischen die Ebenen schauen 
+      ok Beispiel5() aber nicht, jetzt noch umschreiben auf zwischen die Ebenen schauen 
+        ok dabei GOKART mit eps=0.0001 und eps2=0.00001 und TSETZ mit 0.000005
+        .. nur e0 und e3 sind noch mit 1 Kante zuviel
   .. Anfangswerte schon vor init() setzen
   .. Eingabe schrittweise weitergehen
   .. Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten

@@ -26,7 +26,7 @@ var TAND=2;
 var TNOT=3;
 
 var TSETZ=function(A) {
-  if (Math.abs(A)<0.00001) return 2; //Rand
+  if (Math.abs(A)<0.000005) return 2; //Rand
   if (A<0) return 3;  //draussen
   if (A>0) return 1;  //innen
   }
@@ -530,16 +530,27 @@ var KENT=function(OBJ) { //Entgraten
 
 var MADD=function(p1,p2) {return [p1[0]+p2[0],p1[1]+p2[1],p1[2]+p2[2],1]}
 
+var MSCAL=function(s,v) { //Produkkt Skalar mit Vektor
+  return [s*v[0],s*v [1],s*v[2],1];
+  }
+
 var KREUZ=function(a,b) { //Kreuzprodukkt
   return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0],1];
   }
+//    p3=[16,18,23,[193.0224597294723,101.13086532308243,1552.2459729472316,1],[5,25],[16,18,23]]
+//    p17=[9,14,16,[193.01715769148177,101.12927041360496,1551.7157691481762,1],[21],[9,14,16]]
+//    p18=[12,14,16,[193.62132746752474,101.12927041360491,1612.1327467524716,1],[22],[12,14,16]]
+//    p21=[21,23,25,[193.6262250321179,101.13086532308239,1612.6225032117907,1],[26],[21,23,16]]
+//    k9=[3,21,16,23,18,21,null,[16,23]]
+//    k32=[17,18,14,16,9,12,null,[14,16]]
 
 var KRWG=function(OBJ) { //Kanten entfernen räumlich
   var E=OBJ[0];
   var P=OBJ[2];
   var K=OBJ[3];
   var W=[]; //zu entfernende Kanten
-  var eps=0.01;
+  var eps=0.0001;
+  var eps2=0.00001;
   var KNEU=[];
   for (var i=0;i<K.length;i++) {
     var p1=P[K[i][0]][3];
@@ -550,11 +561,15 @@ var KRWG=function(OBJ) { //Kanten entfernen räumlich
     Logtext=Logtext+"KRWG "+i+" d="+d+" ["+K[i][7]+"] V="+V+"\n";
     var ezahl=0; //Anzahl verwendeter Ebenen
     for (var j=0;j<K[i][7].length;j++) {
-      Logtext=Logtext+"  E"+K[i][7][j]+" VxE=["+KREUZ(V,E[K[i][7][j]])+"]\n";
-      if ((DURCHGUCKER(OBJ,MADD(M,KREUZ(V,E[K[i][7][j]])))==2)||(DURCHGUCKER(OBJ,MADD(M,KREUZ(E[K[i][7][j]],V)))==2)) ezahl=ezahl+1;
+      var ekij=E[K[i][7][j]];
+      if (
+        (DURCHGUCKER(OBJ,MADD(MSCAL(+eps2,ekij),MADD(M,KREUZ(V,ekij))))!=
+         DURCHGUCKER(OBJ,MADD(MSCAL(-eps2,ekij),MADD(M,KREUZ(V,ekij)))))||
+        (DURCHGUCKER(OBJ,MADD(MSCAL(+eps2,ekij),MADD(M,KREUZ(ekij,V))))!=
+         DURCHGUCKER(OBJ,MADD(MSCAL(-eps2,ekij),MADD(M,KREUZ(ekij,V)))))) ezahl=ezahl+1;
+      Logtext=Logtext+"  E"+K[i][7][j]+" VxE=["+KREUZ(V,ekij)+"] "+ezahl+"\n";
       }
     if (ezahl>1) KNEU.push(K[i]);
-    Logtext=Logtext+"    "+ezahl+"\n";
     }
   OBJ[3]=KNEU;K=KNEU;
   for (var i=0;i<E.length;i++) E[i][5]=0;
