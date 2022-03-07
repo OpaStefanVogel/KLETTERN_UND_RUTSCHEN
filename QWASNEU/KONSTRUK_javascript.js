@@ -540,7 +540,7 @@ var KRWG=function(OBJ) { //Kanten entfernen räumlich
     var p1=P[K[i][0]][3];
     var p2=P[K[i][1]][3];
     var M=[(p1[0]+p2[0])/2,(p1[1]+p2[1])/2,(p1[2]+p2[2])/2]; //Kantenmittelpunkt
-    var flag=true;
+    var flag=false;
     var f1=DURCHGUCKER(OBJ,MADD(M,[0.01,0.01,0.01,1]));
     if (DURCHGUCKER(OBJ,MADD(M,[0.01,0.01,-0.01,1]))!=f1) flag=false;
     if (DURCHGUCKER(OBJ,MADD(M,[0.01,-0.01,0.01,1]))!=f1) flag=false;
@@ -569,7 +569,7 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   //if (Logflag) Logtext=Logtext+"OBJ2="+JSON.stringify(OBJ2)+"\n";
   var TRU=OBJ1[0].length;
   var ERG=[];
-  ERG[0]=OBJ1[0].slice().concat(OBJ2[0]);
+  ERG[0]=OBJ1[0].slice().concat(OBJ2[0]); for (var i=0;i<ERG[0].length;i++) ERG[0][i]=ERG[0][i].slice();
   ERG[1]=OBJ1[1].slice().concat(OBJ2[1]);
   if (BIT) ERG[1].push(TNOT);
   ERG[1].push(TAND);  
