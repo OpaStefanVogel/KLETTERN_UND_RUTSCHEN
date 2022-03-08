@@ -24,7 +24,12 @@ ok SVG noch etwas einpassen, ok mit viewBox erstmal
       ok zumindestens schon GOKART geht damit
       ok Beispiel5() aber nicht, jetzt noch umschreiben auf zwischen die Ebenen schauen 
         ok dabei GOKART mit eps=0.0001 und eps2=0.00001 und TSETZ mit 0.000005
-        .. nur e0 und e3 sind noch mit 1 Kante zuviel
+        .. nur e0 und e3 sind noch mit 1 Kante zuviel bei GOKART
+        .. bei FLÄCHEN der p1
+        .. bei DACH die eine Luftkante zuviel
+          .. aha, das sind drei Ebenen durch eine Kante
+        .. bei DACH fehlt der linke Fußbalken
+        .. bei nochmaliogem KENT() keine Sparren
   .. Anfangswerte schon vor init() setzen
   .. Eingabe schrittweise weitergehen
   .. Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten
