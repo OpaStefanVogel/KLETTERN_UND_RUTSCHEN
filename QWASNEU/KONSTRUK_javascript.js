@@ -365,22 +365,9 @@ var KEBN=function(OBJ) { //fast gleiche Ebenen finden
     }
   }
 
-var KPBN=function(OBJ) { //Ebenen aus Punkten entfernen
+var KASP=function(OBJ) {//KASP fasst nahe Punkte zusammen:
   var E=OBJ[0];
   var P=OBJ[2];
-  for (var i=0;i<P.length;i++) { var p=P[i];
-    var p5neu=[];
-    for (var j=0;j<p[5].length;j++) {
-      if (p5neu.indexOf(E[p[5][j]][4])==-1) p5neu.push(E[p[5][j]][4]);
-      }
-    p[5]=p5neu;
-    }  
-  }
-
-var KASPflag=false;
-var KASP=function(OBJ) {//KASP fasst nahe Punkte zusammen:
-  var P=OBJ[2];
-  if (KASPflag) alert("P="+P.join("\n"));
   for (var i=0;i<P.length;i++) {
     var imin=i;
     P[imin][4]=[];
@@ -391,8 +378,8 @@ var KASP=function(OBJ) {//KASP fasst nahe Punkte zusammen:
   var Pneu=[];
   for (var i=0;i<P.length;i++) if (P[i][4].length>0) Pneu.push(P[i]);
   //for (var i=0;i<P.length;i++) if ((P[i][4].length%2)!=0) Pneu.push(P[i]);
-  var Q=[];
-  for (var i=0;i<Pneu.length;i++) for (var j=0;j<Pneu[i][4].length;j++) Q[Pneu[i][4][j]]=i;
+  //var Q=[];
+  //for (var i=0;i<Pneu.length;i++) for (var j=0;j<Pneu[i][4].length;j++) Q[Pneu[i][4][j]]=i;
   for (var i=0;i<Pneu.length;i++) { //alle bisherigen bestimmenden Ebenen sammeln
     var EL=[]; //Ebenenliste
     for (var j=0;j<Pneu[i][4].length;j++) {
@@ -401,6 +388,19 @@ var KASP=function(OBJ) {//KASP fasst nahe Punkte zusammen:
       }
     //delete Pneu[i][4];
     Pneu[i][5]=EL;
+    }
+  for (var i=0;i<Pneu.length;i++) { var p=Pneu[i]; //fast gleiche Ebenen zusammenfassen
+    var p5neu=[];
+    for (var j=0;j<p[5].length;j++) {
+      if (p5neu.indexOf(E[p[5][j]][4])==-1) p5neu.push(E[p[5][j]][4]);
+      }
+    p[5]=p5neu;
+    }  
+  for (var i=0;i<Pneu.length;i++) { //die besten Ebenen für P[i][0..2] herauspicken
+    Pneu[i][5]=Pneu[i][5].sort(Zsort); //vorerst die vor dem Schneiden soweit möglich 
+    Pneu[i][0]=Pneu[i][5][0];
+    Pneu[i][1]=Pneu[i][5][1];
+    Pneu[i][2]=Pneu[i][5][2];
     }
   OBJ[2]=Pneu;
   }
@@ -427,76 +427,6 @@ var KANZ=function(OBJ) {//KASP fasst gleiche Kanten zusammen:
   for (var i=0;i<OBJ[3].length;i++) {
     delete OBJ[3][i][6];
     OBJ[3][i][7]=OBJ[3][i][7].slice();
-    }
-  }
-
-//KRED reduziert die Anzahl der Ebenen:
-var KRED=function(OBJ) {
-  //if (Logflag==true) alert("Hier geht KRED los");
-  if (Logflag==true) Logtext=Logtext+"\n\n\nKRED:\n"+OBJ[3].join("\n");
-  var verwendet=[];
-  var KANTEN=OBJ[3];
-  for (var i=0;i<OBJ[2].length;i++) {
-    var x=OBJ[2][i];
-    //die von P ausgehenden Kanten bestimmen
-    var P=OBJ[2][i];
-    var KK=[]
-    for (var j=0;j<KANTEN.length;j++) if (KANTEN[j][0]==i||KANTEN[j][1]==i) KK.push(j);
-    var KKK=[];      
-    for (var j=0;j<KK.length;j++) KKK=KKK.concat(KANTEN[KK[j]][7]);
-    for (var j=0;j<KKK.length;j++) if (KKK.indexOf(KKK[j],j+1)>-1) verwendet[KKK[j]]=1;
-    }
-  var T1neu=OBJ[1].slice();
-  var sum=0;
-  var vsum=0;
-  while (sum<OBJ[0].length) {
-    while(T1neu[vsum]!=1) vsum=vsum+1;
-    if (verwendet[sum]) ; else T1neu[vsum]=0;
-    vsum=vsum+1;
-    sum=sum+1;
-    }
-  var Stapel=[];
-  var T2neu=[];
-  for (var i=0;i<T1neu.length;i++) {
-    if (T1neu[i]==0) Stapel.push(0);
-    if (T1neu[i]==1) {Stapel.push(1);T2neu.push(1)}
-    if (T1neu[i]==3) if (Stapel.pop()==1) {Stapel.push(1);T2neu.push(3)} else Stapel.push(0);
-    if (T1neu[i]==2) if (Stapel.pop()==1) if (Stapel.pop()==1) {Stapel.push(1);T2neu.push(2)} else Stapel.push(1);
-    }
-  OBJ[1]=T2neu;
-  var sum=0;
-  for (var i=0;i<OBJ[0].length;i++) if (verwendet[i]) {
-    OBJ[0][sum]=OBJ[0][i];
-    verwendet[i]=sum; 
-    sum=sum+1;
-    }
-  OBJ[0]=OBJ[0].slice(0,sum);
-  for (var i=0;i<OBJ[2].length;i++) {
-    var x=OBJ[2][i];
-//kann raus dann:
-    if (verwendet[x[0]]) x[0]=verwendet[x[0]];
-    if (verwendet[x[1]]) x[1]=verwendet[x[1]];
-    if (verwendet[x[2]]) x[2]=verwendet[x[2]];
-    if (x[5]) ; else alert("kein x[5]");
-    var xneu=[];
-    for (var j=0;j<x[5].length;j++) if (verwendet[x[5][j]]>-1) xneu.push(verwendet[x[5][j]]);
-    x[5]=xneu.slice();
-    x[0]=x[5][0];
-    x[1]=x[5][1];
-    x[2]=x[5][2];
-    }
-  for (var i=0;i<OBJ[3].length;i++) {
-    var x=OBJ[3][i];
-    if (x[7]) ; else alert("kein x[7]");
-    var xneu=[];
-    for (var j=0;j<x[7].length;j++) if (verwendet[x[7][j]]>-1) xneu.push(verwendet[x[7][j]]);
-    x[7]=xneu;
-    x[2]=x[7][0];
-    x[3]=x[7][1];
-    for (var j=0;j<3;j++) {
-      if (x[7].indexOf(OBJ[2][x[0]][j])==-1) x[4]=OBJ[2][x[0]][j];
-      if (x[7].indexOf(OBJ[2][x[1]][j])==-1) x[5]=OBJ[2][x[1]][j];
-      }
     }
   }
 
@@ -558,7 +488,7 @@ var KRWG=function(OBJ) { //Kanten entfernen räumlich
     var M=[(p1[0]+p2[0])/2,(p1[1]+p2[1])/2,(p1[2]+p2[2])/2]; //Kantenmittelpunkt
     var d=dist(p1,p2);
     var V=[(p2[0]-p1[0])/d*eps,(p2[1]-p1[1])/d*eps,(p2[2]-p1[2])/d*eps]; //Kantentangente*eps
-    Logtext=Logtext+"KRWG "+i+" d="+d+" ["+K[i][7]+"] V="+V+"\n";
+    if (Logflag) Logtext=Logtext+"KRWG "+i+" d="+d+" ["+K[i][7]+"] V="+V+"\n";
     var ezahl=0; //Anzahl verwendeter Ebenen
     for (var j=0;j<K[i][7].length;j++) {
       var ekij=E[K[i][7][j]];
@@ -567,7 +497,7 @@ var KRWG=function(OBJ) { //Kanten entfernen räumlich
          DURCHGUCKER(OBJ,MADD(MSCAL(-eps2,ekij),MADD(M,KREUZ(V,ekij)))))||
         (DURCHGUCKER(OBJ,MADD(MSCAL(+eps2,ekij),MADD(M,KREUZ(ekij,V))))!=
          DURCHGUCKER(OBJ,MADD(MSCAL(-eps2,ekij),MADD(M,KREUZ(ekij,V)))))) ezahl=ezahl+1;
-      Logtext=Logtext+"  E"+K[i][7][j]+" VxE=["+KREUZ(V,ekij)+"] "+ezahl+"\n";
+      if (Logflag) Logtext=Logtext+"  E"+K[i][7][j]+" VxE=["+KREUZ(V,ekij)+"] "+ezahl+"\n";
       }
     if (ezahl>1) KNEU.push(K[i]);
     }
@@ -618,10 +548,8 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
 
   KEBN(ERG); //gleiche Ebenen bestimmen
   KASP(ERG); //gleiche Punkte zusammenfassen
-  KPBN(ERG); //Ebenen aus Punkten entfernen
   KFILL(ERG);
   KANZ(ERG); //gleiche Kanten zusammenfassen
-  //KRED(ERG); Ebenen selbst entfernen nicht mehr
   KENT(ERG); //Entgraten
   KFILL(ERG);
   KANZ(ERG);

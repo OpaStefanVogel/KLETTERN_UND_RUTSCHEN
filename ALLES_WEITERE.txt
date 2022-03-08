@@ -27,9 +27,10 @@ ok SVG noch etwas einpassen, ok mit viewBox erstmal
         .. nur e0 und e3 sind noch mit 1 Kante zuviel bei GOKART
         .. bei FLÄCHEN der p1
         .. bei DACH die eine Luftkante zuviel
-          .. aha, das sind drei Ebenen durch eine Kante
+          ok aha, das sind drei Ebenen durch eine Kante. p[i][0..2] neu in KASP
         .. bei DACH fehlt der linke Fußbalken
         .. bei nochmaliogem KENT() keine Sparren
+  .. die fast gleichen Ebenen und so auch nach Verschieben und Drehen wieder eintragen.
   .. Anfangswerte schon vor init() setzen
   .. Eingabe schrittweise weitergehen
   .. Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten
