@@ -553,7 +553,7 @@ var KRWG=function(OBJ) { //Kanten entfernen räumlich
   var P=OBJ[2];
   var K=OBJ[3];
   var W=[]; //zu entfernende Kanten
-  var eps=0.0001;
+  var eps=0.001;
   var eps2=0.00001;
   var KNEU=[];
   for (var i=0;i<K.length;i++) {
@@ -563,17 +563,23 @@ var KRWG=function(OBJ) { //Kanten entfernen räumlich
     var d=dist(p1,p2);
     var V=[(p2[0]-p1[0])/d*eps,(p2[1]-p1[1])/d*eps,(p2[2]-p1[2])/d*eps]; //Kantentangente*eps
     if (Logflag) Logtext=Logtext+"KRWG "+i+" d="+d+" ["+K[i][7]+"] V="+V+"\n";
-    var ezahl=0; //Anzahl verwendeter Ebenen
+    var eneu=[]; //Anzahl verwendeter Ebenen
     for (var j=0;j<K[i][7].length;j++) {
       var ekij=E[K[i][7][j]];
       if (
         (DURCHGUCKER(OBJ,MADD(MSCAL(+eps2,ekij),MADD(M,KREUZ(V,ekij))))!=
          DURCHGUCKER(OBJ,MADD(MSCAL(-eps2,ekij),MADD(M,KREUZ(V,ekij)))))||
         (DURCHGUCKER(OBJ,MADD(MSCAL(+eps2,ekij),MADD(M,KREUZ(ekij,V))))!=
-         DURCHGUCKER(OBJ,MADD(MSCAL(-eps2,ekij),MADD(M,KREUZ(ekij,V)))))) ezahl=ezahl+1;
-      if (Logflag) Logtext=Logtext+"  E"+K[i][7][j]+" VxE=["+KREUZ(V,ekij)+"] "+ezahl+"\n";
+         DURCHGUCKER(OBJ,MADD(MSCAL(-eps2,ekij),MADD(M,KREUZ(ekij,V)))))) eneu.push(K[i][7][j]);
+      if (Logflag) Logtext=Logtext+"  E"+K[i][7][j]+" VxE=["+KREUZ(V,ekij)+"] "+eneu.length
+        +" "+DURCHGUCKER(OBJ,MADD(MSCAL(+eps2,ekij),MADD(M,KREUZ(V,ekij))))
+        +" "+DURCHGUCKER(OBJ,MADD(MSCAL(-eps2,ekij),MADD(M,KREUZ(V,ekij))))
+        +" "+DURCHGUCKER(OBJ,MADD(MSCAL(+eps2,ekij),MADD(M,KREUZ(ekij,V))))
+        +" "+DURCHGUCKER(OBJ,MADD(MSCAL(-eps2,ekij),MADD(M,KREUZ(ekij,V))))
+        +"\n";
       }
-    if (ezahl>1) KNEU.push(K[i]);
+    K[i][7]=eneu;
+    if (eneu.length>1) KNEU.push(K[i]);
     }
   OBJ[3]=KNEU;K=KNEU;
   for (var i=0;i<E.length;i++) E[i][5]=0;

@@ -27,9 +27,10 @@ ok GOKART enthält Kanten mit drei bestimmenden Ebenen
         ok bei DACH die eine Luftkante zuviel
           ok aha, das sind drei Ebenen durch eine Kante. p[i][0..2] neu in KASP
         ok bei DACH fehlt der linke Fußbalken ok war falsch eingegeben
-.. nur e0 und e3 sind noch mit 1 Kante zuviel bei GOKART
+ok bei nochmaligem KENT() keine Sparren, ok nochmaliges KENT() ist nicht nötig
+ok nur e0 und e3 sind noch mit 1 Kante zuviel bei GOKART, ok KRWG() merkt sich die verwendeten Ebenen
+.. KRWG mit eps=0.001 statt 0.0001, weil sonst zu nahe dran, das muss noch ohne eps und eps2 zu machen gehen
 .. bei FLÄCHEN der p1
-.. bei nochmaliogem KENT() keine Sparren
 .. die fast gleichen Ebenen und so auch nach Verschieben und Drehen wieder eintragen.
 .. Anfangswerte schon vor init() setzen
 .. Eingabe schrittweise weitergehen
