@@ -13,30 +13,30 @@ ok bei Klick auf k0 die Ausgabe nicht durch Ebene ersetzen, ok jetzt TQ als Kant
 ok zur Objektbenennung auch die Objektnummer
 ok so gehts weiter: Punkte zusammenfassen schon vor Kanten bestimmen, und schon ok
 ok SVG noch etwas einpassen, ok mit viewBox erstmal
-.. GOKART enthält Kanten mit drei bestimmenden Ebenen
+ok GOKART enthält Kanten mit drei bestimmenden Ebenen
   ok A Q S D kleiner zeichnen ok mit QASDzoom
   ok Kameraposition kopierbar machen
-  .. Beispiel5() mit zwei fast aneinanderliegenden Schneidquadern
+  ok Beispiel5() mit zwei fast aneinanderliegenden Schneidquadern
     ok doppelte Ebenen nur einfach verwenden, entgegengesetzt doppelte als pj=-pj-1 laufen mit durch
     ok ergibt bei dx=0 auch schon eine überflüssige Kante, klar warum: P1 P2 P3 P5 liegen alle in 2 Ebenen.ok dx=0 geht
     ok überflüssige Ebenen nicht mehr entfernen, sondern als nicht verwendet markieren, ok durch Anzahl der daraufliegenden Kanten
-    .. dz=0 wie da weiter? Keine Idee. Aha in KRWG() die bestimmenden Ebenen bestimmen und wenn weniger 2 dann Kante weg.
+    ok dz=0 wie da weiter? Keine Idee. Aha in KRWG() die bestimmenden Ebenen bestimmen und wenn weniger 2 dann Kante weg.
       ok zumindestens schon GOKART geht damit
       ok Beispiel5() aber nicht, jetzt noch umschreiben auf zwischen die Ebenen schauen 
         ok dabei GOKART mit eps=0.0001 und eps2=0.00001 und TSETZ mit 0.000005
-        .. nur e0 und e3 sind noch mit 1 Kante zuviel bei GOKART
-        .. bei FLÄCHEN der p1
-        .. bei DACH die eine Luftkante zuviel
+        ok bei DACH die eine Luftkante zuviel
           ok aha, das sind drei Ebenen durch eine Kante. p[i][0..2] neu in KASP
-        .. bei DACH fehlt der linke Fußbalken
-        .. bei nochmaliogem KENT() keine Sparren
-  .. die fast gleichen Ebenen und so auch nach Verschieben und Drehen wieder eintragen.
-  .. Anfangswerte schon vor init() setzen
-  .. Eingabe schrittweise weitergehen
-  .. Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten
-    .. dazu in raycast minimaler Winkel statt minimaler Abstand
-  .. das Zoomen mit Maus mit event.preventDefault()
-  .. anstelle Würfel ein xyz-Koordinatensystem
+        ok bei DACH fehlt der linke Fußbalken ok war falsch eingegeben
+.. nur e0 und e3 sind noch mit 1 Kante zuviel bei GOKART
+.. bei FLÄCHEN der p1
+.. bei nochmaliogem KENT() keine Sparren
+.. die fast gleichen Ebenen und so auch nach Verschieben und Drehen wieder eintragen.
+.. Anfangswerte schon vor init() setzen
+.. Eingabe schrittweise weitergehen
+.. Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten
+.. dazu in raycast minimaler Winkel statt minimaler Abstand
+.. das Zoomen mit Maus mit event.preventDefault()
+.. anstelle Würfel ein xyz-Koordinatensystem
 .. überhaupt P[0..2] raus oder auch nicht
 .. Punkte ohne Kanten auch löschen
 .. ob if (P[5]) noch notwendig ist, irgendwann alert("kein...") wieder heraus

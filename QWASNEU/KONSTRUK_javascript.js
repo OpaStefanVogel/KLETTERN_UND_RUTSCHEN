@@ -430,6 +430,79 @@ var KANZ=function(OBJ) {//KASP fasst gleiche Kanten zusammen:
     }
   }
 
+/* nur aufheben:
+//KRED reduziert die Anzahl der Ebenen:
+var KRED=function(OBJ) {
+  //if (Logflag==true) alert("Hier geht KRED los");
+  if (Logflag==true) Logtext=Logtext+"\n\n\nKRED:\n"+OBJ[3].join("\n");
+  var verwendet=[];
+  var KANTEN=OBJ[3];
+  for (var i=0;i<OBJ[2].length;i++) {
+    var x=OBJ[2][i];
+    //die von P ausgehenden Kanten bestimmen
+    var P=OBJ[2][i];
+    var KK=[]
+    for (var j=0;j<KANTEN.length;j++) if (KANTEN[j][0]==i||KANTEN[j][1]==i) KK.push(j);
+    var KKK=[];      
+    for (var j=0;j<KK.length;j++) KKK=KKK.concat(KANTEN[KK[j]][7]);
+    for (var j=0;j<KKK.length;j++) if (KKK.indexOf(KKK[j],j+1)>-1) verwendet[KKK[j]]=1;
+    }
+  var T1neu=OBJ[1].slice();
+  var sum=0;
+  var vsum=0;
+  while (sum<OBJ[0].length) {
+    while(T1neu[vsum]!=1) vsum=vsum+1;
+    if (verwendet[sum]) ; else T1neu[vsum]=0;
+    vsum=vsum+1;
+    sum=sum+1;
+    }
+  var Stapel=[];
+  var T2neu=[];
+  for (var i=0;i<T1neu.length;i++) {
+    if (T1neu[i]==0) Stapel.push(0);
+    if (T1neu[i]==1) {Stapel.push(1);T2neu.push(1)}
+    if (T1neu[i]==3) if (Stapel.pop()==1) {Stapel.push(1);T2neu.push(3)} else Stapel.push(0);
+    if (T1neu[i]==2) if (Stapel.pop()==1) if (Stapel.pop()==1) {Stapel.push(1);T2neu.push(2)} else Stapel.push(1);
+    }
+  OBJ[1]=T2neu;
+  var sum=0;
+  for (var i=0;i<OBJ[0].length;i++) if (verwendet[i]) {
+    OBJ[0][sum]=OBJ[0][i];
+    verwendet[i]=sum; 
+    sum=sum+1;
+    }
+  OBJ[0]=OBJ[0].slice(0,sum);
+  for (var i=0;i<OBJ[2].length;i++) {
+    var x=OBJ[2][i];
+//kann raus dann:
+    if (verwendet[x[0]]) x[0]=verwendet[x[0]];
+    if (verwendet[x[1]]) x[1]=verwendet[x[1]];
+    if (verwendet[x[2]]) x[2]=verwendet[x[2]];
+    if (x[5]) ; else alert("kein x[5]");
+    var xneu=[];
+    for (var j=0;j<x[5].length;j++) if (verwendet[x[5][j]]>-1) xneu.push(verwendet[x[5][j]]);
+    x[5]=xneu.slice();
+    x[0]=x[5][0];
+    x[1]=x[5][1];
+    x[2]=x[5][2];
+    }
+  for (var i=0;i<OBJ[3].length;i++) {
+    var x=OBJ[3][i];
+    if (x[7]) ; else alert("kein x[7]");
+    var xneu=[];
+    for (var j=0;j<x[7].length;j++) if (verwendet[x[7][j]]>-1) xneu.push(verwendet[x[7][j]]);
+    x[7]=xneu;
+    x[2]=x[7][0];
+    x[3]=x[7][1];
+    for (var j=0;j<3;j++) {
+      if (x[7].indexOf(OBJ[2][x[0]][j])==-1) x[4]=OBJ[2][x[0]][j];
+      if (x[7].indexOf(OBJ[2][x[1]][j])==-1) x[5]=OBJ[2][x[1]][j];
+      }
+    }
+  }
+*/
+
+/* auch aufheben:
 var KENT=function(OBJ) { //Entgraten
   var E=OBJ[0];
   var P=OBJ[2];
@@ -457,6 +530,7 @@ var KENT=function(OBJ) { //Entgraten
   //OBJ[3]=[];
   if (Logflag) Logtext=Logtext+"zweites KFILL beendet mit "+DURCHGUCKER(OBJ,[107.5,100,50,1])+"\n";
   }
+*/
 
 var MADD=function(p1,p2) {return [p1[0]+p2[0],p1[1]+p2[1],p1[2]+p2[2],1]}
 
@@ -550,9 +624,9 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   KASP(ERG); //gleiche Punkte zusammenfassen
   KFILL(ERG);
   KANZ(ERG); //gleiche Kanten zusammenfassen
-  KENT(ERG); //Entgraten
-  KFILL(ERG);
-  KANZ(ERG);
+//  KENT(ERG); //Entgraten
+//  KFILL(ERG);
+//  KANZ(ERG);
   KRWG(ERG); //Kanten entfernen räumlich
   return ERG;
   }
