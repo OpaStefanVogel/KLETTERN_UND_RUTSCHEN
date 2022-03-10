@@ -30,7 +30,7 @@
     button {font-size:200%}
     </style>
   </head>
-<body onload="Beispiel4()">
+<body onload="Beispiel5()">
 <!--canvas id="Uhr"> </canvas-->
 <div>zur Zeit 3 Eingabebeispiele: 
   <button onclick="Beispiel1()">REST5</button>,
@@ -50,7 +50,7 @@
 <button onclick='TDrehen()'>drehen</button>
 <button onclick='TSchneiden()'>schneiden</button>
 <button onclick='TLoeschen()'>löschen</button>
-
+<span id="mouse"> </span>
 
 
 
@@ -1490,29 +1490,35 @@ function raycast ( e ) {
   //for (var i in e) alert(i);
   //mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
   //mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
-  mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / canvas_width/*window.innerWidth*/ ) * 2 - 1;
-  mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / canvas_height/*window.innerHeight/*event.target.height*/ ) * 2 + 1;
+  mouse.x = 1.25*(( (event.clientX-event.target.getBoundingClientRect().left) / canvas_width/*window.innerWidth*/ ) * 2 - 1); //warum die 1.25?
+  mouse.y = 1.25*(- ( (event.clientY-event.target.getBoundingClientRect().top) / canvas_height/*window.innerHeight/*event.target.height*/ ) * 2 + 1); //warum die 1.25?
   mouse.z = 1;
 //alert(JSON.stringify(camera.matrix.elements[8]));
+  document.getElementById("mouse").firstChild.nodeValue=JSON.stringify(mouse);
+  if (Logflag) Logtext=Logtext+JSON.stringify(mouse)+"\n";
   cmin=0;
   var dmin=0;
   var pk="p";
   var pmin=[[0,0,0,1],[0,0,0,1]];
   var mindist=Infinity;
   for (var c in Castlist) {
+    if (Logflag) Logtext=Logtext+"OBJ["+c+"]:\n";
     for (var d in Castlist[c][2]) {
       var p=Castlist[c][2][d][3];
-      var dist=(new THREE.Vector3(p[0]/zoom,p[1]/zoom,p[2]/zoom)).project(camera).distanceToSquared(mouse);
+      var pp=(new THREE.Vector3(p[0]/zoom,p[1]/zoom,p[2]/zoom)).project(camera);
+      var dist=pp.multiplyScalar(1/pp.z).distanceToSquared(mouse);
       if (dist<mindist) {pk="p"; mindist=dist; cmin=c; dmin=d; pmin=[p.slice(),p.slice()];}
+      if (Logflag) Logtext=Logtext+"d="+d+", dist="+dist+", mindist="+mindist+JSON.stringify(pp.multiplyScalar(1/pp.z))+"\n";
       }
     for (var d in Castlist[c][3]) {
       var p=Castlist[c][2];
       var k=Castlist[c][3][d];
-      var dist=(new THREE.Vector3(
+      var pp=(new THREE.Vector3(
         (p[k[0]][3][0]+p[k[1]][3][0])/2/zoom,
         (p[k[0]][3][1]+p[k[1]][3][1])/2/zoom,
         (p[k[0]][3][2]+p[k[1]][3][2])/2/zoom
-        )).project(camera).distanceToSquared(mouse);
+        )).project(camera);
+      var dist=pp.multiplyScalar(1/pp.z).distanceToSquared(mouse);
       if (dist<mindist) {pk="k"; mindist=dist; cmin=c; dmin=d; pmin=[p[k[0]][3].slice(),p[k[1]][3].slice()];}
       }
     }

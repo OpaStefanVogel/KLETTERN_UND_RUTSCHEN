@@ -29,13 +29,14 @@ ok GOKART enthält Kanten mit drei bestimmenden Ebenen
         ok bei DACH fehlt der linke Fußbalken ok war falsch eingegeben
 ok bei nochmaligem KENT() keine Sparren, ok nochmaliges KENT() ist nicht nötig
 ok nur e0 und e3 sind noch mit 1 Kante zuviel bei GOKART, ok KRWG() merkt sich die verwendeten Ebenen
+ok Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten ok .multiplyScalar(1/pp.z) hat gefehlt
+  nö dazu in raycast minimaler Winkel statt minimaler Abstand, nö, vorerst nicht nötig
+  .. den Faktor 1.25 wovon der ist und wie groß eigentlich
 .. KRWG mit eps=0.001 statt 0.0001, weil sonst zu nahe dran, das muss noch ohne eps und eps2 zu machen gehen
 .. bei FLÄCHEN der p1
 .. die fast gleichen Ebenen und so auch nach Verschieben und Drehen wieder eintragen.
 .. Anfangswerte schon vor init() setzen
 .. Eingabe schrittweise weitergehen
-.. Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten
-.. dazu in raycast minimaler Winkel statt minimaler Abstand
 .. das Zoomen mit Maus mit event.preventDefault()
 .. anstelle Würfel ein xyz-Koordinatensystem
 .. überhaupt P[0..2] raus oder auch nicht
