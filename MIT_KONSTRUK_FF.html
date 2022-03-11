@@ -277,7 +277,6 @@ var REST3=RUMPS(BALKEN1,BALKEN2,1);
 var REST4=RUMPS(REST2,BALKEN2,1);
 PUNKT_A=[-10,75,-10,1];
 var BALKEN3=QUADER(100,15,100); KFILL(BALKEN3);
-Logflag=true;
 REST5=RUMPS(REST4,BALKEN3,1);
 //REST5=BALKEN1;
 Logtext=Logtext+"REST5="+JSON.stringify(REST5)+"\n";
@@ -310,7 +309,7 @@ TD();
 /*19*/ TQ(54.6589723069,37.0764868502,0,0);
 /*19*/ TSchneiden();
 
-Logtext=JSON.stringify(cube.geometry.faces)+"\n"+Logtext;
+//Logtext=JSON.stringify(cube.geometry.faces)+"\n"+Logtext;
 
   Logfile();
   Logfile2();
@@ -1148,7 +1147,8 @@ LT=[
 "/*27*/ TQ(190,0,1250,1)",
 "/*28*/ TD()",
 "/*29*/ TQ(177.5,0,0,0)",
-"/*30*/ Logflag=true;TSchneiden()",
+"/*30*/ TSchneiden()",
+"/*31*/ TQ(0,0,0,0);TA();TS();TD()",
 ];
   
   
@@ -1215,8 +1215,8 @@ LT=[
 "/*9*/ TQ(60,120,160,2)",
 "/*10*/ TA()",
 "/*11*/ TQ(0,0,0,0)",
-"/*12*/ Logflag=true;TSchneiden()",
-"/*13*/ //TQ(0,0,0,0);TA();TS();TD()",
+"/*12*/ TSchneiden()",
+"/*13*/ TQ(0,0,0,0);TA();TS();TD()",
 ];  
 
 

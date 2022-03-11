@@ -666,7 +666,12 @@ if (Logflag) Logtext=Logtext+"MMULT(A,T)=[[8,11],[13,18]]: "+JSON.stringify(MMUL
 
 
 var TRANSFORM=function(OBJ,A) {
-  OBJ[0]=MMULT(OBJ[0],A);
+  var neu=MMULT(OBJ[0],A);
+  for (var i in OBJ[0]) {
+    if (OBJ[0][i][4]>=0) neu[i][4]=OBJ[0][i][4];
+    if (OBJ[0][i][5]>=0) neu[i][5]=OBJ[0][i][5];
+    }
+  OBJ[0]=neu;
   //for (var P of OBJ[2]) {
   for (var iP in OBJ[2]) { var P=OBJ[2][iP];
     if (Logflag) Logtext=Logtext+"TRANSFORM i="+iP+"\n"+OBJ[0][P[0]]+"\n"+OBJ[0][P[1]]+"\n"+OBJ[0][P[2]]+"\n";
