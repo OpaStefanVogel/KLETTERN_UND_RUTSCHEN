@@ -40,7 +40,7 @@ ok Klick e0 und k0 auch ins SVG zeichnen und ins span eintragen
 ok Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten ok .multiplyScalar(1/pp.z) hat gefehlt
   nö dazu in raycast minimaler Winkel statt minimaler Abstand, nö, vorerst nicht nötig
   ok den Faktor 1.25 wovon der ist und wie groß eigentlich, ok das war 1/z von dem z=0.8... jetzt pp.z=1;
-.. raycast() nur bei dem einem Objekt wenn Button "einzeln"
+ok raycast() nur bei dem einem Objekt wenn Button "einzeln"
 .. raycast() schon bei mousemove
 .. KRWG mit eps=0.001 statt 0.0001, weil sonst zu nahe dran, das muss noch ohne eps und eps2 zu machen gehen
 .. bei FLÄCHEN der p1

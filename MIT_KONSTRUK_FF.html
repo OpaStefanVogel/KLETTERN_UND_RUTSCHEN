@@ -1425,11 +1425,11 @@ var TNeu=function(l,b,h,name) {
 var einzeln=0;
 function Einzelobjekt() {
   //alert(Castlist[3]);
-  for (var i=0;i<Castlist.length;i++) {
-    if (einzeln==0) if (i!=cmin) Castlist[i][4].visible=false;
-    if (einzeln==1) Castlist[i][4].visible=true;
-    }
   einzeln=1-einzeln;
+  for (var i=0;i<Castlist.length;i++) {
+    if (einzeln==1) if (i!=cmin) Castlist[i][4].visible=false;
+    if (einzeln==0) Castlist[i][4].visible=true;
+    }
   }
   </script>
 
@@ -1500,7 +1500,7 @@ function raycast ( e ) {
   var pk="p";
   var pmin=[[0,0,0,1],[0,0,0,1]];
   var mindist=Infinity;
-  for (var c in Castlist) {
+  for (var c in Castlist) if(Castlist[c][4].visible) {
     if (Logflag) Logtext=Logtext+"OBJ["+c+"]:\n";
     for (var d in Castlist[c][2]) {
       var p=Castlist[c][2][d][3];
@@ -1508,7 +1508,7 @@ function raycast ( e ) {
       pp.z=1;
       var dist=pp.distanceToSquared(mouse);
       if (dist<mindist) {pk="p"; mindist=dist; cmin=c; dmin=d; pmin=[p.slice(),p.slice()];}
-      if (Logflag) Logtext=Logtext+"d="+d+", dist="+dist+", mindist="+mindist+JSON.stringify(pp.multiplyScalar(1/pp.z))+"\n";
+      if (Logflag) Logtext=Logtext+"d="+d+", dist="+dist+", mindist="+mindist+JSON.stringify(pp)+"\n";
       }
     for (var d in Castlist[c][3]) {
       var p=Castlist[c][2];
@@ -1526,7 +1526,7 @@ function raycast ( e ) {
 //alert("cmin="+cmin+", dmin="+dmin+",pmin="+JSON.stringify(pmin)+", mindist="+mindist);
 //alert(JSON.stringify((new THREE.Vector3((pmin[0][0]+pmin[1][0])/2/zoom,(pmin[0][1]+pmin[1][1])/2/zoom,(pmin[0][2]+pmin[1][2])/2/zoom)).project(camera))); 
   TQ((pmin[0][0]+pmin[1][0])/2,(pmin[0][1]+pmin[1][1])/2,(pmin[0][2]+pmin[1][2])/2,cmin);
-  document.getElementById("Pdisp").firstChild.nodeValue=pk+dmin+"=["+[(q.position.x*zoom).toFixed(2),(q.position.y*zoom).toFixed(2),(q.position.z*zoom).toFixed(2)]+'] in "'+cmin+" "+Castlist[cmin][5]+'"';
+  document.getElementById("Pdisp").firstChild.nodeValue=pk+dmin+"=["+[(q.position.x*zoom).toFixed(2),(q.position.y*zoom).toFixed(2),(q.position.z*zoom).toFixed(2)]+'] in "OBJ'+cmin+" ("+Castlist[cmin][5]+')"';
   }
 
   </script>
