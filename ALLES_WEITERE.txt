@@ -36,6 +36,7 @@ ok wenn sich mehr als 3 Ebenen in einem Punkt schneiden ist nur behelfsweise gel
 ok und fast übereinanderliegende Ebenen zusammenfassen
 ok die fast gleichen Ebenen und so auch nach Verschieben und Drehen wieder eintragen.
 ok das Zoomen mit Maus mit event.preventDefault() ok in libs/OrbitControls.js 
+ok Klick e0 und k0 auch ins SVG zeichnen und ins span eintragen
 ok Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten ok .multiplyScalar(1/pp.z) hat gefehlt
   nö dazu in raycast minimaler Winkel statt minimaler Abstand, nö, vorerst nicht nötig
   .. den Faktor 1.25 wovon der ist und wie groß eigentlich
@@ -48,7 +49,6 @@ ok Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten ok .mul
 .. Punkte ohne Kanten auch löschen
 .. ob if (P[5]) noch notwendig ist, irgendwann alert("kein...") wieder heraus
 .. für die Kantenfluchtlinien auch alle ei,ej durchgehen
-.. Klick e0 und k0 auch ins SVG zeichnen
 .. wie es zu dem U==[0,0,0,0] kommt, parallel vielleicht?
 .. bei AUFDERKANTE muß wohl ein AUFDERFLAECHE auch mit dazu
 .. Keil auch nur behelfsmäßig in GERADEXEBENE, bis jetzt nur 2 Ebenen, Button "merken" mit mehr als 2 Ebenen

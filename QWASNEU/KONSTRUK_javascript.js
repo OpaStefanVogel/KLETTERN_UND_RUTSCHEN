@@ -334,7 +334,7 @@ var markObj=function(cmin,ekp,i,value) {
   alert([cmin,ekp,i,value].join("+"));
   }
 var spanObj=function(cmin,ekp,i,value) {
-  var ret='<span onclick="markObj('+cmin+','+ekp+','+i+','+value+')">'+"ekp"[ekp]+i+"="+value+"</span>";
+  var ret='<span onclick="markObj('+cmin+','+ekp+','+i+','+value+')">'+"etpk"[ekp]+i+"="+value+"</span>";
   return ret;
   }
 
@@ -346,7 +346,7 @@ var KDUMP=function(OBJ) {
   Logtext=Logtext+"  Punkte pi=[ei,ej,ek,[x,y,z,1]]:\n";
   for (var i in OBJ[2]) Logtext=Logtext+"    "+spanObj(cmin,2,i,JSON.stringify(OBJ[2][i]))+"\n";
   Logtext=Logtext+"  Kanten ki=[pi,pj,ek,el,evon,ebis]:\n";
-  for (var i in OBJ[3]) Logtext=Logtext+"    "+spanObj(cmin,1,i,JSON.stringify(OBJ[3][i]))+"\n";
+  for (var i in OBJ[3]) Logtext=Logtext+"    "+spanObj(cmin,3,i,JSON.stringify(OBJ[3][i]))+"\n";
   }
 
 //vor 11 RUMPS:
@@ -726,8 +726,9 @@ var KPLOT=function(KLISTE) {
       KPLOTtext=KPLOTtext+'<line x1="'+P1[0]+'" y1="'+P1[1]+'" x2="'+P2[0]+'" y2="'+P2[1]+'"/>\n';
       }
     }
+  xmin=xmin-10; ymin=ymin-10; xmax=xmax+10; ymax=ymax+10;
   KPLOTtext='<svg width="100%" height="400" viewBox="'+xmin+" "+ymin+" "+(xmax-xmin)+" "+(ymax-ymin)+'" stroke="blue">\n'+KPLOTtext;
-  KPLOTtext=KPLOTtext+'<path id="Eiderdaus" d="M0,0 L40,0 L40,40 Z" fill="orange" fill-rule="evenodd" stroke="none"/></svg>\n';
+  KPLOTtext=KPLOTtext+'<path id="Eiderdaus" d="M-100,-100 L-40,-100 L-40,-40 Z" fill="orange" fill-rule="evenodd" stroke="none"/><circle id="svg_p" cx="-77" cy="-33" r="5" stroke="orange" fill="none"/><line id="svg_k" x1="-100" y1="-100" x2="-200" y2="-300" stroke="orange" stroke-dasharray="1,1" stroke-width="4" fill="none"/></svg>\n';
   }
 
 if (Logflag) KPLOT([REST1]);
