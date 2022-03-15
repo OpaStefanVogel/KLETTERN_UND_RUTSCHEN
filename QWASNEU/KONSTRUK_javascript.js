@@ -548,7 +548,7 @@ var KREUZ=function(a,b) { //Kreuzprodukkt
 //    k9=[3,21,16,23,18,21,null,[16,23]]
 //    k32=[17,18,14,16,9,12,null,[14,16]]
 
-var KRWG=function(OBJ) { //Kanten entfernen räumlich
+var KRWG=function(OBJ) { //Kanten mit nur 1 bestimmende Ebene entfernen
   var E=OBJ[0];
   var P=OBJ[2];
   var K=OBJ[3];
@@ -584,11 +584,43 @@ var KRWG=function(OBJ) { //Kanten entfernen räumlich
   OBJ[3]=KNEU;K=KNEU;
   for (var i=0;i<E.length;i++) E[i][5]=0;
   for (var i=0;i<K.length;i++) for (var j=0;j<K[i][7].length;j++) E[K[i][7][j]][5]=E[K[i][7][j]][5]+1;
-
   }
 
-//11
-//so, jetzt nur noch RUMPS:
+var KPWG=function(OBJ) { //Punkte mit nur 2 Kanten entfernen
+  var Punktliste=[];
+  var Kantenliste=[];
+  for (var iP in OBJ[2]) { var P=OBJ[2][iP];
+    var Kantenliste=[];
+    for (var iK in OBJ[3]) { var K=OBJ[3][iK];
+      if (K[0]==iP) Kantenliste.push([iK,0]);
+      if (K[1]==iP) Kantenliste.push([iK,1]);
+      }
+    if (Kantenliste.length==2) {
+      Punktliste.push(iP);
+      OBJ[3][Kantenliste[0][0]][Kantenliste[0][1]]=OBJ[3][Kantenliste[1][0]][1-Kantenliste[1][1]];
+      OBJ[3].splice([Kantenliste[1][0]],1);
+      //alert(iP);
+      }
+    }
+  if (Punktliste.length>0) {//alert(Punktliste);
+    var neue_Punktliste=[];
+    var neue_Punktnummern=[];
+    for (var iP in OBJ[2]) if (Punktliste.indexOf(iP)==-1) {
+      neue_Punktnummern[iP]=neue_Punktliste.length;
+      neue_Punktliste.push(OBJ[2][iP]);
+      }
+    //alert(neue_Punktnummern);
+    OBJ[2]=neue_Punktliste;
+    //alert(neue_Punktliste.join("\n"));
+    for (var iK in OBJ[3]) { var K=OBJ[3][iK];
+      K[0]=neue_Punktnummern[K[0]];
+      K[1]=neue_Punktnummern[K[1]];
+      }
+    //alert(OBJ[3].join("\n"));
+    }
+  }
+
+//11 so, jetzt nur noch RUMPS:
 var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   //local TRU,ERG,P,PNEU;
   if (Logflag) Logtext=Logtext+"OBJ1=\n";
@@ -633,7 +665,8 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
 //  KENT(ERG); //Entgraten
 //  KFILL(ERG);
 //  KANZ(ERG);
-  KRWG(ERG); //Kanten entfernen räumlich
+  KRWG(ERG); //Kanten mit nur 1 bestimmende Ebene entfernen
+  KPWG(ERG); //Punkte mit nur 2 Kanten entfernen
   return ERG;
   }
 
