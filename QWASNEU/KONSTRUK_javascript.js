@@ -618,6 +618,8 @@ var KPWG=function(OBJ) { //Punkte mit nur 2 Kanten entfernen
       }
     //alert(OBJ[3].join("\n"));
     }
+  for (var i in OBJ[0]) OBJ[0][i][5]=0;
+  for (var i in OBJ[3]) for (var j in OBJ[3][i][7]) OBJ[0][OBJ[3][i][7][j]][5]+=1;
   }
 
 //11 so, jetzt nur noch RUMPS:
@@ -761,7 +763,14 @@ var KPLOT=function(KLISTE) {
     }
   xmin=xmin-10; ymin=ymin-10; xmax=xmax+10; ymax=ymax+10;
   KPLOTtext='<svg width="100%" height="400" viewBox="'+xmin+" "+ymin+" "+(xmax-xmin)+" "+(ymax-ymin)+'" stroke="blue">\n'+KPLOTtext;
-  KPLOTtext=KPLOTtext+'<path id="Eiderdaus" d="M-100,-100 L-40,-100 L-40,-40 Z" fill="orange" fill-rule="evenodd" stroke="none"/><circle id="svg_p" cx="-77" cy="-33" r="5" stroke="orange" fill="none"/><line id="svg_k" x1="-100" y1="-100" x2="-200" y2="-300" stroke="orange" stroke-dasharray="1,1" stroke-width="4" fill="none"/></svg>\n';
+  KPLOTtext=KPLOTtext+'<path id="Eiderdaus" d="M-100,-100 L-40,-100 L-40,-40 Z" fill="orange" fill-rule="evenodd" stroke="none"/>'
+    +'<circle id="svg_p" cx="-77" cy="-33" r="5" stroke="fuchsia" stroke-dasharray="0.5,1.5" stroke-width="4" fill="none">'
+      +'<animate attributeName="stroke-dashoffset" from="0" to="4" dur="1" additive="sum" repeatCount="indefinite"/>'
+      +'</circle>'
+    +'<line id="svg_k" x1="-100" y1="-100" x2="-200" y2="-300" stroke="fuchsia" stroke-dasharray="0.5,1.5" stroke-width="4" fill="none">'
+      +'<animate attributeName="stroke-dashoffset" from="0" to="4" dur="1" additive="sum" repeatCount="indefinite"/>'
+      +'</line>'
+    +'</svg>\n';
   }
 
 if (Logflag) KPLOT([REST1]);
