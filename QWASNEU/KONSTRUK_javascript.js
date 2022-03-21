@@ -586,7 +586,7 @@ var KRWG=function(OBJ) { //Kanten mit nur 1 bestimmende Ebene entfernen
   for (var i=0;i<K.length;i++) for (var j=0;j<K[i][7].length;j++) E[K[i][7][j]][5]=E[K[i][7][j]][5]+1;
   }
 
-var KPWG=function(OBJ) { //Punkte mit nur 2 Kanten entfernen
+var KPWG=function(OBJ) { //Punkte mit nur 2 oder 0 Kanten entfernen
   var Punktliste=[];
   var Kantenliste=[];
   for (var iP in OBJ[2]) { var P=OBJ[2][iP];
@@ -600,6 +600,14 @@ var KPWG=function(OBJ) { //Punkte mit nur 2 Kanten entfernen
       OBJ[3][Kantenliste[0][0]][Kantenliste[0][1]]=OBJ[3][Kantenliste[1][0]][1-Kantenliste[1][1]];
       OBJ[3].splice([Kantenliste[1][0]],1);
       //alert(iP);
+      }
+    if (Kantenliste.length==1) {
+      Punktliste.push(iP);
+      //alert("war noch nie dagewesen: nur eine Kante zu P"+iP);
+      OBJ[3].splice([Kantenliste[0][0]],1);
+      }
+    if (Kantenliste.length==0) {
+      Punktliste.push(iP);
       }
     }
   if (Punktliste.length>0) {//alert(Punktliste);

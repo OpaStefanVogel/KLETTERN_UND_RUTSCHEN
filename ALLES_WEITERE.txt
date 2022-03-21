@@ -43,6 +43,7 @@ ok Punkte anklicken scheint ungenau zu sein, vor allem bei nahen Punkten ok .mul
 ok raycast() nur bei dem einem Objekt wenn Button "einzeln"
 ok bei FLÄCHEN der p1 weg, also Punkte auf nur einer durchgehenden Kante
 ok animate Punkte und Kanten im SVG
+OK Punkte ohne Kanten und mit nur einer Kante auch löschen ok
 .. raycast() schon bei mousemove, bei gedrücktem Shift am besten
 .. KRWG mit eps=0.001 statt 0.0001, weil sonst zu nahe dran, das muss noch ohne eps und eps2 zu machen gehen
 .. Anfangswerte schon vor init() setzen
@@ -50,7 +51,6 @@ ok animate Punkte und Kanten im SVG
 .. Eingabe auch schrittweise zurückgehenm UNDO REDO
 .. anstelle Würfel ein xyz-Koordinatensystem
 .. überhaupt P[0..2] raus oder auch nicht
-.. Punkte ohne Kanten auch löschen
 .. ob if (P[5]) noch notwendig ist, irgendwann alert("kein...") wieder heraus
 .. für die Kantenfluchtlinien auch alle ei,ej durchgehen
 .. wie es zu dem U==[0,0,0,0] kommt, parallel vielleicht?
