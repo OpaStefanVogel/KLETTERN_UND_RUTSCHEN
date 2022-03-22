@@ -129,6 +129,7 @@ function init() {
   renderer.setClearColor(0xCCCC00, 1.0);
   renderer.setSize(canvas_width, canvas_height);
   renderer.domElement.addEventListener( 'click', raycast, false );
+  renderer.domElement.addEventListener( 'mousemove', function() {if (event.shiftKey) raycast()}, false );
 
         // add light
         var light = new THREE.DirectionalLight();

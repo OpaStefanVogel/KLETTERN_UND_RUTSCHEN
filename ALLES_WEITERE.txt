@@ -44,7 +44,8 @@ ok raycast() nur bei dem einem Objekt wenn Button "einzeln"
 ok bei FLÄCHEN der p1 weg, also Punkte auf nur einer durchgehenden Kante
 ok animate Punkte und Kanten im SVG
 OK Punkte ohne Kanten und mit nur einer Kante auch löschen ok
-.. raycast() schon bei mousemove, bei gedrücktem Shift am besten
+ok raycast() schon bei mousemove, bei gedrücktem Shift am besten ok genauso
+.. Ausgabe zu freecad hinüber
 .. KRWG mit eps=0.001 statt 0.0001, weil sonst zu nahe dran, das muss noch ohne eps und eps2 zu machen gehen
 .. Anfangswerte schon vor init() setzen
 .. Eingabe schrittweise weitergehen
