@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=lxterminal -e "ls;git pull;pcmanfm .&mousepad KLETTERN_UND_RUTSCHEN.desktop README.md MIT_QUADRO.html QWASNEU/KONSTRUK_javascript.js MIT_KONSTRUK_FF.html ALLES_WEITERE.txt&(sleep 2; gitk --all) &bash"
+Exec=lxterminal -e "ls;git pull;pcmanfm .&mousepad KLETTERN_UND_RUTSCHEN.desktop README.md MIT_QUADRO.html QWASNEU/KONSTRUK_javascript.js FLAECHEN.FCMacro MIT_KONSTRUK_FF.html ALLES_WEITERE.txt&(sleep 2; gitk --all) &bash"
 Type=Application
 Path=/home/pi/Desktop/CLONE/Repositories/KLETTERN_UND_RUTSCHEN
 Terminal=false
