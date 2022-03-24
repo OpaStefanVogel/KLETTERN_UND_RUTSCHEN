@@ -1,0 +1,290 @@
+Gui.runCommand('Std_Workbench',18)
+Gui.runCommand('Std_ViewStatusBar',1)
+### Begin command Std_New
+App.newDocument("Unnamed")
+# App.setActiveDocument("Unnamed")
+# App.ActiveDocument=App.getDocument("Unnamed")
+# Gui.ActiveDocument=Gui.getDocument("Unnamed")
+Gui.activeDocument().activeView().viewDefaultOrientation()
+### End command Std_New
+Gui.runCommand('Std_OrthographicCamera',1)
+### Begin command Std_Workbench
+Gui.activateWorkbench("PartWorkbench")
+### End command Std_Workbench
+### Begin command Part_Box
+App.ActiveDocument.addObject("Part::Box","Box")
+App.ActiveDocument.ActiveObject.Label = "Cube"
+App.ActiveDocument.recompute()
+Gui.SendMsgToActiveView("ViewFit")
+### End command Part_Box
+# Gui.Selection.addSelection('Unnamed','Box')
+Gui.runCommand('Std_ViewDockUndockFullscreen',1)
+FreeCAD.getDocument('Unnamed').getObject('Box').Length = '300 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box').Width = '100 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box').Height = '200 mm'
+
+MRU="1"
+with open('/usr/share/freecad/Mod/Start/StartPage/LoadMRU.py') as file:
+	exec(file.read())
+
+
+import FreeCADGui
+FreeCADGui.open(u"/home/pi/Desktop/CLONE/Repositories/KLETTERN_UND_RUTSCHEN/FLAECHEN.FCMacro")
+
+
+Gui.runCommand('Std_Workbench',18)
+Gui.activateWorkbench("StartWorkbench")
+Gui.runCommand('Std_ViewStatusBar',1)
+### Begin command Std_New
+App.newDocument("Unnamed")
+# App.setActiveDocument("Unnamed1")
+# App.ActiveDocument=App.getDocument("Unnamed1")
+# Gui.ActiveDocument=Gui.getDocument("Unnamed1")
+# App.setActiveDocument("Unnamed")
+# App.ActiveDocument=App.getDocument("Unnamed")
+# Gui.ActiveDocument=Gui.getDocument("Unnamed")
+Gui.activeDocument().activeView().viewDefaultOrientation()
+### End command Std_New
+Gui.runCommand('Std_OrthographicCamera',1)
+### Begin command Std_Workbench
+Gui.activateWorkbench("PartWorkbench")
+Gui.runCommand('Std_Workbench',10)
+### End command Std_Workbench
+### Begin command Part_Box
+App.ActiveDocument.addObject("Part::Box","Box")
+App.ActiveDocument.ActiveObject.Label = "Cube"
+App.ActiveDocument.recompute()
+Gui.SendMsgToActiveView("ViewFit")
+### End command Part_Box
+# Gui.Selection.addSelection('Unnamed','Box')
+Gui.runCommand('Std_ViewDockUndockFullscreen',1)
+FreeCAD.getDocument('Unnamed').getObject('Box').Length = '300 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box').Width = '100 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box').Height = '200 mm'
+
+# App.setActiveDocument("Unnamed")
+# App.ActiveDocument=App.getDocument("Unnamed")
+# Gui.ActiveDocument=Gui.getDocument("Unnamed")
+# App.setActiveDocument("Unnamed1")
+# App.ActiveDocument=App.getDocument("Unnamed1")
+# Gui.ActiveDocument=Gui.getDocument("Unnamed1")
+# App.setActiveDocument("Unnamed")
+# App.ActiveDocument=App.getDocument("Unnamed")
+# Gui.ActiveDocument=Gui.getDocument("Unnamed")
+App.closeDocument("Unnamed")
+# App.setActiveDocument("")
+# App.ActiveDocument=None
+# Gui.ActiveDocument=None
+# Gui.Selection.clearSelection()
+# App.setActiveDocument("Unnamed1")
+# App.ActiveDocument=App.getDocument("Unnamed1")
+# Gui.ActiveDocument=Gui.getDocument("Unnamed1")
+MRU="0"
+with open('/usr/share/freecad/Mod/Start/StartPage/LoadMRU.py') as file:
+	exec(file.read())
+
+
+
+import FreeCADGui
+FreeCADGui.open(u"/home/pi/Desktop/CLONE/Repositories/KLETTERN_UND_RUTSCHEN/FLAECHEN.FCMacro")
+# Gui.Selection.addSelection('Unnamed1','Box')
+FreeCAD.getDocument('Unnamed').getObject('Box').Length = '300 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box').Width = '100 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box').Height = '200 mm'
+# Gui.Selection.clearSelection()
+App.closeDocument("Unnamed1")
+# App.setActiveDocument("")
+# App.ActiveDocument=None
+# Gui.ActiveDocument=None
+Gui.runCommand('Std_Workbench',18)
+Gui.activateWorkbench("StartWorkbench")
+Gui.runCommand('Std_ViewStatusBar',1)
+### Begin command Std_New
+App.newDocument("Unnamed")
+# App.setActiveDocument("Unnamed")
+# App.ActiveDocument=App.getDocument("Unnamed")
+# Gui.ActiveDocument=Gui.getDocument("Unnamed")
+# App.setActiveDocument("Unnamed")
+# App.ActiveDocument=App.getDocument("Unnamed")
+# Gui.ActiveDocument=Gui.getDocument("Unnamed")
+Gui.activeDocument().activeView().viewDefaultOrientation()
+### End command Std_New
+Gui.runCommand('Std_OrthographicCamera',1)
+### Begin command Std_Workbench
+Gui.activateWorkbench("PartWorkbench")
+Gui.runCommand('Std_Workbench',10)
+### End command Std_Workbench
+### Begin command Part_Box
+App.ActiveDocument.addObject("Part::Box","Box")
+App.ActiveDocument.ActiveObject.Label = "Cube"
+App.ActiveDocument.recompute()
+Gui.SendMsgToActiveView("ViewFit")
+### End command Part_Box
+# Gui.Selection.addSelection('Unnamed','Box')
+Gui.runCommand('Std_ViewDockUndockFullscreen',1)
+FreeCAD.getDocument('Unnamed').getObject('Box').Length = '300 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box').Width = '100 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box').Height = '200 mm'
+
+# Gui.Selection.addSelection('Unnamed','Box')
+# Gui.Selection.clearSelection()
+App.closeDocument("Unnamed")
+# App.setActiveDocument("")
+# App.ActiveDocument=None
+# Gui.ActiveDocument=None
+Gui.runCommand('Std_Workbench',18)
+Gui.activateWorkbench("StartWorkbench")
+Gui.runCommand('Std_ViewStatusBar',1)
+### Begin command Std_New
+App.newDocument("Unnamed")
+# App.setActiveDocument("Unnamed")
+# App.ActiveDocument=App.getDocument("Unnamed")
+# Gui.ActiveDocument=Gui.getDocument("Unnamed")
+# App.setActiveDocument("Unnamed")
+# App.ActiveDocument=App.getDocument("Unnamed")
+# Gui.ActiveDocument=Gui.getDocument("Unnamed")
+Gui.activeDocument().activeView().viewDefaultOrientation()
+### End command Std_New
+Gui.runCommand('Std_OrthographicCamera',1)
+### Begin command Std_Workbench
+Gui.activateWorkbench("PartWorkbench")
+Gui.runCommand('Std_Workbench',10)
+### End command Std_Workbench
+### Begin command Part_Box
+App.ActiveDocument.addObject("Part::Box","Box")
+App.ActiveDocument.ActiveObject.Label = "Cube"
+App.ActiveDocument.recompute()
+Gui.SendMsgToActiveView("ViewFit")
+### End command Part_Box
+# Gui.Selection.addSelection('Unnamed','Box')
+Gui.runCommand('Std_ViewDockUndockFullscreen',1)
+FreeCAD.getDocument('Unnamed').getObject('Box').Length = '300 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box').Width = '100 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box').Height = '200 mm'
+
+### Begin command Part_Box
+App.ActiveDocument.addObject("Part::Box","Box")
+App.ActiveDocument.ActiveObject.Label = "Cube"
+App.ActiveDocument.recompute()
+Gui.SendMsgToActiveView("ViewFit")
+### End command Part_Box
+### Begin command Part_Box
+App.ActiveDocument.addObject("Part::Box","Box")
+App.ActiveDocument.ActiveObject.Label = "Cube"
+App.ActiveDocument.recompute()
+Gui.SendMsgToActiveView("ViewFit")
+### End command Part_Box
+# Gui.Selection.addSelection('Unnamed','Box001')
+FreeCAD.getDocument('Unnamed').getObject('Box001').Placement = App.Placement(App.Vector(5,0,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Placement = App.Placement(App.Vector(55,0,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Placement = App.Placement(App.Vector(55,6,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Placement = App.Placement(App.Vector(55,65,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Placement = App.Placement(App.Vector(55,64,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Placement = App.Placement(App.Vector(55,63,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Placement = App.Placement(App.Vector(55,64,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Placement = App.Placement(App.Vector(55,6,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Placement = App.Placement(App.Vector(55,65,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Placement = App.Placement(App.Vector(55,65,5),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Placement = App.Placement(App.Vector(55,65,50),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Length = '1 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Length = '10 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Length = '105 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Width = '5 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Width = '50 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Height = '6 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Height = '60 mm'
+
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Box002')
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(6,0,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,0,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,7,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,70,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,69,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,68,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,6,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,1,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,7,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,70,0),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,70,1),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,70,10),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,70,100),App.Rotation(App.Vector(0,0,1),0))
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Length = '1 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Length = '10 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Length = '100 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Width = '5 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Width = '50 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Height = '6 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box002').Height = '60 mm'
+
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Box')
+# Gui.Selection.addSelection('Unnamed','Box001')
+### Begin command Part_Cut
+App.activeDocument().addObject("Part::Cut","Cut")
+App.activeDocument().Cut.Base = App.activeDocument().Box
+App.activeDocument().Cut.Tool = App.activeDocument().Box001
+Gui.activeDocument().Box.Visibility=False
+Gui.activeDocument().Box001.Visibility=False
+App.getDocument('Unnamed').getObject('Cut').ViewObject.ShapeColor=getattr(App.getDocument('Unnamed').getObject('Box').getLinkedObject(True).ViewObject,'ShapeColor',App.getDocument('Unnamed').getObject('Cut').ViewObject.ShapeColor)
+App.getDocument('Unnamed').getObject('Cut').ViewObject.DisplayMode=getattr(App.getDocument('Unnamed').getObject('Box').getLinkedObject(True).ViewObject,'DisplayMode',App.getDocument('Unnamed').getObject('Cut').ViewObject.DisplayMode)
+App.ActiveDocument.recompute()
+### End command Part_Cut
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Cut')
+# Gui.Selection.addSelection('Unnamed','Box002')
+### Begin command Part_Cut
+App.activeDocument().addObject("Part::Cut","Cut001")
+App.activeDocument().Cut001.Base = App.activeDocument().Cut
+App.activeDocument().Cut001.Tool = App.activeDocument().Box002
+Gui.activeDocument().Cut.Visibility=False
+Gui.activeDocument().Box002.Visibility=False
+App.getDocument('Unnamed').getObject('Cut001').ViewObject.ShapeColor=getattr(App.getDocument('Unnamed').getObject('Cut').getLinkedObject(True).ViewObject,'ShapeColor',App.getDocument('Unnamed').getObject('Cut001').ViewObject.ShapeColor)
+App.getDocument('Unnamed').getObject('Cut001').ViewObject.DisplayMode=getattr(App.getDocument('Unnamed').getObject('Cut').getLinkedObject(True).ViewObject,'DisplayMode',App.getDocument('Unnamed').getObject('Cut001').ViewObject.DisplayMode)
+App.ActiveDocument.recompute()
+### End command Part_Cut
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Cut001')
+### Begin command Std_SendToPythonConsole
+obj = App.getDocument("Unnamed").getObject("Cut001")
+### End command Std_SendToPythonConsole
+for e in obj.Shape.Vertexes:
+   print(e.Point)
+
+
