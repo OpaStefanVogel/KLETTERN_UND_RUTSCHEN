@@ -43,7 +43,7 @@ Gui.SendMsgToActiveView("ViewFit")
 ### End command Part_Box
 # Gui.Selection.addSelection('Unnamed','Box001')
 #FreeCAD.getDocument('Unnamed').getObject('Box001').Placement = App.Placement(App.Vector(55,65,50),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument('Unnamed').getObject('Box001').Placement.translate(Base.Vector(55,65,50))
+FreeCAD.getDocument('Unnamed').getObject('Box001').Placement.translate(FreeCAD.Vector(55,65,50))
 FreeCAD.getDocument('Unnamed').getObject('Box001').Length = '105 mm'
 FreeCAD.getDocument('Unnamed').getObject('Box001').Width = '50 mm'
 FreeCAD.getDocument('Unnamed').getObject('Box001').Height = '60 mm'
@@ -51,7 +51,7 @@ FreeCAD.getDocument('Unnamed').getObject('Box001').Height = '60 mm'
 # Gui.Selection.clearSelection()
 # Gui.Selection.addSelection('Unnamed','Box002')
 #FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,70,100),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument('Unnamed').getObject('Box002').Placement.translate(Base.Vector(60,70,100))
+FreeCAD.getDocument('Unnamed').getObject('Box002').Placement.translate(FreeCAD.Vector(60,70,100))
 FreeCAD.getDocument('Unnamed').getObject('Box002').Length = '100 mm'
 FreeCAD.getDocument('Unnamed').getObject('Box002').Width = '50 mm'
 FreeCAD.getDocument('Unnamed').getObject('Box002').Height = '60 mm'
