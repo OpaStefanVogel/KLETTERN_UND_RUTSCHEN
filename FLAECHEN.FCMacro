@@ -1,3 +1,5 @@
+App.closeDocument("Unnamed")
+
 Gui.runCommand('Std_Workbench',18)
 Gui.activateWorkbench("StartWorkbench")
 Gui.runCommand('Std_ViewStatusBar',1)
@@ -35,22 +37,20 @@ App.ActiveDocument.ActiveObject.Label = "Cube"
 App.ActiveDocument.recompute()
 Gui.SendMsgToActiveView("ViewFit")
 ### End command Part_Box
+# Gui.Selection.addSelection('Unnamed','Box001')
+FreeCAD.getDocument('Unnamed').getObject('Box001').Length = '105 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box001').Width = '50 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box001').Height = '60 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box001').Placement.translate(FreeCAD.Vector(55,65,50))
+
 ### Begin command Part_Box
 App.ActiveDocument.addObject("Part::Box","Box")
 App.ActiveDocument.ActiveObject.Label = "Cube"
 App.ActiveDocument.recompute()
 Gui.SendMsgToActiveView("ViewFit")
 ### End command Part_Box
-# Gui.Selection.addSelection('Unnamed','Box001')
-#FreeCAD.getDocument('Unnamed').getObject('Box001').Placement = App.Placement(App.Vector(55,65,50),App.Rotation(App.Vector(0,0,1),0))
-FreeCAD.getDocument('Unnamed').getObject('Box001').Placement.translate(FreeCAD.Vector(55,65,50))
-FreeCAD.getDocument('Unnamed').getObject('Box001').Length = '105 mm'
-FreeCAD.getDocument('Unnamed').getObject('Box001').Width = '50 mm'
-FreeCAD.getDocument('Unnamed').getObject('Box001').Height = '60 mm'
-
 # Gui.Selection.clearSelection()
 # Gui.Selection.addSelection('Unnamed','Box002')
-#FreeCAD.getDocument('Unnamed').getObject('Box002').Placement = App.Placement(App.Vector(60,70,100),App.Rotation(App.Vector(0,0,1),0))
 FreeCAD.getDocument('Unnamed').getObject('Box002').Placement.translate(FreeCAD.Vector(60,70,100))
 FreeCAD.getDocument('Unnamed').getObject('Box002').Length = '100 mm'
 FreeCAD.getDocument('Unnamed').getObject('Box002').Width = '50 mm'
@@ -89,6 +89,25 @@ App.ActiveDocument.recompute()
 ### Begin command Std_SendToPythonConsole
 obj = App.getDocument("Unnamed").getObject("Cut001")
 ### End command Std_SendToPythonConsole
+for e in obj.Shape.Vertexes:
+   print(e.Point)
+
+### Begin command Part_Box
+App.ActiveDocument.addObject("Part::Box","Box")
+App.ActiveDocument.ActiveObject.Label = "Cube"
+App.ActiveDocument.recompute()
+Gui.SendMsgToActiveView("ViewFit")
+### End command Part_Box
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Box003')
+FreeCAD.getDocument('Unnamed').getObject('Box003').Length = '355 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box003').Width = '115 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box003').Height = '115 mm'
+FreeCAD.getDocument('Unnamed').getObject('Box003').Placement.translate(FreeCAD.Vector(120,0,185))
+FreeCAD.getDocument('Unnamed').getObject('Box003').Placement.rotate(FreeCAD.Vector(0,0,0),FreeCAD.Vector(0,1,0),-80.79959953092967)
+FreeCAD.getDocument('Unnamed').getObject('Box003').Placement.rotate(FreeCAD.Vector(0,0,0),FreeCAD.Vector(0,1,0),72.05059700708613)
+FreeCAD.getDocument('Unnamed').getObject('Box003').Placement.rotate(FreeCAD.Vector(0,0,0),FreeCAD.Vector(115/2,0,-355),-8.759726433781287)
+obj = App.getDocument("Unnamed").getObject("Box003")
 for e in obj.Shape.Vertexes:
    print(e.Point)
 

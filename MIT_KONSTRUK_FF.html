@@ -30,7 +30,7 @@
     button {font-size:200%}
     </style>
   </head>
-<body onload="Beispiel5()">
+<body onload="Beispiel6()">
 <!--canvas id="Uhr"> </canvas-->
 <div>zur Zeit 3 Eingabebeispiele: 
   <button onclick="Beispiel1()">REST5</button>,
@@ -38,6 +38,7 @@
   <button onclick="Beispiel3()">DACH</button>.
   <button onclick="Beispiel4()">QUADER</button>.
   <button onclick="Beispiel5()">FLÄCHEN</button>.
+  <button onclick="Beispiel6()">WINKEL</button>.
   </div>
 <button onclick='TA()'>TA()</button>
 <button onclick='TS()'>TS()</button>
@@ -209,13 +210,14 @@ function init() {
 <script>
 var DrehenASD=function(OBJ_X) {
 
+  if (Logflag==true) Logtext=Logtext+"Verschieben zum Ursprung mit [dx,dy,dz]=["+[-PA.position.x*zoom,-PA.position.y*zoom,-PA.position.z*zoom]+"]\n";
   var RET=TRANSFORM(OBJ_X,[[1,0,0,PA.position.x*zoom],[0,1,0,PA.position.y*zoom],[0,0,1,PA.position.z*zoom],[0,0,0,1]]);
 
   var alpha=0; 
   if((PS.position.z-PA.position.z)**2+(PS.position.x-PA.position.x)**2>0.00001) {
     alpha=-Math.atan2(PS.position.x-PA.position.x,PS.position.z-PA.position.z);
     }
-  if (Logflag==true) alert("Drehen mit alpha="+(alpha*180/Math.PI));
+  if (Logflag==true) Logtext=Logtext+"Drehen um die y-Achse mit alpha="+(alpha*180/Math.PI)+"\n";
   var ca=Math.cos(alpha); 
   var sa=Math.sin(alpha); 
   RET=TRANSFORM(RET,[[ca,0,-sa,0],[0,1,0,0],[sa,0,ca,0],[0,0,0,1]]); 
@@ -225,7 +227,7 @@ var DrehenASD=function(OBJ_X) {
     beta=-Math.atan2(Math.sqrt((PD.position.z-PA.position.z)**2+(PD.position.x-PA.position.x)**2),PD.position.y-PA.position.y);
     beta=beta+Math.atan2(Math.sqrt((PS.position.z-PA.position.z)**2+(PS.position.x-PA.position.x)**2),PS.position.y-PA.position.y);
     }
-  if (Logflag==true) alert("beta="+(beta*180/Math.PI));
+  if (Logflag==true) Logtext=Logtext+"Drehen um die x-Achse mit beta="+(-beta*180/Math.PI)+"\n";
   var cb=Math.cos(beta); 
   var sb=Math.sin(beta); 
   RET=TRANSFORM(RET,[[1,0,0,0],[0,cb,-sb,0],[0,sb,cb,0],[0,0,0,1]]);
@@ -234,10 +236,12 @@ var DrehenASD=function(OBJ_X) {
   if((PD.position.z-PA.position.z)**2+(PD.position.x-PA.position.x)**2>0.00001) {
     gamma=Math.atan2(PD.position.x-PA.position.x,PD.position.z-PA.position.z);
     }
+  if (Logflag==true) Logtext=Logtext+"Drehen um die y-Achse mit gamma="+(gamma*180/Math.PI)+"\n";
   var cc=Math.cos(gamma); 
   var sc=Math.sin(gamma); 
   RET=TRANSFORM(RET,[[cc,0,-sc,0],[0,1,0,0],[sc,0,cc,0],[0,0,0,1]]); 
 
+  if (Logflag==true) Logtext=Logtext+"Verschieben zum Ausgangsort mit [dx,dy,dz]=["+[PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom]+"]\n";
   RET=TRANSFORM(RET,[[1,0,0,-PA.position.x*zoom],[0,1,0,-PA.position.y*zoom],[0,0,1,-PA.position.z*zoom],[0,0,0,1]]); 
 
   return RET;
@@ -1262,6 +1266,91 @@ Vector (160.0, 70.0, 100.0)
     contr.update();
     requestAnimationFrame(render);
     document.getElementById("camerapos").firstChild.nodeValue=camera.position.x.toFixed(2)+","+camera.position.y.toFixed(2)+","+camera.position.z.toFixed(2);
+    }    
+  render();
+  }
+  </script>
+
+
+<script>
+var Beispiel6=function() {
+  init();
+  zoom=200;
+  Linientyp=1; //dünne Linie
+  Logtext2=[];
+  History=[];
+  Logflag=false;
+  
+  // position and point the camera to the center of the scene
+  camera.position.x = -0.83; //5; //15;-0.83,0.83,-1.99]; 
+  camera.position.y = 0.83; //5; //16;
+  camera.position.z = -1.99; //-12; //13
+  camera.lookAt(scene.position);
+
+//      " >P 0 0 0 Anlegepunkt" INTERPRET
+//      " >Q 355 115 115 Hinterbalken" INTERPRET
+var Hinterbalken=neuen_Balken_plazieren(0,0,0,355,115,115);
+
+//      " >P 130 1250 0 Anlegepunkt" INTERPRET
+//      " >Q 120 370 120 Vorderbalken" INTERPRET
+var Vorderbalken=neuen_Balken_plazieren(130,0,1250,120,120,370);
+
+//Logflag=true;
+//Testflag=true;
+
+LT=[
+"/*0*/ TQ(130,0,1250,1)",
+"/*1*/ TA()",
+"/*2*/ TQ(250,0,1435,1)",
+"/*3*/ TS()",
+"/*4*/ TQ(0,0,57.5,0)",
+"/*5*/ TVerschieben()",
+"/*6*/ TQ(120,0,185,0)",
+"/*7*/ TA()",
+"/*8*/ TQ(475,0,242.5,0)",
+"/*9*/ TS()",
+"/*10*/ TQ(475,57.5,300,0)",
+"/*11*/ TD()",
+"/*12*/ Logflag=true;TDrehen();//Logflag=false;",
+];
+
+/*
+Verschieben zum Ursprung mit [dx,dy,dz]=[-120,0,-185]
+Drehen um die y-Achse mit alpha=-80.79959953092967
+Drehen um die x-Achse mit beta=-8.759726433781287
+Drehen um die y-Achse mit gamma=72.05059700708613
+Verschieben zum Ausgangsort mit [dx,dy,dz]=[120,0,185]
+    p0=[0,1,2,[120.00000000000003,7.105427357601003e-15,184.99999999999994,1],null,[0,1,2]]
+    p1=[0,1,5,[102.30375447070085,2.80019748308526,298.5957824402935,1],null,[0,1,5]]
+    p2=[0,2,4,[103.33891404604843,113.65860228231527,179.60274680364947,1],null,[0,2,4]]
+    p3=[0,4,5,[85.64266851674925,116.45879976540053,293.19852924394297,1],null,[0,4,5]]
+    p4=[1,2,3,[466.98065689313665,53.367846927155945,237.73800011725046,1],null,[1,2,3]]
+    p5=[1,3,5,[449.2844113638375,56.16804441024118,351.33378255754394,1],null,[1,3,5]]
+    p6=[2,3,4,[450.31957093918504,167.0264492094712,232.34074692089996,1],null,[2,3,4]]
+    p7=[3,4,5,[432.62332540988587,169.82664669255644,345.93652936119344,1],null,[3,4,5]]
+Vector (102.30375447070081, 2.8001974830852503, 298.5957824402934)
+Vector (120.0, 0.0, 185.0)
+Vector (85.64266851674923, 116.45879976540053, 293.1985292439429)
+Vector (103.33891404604842, 113.65860228231527, 179.6027468036495)
+Vector (449.28441136383736, 56.16804441024116, 351.333782557544)
+Vector (466.98065689313654, 53.36784692715591, 237.73800011725058)
+Vector (432.6233254098858, 169.82664669255644, 345.9365293611935)
+Vector (450.319570939185, 167.0264492094712, 232.34074692090005)
+*/
+  
+  LTeval(LT,0);
+//for (var li in LT) eval(LT[li]);
+
+
+  Logfile("das war Beispiel6");
+
+  function render() {
+    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
+    renderer.render(scene, camera);
+    ////camera.position.x+=0.0;
+    cube.position.copy(contr.target);
+    contr.update();
+    requestAnimationFrame(render);
     }    
   render();
   }

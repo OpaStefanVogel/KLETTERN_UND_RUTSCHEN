@@ -717,9 +717,9 @@ var TRANSFORM=function(OBJ,A) {
   OBJ[0]=neu;
   //for (var P of OBJ[2]) {
   for (var iP in OBJ[2]) { var P=OBJ[2][iP];
-    if (Logflag) Logtext=Logtext+"TRANSFORM i="+iP+"\n"+OBJ[0][P[0]]+"\n"+OBJ[0][P[1]]+"\n"+OBJ[0][P[2]]+"\n";
+    //if (Logflag) Logtext=Logtext+"TRANSFORM i="+iP+"\n"+OBJ[0][P[0]]+"\n"+OBJ[0][P[1]]+"\n"+OBJ[0][P[2]]+"\n";
     P[3]=PGGT(DREIEBENEN(OBJ[0][P[0]],OBJ[0][P[1]],OBJ[0][P[2]]));
-    if (Logflag) Logtext=Logtext+iP+" "+P[3]+"\n";
+    //if (Logflag) Logtext=Logtext+iP+" "+P[3]+"\n";
     //if (P[3][3]<0) P[3]=[-P[4]; fi; //ist jetzt PGGT
     }
   //QFILL(OBJ);
