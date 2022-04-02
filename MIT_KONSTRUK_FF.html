@@ -1821,12 +1821,12 @@ function export_object() {
   var E=OBJ_X[0];
   var P=OBJ_X[2];
   var K=OBJ_X[3];
-  for (var i in P) ExportText=ExportText+"p"+i+"=Base.Vector("+P[i][3]+")\n";
-  for (var i in K) ExportText=ExportText+"k"+i+"=Part.LineSegment(p"+K[i][0]+",p"+K[i][1]+")\n";
+  for (var i in P) ExportText=ExportText+"p"+i+"=Base.Vector("+P[i][3].slice(0,3)+")\n";
+  for (var i in K) ExportText=ExportText+"k"+i+"=Part.LineSegment(p"+K[i][0]+",p"+K[i][1]+").toShape()\n";
   for (var i in E) if (E[i][5]>0) {
-    ExportText=ExportText+"e"+i+"=Part.Face(Part.Wire(Part.Shape([";
+    ExportText=ExportText+"e"+i+"=Part.Face(Part.Wire([";
     for (var j in K) if (K[j][7][0]==i||K[j][7][1]==i) ExportText=ExportText+"k"+j+",";
-    ExportText=ExportText.slice(0,-1)+"])))\n";
+    ExportText=ExportText.slice(0,-1)+"]))\n";
     }
   ExportText=ExportText+"OBJ_X=Part.Solid(Part.Shell([";
   for (var i in E) if (E[i][5]>0) ExportText=ExportText+"e"+i+",";
