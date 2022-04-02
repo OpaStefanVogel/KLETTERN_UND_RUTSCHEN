@@ -534,12 +534,21 @@ var KENT=function(OBJ) { //Entgraten
 
 var MADD=function(p1,p2) {return [p1[0]+p2[0],p1[1]+p2[1],p1[2]+p2[2],1]}
 
-var MSCAL=function(s,v) { //Produkkt Skalar mit Vektor
-  return [s*v[0],s*v [1],s*v[2],1];
+var MSCAL=function(s,v) { //Produkt Skalar mit Vektor
+  return [s*v[0],s*v[1],s*v[2],1];
   }
 
-var KREUZ=function(a,b) { //Kreuzprodukkt
-  return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0],1];
+var PDOT=function(a,b) { //Dotprodukt
+  return a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+  }
+
+var sign=1;
+var KREUZ=function(a,b) { //Kreuzprodukt
+  var sign=1;
+  if (a[1]*b[2]-a[2]*b[1]<0) sign=-sign; ///als extra var machen
+  if (a[2]*b[0]-a[0]*b[2]<0) sign=-sign;
+  if (a[0]*b[1]-a[1]*b[0]<0) sign=-sign;
+  return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0],1,sign];
   }
 //    p3=[16,18,23,[193.0224597294723,101.13086532308243,1552.2459729472316,1],[5,25],[16,18,23]]
 //    p17=[9,14,16,[193.01715769148177,101.12927041360496,1551.7157691481762,1],[21],[9,14,16]]
@@ -563,7 +572,28 @@ var KRWG=function(OBJ) { //Kanten mit nur 1 bestimmende Ebene entfernen
     var d=dist(p1,p2);
     var V=[(p2[0]-p1[0])/d*eps,(p2[1]-p1[1])/d*eps,(p2[2]-p1[2])/d*eps]; //Kantentangente*eps
     if (Logflag) Logtext=Logtext+"KRWG "+i+" d="+d+" ["+K[i][7]+"] V="+V+"\n";
-    var eneu=[]; //Anzahl verwendeter Ebenen
+
+    var eneu=[]; //verwendete Ebenen
+    //if (K[i][7].length>2) alert(K[i][7]);
+    var EL=[];//zu sortierende Liste der Richtungsvektoren
+    for (var j=0;j<K[i][7].length;j++) EL.push([0,KREUZ(V,E[K[i][7][j]]).slice(0,3),-1,-1,K[i][7][j]]);
+    for (var j=0;j<K[i][7].length;j++) EL.push([-EL[j][0],MSCAL(-1,EL[j][1]),-1,-1,EL[j][4]]);
+    for (var j=0;j<EL.length;j++) {
+      var KR=KREUZ(EL[0][1],EL[j][1]);
+      EL[j][0]=Math.atan2(dist(KR,[0,0,0])*KR[4],PDOT(EL[0][1],EL[j][1]))*180/Math.PI;
+      }
+    EL.sort(Asort).reverse();
+    EL.push(EL[0]);
+    for (var j=0;j<EL.length-1;j++) {
+      var DG=DURCHGUCKER(OBJ,MADD(M,MSCAL(0.5,MADD(EL[j][1],EL[j+1][1]))));
+      EL[j][2]=DG;
+      EL[j+1][3]=DG;
+      }
+    //if (K[i][7].length>2) alert(EL.join("\n"));
+    for (var j=0;j<EL.length-1;j++) if (EL[j][2]!=EL[j][3]&&eneu.indexOf(EL[j][4])==-1) eneu.push(EL[j][4]);
+    //if (K[i][7].length>2) alert("eneu=["+eneu+"]");
+/*
+    var eneu=[]; //verwendete Ebenen
     for (var j=0;j<K[i][7].length;j++) {
       var ekij=E[K[i][7][j]];
       if (
@@ -578,6 +608,7 @@ var KRWG=function(OBJ) { //Kanten mit nur 1 bestimmende Ebene entfernen
         +" "+DURCHGUCKER(OBJ,MADD(MSCAL(-eps2,ekij),MADD(M,KREUZ(ekij,V))))
         +"\n";
       }
+*/
     K[i][7]=eneu;
     if (eneu.length>1) KNEU.push(K[i]);
     }
@@ -586,7 +617,7 @@ var KRWG=function(OBJ) { //Kanten mit nur 1 bestimmende Ebene entfernen
   for (var i=0;i<K.length;i++) for (var j=0;j<K[i][7].length;j++) E[K[i][7][j]][5]=E[K[i][7][j]][5]+1;
   }
 
-var KPWG=function(OBJ) { //Punkte mit nur 2 oder 0 Kanten entfernen
+var KPWG=function(OBJ) { //Punkte mit nur 2 oder 1 oder 0 Kanten entfernen
   var Punktliste=[];
   var Kantenliste=[];
   for (var iP in OBJ[2]) { var P=OBJ[2][iP];

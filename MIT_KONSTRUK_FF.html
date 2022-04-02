@@ -21,18 +21,10 @@
   <script src="threejs-cookbook/libs/Projector.js"></script>
   <script src="threejs-cookbook/libs/dat.gui.min.js"></script>
   <script src="threejs-cookbook/libs/clock.js"></script>
-  <style>
-     body {
-       margin: 1;
-       overflow: auto;
-       }
-
-    button {font-size:200%}
-    </style>
   </head>
-<body onload="Beispiel6()">
+<body onload="Beispiel4()">
 <!--canvas id="Uhr"> </canvas-->
-<div>zur Zeit 3 Eingabebeispiele: 
+<div>zur Zeit 6 Eingabebeispiele: 
   <button onclick="Beispiel1()">REST5</button>,
   <button onclick="Beispiel2()">GOKART</button> und
   <button onclick="Beispiel3()">DACH</button>.
@@ -65,6 +57,11 @@ camera.position=[<span id="camerapos">...</span>];
 <div id="Log2" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
 <div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
 <div id="KPLOTelement">KPLOT</div>
+<div>Export zu freeCAD: 
+  <button onclick="export_object()">ausgewähltes Objekt</button>, 
+  <button onclick="export_object()">Verlauf</button>
+  </div>
+<div id="exportiere" style="display:flex; white-space:pre; font-family:monospace; overflow:auto; border:solid; width:90%; height:200px"> export</div>
 
 <script src="QWASNEU/KONSTRUK_javascript.js"></script>
 
@@ -103,6 +100,7 @@ var SCHNITTEBENE_ASD=0;
 var MERKOBJEKT=[[],[],[],[]];
 var History=[];
 var QASDzoom=1;
+var das_ist_Beispiel=0;
   </script>
 
 <script>//globale Funktionen
@@ -328,7 +326,8 @@ TD();
     renderer.render(scene, camera);
     ////camera.position.x+=0.0;
     contr.update();
-    requestAnimationFrame(render);
+    if (das_ist_Beispiel==1) requestAnimationFrame(render);
+    document.getElementById("camerapos").firstChild.nodeValue=camera.position.x.toFixed(2)+","+camera.position.y.toFixed(2)+","+camera.position.z.toFixed(2);
     }    
   render();
   }
@@ -597,7 +596,8 @@ LT=[
     ////camera.position.x+=0.0;
     cube.position.copy(contr.target);
     contr.update();
-    requestAnimationFrame(render);
+    if (das_ist_Beispiel==2) requestAnimationFrame(render);
+    document.getElementById("camerapos").firstChild.nodeValue=camera.position.x.toFixed(2)+","+camera.position.y.toFixed(2)+","+camera.position.z.toFixed(2);
     }    
   render();
   }
@@ -1090,7 +1090,8 @@ LT=[
     ////camera.position.x+=0.0;
     cube.position.copy(contr.target);
     contr.update();
-    requestAnimationFrame(render);
+    if (das_ist_Beispiel==3) requestAnimationFrame(render);
+    document.getElementById("camerapos").firstChild.nodeValue=camera.position.x.toFixed(2)+","+camera.position.y.toFixed(2)+","+camera.position.z.toFixed(2);
     }    
   render();
   }
@@ -1098,6 +1099,9 @@ LT=[
 
 <script>
 var Beispiel4=function() {
+  das_ist_Beispiel=4;
+  QASDzoom=2;
+
   init();
   zoom=200;
   Linientyp=1; //dünne Linie
@@ -1106,9 +1110,9 @@ var Beispiel4=function() {
   Logflag=false;
   
   // position and point the camera to the center of the scene
-  camera.position.x = -5; //5; //15;
-  camera.position.y = 5; //5; //16;
-  camera.position.z = -12; //-12; //13
+  camera.position.x = -1,19; //5; //15;
+  camera.position.y = 1.19; //5; //16;
+  camera.position.z = -2.85; //-12; //13
   camera.lookAt(scene.position);
 
 //      " >P 0 0 0 Anlegepunkt" INTERPRET
@@ -1171,7 +1175,8 @@ LT=[
     ////camera.position.x+=0.0;
     cube.position.copy(contr.target);
     contr.update();
-    requestAnimationFrame(render);
+    if (das_ist_Beispiel==4) requestAnimationFrame(render);
+    document.getElementById("camerapos").firstChild.nodeValue=camera.position.x.toFixed(2)+","+camera.position.y.toFixed(2)+","+camera.position.z.toFixed(2);
     }    
   render();
   }
@@ -1180,6 +1185,7 @@ LT=[
 
 <script>
 var Beispiel5=function() {
+  das_ist_Beispiel=5;
   QASDzoom=8;
 
   init();
@@ -1264,7 +1270,7 @@ Vector (160.0, 70.0, 100.0)
     ////camera.position.x+=0.0;
     cube.position.copy(contr.target);
     contr.update();
-    requestAnimationFrame(render);
+    if (das_ist_Beispiel==5) requestAnimationFrame(render);
     document.getElementById("camerapos").firstChild.nodeValue=camera.position.x.toFixed(2)+","+camera.position.y.toFixed(2)+","+camera.position.z.toFixed(2);
     }    
   render();
@@ -1809,6 +1815,58 @@ function AddObjekt(OBJ1,OBJ2) {
   }
   </script>
 
+<script id="script_export">
+function export_object() {
+  var ExportText="import Part\nfrom FreeCAD import Base\n"; //JSON.stringify(OBJ_X.slice(0,4));
+  var E=OBJ_X[0];
+  var P=OBJ_X[2];
+  var K=OBJ_X[3];
+  for (var i in P) ExportText=ExportText+"p"+i+"=Base.Vector("+P[i][3]+")\n";
+  for (var i in K) ExportText=ExportText+"k"+i+"=Part.LineSegment(p"+K[i][0]+",p"+K[i][1]+")\n";
+  for (var i in E) if (E[i][5]>0) {
+    ExportText=ExportText+"e"+i+"=Part.Face(Part.Wire(Part.Shape([";
+    for (var j in K) if (K[j][7][0]==i||K[j][7][1]==i) ExportText=ExportText+"k"+j+",";
+    ExportText=ExportText.slice(0,-1)+"])))\n";
+    }
+  ExportText=ExportText+"OBJ_X=Part.Solid(Part.Shell([";
+  for (var i in E) if (E[i][5]>0) ExportText=ExportText+"e"+i+",";
+  ExportText=ExportText.slice(0,-1)+"]))\nPart.show(OBJ_X)\n";
+  //alert(ExportText);
+  document.getElementById("exportiere").innerHTML=ExportText+"\n";
+  selectText("exportiere");
+  }
+
+/*Vorlage: https://wiki.freecadweb.org/index.php?title=Topological_data_scripting
+
+import Part
+from FreeCAD import Base
+V1 = Base.Vector(0, 10, 0)
+V2 = Base.Vector(30, 10, 0)
+V3 = Base.Vector(30, -10, 0)
+L1 = Part.LineSegment(V1, V2)
+L2 = Part.LineSegment(V3, V4)
+...
+#The last step is to put the geometric base elements together and bake a topological shape:
+S1 = Part.Shape([C1, L1, C2, L2])
+W = Part.Wire(S1.Edges)
+
+face1 = Part.Face(poly)
+face2 = Part.Face(poly)
+
+myShell = Part.makeShell([face1, face2, face3, face4, face5, face6])   
+mySolid = Part.makeSolid(myShell)
+
+myCyl = Part.makeCylinder(2, 20)
+myCyl.translate(Base.Vector(size / 2, size / 2, 0))
+
+cut_part = mySolid.cut(myCyl)
+
+Part.show(cut_part)
+
+*/
+
+  </script>
+
 <script>
 function Testspline() {
 
@@ -1884,9 +1942,19 @@ FEHLERTEXT ( nr --> adr n )
   ;
   */
   </script>
-<svg height="300px">
+<!--svg height="300px">
 <path d="M0,0 L100,100 L100,200 L0,0 L200,100 L100,100 L0,0 L200,200 L200,100 L0,0 L200,200 L100,200 L0,0 L130,180 L150,120 L0,0 L170,180 L130,180 L0,0 L170,180 L150,120 L0,0 Z" stroke="none" fill="orange" fill-rule="evenodd"/>
 <path d="M10,10 L20,10 M20,20 L20,20 L10,20" stroke="green" fill="orange" fill-rule="evenodd"/>
-  </svg>
+  </svg-->
+
+
+  <style>
+     body {
+       margin: 1;
+       overflow: auto;
+       }
+
+    button {font-size:200%}
+    </style>
 </body>
 </html>
