@@ -22,15 +22,16 @@
   <script src="threejs-cookbook/libs/dat.gui.min.js"></script>
   <script src="threejs-cookbook/libs/clock.js"></script>
   </head>
-<body onload="Beispiel4()">
+<body onload="Beispiel7()">
 <!--canvas id="Uhr"> </canvas-->
-<div>zur Zeit 6 Eingabebeispiele: 
+<div>zur Zeit 7 Eingabebeispiele: 
   <button onclick="Beispiel1()">REST5</button>,
   <button onclick="Beispiel2()">GOKART</button> und
   <button onclick="Beispiel3()">DACH</button>.
   <button onclick="Beispiel4()">QUADER</button>.
   <button onclick="Beispiel5()">FLÄCHEN</button>.
   <button onclick="Beispiel6()">WINKEL</button>.
+  <button onclick="Beispiel7()">SCHUSTERBURG</button>.
   </div>
 <button onclick='TA()'>TA()</button>
 <button onclick='TS()'>TS()</button>
@@ -51,7 +52,7 @@
 <button onclick='alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
 <button onclick='contr.target.copy(q.position)'>Zentrieren</button>
 <button onclick='Einzelobjekt()'>einzeln</button>
-camera.position=[<span id="camerapos">...</span>];
+schaue_von_und_nach(<span id="camerapos" onclick='selectText("camerapos")'>...</span>);
 <span id="Pdisp">...</span>;
   </div>
 <div id="Log2" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
@@ -100,7 +101,9 @@ var SCHNITTEBENE_ASD=0;
 var MERKOBJEKT=[[],[],[],[]];
 var History=[];
 var QASDzoom=1;
-var das_ist_Beispiel=0;
+var requestAnimationFrameID=0;
+var ASdistanz=1;
+var Verschiebedistanz=1;
   </script>
 
 <script>//globale Funktionen
@@ -109,6 +112,7 @@ function init() {
   Linientyp=0;
   PUNKT_A=[0,0,0,1];
   Castlist=[];
+  cancelAnimationFrame(requestAnimationFrameID);
 
   // create a scene, that will hold all our elements such as objects, cameras and lights.
   scene = new THREE.Scene();
@@ -120,7 +124,7 @@ function init() {
 
   // create a camera, which defines where we‘re looking at.
   //camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.001, 1000);
-  camera = new THREE.PerspectiveCamera(45, canvas_width / canvas_height, 0.1, 1000);
+  camera = new THREE.PerspectiveCamera(45, canvas_width / canvas_height, 0.1, 100000);
   //alert(THREE.WebGLRenderer); //geht nicht bei MINT
 
   // create a render, sets the background color and the size
@@ -261,6 +265,7 @@ var neuen_Balken_plazieren=function(x,y,z,l,b,h) {
 
 <script>
 var Beispiel1=function() {
+  QASDzoom=1;
   init();
   Linientyp=0; //Röhren
   Logtext2=[];
@@ -326,8 +331,8 @@ TD();
     renderer.render(scene, camera);
     ////camera.position.x+=0.0;
     contr.update();
-    if (das_ist_Beispiel==1) requestAnimationFrame(render);
-    document.getElementById("camerapos").firstChild.nodeValue=camera.position.x.toFixed(2)+","+camera.position.y.toFixed(2)+","+camera.position.z.toFixed(2);
+    requestAnimationFrameID=requestAnimationFrame(render);
+    zeige_Kameraposition();
     }    
   render();
   }
@@ -336,6 +341,7 @@ TD();
 
 <script>
 var Beispiel2=function() {
+  QASDzoom=1;
   init();
   zoom=200;
   Linientyp=1; //dünne Linie
@@ -343,11 +349,8 @@ var Beispiel2=function() {
   History=[];
   Logflag=false;
   
-  // position and point the camera to the center of the scene
-  camera.position.x = -5; //5; //15;
-  camera.position.y = 5; //5; //16;
-  camera.position.z = -12; //-12; //13
-  camera.lookAt(scene.position);
+  // position and point the camera to
+  schaue_von_und_nach(-5,5,-12, 0.00,0.00,0.00);
 
 /*
   PA.position.x=0/zoom;
@@ -573,17 +576,10 @@ LT=[
 "TQ(-900,0,5,0)",
 "TNeu(5,500,2000,'neuer Putz')",
   ];
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
   LTeval(LT,0);
 //for (var li in LT) eval(LT[li]);
 
@@ -596,8 +592,8 @@ LT=[
     ////camera.position.x+=0.0;
     cube.position.copy(contr.target);
     contr.update();
-    if (das_ist_Beispiel==2) requestAnimationFrame(render);
-    document.getElementById("camerapos").firstChild.nodeValue=camera.position.x.toFixed(2)+","+camera.position.y.toFixed(2)+","+camera.position.z.toFixed(2);
+    requestAnimationFrameID=requestAnimationFrame(render);
+    zeige_Kameraposition();
     }    
   render();
   }
@@ -605,6 +601,7 @@ LT=[
 
 <script>//Beispiel3
 var Beispiel3=function() {
+  QASDzoom=1;
   init();
   zoom=20;
   Linientyp=1; //dünne Linie
@@ -612,11 +609,8 @@ var Beispiel3=function() {
   Logflag=false;
   History=[];
   
-  // position and point the camera to the center of the scene
-  camera.position.x = -70; //5; //15;
-  camera.position.y = 30; //5; //16;
-  camera.position.z = 60; //-12; //13
-  camera.lookAt(scene.position);
+  // position and point the camera to
+  schaue_von_und_nach(-70,30,60, 0.00,0.00,0.00);
 
 /*
   PA.position.x=0/zoom;
@@ -1090,8 +1084,8 @@ LT=[
     ////camera.position.x+=0.0;
     cube.position.copy(contr.target);
     contr.update();
-    if (das_ist_Beispiel==3) requestAnimationFrame(render);
-    document.getElementById("camerapos").firstChild.nodeValue=camera.position.x.toFixed(2)+","+camera.position.y.toFixed(2)+","+camera.position.z.toFixed(2);
+    requestAnimationFrameID=requestAnimationFrame(render);
+    zeige_Kameraposition();
     }    
   render();
   }
@@ -1099,7 +1093,6 @@ LT=[
 
 <script>
 var Beispiel4=function() {
-  das_ist_Beispiel=4;
   QASDzoom=2;
 
   init();
@@ -1109,11 +1102,8 @@ var Beispiel4=function() {
   History=[];
   Logflag=false;
   
-  // position and point the camera to the center of the scene
-  camera.position.x = -1,19; //5; //15;
-  camera.position.y = 1.19; //5; //16;
-  camera.position.z = -2.85; //-12; //13
-  camera.lookAt(scene.position);
+  // position and point the camera to
+  schaue_von_und_nach(-1.19,1.19,-2.85, 0.00,0.00,0.00);
 
 //      " >P 0 0 0 Anlegepunkt" INTERPRET
 //      " >Q 355 115 115 Hinterbalken" INTERPRET
@@ -1175,8 +1165,8 @@ LT=[
     ////camera.position.x+=0.0;
     cube.position.copy(contr.target);
     contr.update();
-    if (das_ist_Beispiel==4) requestAnimationFrame(render);
-    document.getElementById("camerapos").firstChild.nodeValue=camera.position.x.toFixed(2)+","+camera.position.y.toFixed(2)+","+camera.position.z.toFixed(2);
+    requestAnimationFrameID=requestAnimationFrame(render);
+    zeige_Kameraposition();
     }    
   render();
   }
@@ -1185,7 +1175,6 @@ LT=[
 
 <script>
 var Beispiel5=function() {
-  das_ist_Beispiel=5;
   QASDzoom=8;
 
   init();
@@ -1196,11 +1185,8 @@ var Beispiel5=function() {
   Logflag=false;
   
 
-  // position and point the camera to the center of the scene
-  camera.position.x = 1.31; //5; //15;
-  camera.position.y = 0.93; //5; //16;
-  camera.position.z = 1.04; //-12; //13
-  camera.lookAt(scene.position);
+  // position and point the camera to
+  schaue_von_und_nach(1.31,0.93,1.04, 0.00,0.00,0.00);
 
 //      " >P 0 0 0 Anlegepunkt" INTERPRET
 //      " >Q 355 115 115 Hinterbalken" INTERPRET
@@ -1270,16 +1256,16 @@ Vector (160.0, 70.0, 100.0)
     ////camera.position.x+=0.0;
     cube.position.copy(contr.target);
     contr.update();
-    if (das_ist_Beispiel==5) requestAnimationFrame(render);
-    document.getElementById("camerapos").firstChild.nodeValue=camera.position.x.toFixed(2)+","+camera.position.y.toFixed(2)+","+camera.position.z.toFixed(2);
+    requestAnimationFrameID=requestAnimationFrame(render);
+    zeige_Kameraposition();
     }    
   render();
   }
   </script>
 
-
 <script>
 var Beispiel6=function() {
+  QASDzoom=1;
   init();
   zoom=200;
   Linientyp=1; //dünne Linie
@@ -1287,11 +1273,8 @@ var Beispiel6=function() {
   History=[];
   Logflag=false;
   
-  // position and point the camera to the center of the scene
-  camera.position.x = -0.83; //5; //15;-0.83,0.83,-1.99]; 
-  camera.position.y = 0.83; //5; //16;
-  camera.position.z = -1.99; //-12; //13
-  camera.lookAt(scene.position);
+  // position and point the camera to
+  schaue_von_und_nach(-0.83,0.83,-1.99, 0.00,0.00,0.00);
 
 //      " >P 0 0 0 Anlegepunkt" INTERPRET
 //      " >Q 355 115 115 Hinterbalken" INTERPRET
@@ -1356,12 +1339,85 @@ Vector (450.319570939185, 167.0264492094712, 232.34074692090005)
     ////camera.position.x+=0.0;
     cube.position.copy(contr.target);
     contr.update();
-    requestAnimationFrame(render);
+    requestAnimationFrameID=requestAnimationFrame(render);
+    zeige_Kameraposition();
     }    
   render();
   }
   </script>
 
+<script>
+var Beispiel7=function() {
+  QASDzoom=1;
+
+  init();
+  zoom=200;
+  Linientyp=1; //dünne Linie
+  Logtext2=[];
+  History=[];
+  Logflag=false;
+  
+
+  // position and point the camera to
+  schaue_von_und_nach(47.60,1.59,0.56, 50.00,0.00,0.00);
+
+
+//Logflag=true;
+//Testflag=true';
+
+LT=[
+"/*0*/ TNeu(100,1000,100)",
+"/*1*/ TQ(0,0,50,0)",
+"/*2*/ TA()",
+"/*3*/ TQ(0,0,0,0)",
+"/*4*/ TS()",
+"/*5*/ TVerschieben()",
+"/*6*/ TQ(50,0,-50,0)",
+"/*7*/ TA()",
+"/*8*/ TQ(0,0,-50,0)",
+"/*9*/ TS()",
+"/*10*/ TVerschieben();",
+"/*11*/ TQ(-50,1000,50,0)",
+"/*12*/ TA()",
+"/*13*/ TQ(-50,0,50,0)",
+"/*14*/ TS()",
+"/*15*/ TVerschieben()",
+"/*16*/ TQ(10000,-2000,-100,0)",
+"/*17*/ TNeu(1000,2000,100,'oberstes L-Teil')",
+"/*18*/ TQ(10000,0,0,1)",
+"/*19*/ TA()",
+"/*20*/ TQ(11000,0,0,1)",
+"/*21*/ TS()",
+"/*22*/ TD(); YPR(-8)",
+"/*23*/ TQ(10000,0,0,1)",
+"/*24*/ TDrehen()",
+"/*17*/ TNeu(100,200,50,'Meßklotz')",
+"/*27*/ TQ(10000,0,0,1)",
+"/*28*/ TA()",
+"/*29*/ TQ(10100,0,0,2)",
+"/*30*/ TS()",
+"/*15*/ D(500)",
+"/*15*/ TVerschieben()",
+  ];
+
+  LTeval(LT,0);
+//for (var li in LT) eval(LT[li]);
+
+
+  Logfile("das war Beispiel7");
+
+  function render() {
+    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
+    renderer.render(scene, camera);
+    ////camera.position.x+=0.0;
+    cube.position.copy(contr.target);
+    contr.update();
+    requestAnimationFrameID=requestAnimationFrame(render);
+    zeige_Kameraposition();
+    }    
+  render();
+  }
+  </script>
 
 <script>//Eingabefunktionen für Log2
 var gerundet=function(x) { return Math.round(x*10000000000)/10000000000 }
@@ -1390,6 +1446,8 @@ var TA=function() {//setzt Punkt A auf Punkt Q
 var TS=function() {//setzt Punkt S auf Punkt Q
   Logtext2.push("TS()");
   PS.position.copy(q.position);
+  ASdistanz=PS.position.distanceTo(PA.position)*zoom;
+  Verschiebedistanz=ASdistanz;
   VAS.geometry.verticesNeedUpdate = true;
   OBJ_Y=0;
   SCHNITTVEKTOR_AS=[[EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x+(PA.position.y-PS.position.y)*PA.position.y+(PA.position.z-PS.position.z)*PA.position.z)*zoom])],[TEBN],[],[]];
@@ -1476,7 +1534,11 @@ var TVerschieben=function() {//verschiebt OBJ_X um Vektor AS
   Logtext2.push("TVerschieben()");
   scene.remove(OBJ_X[4]); 
   var cind=Castlist.indexOf(OBJ_X);
-  OBJ_X=TRANSFORM(OBJ_X,[[1,0,0,(PA.position.x-PS.position.x)*zoom],[0,1,0,(PA.position.y-PS.position.y)*zoom],[0,0,1,(PA.position.z-PS.position.z)*zoom],[0,0,0,1]]);
+  OBJ_X=TRANSFORM(OBJ_X,[
+    [1,0,0,(PA.position.x-PS.position.x)*zoom*Verschiebedistanz/ASdistanz],
+    [0,1,0,(PA.position.y-PS.position.y)*zoom*Verschiebedistanz/ASdistanz],
+    [0,0,1,(PA.position.z-PS.position.z)*zoom*Verschiebedistanz/ASdistanz],
+    [0,0,0,1]]);
   KDUMP(OBJ_X);KPLOT([OBJ_X]);
   AddObjekt(scene,OBJ_X); Castlist.pop(); 
   Castlist[cind]=OBJ_X;
@@ -1542,9 +1604,28 @@ var TNeu=function(l,b,h,name) {
   Logfile();
   Logfile2();
   }
+
+var YPR=function(yaw) {//###
+  Logtext2.push("YPR("+yaw+")");
+  //for (var p in PA.position) Logtext2.push(" "+p);
+  var ya=yaw/180*Math.PI;
+  var cosyaw=Math.cos(ya);
+  var sinyaw=Math.sin(ya);
+  PS.position.y=PA.position.y;
+  PD.position.y=PA.position.y;
+  PD.position.x=PA.position.x+cosyaw*(PS.position.x-PA.position.x)+sinyaw*(PS.position.z-PA.position.z);
+  PD.position.z=PA.position.z-sinyaw*(PS.position.x-PA.position.x)+cosyaw*(PS.position.z-PA.position.z);
+  //alert(PS.position.x*zoom);
+  //TS(PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,cmin);
+  //TD(PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,cmin);
+  }
+
+var D=function(dist) {
+  Verschiebedistanz=dist;
+  }
   </script>
 
-<script>//nur ein enes Objekt zeigen
+<script>//nur ein einzelnes Objekt zeigen
 var einzeln=0;
 function Einzelobjekt() {
   //alert(Castlist[3]);
@@ -1865,6 +1946,20 @@ Part.show(cut_part)
 
 */
 
+  </script>
+
+<script>
+var schaue_von_und_nach=function(x,y,z, u,v,w) {
+  camera.position.x=x;
+  camera.position.y=y;
+  camera.position.z=z;
+  //camera.position=new THREE.Vector3(x,y,z); //geht nicht
+  contr.target.copy(new THREE.Vector3(u,v,w)); //anstelle camera.lookAt(scene.position);
+  }
+
+var zeige_Kameraposition=function() {//###
+  document.getElementById("camerapos").firstChild.nodeValue=camera.position.x.toFixed(2)+","+camera.position.y.toFixed(2)+","+camera.position.z.toFixed(2)+",  "+(cube.position.x).toFixed(2)+","+(cube.position.y).toFixed(2)+","+(cube.position.z).toFixed(2);
+  }
   </script>
 
 <script>
