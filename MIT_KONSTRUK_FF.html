@@ -22,9 +22,9 @@
   <script src="threejs-cookbook/libs/dat.gui.min.js"></script>
   <script src="threejs-cookbook/libs/clock.js"></script>
   </head>
-<body onload="Beispiel7()">
+<body onload="Beispiel8()">
 <!--canvas id="Uhr"> </canvas-->
-<div>zur Zeit 7 Eingabebeispiele: 
+<div>zur Zeit 8 Eingabebeispiele: 
   <button onclick="Beispiel1()">REST5</button>,
   <button onclick="Beispiel2()">GOKART</button> und
   <button onclick="Beispiel3()">DACH</button>.
@@ -32,6 +32,7 @@
   <button onclick="Beispiel5()">FLÄCHEN</button>.
   <button onclick="Beispiel6()">WINKEL</button>.
   <button onclick="Beispiel7()">SCHUSTERBURG</button>.
+  <button onclick="Beispiel8()">NUT_UND_FEDER</button>.
   </div>
 <button onclick='TA()'>TA()</button>
 <button onclick='TS()'>TS()</button>
@@ -1348,7 +1349,7 @@ Vector (450.319570939185, 167.0264492094712, 232.34074692090005)
 
 <script>
 var Beispiel7=function() {
-  QASDzoom=1;
+  QASDzoom=8;
 
   init();
   zoom=200;
@@ -1359,18 +1360,18 @@ var Beispiel7=function() {
   
 
   // position and point the camera to
-  schaue_von_und_nach(47.60,1.59,0.56, 50.00,0.00,0.00);
+  schaue_von_und_nach(51.71,1.93,1.08, 52.50,1.00,0.25);
 
 
 //Logflag=true;
-//Testflag=true';
+//Testflag=true;
 
 LT=[
 "/*0*/ TNeu(100,1000,100)",
 "/*1*/ TQ(0,0,50,0)",
 "/*2*/ TA()",
 "/*3*/ TQ(0,0,0,0)",
-"/*4*/ TS()",
+"/*4*/ TS();",
 "/*5*/ TVerschieben()",
 "/*6*/ TQ(50,0,-50,0)",
 "/*7*/ TA()",
@@ -1398,6 +1399,8 @@ LT=[
 "/*30*/ TS()",
 "/*15*/ D(500)",
 "/*15*/ TVerschieben()",
+"/*33*/ TQ(10500,200,50,2)",
+"/*17*/ TNeu(20,30,15,'Nutholz')",
   ];
 
   LTeval(LT,0);
@@ -1405,6 +1408,124 @@ LT=[
 
 
   Logfile("das war Beispiel7");
+
+  function render() {
+    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
+    renderer.render(scene, camera);
+    ////camera.position.x+=0.0;
+    cube.position.copy(contr.target);
+    contr.update();
+    requestAnimationFrameID=requestAnimationFrame(render);
+    zeige_Kameraposition();
+    }    
+  render();
+  }
+  </script>
+
+<script>
+var Beispiel8=function() {
+  QASDzoom=8;
+
+  init();
+  zoom=200;
+  Linientyp=1; //dünne Linie
+  Logtext2=[];
+  History=[];
+  Logflag=false;
+  
+
+  // position and point the camera to
+  schaue_von_und_nach(1.08,1.47,-0.77, 0.50,1.00,0.00);
+
+
+//Logflag=true;
+//Testflag=true;
+
+LT=[
+"/*0*/ TNeu(100,200,50)",
+"/*1*/ TQ(0,200,0,0)",
+"/*2*/ TNeu(20,30,15)",
+"/*3*/ TQ(0,230,0,1)",
+"/*4*/ TA()",
+"/*5*/ TQ(0,200,0,0)",
+"/*6*/ TS()",
+"/*7*/ TQ(0,230,15,1)",
+"/*8*/ TVerschieben()",
+"/*9*/ TA()",
+"/*10*/ TQ(0,170,15,1)",
+"/*11*/ TA()",
+"/*12*/ TQ(0,170,0,1)",
+"/*13*/ TS()",
+"/*14*/ TUmdrehen()",
+"/*15*/ TMerken()",
+"/*16*/ TQ(0,170,15,1)",
+"/*17*/ TA()",
+"/*18*/ TQ(0,200,15,1)",
+"/*19*/ TS()",
+"/*20*/ TUmdrehen()",
+"/*21*/ TQ(0,200,50,0)",
+"/*22*/ TSchneiden()",
+"/*23*/ TQ(20,170,0,1)",
+"/*24*/ TA()",
+"/*25*/ TQ(0,170,0,0)",
+"/*26*/ TS()",
+"/*27*/ TUmdrehen()",
+"/*28*/ TMerken()",
+"/*29*/ TQ(20,170,0,1)",
+"/*30*/ TA()",
+"/*31*/ TQ(20,200,0,1)",
+"/*32*/ TS()",
+"/*33*/ TUmdrehen()",
+"/*34*/ TQ(0,200,50,0)",
+"/*35*/ TSchneiden()",
+"/*36*/ TQ(20,200,15,0)",
+"/*37*/ TA()",
+"/*38*/ TQ(100,200,50,0)",
+"/*39*/ TS()",
+"/*40*/ TQ(0,200,0,1)",
+"/*41*/ TVerschieben()",
+"/*42*/ TQ(80,170,50,1)",
+"/*43*/ TA()",
+"/*44*/ TQ(100,170,50,1)",
+"/*45*/ TS()",
+"/*46*/ TUmdrehen()",
+"/*47*/ TMerken()",
+"/*48*/ TQ(80,170,50,1)",
+"/*49*/ TA()",
+"/*50*/ TQ(80,200,50,1)",
+"/*51*/ TS()",
+"/*52*/ TUmdrehen()",
+"/*53*/ TQ(20,200,15,0)",
+"/*54*/ TSchneiden()",
+"/*55*/ TQ(100,170,35,1)",
+"/*56*/ TA()",
+"/*57*/ TQ(100,170,50,1)",
+"/*58*/ TS()",
+"/*59*/ TUmdrehen()",
+"/*60*/ TMerken()",
+"/*61*/ TQ(100,170,35,1)",
+"/*62*/ TA()",
+"/*63*/ TQ(100,200,35,1)",
+"/*64*/ TS()",
+"/*65*/ TUmdrehen()",
+"/*66*/ TQ(20,200,15,0)",
+"/*67*/ TSchneiden()",
+"/*68*/ TQ(80,200,50,1)",
+"/*69*/ TA()",
+"/*70*/ TQ(100,200,50,1)",
+"/*71*/ TS()",
+"/*72*/ TQ(100,200,35,1)",
+"/*73*/ TVerschieben()",
+"/*74*/ TVerschieben()",
+"/*75*/ TQ(140,170,50,1);TA();TS();TD();",
+];
+  
+  
+  LTeval(LT,0);
+//for (var li in LT) eval(LT[li]);
+
+
+  Logfile("das war Beispiel8");
 
   function render() {
     //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
@@ -1621,6 +1742,7 @@ var YPR=function(yaw) {//###
   }
 
 var D=function(dist) {
+  Logtext2.push("D("+dist+")");
   Verschiebedistanz=dist;
   }
   </script>
