@@ -116,12 +116,16 @@ mediaElement.play();
 
 			const renderer = new THREE.WebGLRenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );
-			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.setSize( window.innerWidth*0.9, window.innerHeight*0.9);
 			renderer.xr.enabled = true;
 			renderer.xr.setReferenceSpaceType( 'local' );
 			//document.body.appendChild( renderer.domElement );
 
 			//document.body.appendChild( VRButton.createButton( renderer ) );
+
+renderer.domElement.addEventListener("click",Bild_click);
+renderer.domElement.addEventListener("touchstart",Bild_touchstart);
+renderer.domElement.addEventListener("touchmove",Bild_touchmove);
 document.body.insertBefore( renderer.domElement, document.getElementById("Ausgabe zu tree.js") );
 document.body.appendChild( VRButton.createButton( renderer ) );
 
@@ -294,8 +298,8 @@ scene.add(train);
 
 			//
 
-			window.addEventListener( 'resize', onWindowResize );
-			renderer.domElement.addEventListener( 'onclick', function(){alert(8)} );
+//			window.addEventListener( 'resize', onWindowResize );
+//			renderer.domElement.addEventListener( 'click', function(){alert(8)} );
 
 			function onWindowResize() {
 
@@ -559,6 +563,116 @@ var Ausrichten=0.005;
 			}
 
 			renderer.setAnimationLoop( render );
+			
+			
+
+
+
+
+
+//------------------------touchevents
+
+var TouchposX=0;
+var TouchposY=0;
+var Touch2posX=0;
+var Touch2posY=0;
+var cameraposalt=0;
+var gammaalt=0;
+var deltaalt=0;
+var distanzalt=0;
+var touchzahl=0;
+
+
+function Bild_touchstart() {
+  var Touch=event.targetTouches.item(0);
+  //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
+  TouchposX=Touch.clientX;
+  TouchposY=Touch.clientY;
+  cameraposalt=camera.position.clone();
+  gammaalt=gamma;
+  deltaalt=delta;
+  distanzalt=distanz;
+  touchzahl=1;
+  //event.preventDefault();
+  }
+
+function Bild_touchmove() {
+  var Log=event.targetTouches.length;
+  var Touch=event.targetTouches.item(0);
+  if (event.targetTouches.length==1&&touchzahl==1) {
+    gamma=Math.min(Math.PI-0.01,Math.max(0.01,gammaalt-(Touch.clientY-TouchposY)/8/180*Math.PI));
+    delta=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
+    //alert(distanz+" "+camera.position.clone().sub(cl).length());
+    camera.position.setFromSphericalCoords(distanz,gamma,delta).add(cl);//???gewagt
+    camera.lookAt(q.position);
+    //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
+    //touchzahl=1;
+    } else {
+      var Touch2=event.targetTouches.item(1);
+      if (touchzahl==1) {
+        touchzahl=2;
+        TouchposX=Touch.clientX;
+        Touch2posX=Touch2.clientX;
+        TouchposY=Touch.clientY;
+        Touch2posY=Touch2.clientY;
+        distanzalt=distanz;
+        } else {
+          distanz=distanzalt-(Math.sqrt((Touch.clientX-Touch2.clientX)**2+(Touch.clientY-Touch2.clientY)**2)-Math.sqrt((TouchposX-Touch2posX)**2+(TouchposY-Touch2posY)**2))/50;
+          distanz=Math.min(Math.max(distanz,3),10);
+          }
+      camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
+      camera.lookAt(q.position);
+      }+
+  //document.getElementById("Log2").firstChild.nodeValue=Log;
+  event.preventDefault();
+  }
+
+//var sminind=0;//schon oben
+function Bild_click() {
+  var mouse=new THREE.Vector3();
+  var Log="\nmouse=["+(event.clientX-event.target.getBoundingClientRect().left)+","+(event.clientY-event.target.getBoundingClientRect().top)+"]\n";
+  mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / event.target.width ) * 2 - 1;
+  mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / event.target.height ) * 2 + 1;
+  mouse.z = 0.96;
+  //Log=Log+mouse.toArray()+"\n"+Knoten.length+"####\n";
+  var min=100000;
+  var minind=0;
+  for (var i=0;i<Knoten.length;i++) {
+    //Log=Log+i+" "+Knoten[i].clone().toArray()+"\n"+Knoten[i].clone().project(camera).toArray()+"\n";
+    var dist=Knoten[i].clone().project(camera).distanceToSquared(mouse);
+    if (dist<min) {min=dist; minind=i}
+    //Log=Log+minind+" "+dist+"\n";
+    }
+
+  //Log=Log+q.position.clone().project(camera).toArray()+"\n";
+  //Log=Log+event.clientX+" "+event.clientY+" "+clock.getDelta()+"\n";
+  //clock.start();
+  if (min>0.1) { if (mouse.y>-0.7) q.visible=false; s.visible=false; } else {
+    q.visible=true;
+    q.position.copy(Knoten[minind]);
+    s.visible=true;
+
+    var smin=100000;
+    sminind=0;
+    for (var i=0;i<Stangen.length;i++) {
+      //Log=Log+i+" "+Stangen[i].position.toArray()+"\n"+Stangen[i].position.clone().project(camera).toArray()+"\n";
+      var dist=Stangen[i].position.clone().project(camera).distanceToSquared(mouse);
+      if (dist<smin) {smin=dist; sminind=i}
+      //Log=Log+"sminind="+sminind+", smin="+smin+"\n";
+      }
+
+    s.position.copy(Stangen[sminind].position);
+    
+    }
+  //document.getElementById("Log2").firstChild.nodeValue=Log;
+  }
+
+function Kamera_ausrichten() {
+  cl.copy(q.position);
+  camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
+  camera.lookAt(q.position);    
+  }
+
 
 		</script>
 
