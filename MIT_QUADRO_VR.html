@@ -10,6 +10,69 @@
 		<div id="container"></div>
 
 	<body>
+<p id="Logfile"> </p> 
+<div style="font-style:italic; white-space:pre-wrap;">
+
+ANLEITUNG:
+
+Die Knöpfe verraten es dir.
+
+
+</div>
+<div style="display:flex; align-items:flex-end">               
+<span style="display:flex; flex-direction:row; align-items:flex-end">
+
+<button onclick="Loeschen()">Löschen</button>
+<button onclick="Farbe('green')" style="background-color:green">grün</button>
+<button onclick="Farbe('mediumblue')" style="background-color:blue">blau</button>
+<button onclick="Farbe('orange')" style="background-color:orange">orange</button>
+<button onclick="Farbe('red')" style="background-color:red">rot</button>
+<!--span id="link" style="position:relative; top:0px; left:60px; background-color:white"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span-->
+  </span>
+</div>               
+<div id="Ausgabe Downloadtext" style="display:none; white-space:pre-wrap; font-size:50%"> </div>
+<div id="Ausgabe zu tree.js"></div>               
+<div>               
+<button id="links"  style="background-color:ccbbff">links</button>
+<button id="hoch"   style="background-color:f7f7f7">hoch</button>
+<button id="rechts" style="background-color:ffeecc">rechts</button>
+<button id="runter" style="background-color:777733">runter</button>
+<button id="hinter" style="background-color:444444; color:777777">hinter</button>
+<button id="vor"    style="background-color:ddddff">vor</button>
+Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
+<span onclick="Faktor=10"><input type="radio" id="L10" name="Laenge" value="10"/><label for="L10">10</label></span>
+<span onclick="Faktor=20"><input type="radio" id="L20" name="Laenge" value="20"/><label for="L20">20</label></span>
+<span onclick="Faktor=40"><input type="radio" id="L40" name="Laenge" value="40" checked="checked"/><label for="L40">40</label></span>
+<span onclick="Faktor=80"><input type="radio" id="L80" name="Laenge" value="80"/><label for="L80">80</label></span>
+<button id="rollercoaster">zwischendurch im rollercoaster mitfahren</button>
+<button id="weiter_mit_QUADRO">dann QUADRO weiter machen</button>
+</span>
+</div>               
+<span id="Logpos" style="display:none"> </span>
+<span id="Log"> </span>
+<span id="Log2" style="white-space:pre-wrap"> </span>
+<div>               
+<button onclick="Richtung(-40,0,0,10)">Mini links</button>
+<button onclick="Richtung(30,-30,0,Faktor)">schräg rechts hoch</button>
+<button onclick="Richtung(30,30,0,Faktor)">schräg rechts runter</button>
+<button onclick="Richtung(-40,0,0,10)">Mini links</button>
+</div>               
+<div>               
+<button onclick="Richtung(40,0,0,10)">Mini rechts</button>
+<button onclick="Richtung(-30,-30,0,Faktor)">schräg links hoch</button>
+<button onclick="Richtung(-30,30,0,Faktor)">schräg links runter</button>
+<button onclick="Richtung(40,0,0,10)">Mini rechts</button>
+</div>
+<div>               
+<button onclick="Richtung(0,-40,0,10)">Mini hoch</button>
+<button onclick="Richtung(0,40,0,10)">Mini runter</button>
+</div>
+
+
+
+
+
+
 <!--video id="video" loop muted crossOrigin="anonymous" playsinline style="display:non">
   <source src="./three.js/textures/pano.webm">
   <source src="./three.js/examples/textures/pano.mp4">
@@ -56,9 +119,12 @@ mediaElement.play();
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			renderer.xr.enabled = true;
 			renderer.xr.setReferenceSpaceType( 'local' );
-			document.body.appendChild( renderer.domElement );
+			//document.body.appendChild( renderer.domElement );
 
-			document.body.appendChild( VRButton.createButton( renderer ) );
+			//document.body.appendChild( VRButton.createButton( renderer ) );
+document.body.insertBefore( renderer.domElement, document.getElementById("Ausgabe zu tree.js") );
+document.body.appendChild( VRButton.createButton( renderer ) );
+
 
 			//
 
@@ -78,7 +144,6 @@ scene.add(train);
 
 			const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 500 );
 			train.add( camera );
-scene.add( camera );camera.position.set( 2, 2, -40 );camera.lookAt(0,3,0);
 
 			// environment
 
@@ -230,6 +295,7 @@ scene.add( camera );camera.position.set( 2, 2, -40 );camera.lookAt(0,3,0);
 			//
 
 			window.addEventListener( 'resize', onWindowResize );
+			renderer.domElement.addEventListener( 'onclick', function(){alert(8)} );
 
 			function onWindowResize() {
 
@@ -348,12 +414,10 @@ function Stange(qalt,qneu,Faktor,Farbe) {
 
 
 
-
 //---------------------------------------- aus MIT_QUADRO.html die Geometrie:
-
 const QUADRO = new THREE.Object3D();
 scene.add( QUADRO );
-QUADRO.position.set( 3, 1, -34 );
+QUADRO.position.set( 4, 0.2, -34 );
 QUADRO.rotateY(Math.PI);
 //QUADRO.rotateZ(Math.PI);
 
@@ -368,15 +432,37 @@ const sMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00, metalness: 
 const s = new THREE.Mesh( sGeometry, sMaterial );
 QUADRO.add( s );
 
+QUADRO.add(camera);
+var gamma=Math.PI/2.4;
+var delta=0.2;
+var distanz=6;
+camera.position.setFromSphericalCoords(distanz,gamma,delta);
+//camera.position.set( 2, 2, -40 );camera.lookAt(0,3,0);
 
-let sminind=0;
-Richtung(0,0,40,Faktor);//vor
-Richtung(0,-40,0,Faktor);//hoch
-Richtung(40,0,0,Faktor);//rechts
-//Richtung(0,0,-40,Faktor);
+let sminind=0;//fehlt oben
+function Test() {
+setTimeout(Richtung,2000,0,0,40,Faktor);//vor
+setTimeout(Richtung,4000,0,-40,0,Faktor);//hoch
+setTimeout(Richtung,6000,40,0,0,Faktor);//rechts
+setTimeout(Richtung,8000,0,40,0,Faktor);//runter
+setTimeout(Richtung,10000,0,0,40,Faktor);//vor
+setTimeout(Richtung,12000,0,-40,0,Faktor);//hoch
+setTimeout(Richtung,14000,-40,0,0,Faktor);//links
+setTimeout(Richtung,16000,0,40,0,Faktor);//runter
+setTimeout(Test,16000);
+}
+//Test();
 
 
-
+//------------die Tasten
+document.getElementById("links" ).addEventListener('click',function(){Richtung(-40,0,0,Faktor)});
+document.getElementById("rechts").addEventListener('click',function(){Richtung(+40,0,0,Faktor)});
+document.getElementById("hoch"  ).addEventListener('click',function(){Richtung(0,-40,0,Faktor)});
+document.getElementById("runter").addEventListener('click',function(){Richtung(0,+40,0,Faktor)});
+document.getElementById("hinter").addEventListener('click',function(){Richtung(0,0,-40,Faktor)});
+document.getElementById("vor"   ).addEventListener('click',function(){Richtung(0,0,+40,Faktor)});
+document.getElementById("rollercoaster").addEventListener('click',function(){train.add(camera);camera.position.set( 0, 0, 1); q.visible=false});
+document.getElementById("weiter_mit_QUADRO").addEventListener('click',function(){QUADRO.add(camera);camera.position.copy(cp); q.visible=true});
 
 
 
@@ -392,7 +478,13 @@ Richtung(40,0,0,Faktor);//rechts
 
 //-----------------
 
+var cl=q.position.clone();
+var cp=camera.position.clone();
+var Ausrichten=0.005;
 
+
+
+//--------
 
 			function render() {
 
@@ -424,6 +516,42 @@ Richtung(40,0,0,Faktor);//rechts
 
 				//
 
+//----QUADRO
+
+  if (q.visible) {
+
+    var diff=new THREE.Vector3();
+    diff.subVectors(q.position,cl);
+  
+    if (diff.length()>0.01) {
+      if (Ausrichten<1) diff.normalize().multiplyScalar(Ausrichten);
+      cl.add(diff);
+      camera.lookAt(QUADRO.localToWorld(cl.clone()));
+      }
+
+    var diff2=new THREE.Vector3();
+//    diff2.subVectors(camera.position,q.position)
+    diff2.subVectors(cp,q.position)
+    
+    document.getElementById("Log2").firstChild.nodeValue=diff2.length().toFixed(4)+" "+JSON.stringify(QUADRO.localToWorld(cl.clone()));
+
+    if (Math.abs(diff2.length()-distanz)>0.01) {
+      diff2.normalize().multiplyScalar(Ausrichten);
+      cp.add(diff);
+      camera.position.copy(cp);
+      camera.lookAt(QUADRO.localToWorld(cl.clone()));
+      }
+
+    }
+
+
+
+
+
+//----------
+
+
+
 				renderer.render( scene, camera );
 
 				prevTime = time;
@@ -434,61 +562,6 @@ Richtung(40,0,0,Faktor);//rechts
 
 		</script>
 
-<p id="Logfile"> </p> 
-<div style="font-style:italic; white-space:pre-wrap;">
-
-ANLEITUNG:
-
-Die Knöpfe verraten es dir.
-
-
-</div>
-<div style="display:flex; align-items:flex-end">               
-<span style="display:flex; flex-direction:row; align-items:flex-end">
-
-<button onclick="Loeschen()">Löschen</button>
-<button onclick="Farbe('green')" style="background-color:green">grün</button>
-<button onclick="Farbe('mediumblue')" style="background-color:blue">blau</button>
-<button onclick="Farbe('orange')" style="background-color:orange">orange</button>
-<button onclick="Farbe('red')" style="background-color:red">rot</button>
-<!--span id="link" style="position:relative; top:0px; left:60px; background-color:white"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span-->
-  </span>
-</div>               
-<div id="Ausgabe Downloadtext" style="display:none; white-space:pre-wrap; font-size:50%"> </div>
-<div id="Ausgabe zu tree.js"></div>               
-<div>               
-<button onclick="Richtung(-40,0,0,Faktor)" style="background-color:ccbbff">links</button>
-<button onclick="Richtung(0,-40,0,Faktor)" style="background-color:f7f7f7">hoch</button>
-<button onclick="Richtung(40,0,0,Faktor)" style="background-color:ffeecc">rechts</button>
-<button onclick="Richtung(0,40,0,Faktor)" style="background-color:777733">runter</button>
-<button onclick="Richtung(0,0,-40,Faktor)" style="background-color:444444; color:777777">hinter</button>
-<button onclick="Richtung(0,0,40,Faktor)" style="background-color:ddddff">vor</button>
-Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
-<span onclick="Faktor=10"><input type="radio" id="L10" name="Laenge" value="10"/><label for="L10">10</label></span>
-<span onclick="Faktor=20"><input type="radio" id="L20" name="Laenge" value="20"/><label for="L20">20</label></span>
-<span onclick="Faktor=40"><input type="radio" id="L40" name="Laenge" value="40" checked="checked"/><label for="L40">40</label></span>
-<span onclick="Faktor=80"><input type="radio" id="L80" name="Laenge" value="80"/><label for="L80">80</label></span>
-</span>
-</div>               
-<span id="Logpos" style="display:none"> </span>
-<span id="Log"> </span>
-<span id="Log2" style="white-space:pre-wrap"> </span>
-<div>               
-<button onclick="Richtung(-40,0,0,10)">Mini links</button>
-<button onclick="Richtung(30,-30,0,Faktor)">schräg rechts hoch</button>
-<button onclick="Richtung(30,30,0,Faktor)">schräg rechts runter</button>
-<button onclick="Richtung(-40,0,0,10)">Mini links</button>
-</div>               
-<div>               
-<button onclick="Richtung(40,0,0,10)">Mini rechts</button>
-<button onclick="Richtung(-30,-30,0,Faktor)">schräg links hoch</button>
-<button onclick="Richtung(-30,30,0,Faktor)">schräg links runter</button>
-<button onclick="Richtung(40,0,0,10)">Mini rechts</button>
-</div>
-<div>               
-<button onclick="Richtung(0,-40,0,10)">Mini hoch</button>
-<button onclick="Richtung(0,40,0,10)">Mini runter</button>
-</div>
 	</body>
 </html>
 
