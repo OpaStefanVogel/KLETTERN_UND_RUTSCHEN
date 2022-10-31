@@ -465,8 +465,8 @@ document.getElementById("hoch"  ).addEventListener('click',function(){Richtung(0
 document.getElementById("runter").addEventListener('click',function(){Richtung(0,+40,0,Faktor)});
 document.getElementById("hinter").addEventListener('click',function(){Richtung(0,0,-40,Faktor)});
 document.getElementById("vor"   ).addEventListener('click',function(){Richtung(0,0,+40,Faktor)});
-document.getElementById("rollercoaster").addEventListener('click',function(){train.add(camera);camera.position.set( 0, 0, 1); q.visible=false});
-document.getElementById("weiter_mit_QUADRO").addEventListener('click',function(){QUADRO.add(camera);camera.position.copy(cp); q.visible=true});
+document.getElementById("rollercoaster").addEventListener('click',function(){train.add(camera);camera.position.set( 0, 0, 1); camera.lookAt(train.position); q.visible=false});
+document.getElementById("weiter_mit_QUADRO").addEventListener('click',function(){QUADRO.add(camera);camera.position.copy(cp); camera.lookAt(QUADRO.localToWorld(cl.clone())); q.visible=true});
 
 
 
@@ -604,7 +604,8 @@ function Bild_touchmove() {
     delta=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
     //alert(distanz+" "+camera.position.clone().sub(cl).length());
     camera.position.setFromSphericalCoords(distanz,gamma,delta).add(cl);//???gewagt
-    camera.lookAt(q.position);
+    camera.lookAt(QUADRO.localToWorld(cl.clone()));
+    cp=camera.position.clone();
     //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
     //touchzahl=1;
     } else {
@@ -621,8 +622,9 @@ function Bild_touchmove() {
           distanz=Math.min(Math.max(distanz,3),10);
           }
       camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
-      camera.lookAt(q.position);
-      }+
+      camera.lookAt(QUADRO.localToWorld(cl.clone()));
+      cp=camera.position.clone();
+      }
   //document.getElementById("Log2").firstChild.nodeValue=Log;
   event.preventDefault();
   }
@@ -670,7 +672,8 @@ function Bild_click() {
 function Kamera_ausrichten() {
   cl.copy(q.position);
   camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
-  camera.lookAt(q.position);    
+  camera.lookAt(QUADRO.localToWorld(cl.clone()));
+  //cp=camera.position.clone(); 
   }
 
 
