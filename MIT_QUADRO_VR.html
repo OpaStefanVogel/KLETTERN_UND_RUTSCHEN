@@ -456,7 +456,7 @@ setTimeout(Richtung,16000,0,40,0,Faktor);//runter
 setTimeout(Test,16000);
 }
 //Test();
-
+Richtung(0,0,40,Faktor);//ohne dem passt die Kameraposition nicht
 
 //------------die Tasten
 document.getElementById("links" ).addEventListener('click',function(){Richtung(-40,0,0,Faktor)});
@@ -485,7 +485,6 @@ document.getElementById("weiter_mit_QUADRO").addEventListener('click',function()
 var cl=q.position.clone();
 var cp=camera.position.clone();
 var Ausrichten=0.005;
-
 
 
 //--------
@@ -537,7 +536,7 @@ var Ausrichten=0.005;
 //    diff2.subVectors(camera.position,q.position)
     diff2.subVectors(cp,q.position)
     
-    document.getElementById("Log2").firstChild.nodeValue=diff2.length().toFixed(4)+" "+JSON.stringify(QUADRO.localToWorld(cl.clone()));
+    //document.getElementById("Log2").firstChild.nodeValue=diff2.length().toFixed(4)+" "+JSON.stringify(QUADRO.localToWorld(cl.clone()));
 
     if (Math.abs(diff2.length()-distanz)>0.01) {
       diff2.normalize().multiplyScalar(Ausrichten);
@@ -632,22 +631,22 @@ function Bild_touchmove() {
 //var sminind=0;//schon oben
 function Bild_click() {
   var mouse=new THREE.Vector3();
-  var Log="\nmouse=["+(event.clientX-event.target.getBoundingClientRect().left)+","+(event.clientY-event.target.getBoundingClientRect().top)+"]\n";
-  mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / event.target.width ) * 2 - 1;
-  mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / event.target.height ) * 2 + 1;
+  var Log="mouse=["+(event.clientX-event.target.getBoundingClientRect().left)+","+(event.clientY-event.target.getBoundingClientRect().top)+"]"+event.target.getBoundingClientRect().width+" "+event.target.getBoundingClientRect().height+"\n";
+  mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / event.target.getBoundingClientRect().width ) * 2 - 1;//+0.34;
+  mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / event.target.getBoundingClientRect().height ) * 2 + 1;// -0.31;
   mouse.z = 0.96;
-  //Log=Log+mouse.toArray()+"\n"+Knoten.length+"####\n";
+  Log=Log+"mouse=["+mouse.toArray()+"]; Knoten.length="+Knoten.length+";\n";
   var min=100000;
   var minind=0;
   for (var i=0;i<Knoten.length;i++) {
-    //Log=Log+i+" "+Knoten[i].clone().toArray()+"\n"+Knoten[i].clone().project(camera).toArray()+"\n";
-    var dist=Knoten[i].clone().project(camera).distanceToSquared(mouse);
+    Log=Log+"Knoten "+i+" = "+Knoten[i].clone().toArray()+"; project="+QUADRO.localToWorld(Knoten[i].clone()).project(camera).toArray()+"\n";
+    var dist=QUADRO.localToWorld(Knoten[i].clone()).project(camera).distanceToSquared(mouse);
     if (dist<min) {min=dist; minind=i}
-    //Log=Log+minind+" "+dist+"\n";
+    Log=Log+minind+" "+dist+"\n";
     }
 
-  //Log=Log+q.position.clone().project(camera).toArray()+"\n";
-  //Log=Log+event.clientX+" "+event.clientY+" "+clock.getDelta()+"\n";
+  Log=Log+"q.position.project="+q.position.clone().project(camera).toArray()+"\n";
+  Log=Log+event.clientX+" "+event.clientY+" "/*+clock.getDelta()*/+"\n";
   //clock.start();
   if (min>0.1) { if (mouse.y>-0.7) q.visible=false; s.visible=false; } else {
     q.visible=true;
@@ -657,16 +656,16 @@ function Bild_click() {
     var smin=100000;
     sminind=0;
     for (var i=0;i<Stangen.length;i++) {
-      //Log=Log+i+" "+Stangen[i].position.toArray()+"\n"+Stangen[i].position.clone().project(camera).toArray()+"\n";
-      var dist=Stangen[i].position.clone().project(camera).distanceToSquared(mouse);
+      Log=Log+"Stange "+i+" = "+Stangen[i].position.toArray()+";nproject="+QUADRO.localToWorld(Stangen[i].position.clone()).project(camera).toArray()+"\n";
+      var dist=QUADRO.localToWorld(Stangen[i].position.clone()).project(camera).distanceToSquared(mouse);
       if (dist<smin) {smin=dist; sminind=i}
-      //Log=Log+"sminind="+sminind+", smin="+smin+"\n";
+      Log=Log+"sminind="+sminind+", smin="+smin+"\n";
       }
 
     s.position.copy(Stangen[sminind].position);
     
     }
-  //document.getElementById("Log2").firstChild.nodeValue=Log;
+  document.getElementById("Log2").firstChild.nodeValue=Log;
   }
 
 function Kamera_ausrichten() {
