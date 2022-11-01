@@ -22,11 +22,11 @@ Die Knöpfe verraten es dir.
 <div style="display:flex; align-items:flex-end">               
 <span style="display:flex; flex-direction:row; align-items:flex-end">
 
-<button onclick="Loeschen()">Löschen</button>
-<button onclick="Farbe('green')" style="background-color:green">grün</button>
-<button onclick="Farbe('mediumblue')" style="background-color:blue">blau</button>
-<button onclick="Farbe('orange')" style="background-color:orange">orange</button>
-<button onclick="Farbe('red')" style="background-color:red">rot</button>
+<button id="Löschen">Löschen</button>
+<button id="grün" style="background-color:green">grün</button>
+<button id="blau" style="background-color:blue">blau</button>
+<button id="orange" style="background-color:orange">orange</button>
+<button id="rot" style="background-color:red">rot</button>
 <!--span id="link" style="position:relative; top:0px; left:60px; background-color:white"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span-->
   </span>
 </div>               
@@ -52,20 +52,20 @@ Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 <span id="Log"> </span>
 <span id="Log2" style="white-space:pre-wrap"> </span>
 <div>               
-<button onclick="Richtung(-40,0,0,10)">Mini links</button>
-<button onclick="Richtung(30,-30,0,Faktor)">schräg rechts hoch</button>
-<button onclick="Richtung(30,30,0,Faktor)">schräg rechts runter</button>
-<button onclick="Richtung(-40,0,0,10)">Mini links</button>
+<button id="Mini links1">Mini links</button>
+<button id="schräg rechts hoch">schräg rechts hoch</button>
+<button id="schräg rechts runter">schräg rechts runter</button>
+<button id="Mini links2">Mini links</button>
 </div>               
 <div>               
-<button onclick="Richtung(40,0,0,10)">Mini rechts</button>
-<button onclick="Richtung(-30,-30,0,Faktor)">schräg links hoch</button>
-<button onclick="Richtung(-30,30,0,Faktor)">schräg links runter</button>
-<button onclick="Richtung(40,0,0,10)">Mini rechts</button>
+<button id="Mini rechts1">Mini rechts</button>
+<button id="schräg links hoch">schräg links hoch</button>
+<button id="schräg links runter">schräg links runter</button>
+<button id="Mini rechts2">Mini rechts</button>
 </div>
 <div>               
-<button onclick="Richtung(0,-40,0,10)">Mini hoch</button>
-<button onclick="Richtung(0,40,0,10)">Mini runter</button>
+<button id="Mini hoch">Mini hoch</button>
+<button id="Mini runter">Mini runter</button>
 </div>
 
 
@@ -376,7 +376,7 @@ function Loeschknopf() {
   }
 
 function Loeschen() {
-  scene.remove(Stangen[sminind]);
+  QUADRO.remove(Stangen[sminind]);
   Stangen.splice(sminind,1);
   Knoten.splice(sminind+1,1);
   sminind=Stangen.length-1;
@@ -410,7 +410,7 @@ function Stange(qalt,qneu,Faktor,Farbe) {
   st.rotateX(Math.PI/2);
   //st.material.color.set(0x009900);
   Stangen.push(st);
-  scene.add( st );
+  QUADRO.add( st );
   sminind=Stangen.length-1;
   s.position.copy(st.position);
   s.visible=true;
@@ -469,9 +469,25 @@ document.getElementById("hinter").addEventListener('click',function(){Richtung(0
 document.getElementById("vor"   ).addEventListener('click',function(){Richtung(0,0,+40,Faktor)});
 document.getElementById("rollercoaster").addEventListener('click',function(){train.add(camera);camera.position.set( 0, 0, 1); camera.lookAt(train.position); q.visible=false});
 document.getElementById("weiter_mit_QUADRO").addEventListener('click',function(){QUADRO.add(camera);camera.position.copy(cp); camera.lookAt(QUADRO.localToWorld(cl.clone())); q.visible=true});
-
-
-
+document.getElementById("L10").parentNode.addEventListener('click',function(){Faktor=10});
+document.getElementById("L20").parentNode.addEventListener('click',function(){Faktor=20});
+document.getElementById("L40").parentNode.addEventListener('click',function(){Faktor=40});
+document.getElementById("L80").parentNode.addEventListener('click',function(){Faktor=80});
+document.getElementById("Löschen").addEventListener('click',function(){Loeschen()});
+document.getElementById("grün"  ).addEventListener('click',function(){Farbe('green')});
+document.getElementById("blau"  ).addEventListener('click',function(){Farbe('mediumblue')});
+document.getElementById("orange").addEventListener('click',function(){Farbe('orange')});
+document.getElementById("rot"   ).addEventListener('click',function(){Farbe('red')});
+document.getElementById("Mini links1"   ).addEventListener('click',function(){Richtung(-40,0,0,10)});
+document.getElementById("schräg rechts hoch"  ).addEventListener('click',function(){Richtung(30,-30,0,Faktor)});
+document.getElementById("schräg rechts runter").addEventListener('click',function(){Richtung(30,30,0,Faktor)});
+document.getElementById("Mini links2"   ).addEventListener('click',function(){Richtung(-40,0,0,10)});
+document.getElementById("Mini rechts1"  ).addEventListener('click',function(){Richtung(40,0,0,10)});
+document.getElementById("schräg links hoch"  ).addEventListener('click',function(){Richtung(-30,-30,0,Faktor)});
+document.getElementById("schräg links runter").addEventListener('click',function(){Richtung(-30,30,0,Faktor)});
+document.getElementById("Mini rechts2"  ).addEventListener('click',function(){Richtung(40,0,0,10)});
+document.getElementById("Mini hoch"     ).addEventListener('click',function(){Richtung(0,-40,0,10)});
+document.getElementById("Mini runter"   ).addEventListener('click',function(){Richtung(0,40,0,10)});
 
 
 
@@ -545,7 +561,7 @@ var Ausrichten=0.005;
       camera.lookAt(QUADRO.localToWorld(cl.clone()));
       }
 
-    document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(QUADRO.localToWorld(camera.position.clone()))+"\n"+JSON.stringify(QUADRO.localToWorld(cl.clone()));
+    //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(QUADRO.localToWorld(camera.position.clone()))+"\n"+JSON.stringify(QUADRO.localToWorld(cl.clone()));
     }
 
 
