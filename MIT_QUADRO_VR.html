@@ -355,7 +355,7 @@ function Richtung(dr,dh,dv,Faktor) {
   q.visible=true;
   Knoten.push(q.position.clone());
   var qneu=q.position.clone();
-  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor/40,16)),(new THREE.MeshStandardMaterial( { color: 0xff0000, metalness: 0.2, roughness: 0 } )));
+  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor/40,16)),(new THREE.MeshStandardMaterial( { color: 0xee1100, metalness: 0.3, roughness: 0.1 } )));
   st.position.x=(qalt.x+qneu.x)/2;
   st.position.y=(qalt.y+qneu.y)/2;
   st.position.z=(qalt.z+qneu.z)/2;
@@ -426,13 +426,13 @@ QUADRO.rotateY(Math.PI);
 //QUADRO.rotateZ(Math.PI);
 
 const qGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
-const qMaterial = new THREE.MeshStandardMaterial( { color: 0x00dddd, metalness: 0.2, roughness: 0} );
+const qMaterial = new THREE.MeshStandardMaterial( { color: 0x00dddd, metalness: 0.5, roughness: 0.1} );
 const q = new THREE.Mesh( qGeometry, qMaterial );
 QUADRO.add( q );
 Knoten.push(q.position.clone());
 
 const sGeometry = new THREE.SphereGeometry( 0.06, 32, 32 );
-const sMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00, metalness: 0.2, roughness: 0 } );
+const sMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00, metalness: 0.5, roughness: 0.1 } );
 const s = new THREE.Mesh( sGeometry, sMaterial );
 QUADRO.add( s );
 
@@ -489,7 +489,25 @@ document.getElementById("Mini rechts2"  ).addEventListener('click',function(){Ri
 document.getElementById("Mini hoch"     ).addEventListener('click',function(){Richtung(0,-40,0,10)});
 document.getElementById("Mini runter"   ).addEventListener('click',function(){Richtung(0,40,0,10)});
 
-
+//---------------- Lichter
+// White directional light at half intensity shining from the top.
+/*const directionalLight = new THREE.DirectionalLight( 0x44ffff, 0.1 );
+QUADRO.add( directionalLight );
+const directionalLight2 = new THREE.DirectionalLight( 0x888888, 1 );
+directionalLight2.position.z=-20;
+directionalLight2.position.y=5;
+QUADRO.add( directionalLight2 );
+const directionalLight3 = new THREE.DirectionalLight( 0x555555, 0.3 );
+directionalLight2.position.y=2;
+directionalLight3.position.z=2;
+QUADRO.add( directionalLight3 );
+*/
+//const light = new THREE.AmbientLight( 0xC0C0C0 ); // soft white light
+//QUADRO.add( light );
+// White directional light at half intensity shining from the top.
+const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
+directionalLight.position.set(-1,5,2);
+scene.add( directionalLight );
 
 
 
