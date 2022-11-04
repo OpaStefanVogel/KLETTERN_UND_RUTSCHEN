@@ -90,7 +90,7 @@ Als Datei <input id="Ausdabedateiname" value="Klettern_und_Rutschen.xml"> <butto
   </div>
 
 <div>
-Zum Zurückladen <b><u>erst ganze Seite reload</u></b> und danach Datei auswählen: <input id="Datei öffnen" style="font-size:200%" type="file" id="files" oninput="reader.readAsText(event.target.files[0])"/>
+Zum Zurückladen <b><u>erst ganze Seite reload</u></b> und danach Datei auswählen: <input id="Datei öffnen" style="font-size:200%" type="file" id="files"/>
   </div>
 
 
@@ -756,7 +756,7 @@ function Kamera_ausrichten() {
 //--------Download
 
 var reader = new FileReader();
-reader.onload = function(e) {alert(1);
+reader.onload = function(e) {
   var Eingabe=e.target.result;
   //document.getElementById("Log").firstChild.nodeValue=Eingabe;
   //alert("los");
