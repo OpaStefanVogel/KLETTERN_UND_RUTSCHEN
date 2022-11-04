@@ -470,9 +470,9 @@ const st= new THREE.Object3D();
 QUADRO.add(st);
 st.add(camera);
 var gamma=Math.PI/2.4;
-var delta2=0.2;
+var delta=0.2;
 var distanz=6;
-st.position.setFromSphericalCoords(distanz,gamma,delta2);
+st.position.setFromSphericalCoords(distanz,gamma,delta);
 var cp=st.position.clone();
 var cl=q.position.clone();
 camera.lookAt(QUADRO.localToWorld(cl.clone()));
@@ -600,8 +600,7 @@ var Ausrichten=0.005;
       if (Ausrichten<1) diff.normalize().multiplyScalar(Ausrichten);
       cl.add(diff);
       cp.add(diff);
-      //st.position.copy(cp);
-      st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt, funktioniert aber
+      st.position.copy(cp);
       camera.lookAt(QUADRO.localToWorld(cl.clone()));
       }
 
@@ -621,7 +620,6 @@ var Ausrichten=0.005;
 
     //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(QUADRO.localToWorld(st.position.clone()))+"\n"+JSON.stringify(QUADRO.localToWorld(cl.clone()));
     //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(st.position.clone())+"\n"+JSON.stringify(QUADRO.localToWorld(st.position.clone()));
-    document.getElementById("Log2").firstChild.nodeValue=gamma+" "+delta2+" "+distanz;
     }
 
 
@@ -666,7 +664,7 @@ function Bild_touchstart() {
   TouchposY=Touch.clientY;
   cameraposalt=st.position.clone();
   gammaalt=gamma;
-  deltaalt=delta2;
+  deltaalt=delta;
   distanzalt=distanz;
   touchzahl=1;
   //event.preventDefault();
@@ -677,9 +675,9 @@ function Bild_touchmove() {
   var Touch=event.targetTouches.item(0);
   if (event.targetTouches.length==1&&touchzahl==1) {
     gamma=Math.min(Math.PI-0.01,Math.max(0.01,gammaalt-(Touch.clientY-TouchposY)/8/180*Math.PI));
-    delta2=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
+    delta=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
     //alert(distanz+" "+st.position.clone().sub(cl).length());
-    st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
+    st.position.setFromSphericalCoords(distanz,gamma,delta).add(cl);//???gewagt
     camera.lookAt(QUADRO.localToWorld(cl.clone()));
     cp=st.position.clone();
     //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
@@ -697,7 +695,7 @@ function Bild_touchmove() {
           distanz=distanzalt-(Math.sqrt((Touch.clientX-Touch2.clientX)**2+(Touch.clientY-Touch2.clientY)**2)-Math.sqrt((TouchposX-Touch2posX)**2+(TouchposY-Touch2posY)**2))/50;
           distanz=Math.min(Math.max(distanz,3),10);
           }
-      st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
+      st.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
       camera.lookAt(QUADRO.localToWorld(cl.clone()));
       cp=st.position.clone();
       }
@@ -747,7 +745,7 @@ function Bild_click() {
 
 function Kamera_ausrichten() {
   cl.copy(q.position);
-  st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
+  st.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
   camera.lookAt(QUADRO.localToWorld(cl.clone()));
   //cp=st.position.clone(); 
   }
