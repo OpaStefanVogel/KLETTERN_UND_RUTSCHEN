@@ -479,7 +479,6 @@ var gamma=Math.PI/2.4;
 var delta2=0.2;
 var distanz=6;
 st.position.setFromSphericalCoords(distanz,gamma,delta2);
-var cp=st.position.clone();
 var cl=q.position.clone();
 camera.lookAt(QUADRO.localToWorld(cl.clone()));
 camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
@@ -507,7 +506,7 @@ document.getElementById("runter").addEventListener('click',function(){Richtung(0
 document.getElementById("hinter").addEventListener('click',function(){Richtung(0,0,-40,Faktor)});
 document.getElementById("vor"   ).addEventListener('click',function(){Richtung(0,0,+40,Faktor)});
 document.getElementById("rollercoaster").addEventListener('click',function(){train.add(camera);camera.position.set( 0, 0, 1); camera.lookAt(train.position); q.visible=false});
-document.getElementById("weiter_mit_QUADRO").addEventListener('click',function(){QUADRO.add(camera);camera.position.copy(cp); camera.lookAt(QUADRO.localToWorld(cl.clone())); q.visible=true});
+document.getElementById("weiter_mit_QUADRO").addEventListener('click',function(){st.add(camera);camera.position.set(0,0,0); camera.lookAt(QUADRO.localToWorld(cl.clone())); q.visible=true});
 document.getElementById("L10").parentNode.addEventListener('click',function(){Faktor=10});
 document.getElementById("L20").parentNode.addEventListener('click',function(){Faktor=20});
 document.getElementById("L40").parentNode.addEventListener('click',function(){Faktor=40});
@@ -545,8 +544,9 @@ directionalLight2.position.z=-20;
 directionalLight2.position.y=5;
 QUADRO.add( directionalLight2 );
 const directionalLight3 = new THREE.DirectionalLight( 0x555555, 0.3 );
-directionalLight2.position.y=2;
-directionalLight3.position.z=2;
+directionalLight3.position.y=5;
+directionalLight3.position.z=20;
+directionalLight3.position.x=-70;
 QUADRO.add( directionalLight3 );
 */
 //const light = new THREE.AmbientLight( 0xC0C0C0 ); // soft white light
@@ -557,8 +557,12 @@ directionalLight.position.set(-1,5,2);
 scene.add( directionalLight );
 
 const directionalLight2 = new THREE.DirectionalLight( 0xffff00, 0.7 );
-directionalLight2.position.set(-1,5,-20);
+directionalLight2.position.set(-4,3,-20);
 scene.add( directionalLight2);
+
+const directionalLight3 = new THREE.DirectionalLight( 0x00ffff, 0.4 );
+directionalLight3.position.set(70,6,-20);
+scene.add( directionalLight3);
 
 
 
@@ -613,8 +617,6 @@ var Ausrichten=0.005;
     if (diff.length()>0.01) {
       if (Ausrichten<1) diff.normalize().multiplyScalar(Ausrichten);
       cl.add(diff);
-      cp.add(diff);
-      //st.position.copy(cp);
       st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);
       camera.lookAt(QUADRO.localToWorld(cl.clone()));
       }
@@ -681,7 +683,6 @@ function Bild_touchmove() {
     //alert(distanz+" "+st.position.clone().sub(cl).length());
     st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
     camera.lookAt(QUADRO.localToWorld(cl.clone()));
-    cp=st.position.clone();
     //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
     //touchzahl=1;
     } else {
@@ -699,7 +700,6 @@ function Bild_touchmove() {
           }
       st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
       camera.lookAt(QUADRO.localToWorld(cl.clone()));
-      cp=st.position.clone();
       }
   //document.getElementById("Log2").firstChild.nodeValue=Log;
   event.preventDefault();
@@ -749,7 +749,6 @@ function Kamera_ausrichten() {
   cl.copy(q.position);
   st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
   camera.lookAt(QUADRO.localToWorld(cl.clone()));
-  //cp=st.position.clone(); 
   }
 
 
