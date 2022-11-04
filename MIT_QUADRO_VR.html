@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js vr - roller coaster</title>
+<title>QUADRO im three.js vr - roller coaster</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 		<link type="text/css" rel="stylesheet" href="main.css">
@@ -12,7 +12,7 @@
 	<body>
 <p id="Logfile"> </p> 
 <div style="font-style:italic; white-space:pre-wrap;">
-
+<span float="right" ><small><code>background: three.js vr - roller coaster</code></small></span>
 <u>ANLEITUNG:</u>
 
 Die Knöpfe verraten es dir.
@@ -26,7 +26,9 @@ Die Knöpfe verraten es dir.
 <button id="grün" style="background-color:green">grün</button>
 <button id="blau" style="background-color:blue">blau</button>
 <button id="orange" style="background-color:orange">orange</button>
-<button id="rot" style="background-color:red">rot</button>
+<button id="rot" style="background-color:red">rot</button> --
+<button id="Demo" style="background-color:">Demo</button>
+<button id="alles_loeschen" style="background-color:">alles löschen</button>
 <!--span id="link" style="position:relative; top:0px; left:60px; background-color:white"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span-->
   </span>
 </div>               
@@ -418,6 +420,11 @@ function Loeschen() {
       }
   }
 
+function alles_loeschen() {
+  while (Stangen.length>0) Loeschen();
+  }
+
+
 function Farbe(farbe) {
   Stangen[sminind].material.color.set(farbe);
   Stangen[sminind].Stange[3]=farbe;
@@ -484,7 +491,7 @@ camera.lookAt(QUADRO.localToWorld(cl.clone()));
 camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
 
 let sminind=0;//fehlt oben
-function Test() {
+function Demo() {
 setTimeout(Richtung,2000,0,0,40,Faktor);//vor
 setTimeout(Richtung,4000,0,-40,0,Faktor);//hoch
 setTimeout(Richtung,6000,40,0,0,Faktor);//rechts
@@ -493,7 +500,7 @@ setTimeout(Richtung,10000,0,0,40,Faktor);//vor
 setTimeout(Richtung,12000,0,-40,0,Faktor);//hoch
 setTimeout(Richtung,14000,-40,0,0,Faktor);//links
 setTimeout(Richtung,16000,0,40,0,Faktor);//runter
-setTimeout(Test,16000);
+//setTimeout(Demo,16000);
 }
 //Test();
 //Richtung(0,0,40,Faktor);//ohne dem passt die Kameraposition nicht
@@ -512,10 +519,12 @@ document.getElementById("L20").parentNode.addEventListener('click',function(){Fa
 document.getElementById("L40").parentNode.addEventListener('click',function(){Faktor=40});
 document.getElementById("L80").parentNode.addEventListener('click',function(){Faktor=80});
 document.getElementById("Löschen").addEventListener('click',function(){Loeschen()});
+document.getElementById("alles_loeschen").addEventListener('click',function(){alles_loeschen()});
 document.getElementById("grün"  ).addEventListener('click',function(){Farbe('green')});
 document.getElementById("blau"  ).addEventListener('click',function(){Farbe('mediumblue')});
 document.getElementById("orange").addEventListener('click',function(){Farbe('orange')});
 document.getElementById("rot"   ).addEventListener('click',function(){Farbe('red')});
+document.getElementById("Demo").addEventListener('click',function(){Demo()});
 document.getElementById("Mini links1"   ).addEventListener('click',function(){Richtung(-40,0,0,10)});
 document.getElementById("schräg rechts hoch"  ).addEventListener('click',function(){Richtung(30,-30,0,Faktor)});
 document.getElementById("schräg rechts runter").addEventListener('click',function(){Richtung(30,30,0,Faktor)});
