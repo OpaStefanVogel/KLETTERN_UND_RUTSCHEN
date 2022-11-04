@@ -26,7 +26,7 @@ Die Knöpfe verraten es dir.
 <button id="grün" style="background-color:green">grün</button>
 <button id="blau" style="background-color:blue">blau</button>
 <button id="orange" style="background-color:orange">orange</button>
-<button id="rot" style="background-color:red">rot</button> --
+<button id="rot" style="background-color:red">rot</button> -------
 <button id="Demo" style="background-color:">Demo</button>
 <button id="alles_loeschen" style="background-color:">alles löschen</button>
 <!--span id="link" style="position:relative; top:0px; left:60px; background-color:white"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span-->
@@ -492,15 +492,16 @@ camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
 
 let sminind=0;//fehlt oben
 function Demo() {
-setTimeout(Richtung,2000,0,0,40,Faktor);//vor
-setTimeout(Richtung,4000,0,-40,0,Faktor);//hoch
-setTimeout(Richtung,6000,40,0,0,Faktor);//rechts
-setTimeout(Richtung,8000,0,40,0,Faktor);//runter
-setTimeout(Richtung,10000,0,0,40,Faktor);//vor
-setTimeout(Richtung,12000,0,-40,0,Faktor);//hoch
-setTimeout(Richtung,14000,-40,0,0,Faktor);//links
-setTimeout(Richtung,16000,0,40,0,Faktor);//runter
-//setTimeout(Demo,16000);
+var t=50;
+setTimeout(Richtung,2*t,0,0,40,Faktor);//vor
+setTimeout(Richtung,4*t,0,-40,0,Faktor);//hoch
+setTimeout(Richtung,6*t,40,0,0,Faktor);//rechts
+setTimeout(Richtung,8*t,0,40,0,Faktor);//runter
+setTimeout(Richtung,10*t,0,0,40,Faktor);//vor
+setTimeout(Richtung,12*t,0,-40,0,Faktor);//hoch
+setTimeout(Richtung,14*t,-40,0,0,Faktor);//links
+setTimeout(Richtung,16*t,0,40,0,Faktor);//runter
+//setTimeout(Demo,18*t);
 }
 //Test();
 //Richtung(0,0,40,Faktor);//ohne dem passt die Kameraposition nicht
