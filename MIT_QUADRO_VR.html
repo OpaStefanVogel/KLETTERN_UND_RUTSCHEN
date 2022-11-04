@@ -431,6 +431,28 @@ QUADRO.position.set( 4, 0.2, -34 );
 QUADRO.rotateY(Math.PI);
 //QUADRO.rotateZ(Math.PI);
 
+const qGeometry0 = new THREE.SphereGeometry( 10, 32, 32 );
+const qMaterial0 = new THREE.MeshStandardMaterial( { color: 0x00dddd, metalness: 0.5, roughness: 0.1} );
+const q0 = new THREE.Mesh( qGeometry0, qMaterial0 );
+scene.add( q0 );
+
+const qGeometry1 = new THREE.SphereGeometry( 0.2, 32, 32 );
+const qMaterial1 = new THREE.MeshStandardMaterial( { color: 0x11dddd, metalness: 0.5, roughness: 0.1} );
+const q1 = new THREE.Mesh( qGeometry1, qMaterial1 );
+QUADRO.add( q1 );
+
+const qGeometry2 = new THREE.SphereGeometry( 0.2, 32, 32 );
+const qMaterial2 = new THREE.MeshStandardMaterial( { color: 0xdd0000, metalness: 0.5, roughness: 0.1} );
+const q2 = new THREE.Mesh( qGeometry2, qMaterial2 );
+QUADRO.add( q2 );
+q2.position.set( 3, 0, 0);
+
+const qGeometry3 = new THREE.SphereGeometry( 0.2, 32, 32 );
+const qMaterial3 = new THREE.MeshStandardMaterial( { color: 0x00dd00, metalness: 0.5, roughness: 0.1} );
+const q3 = new THREE.Mesh( qGeometry3, qMaterial3 );
+QUADRO.add( q3 );
+q3.position.set( 0, 0, 3);
+
 const qGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
 const qMaterial = new THREE.MeshStandardMaterial( { color: 0x00dddd, metalness: 0.5, roughness: 0.1} );
 const q = new THREE.Mesh( qGeometry, qMaterial );
@@ -448,9 +470,9 @@ const st= new THREE.Object3D();
 QUADRO.add(st);
 st.add(camera);
 var gamma=Math.PI/2.4;
-var delta=0.2;
+var delta2=0.2;
 var distanz=6;
-st.position.setFromSphericalCoords(distanz,gamma,delta);
+st.position.setFromSphericalCoords(distanz,gamma,delta2);
 var cp=st.position.clone();
 var cl=q.position.clone();
 camera.lookAt(QUADRO.localToWorld(cl.clone()));
@@ -577,9 +599,13 @@ var Ausrichten=0.005;
     if (diff.length()>0.01) {
       if (Ausrichten<1) diff.normalize().multiplyScalar(Ausrichten);
       cl.add(diff);
-      st.lookAt(QUADRO.localToWorld(cl.clone()));
+      cp.add(diff);
+      //st.position.copy(cp);
+      st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt, funktioniert aber
+      camera.lookAt(QUADRO.localToWorld(cl.clone()));
       }
 
+/*
     var diff2=new THREE.Vector3();
 //    diff2.subVectors(st.position,q.position)
     diff2.subVectors(cp,q.position)
@@ -588,12 +614,14 @@ var Ausrichten=0.005;
 
     if (Math.abs(diff2.length()-distanz)>0.01) {
       diff2.normalize().multiplyScalar(Ausrichten);
-      cp.add(diff);
-      st.position.copy(cp);
-      st.lookAt(QUADRO.localToWorld(cl.clone()));
+      //alert(8);
+//      camera.lookAt(QUADRO.localToWorld(cl.clone()));
       }
+*/
 
     //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(QUADRO.localToWorld(st.position.clone()))+"\n"+JSON.stringify(QUADRO.localToWorld(cl.clone()));
+    //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(st.position.clone())+"\n"+JSON.stringify(QUADRO.localToWorld(st.position.clone()));
+    document.getElementById("Log2").firstChild.nodeValue=gamma+" "+delta2+" "+distanz;
     }
 
 
@@ -638,7 +666,7 @@ function Bild_touchstart() {
   TouchposY=Touch.clientY;
   cameraposalt=st.position.clone();
   gammaalt=gamma;
-  deltaalt=delta;
+  deltaalt=delta2;
   distanzalt=distanz;
   touchzahl=1;
   //event.preventDefault();
@@ -649,10 +677,10 @@ function Bild_touchmove() {
   var Touch=event.targetTouches.item(0);
   if (event.targetTouches.length==1&&touchzahl==1) {
     gamma=Math.min(Math.PI-0.01,Math.max(0.01,gammaalt-(Touch.clientY-TouchposY)/8/180*Math.PI));
-    delta=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
+    delta2=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
     //alert(distanz+" "+st.position.clone().sub(cl).length());
-    st.position.setFromSphericalCoords(distanz,gamma,delta).add(cl);//???gewagt
-    st.lookAt(QUADRO.localToWorld(cl.clone()));
+    st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
+    camera.lookAt(QUADRO.localToWorld(cl.clone()));
     cp=st.position.clone();
     //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
     //touchzahl=1;
@@ -669,8 +697,8 @@ function Bild_touchmove() {
           distanz=distanzalt-(Math.sqrt((Touch.clientX-Touch2.clientX)**2+(Touch.clientY-Touch2.clientY)**2)-Math.sqrt((TouchposX-Touch2posX)**2+(TouchposY-Touch2posY)**2))/50;
           distanz=Math.min(Math.max(distanz,3),10);
           }
-      st.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
-      st.lookAt(QUADRO.localToWorld(cl.clone()));
+      st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
+      camera.lookAt(QUADRO.localToWorld(cl.clone()));
       cp=st.position.clone();
       }
   //document.getElementById("Log2").firstChild.nodeValue=Log;
@@ -719,8 +747,8 @@ function Bild_click() {
 
 function Kamera_ausrichten() {
   cl.copy(q.position);
-  st.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
-  st.lookAt(QUADRO.localToWorld(cl.clone()));
+  st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
+  camera.lookAt(QUADRO.localToWorld(cl.clone()));
   //cp=st.position.clone(); 
   }
 
