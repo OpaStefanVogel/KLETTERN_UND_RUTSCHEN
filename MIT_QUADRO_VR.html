@@ -418,6 +418,12 @@ function Stange(qalt,qneu,Faktor,Farbe) {
 
 
 
+
+
+
+
+
+
 //---------------------------------------- aus MIT_QUADRO.html die Geometrie:
 const QUADRO = new THREE.Object3D();
 scene.add( QUADRO );
@@ -436,11 +442,16 @@ const sMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00, metalness: 
 const s = new THREE.Mesh( sGeometry, sMaterial );
 QUADRO.add( s );
 
-QUADRO.add(camera);
+//QUADRO.add(camera);
+const st= new THREE.Object3D();
+//st.position.set(0,10,13);
+QUADRO.add(st);
+st.add(camera);
 var gamma=Math.PI/2.4;
 var delta=0.2;
 var distanz=6;
-camera.position.setFromSphericalCoords(distanz,gamma,delta);
+st.position.setFromSphericalCoords(distanz,gamma,delta);
+var cp=st.position.clone();
 var cl=q.position.clone();
 camera.lookAt(QUADRO.localToWorld(cl.clone()));
 camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
@@ -509,6 +520,10 @@ const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
 directionalLight.position.set(-1,5,2);
 scene.add( directionalLight );
 
+const directionalLight2 = new THREE.DirectionalLight( 0xffff00, 0.7 );
+directionalLight2.position.set(-1,5,-20);
+scene.add( directionalLight2);
+
 
 
 
@@ -518,7 +533,6 @@ scene.add( directionalLight );
 
 //-----------------
 
-var cp=camera.position.clone();
 var Ausrichten=0.005;
 
 //--------
@@ -563,11 +577,11 @@ var Ausrichten=0.005;
     if (diff.length()>0.01) {
       if (Ausrichten<1) diff.normalize().multiplyScalar(Ausrichten);
       cl.add(diff);
-      camera.lookAt(QUADRO.localToWorld(cl.clone()));
+      st.lookAt(QUADRO.localToWorld(cl.clone()));
       }
 
     var diff2=new THREE.Vector3();
-//    diff2.subVectors(camera.position,q.position)
+//    diff2.subVectors(st.position,q.position)
     diff2.subVectors(cp,q.position)
     
     //document.getElementById("Log2").firstChild.nodeValue=diff2.length().toFixed(4)+" "+JSON.stringify(QUADRO.localToWorld(cl.clone()));
@@ -575,11 +589,11 @@ var Ausrichten=0.005;
     if (Math.abs(diff2.length()-distanz)>0.01) {
       diff2.normalize().multiplyScalar(Ausrichten);
       cp.add(diff);
-      camera.position.copy(cp);
-      camera.lookAt(QUADRO.localToWorld(cl.clone()));
+      st.position.copy(cp);
+      st.lookAt(QUADRO.localToWorld(cl.clone()));
       }
 
-    //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(QUADRO.localToWorld(camera.position.clone()))+"\n"+JSON.stringify(QUADRO.localToWorld(cl.clone()));
+    //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(QUADRO.localToWorld(st.position.clone()))+"\n"+JSON.stringify(QUADRO.localToWorld(cl.clone()));
     }
 
 
@@ -622,7 +636,7 @@ function Bild_touchstart() {
   //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
   TouchposX=Touch.clientX;
   TouchposY=Touch.clientY;
-  cameraposalt=camera.position.clone();
+  cameraposalt=st.position.clone();
   gammaalt=gamma;
   deltaalt=delta;
   distanzalt=distanz;
@@ -631,15 +645,15 @@ function Bild_touchstart() {
   }
 
 function Bild_touchmove() {
-  //var Log=event.targetTouches.length;
+	  //var Log=event.targetTouches.length;
   var Touch=event.targetTouches.item(0);
   if (event.targetTouches.length==1&&touchzahl==1) {
     gamma=Math.min(Math.PI-0.01,Math.max(0.01,gammaalt-(Touch.clientY-TouchposY)/8/180*Math.PI));
     delta=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
-    //alert(distanz+" "+camera.position.clone().sub(cl).length());
-    camera.position.setFromSphericalCoords(distanz,gamma,delta).add(cl);//???gewagt
-    camera.lookAt(QUADRO.localToWorld(cl.clone()));
-    cp=camera.position.clone();
+    //alert(distanz+" "+st.position.clone().sub(cl).length());
+    st.position.setFromSphericalCoords(distanz,gamma,delta).add(cl);//???gewagt
+    st.lookAt(QUADRO.localToWorld(cl.clone()));
+    cp=st.position.clone();
     //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
     //touchzahl=1;
     } else {
@@ -655,9 +669,9 @@ function Bild_touchmove() {
           distanz=distanzalt-(Math.sqrt((Touch.clientX-Touch2.clientX)**2+(Touch.clientY-Touch2.clientY)**2)-Math.sqrt((TouchposX-Touch2posX)**2+(TouchposY-Touch2posY)**2))/50;
           distanz=Math.min(Math.max(distanz,3),10);
           }
-      camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
-      camera.lookAt(QUADRO.localToWorld(cl.clone()));
-      cp=camera.position.clone();
+      st.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
+      st.lookAt(QUADRO.localToWorld(cl.clone()));
+      cp=st.position.clone();
       }
   //document.getElementById("Log2").firstChild.nodeValue=Log;
   event.preventDefault();
@@ -705,9 +719,9 @@ function Bild_click() {
 
 function Kamera_ausrichten() {
   cl.copy(q.position);
-  camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
-  camera.lookAt(QUADRO.localToWorld(cl.clone()));
-  //cp=camera.position.clone(); 
+  st.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
+  st.lookAt(QUADRO.localToWorld(cl.clone()));
+  //cp=st.position.clone(); 
   }
 
 
