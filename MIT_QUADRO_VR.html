@@ -12,13 +12,12 @@
 	<body>
 <p id="Logfile"> </p> 
 <div style="font-style:italic; white-space:pre-wrap;">
-<span float="right" ><small><code>background: three.js vr - roller coaster</code></small></span>
 <u>ANLEITUNG:</u>
 
 Die Knöpfe verraten es dir.
 
-
 </div>
+<span style="position:relative; top:35px; left:760px" ><small><code>background: https://threejs.org/examples/webxr_vr_rollercoaster.html</code></small></span>
 <div style="display:flex; align-items:flex-end">               
 <span style="display:flex; flex-direction:row; align-items:flex-end">
 
@@ -33,7 +32,7 @@ Die Knöpfe verraten es dir.
   </span>
 </div>               
 <div id="Ausgabe Downloadtext" style="display:none; white-space:pre-wrap; font-size:50%"> </div>
-<div id="Ausgabe zu tree.js"></div>               
+<div id="Ausgabe zu tree.js"> </div>
 <div>               
 <button id="links"  style="background-color:ccbbff">links</button>
 <button id="hoch"   style="background-color:f7f7f7">hoch</button>
@@ -432,7 +431,7 @@ function Farbe(farbe) {
 
 function Stange(qalt,qneu,Faktor,Farbe) {
   //alert(qalt+" "+qneu+" "+Faktor+" "+Farbe);
-  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor,16)),(new THREE.MeshStandardMaterial( { color: Farbe } )));
+  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor,16)),(new THREE.MeshStandardMaterial( { color: Farbe, metalness: 0.3, roughness: 0.1 } )));
   q.position.x=qneu[0];
   q.position.y=qneu[1];
   q.position.z=qneu[2];
@@ -491,7 +490,7 @@ camera.lookAt(QUADRO.localToWorld(cl.clone()));
 camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
 
 let sminind=0;//fehlt oben
-function Demo() {
+function Demo1() {
 var t=50;
 setTimeout(Richtung,2*t,0,0,40,Faktor);//vor
 setTimeout(Richtung,4*t,0,-40,0,Faktor);//hoch
@@ -503,6 +502,102 @@ setTimeout(Richtung,14*t,-40,0,0,Faktor);//links
 setTimeout(Richtung,16*t,0,40,0,Faktor);//runter
 //setTimeout(Demo,18*t);
 }
+
+function Demo() {
+Stange([0,0,0],[1,0,0],1,"orange");
+Stange([1,0,0],[2,0,0],1,"orange");
+Stange([2,0,0],[2,1,0],1,"orange");
+Stange([2,1,0],[2,2,0],1,"red");
+Stange([2,2,0],[2,3,0],1,"green");
+Stange([2,3,0],[1,3,0],1,"green");
+Stange([1,3,0],[0,3,0],1,"green");
+Stange([0,3,0],[0,2,0],1,"green");
+Stange([0,2,0],[1,2,0],1,"red");
+Stange([0,2,0],[0,1,0],1,"red");
+Stange([0,1,0],[0,0,0],1,"orange");
+Stange([0,0,0],[0,0,1],1,"orange");
+Stange([0,0,1],[0,1,1],1,"orange");
+Stange([0,1,1],[0,1,0],1,"red");
+Stange([0,1,0],[1,1,0],1,"red");
+Stange([1,1,0],[1,2,0],1,"red");
+Stange([1,2,0],[1,3,0],1,"green");
+Stange([1,2,0],[2,2,0],1,"red");
+Stange([1,0,0],[1,1,0],1,"orange");
+Stange([2,0,0],[2,0,-1],1,"red");
+Stange([2,0,-1],[2,0,-2],1,"red");
+Stange([2,0,-2],[2,1,-2],1,"red");
+Stange([2,1,-2],[2,2,-2],1,"red");
+Stange([2,2,-2],[2,3,-2],1,"red");
+Stange([2,3,-2],[2,3,0],2,"red");
+Stange([2,2,0],[2,2,-1],1,"red");
+Stange([2,2,-1],[2,2,-2],1,"red");
+Stange([2,1,0],[2,1,-1],1,"red");
+Stange([2,1,-1],[2,1,-2],1,"red");
+Stange([2,2,-1],[2,1,-1],1,"red");
+Stange([2,1,-1],[2,0,-1],1,"red");
+Stange([2,0,-1],[3,0,-1],1,"red");
+Stange([3,0,-1],[3,0,-2],1,"red");
+Stange([3,0,-2],[2,0,-2],1,"red");
+Stange([3,0,-1],[3,1,-1],1,"red");
+Stange([3,1,-1],[2,1,-1],1,"red");
+Stange([3,1,-1],[3,1,-2],1,"red");
+Stange([3,1,-2],[3,0,-2],1,"red");
+Stange([3,1,-2],[2,1,-2],1,"red");
+Stange([0,0,0],[0,0,-2],2,"red");
+Stange([0,1,0],[0,1,-2],2,"red");
+Stange([0,3,0],[0,3,-2],2,"red");
+Stange([0,3,-2],[0,2,-2],1,"red");
+Stange([0,2,-2],[0,1,-2],1,"red");
+Stange([0,1,-2],[0,0,-2],1,"red");
+Stange([0,2,0],[0,2,-1],1,"red");
+Stange([0,2,-1],[0,2,-2],1,"red");
+Stange([0,2,-2],[1,2,-2],1,"red");
+Stange([1,2,-2],[1,3,-2],1,"red");
+Stange([1,3,-2],[2,3,-2],1,"red");
+Stange([1,3,-2],[1,3,-3],1,"red");
+Stange([1,3,-3],[1,2,-3],1,"red");
+Stange([1,2,-3],[1,1,-3],1,"red");
+Stange([1,1,-3],[1,0,-3],1,"red");
+Stange([1,0,-3],[0,0,-3],1,"red");
+Stange([0,0,-3],[0,0,-2],1,"red");
+Stange([0,0,-3],[0,1,-3],1,"red");
+Stange([0,1,-3],[0,1,-2],1,"red");
+Stange([0,1,-3],[1,1,-3],1,"red");
+Stange([1,1,-3],[2,1,-3],1,"red");
+Stange([2,1,-3],[3,1,-3],1,"red");
+Stange([3,1,-3],[3,1,-2],1,"red");
+Stange([3,1,-3],[3,0,-3],1,"red");
+Stange([3,0,-3],[3,0,-2],1,"red");
+Stange([2,0,-2],[1,0,-2],1,"red");
+Stange([1,0,-2],[0,0,-2],1,"red");
+Stange([1,0,-2],[1,1,-2],1,"red");
+Stange([1,1,-2],[0,1,-2],1,"red");
+Stange([1,1,-2],[1,1,-3],1,"red");
+Stange([1,2,-2],[2,2,-2],1,"red");
+Stange([2,2,-1],[1,2,-1],1,"red");
+Stange([1,2,-1],[0,2,-1],1,"red");
+Stange([1,2,0],[1,2,-1],1,"red");
+Stange([1,2,-1],[1,2,-2],1,"red");
+Stange([0,3,0],[-0.25,3,0],0.25,"red");
+Stange([-0.25,3,0],[0.5,3.75,0],1,"red");
+Stange([0.5,3.75,0],[1.25,4.5,0],1,"red");
+Stange([1.25,4.5,0],[2,3.75,0],1,"red");
+Stange([2,3.75,0],[2.75,3,0],1,"red");
+Stange([2.75,3,0],[2.5,3,0],0.25,"red");
+Stange([2.5,3,0],[2,3,0],0.5,"red");
+Stange([0,3,-2],[-0.25,3,-2],0.25,"red");
+Stange([-0.25,3,-2],[0.5,3.75,-2],1,"red");
+Stange([0.5,3.75,-2],[1.25,4.5,-2],1,"red");
+Stange([1.25,4.5,-2],[2,3.75,-2],1,"red");
+Stange([2,3.75,-2],[2.75,3,-2],1,"red");
+Stange([2.75,3,-2],[2.5,3,-2],0.25,"red");
+Stange([2.5,3,-2],[2,3,-2],0.5,"red");
+Stange([0.5,3.75,0],[0.5,3.75,-2],2,"red");
+Stange([1.25,4.5,0],[1.25,4.5,-2],2,"red");
+Stange([2,3.75,0],[2,3.75,-1],1,"red");
+Stange([2,3.75,-1],[2,3.75,-2],1,"red");
+  }
+
 //Test();
 //Richtung(0,0,40,Faktor);//ohne dem passt die Kameraposition nicht
 
@@ -562,15 +657,15 @@ QUADRO.add( directionalLight3 );
 //const light = new THREE.AmbientLight( 0xC0C0C0 ); // soft white light
 //QUADRO.add( light );
 // White directional light at half intensity shining from the top.
-const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
+const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.6 );
 directionalLight.position.set(-1,5,2);
 scene.add( directionalLight );
 
-const directionalLight2 = new THREE.DirectionalLight( 0xffff00, 0.7 );
+const directionalLight2 = new THREE.DirectionalLight( 0xffff00, 0.4 );
 directionalLight2.position.set(-4,3,-20);
 scene.add( directionalLight2);
 
-const directionalLight3 = new THREE.DirectionalLight( 0x00ffff, 0.4 );
+const directionalLight3 = new THREE.DirectionalLight( 0x00ffff, 0.2 );
 directionalLight3.position.set(70,6,-20);
 scene.add( directionalLight3);
 
