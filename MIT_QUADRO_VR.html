@@ -1,367 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-<title>QUADRO im three.js vr - roller coaster</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-		<link type="text/css" rel="stylesheet" href="main.css">
-	</head>
-
-		<div id="container"></div>
-
-	<body>
-<p id="Logfile"> </p> 
-<div style="font-style:italic; white-space:pre-wrap;">
-<u>ANLEITUNG:</u>
-
-Die Knöpfe verraten es dir.
-
-</div>
-<span style="position:relative; top:35px; left:760px" ><small><code>background: https://threejs.org/examples/webxr_vr_rollercoaster.html</code></small></span>
-<div style="display:flex; align-items:flex-end">               
-<span style="display:flex; flex-direction:row; align-items:flex-end">
-
-<button id="Löschen">Löschen</button>
-<button id="grün" style="background-color:green">grün</button>
-<button id="blau" style="background-color:blue">blau</button>
-<button id="orange" style="background-color:orange">orange</button>
-<button id="rot" style="background-color:red">rot</button> -------
-<button id="Demo" style="background-color:">Demo</button>
-<button id="alles_loeschen" style="background-color:">alles löschen</button>
-<!--span id="link" style="position:relative; top:0px; left:60px; background-color:white"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span-->
-  </span>
-</div>               
-<div id="Ausgabe Downloadtext" style="display:none; white-space:pre-wrap; font-size:50%"> </div>
-<div id="Ausgabe zu tree.js"> </div>
-<div>               
-<button id="links"  style="background-color:ccbbff">links</button>
-<button id="hoch"   style="background-color:f7f7f7">hoch</button>
-<button id="rechts" style="background-color:ffeecc">rechts</button>
-<button id="runter" style="background-color:777733">runter</button>
-<button id="hinter" style="background-color:444444; color:777777">hinter</button>
-<button id="vor"    style="background-color:ddddff">vor</button>
-Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
-<span onclick="Faktor=10"><input type="radio" id="L10" name="Laenge" value="10"/><label for="L10">10</label></span>
-<span onclick="Faktor=20"><input type="radio" id="L20" name="Laenge" value="20"/><label for="L20">20</label></span>
-<span onclick="Faktor=40"><input type="radio" id="L40" name="Laenge" value="40" checked="checked"/><label for="L40">40</label></span>
-<span onclick="Faktor=80"><input type="radio" id="L80" name="Laenge" value="80"/><label for="L80">80</label></span>
-<button id="rollercoaster">zwischendurch im rollercoaster mitfahren</button>
-<button id="weiter_mit_QUADRO">dann QUADRO weiter machen</button>
-</span>
-</div>               
-<span id="Logpos" style="display:none"> </span>
-<span id="Log"> </span>
-<span id="Log2" style="white-space:pre-wrap"> </span>
-<div>               
-<button id="Mini links1">Mini links</button>
-<button id="schräg rechts hoch">schräg rechts hoch</button>
-<button id="schräg rechts runter">schräg rechts runter</button>
-<button id="Mini links2">Mini links</button>
-</div>               
-<div>               
-<button id="Mini rechts1">Mini rechts</button>
-<button id="schräg links hoch">schräg links hoch</button>
-<button id="schräg links runter">schräg links runter</button>
-<button id="Mini rechts2">Mini rechts</button>
-</div>
-<div>               
-<button id="Mini hoch">Mini hoch</button>
-<button id="Mini runter">Mini runter</button>
-</div>
-
-<hr/>
-<hr/>
-<div>
-  Kamera ausrichten 
-  <span onclick="Ausrichten=1"><input type="radio" id="K10" name="Ausrichten" value="10"/><label for="K10">sofort</label></span>
-  <span onclick="Ausrichten=0.05"><input type="radio" id="K20" name="Ausrichten" value="20"/><label for="K20">schnell</label></span>
-<span onclick="Ausrichten=0.005"><input type="radio" id="K40" name="Ausrichten" value="40" checked="checked"/><label for="K40">langsam</label></span>
-  <span onclick="Ausrichten=0"><input type="radio" id="K80" name="Ausrichten" value="80"/><label for="K80">nur bei</label></span>
-  <button id="Kamera ausrichten" onclick="Kamera_ausrichten()">Kamera ausrichten</button>
-  </div>               
-
-
-
-
-<hr/>
-<hr/>
-<div>
-Als Datei <input id="Ausdabedateiname" value="Klettern_und_Rutschen.xml"> <button id="downloadstart">speichern</button>.
-<span style="display:none">  <a id="download"> </a><small> (dieser Download erfolgt mit <a href="http://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file">&lt;a href=... download=...&gt;</a>)</small></span>
-  </div>
-
-<div>
-Zum Zurückladen <b><u>erst ganze Seite reload</u></b> und danach Datei auswählen: <input id="Datei öffnen" style="font-size:200%" type="file" id="files"/>
-  </div>
-
-
-
-
-
-
-<!--video id="video" loop muted crossOrigin="anonymous" playsinline style="display:non">
-  <source src="./three.js/textures/pano.webm">
-  <source src="./three.js/examples/textures/pano.mp4">
-  </video-->
-<!--p>Hallo</p-->
-		<!-- Import maps polyfill -->
-		<!-- Remove this when import maps will be widely supported -->
-		<!--script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script-->
-
-	</body>
-
-
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "./three.js/build/three.module.js",
-					"three/addons/": "./three.js/examples/jsm/"
-				}
-			}
-		</script>
-
-		<script type="module">
-
-/*
-const video = document.getElementById( 'video' );
-video.play();
-const file = './three.js/examples/sounds/376737_Skullbeatz___Bad_Cat_Maste.mp3';
-const mediaElement = new Audio( file );
-mediaElement.play();
-*/
-
-			import * as THREE from 'three';
-
-			import {
-				RollerCoasterGeometry,
-				RollerCoasterShadowGeometry,
-				RollerCoasterLiftersGeometry,
-				TreesGeometry,
-				SkyGeometry
-			} from 'three/addons/misc/RollerCoaster.js';
-			import { VRButton } from 'three/addons/webxr/VRButton.js';
-
-			let mesh, material, geometry;
-
-			const renderer = new THREE.WebGLRenderer( { antialias: true } );
-			renderer.setPixelRatio( window.devicePixelRatio );
-			renderer.setSize( window.innerWidth*0.9, window.innerHeight*0.9);
-			renderer.xr.enabled = true;
-			renderer.xr.setReferenceSpaceType( 'local' );
-			//document.body.appendChild( renderer.domElement );
-
-			//document.body.appendChild( VRButton.createButton( renderer ) );
-
-renderer.domElement.addEventListener("click",Bild_click);
-renderer.domElement.addEventListener("touchstart",Bild_touchstart);
-renderer.domElement.addEventListener("touchmove",Bild_touchmove);
-document.body.insertBefore( renderer.domElement, document.getElementById("Ausgabe zu tree.js") );
-document.body.appendChild( VRButton.createButton( renderer ) );
-
-
-			//
-
-			const scene = new THREE.Scene();
-			scene.background = new THREE.Color( 0xf0f0ff );
-
-			const light = new THREE.HemisphereLight( 0xfff0f0, 0x606066 );
-			light.position.set( 1, 1, 1 );
-			scene.add( light );
-
-//			const train = new THREE.Object3D();
-//			scene.add( train );
-geometry = new THREE.BoxGeometry( 1,0.5,2 );
-material = new THREE.MeshLambertMaterial( {color: 0x8080ff} );
-const train = new THREE.Mesh( geometry, material );
-scene.add(train);
-
-			const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 500 );
-			train.add( camera );
-
-			// environment
-
-			geometry = new THREE.PlaneGeometry( 500, 500, 15, 15 );
-			geometry.rotateX( - Math.PI / 2 );
-
-			const positions = geometry.attributes.position.array;
-			const vertex = new THREE.Vector3();
-
-			for ( let i = 0; i < positions.length; i += 3 ) {
-
-				vertex.fromArray( positions, i );
-
-				vertex.x += Math.random() * 10 - 5;
-				vertex.z += Math.random() * 10 - 5;
-
-				const distance = ( vertex.distanceTo( scene.position ) / 5 ) - 25;
-				vertex.y = Math.random() * Math.max( 0, distance );
-
-				vertex.toArray( positions, i );
-
-			}
-
-			geometry.computeVertexNormals();
-
-			material = new THREE.MeshLambertMaterial( {
-				color: 0x407000
-			} );
-
-			mesh = new THREE.Mesh( geometry, material );
-			scene.add( mesh );
-
-			geometry = new TreesGeometry( mesh );
-//document.getElementById("Logfile").innerHTML=JSON.stringify(geometry.toJSON());
-//alert (geometry.toJSON().data.attributes.position.array);
-/*
-"metadata":{"version":4.5,"type":"BufferGeometry","generator":"BufferGeometry.toJSON"},"uuid":"aa3de6ee-f19a-405a-aa9f-e021d61e4610","type":"BufferGeometry","data":{"attributes":{
-  "position":{"itemSize":3,"type":"Float32Array","array":[
-  -10.43908405303955,0.6611022353172302,147.7867431640625,
-  -10.587079048156738,5.04817008972168,146.79776000976562,
-  -10.735074043273926,0.6611022353172302,145.8087615966797,
-  -9.598090171813965,0.6611022353172302,146.64976501464844,
-  -10.587079048156738,5.04817008972168,146.79776000976562,
-  -11.576066970825195,0.6611022353172302,146.9457550048828],"normalized":false},
-  "color":{"itemSize":3,"type":"Float32Array","array":[
-  0.23417016863822937,0.4341701567173004,0,
-  0.23417016863822937,0.4341701567173004,0,
-  0.23417016863822937,0.4341701567173004,0,
-  0.23417016863822937,0.4341701567173004,0,
-  0.23417016863822937,0.4341701567173004,0,
-  0.23417016863822937,0.4341701567173004,0],"normalized":false}
-  }}}
-*/
-			material = new THREE.MeshBasicMaterial( {
-				side: THREE.DoubleSide, vertexColors: true
-			} );
-			mesh = new THREE.Mesh( geometry, material );
-			scene.add( mesh );
-
-			geometry = new SkyGeometry();
-			material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
-			mesh = new THREE.Mesh( geometry, material );
-			scene.add( mesh );
-
-			//
-
-			const PI2 = Math.PI * 2;
-
-			const curve = ( function () {
-
-				const vector = new THREE.Vector3();
-				const vector2 = new THREE.Vector3();
-
-				return {
-
-					getPointAt: function ( t ) {
-
-						t = t * PI2;
-
-						const x = Math.sin( t * 3 ) * Math.cos( t * 4 ) * 50;
-						const y = Math.sin( t * 10 ) * 2 + Math.cos( t * 17 ) * 2 + 5;
-						const z = Math.sin( t ) * Math.sin( t * 4 ) * 50;
-
-						return vector.set( x, y, z ).multiplyScalar( 2 );
-
-					},
-
-					getTangentAt: function ( t ) {
-
-						const delta = 0.0001;
-						const t1 = Math.max( 0, t - delta );
-						const t2 = Math.min( 1, t + delta );
-
-						return vector2.copy( this.getPointAt( t2 ) )
-							.sub( this.getPointAt( t1 ) ).normalize();
-
-					}
-
-				};
-
-			} )();
-
-			geometry = new RollerCoasterGeometry( curve, 1500 );
-			material = new THREE.MeshPhongMaterial( { 
-				vertexColors: true,
-			} );
-			mesh = new THREE.Mesh( geometry, material );
-			scene.add( mesh );
-
-			geometry = new RollerCoasterLiftersGeometry( curve, 100 );
-			material = new THREE.MeshPhongMaterial();
-			mesh = new THREE.Mesh( geometry, material );
-			mesh.position.y = 0.1;
-			scene.add( mesh );
-
-			geometry = new RollerCoasterShadowGeometry( curve, 500 );
-			material = new THREE.MeshBasicMaterial( {
-				color: 0x305000, depthWrite: false, transparent: true
-			} );
-			mesh = new THREE.Mesh( geometry, material );
-			mesh.position.y = 0.1;
-			scene.add( mesh );
-
-			const funfairs = [];
-
-			//
-
-			geometry = new THREE.CylinderGeometry( 10, 10, 5, 15 );
-			material = new THREE.MeshLambertMaterial( {
-				color: 0xff8080
-			} );
-			mesh = new THREE.Mesh( geometry, material );
-			mesh.position.set( - 80, 10, - 70 );
-			mesh.rotation.x = Math.PI / 2;
-			scene.add( mesh );
-
-			funfairs.push( mesh );
-
-			geometry = new THREE.CylinderGeometry( 5, 6, 4, 6 );
-			material = new THREE.MeshLambertMaterial( {
-				color: 0x8080DD, roughness:0, metalness: 1
-			} );
-			mesh = new THREE.Mesh( geometry, material );
-			mesh.position.set( 55, 2, 30 );
-			scene.add( mesh );
-
-			funfairs.push( mesh );
-
-			//
-
-//			window.addEventListener( 'resize', onWindowResize );
-//			renderer.domElement.addEventListener( 'click', function(){alert(8)} );
-
-			function onWindowResize() {
-
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-
-				renderer.setSize( window.innerWidth, window.innerHeight );
-
-			}
-
-			//
-
-			const position = new THREE.Vector3();
-			const tangent = new THREE.Vector3();
-
-			const lookAt = new THREE.Vector3();
-
-			let velocity = 0;
-			let progress = 0;
-
-			let prevTime = performance.now();
-
-
-
-
-
-
-
-
-
-
-
-//-------------------------------------------- aus MIT_QUADRO.html die Berechnungen
+<html>
+<head>
+  <title>QUADRO</title>
+  <meta charset="utf-8"/>
+<style>
+button {font-size:200%}
+  </style>
+<script>
 var aktuelle_Position=[0,0,0];
 var vorherige_Position=[0,0,0];
 var Stangen=[];
@@ -384,7 +28,7 @@ function Richtung(dr,dh,dv,Faktor) {
   q.visible=true;
   Knoten.push(q.position.clone());
   var qneu=q.position.clone();
-  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor/40,16)),(new THREE.MeshStandardMaterial( { color: 0xee1100, metalness: 0.3, roughness: 0.1 } )));
+  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor/40,16)),(new THREE.MeshStandardMaterial( { color: 0xff0000 } )));
   st.position.x=(qalt.x+qneu.x)/2;
   st.position.y=(qalt.y+qneu.y)/2;
   st.position.z=(qalt.z+qneu.z)/2;
@@ -393,7 +37,7 @@ function Richtung(dr,dh,dv,Faktor) {
   st.rotateX(Math.PI/2);
   //st.material.color.set(0x009900);
   Stangen.push(st);
-  QUADRO.add( st );
+  scene.add( st );
   sminind=Stangen.length-1;
   s.position.copy(st.position);
   s.visible=true;
@@ -405,7 +49,7 @@ function Loeschknopf() {
   }
 
 function Loeschen() {
-  QUADRO.remove(Stangen[sminind]);
+  scene.remove(Stangen[sminind]);
   Stangen.splice(sminind,1);
   Knoten.splice(sminind+1,1);
   sminind=Stangen.length-1;
@@ -419,11 +63,6 @@ function Loeschen() {
       }
   }
 
-function alles_loeschen() {
-  while (Stangen.length>0) Loeschen();
-  }
-
-
 function Farbe(farbe) {
   Stangen[sminind].material.color.set(farbe);
   Stangen[sminind].Stange[3]=farbe;
@@ -431,7 +70,7 @@ function Farbe(farbe) {
 
 function Stange(qalt,qneu,Faktor,Farbe) {
   //alert(qalt+" "+qneu+" "+Faktor+" "+Farbe);
-  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor,16)),(new THREE.MeshStandardMaterial( { color: Farbe, metalness: 0.3, roughness: 0.1 } )));
+  var st=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+Faktor,16)),(new THREE.MeshStandardMaterial( { color: Farbe } )));
   q.position.x=qneu[0];
   q.position.y=qneu[1];
   q.position.z=qneu[2];
@@ -444,11 +83,13 @@ function Stange(qalt,qneu,Faktor,Farbe) {
   st.rotateX(Math.PI/2);
   //st.material.color.set(0x009900);
   Stangen.push(st);
-  QUADRO.add( st );
+  scene.add( st );
   sminind=Stangen.length-1;
   s.position.copy(st.position);
   s.visible=true;
   }
+  </script>
+  </head>
 
 
 
@@ -456,304 +97,218 @@ function Stange(qalt,qneu,Faktor,Farbe) {
 
 
 
+<body>
+<a style="float:right" href="https://github.com/OpaStefanVogel/KLETTERN_UND_RUTSCHEN">Quelle</a>
+<div style="font-style:italic; white-space:pre-wrap;">
+
+ANLEITUNG:
+
+Die Knöpfe verraten es dir.
 
 
-//---------------------------------------- aus MIT_QUADRO.html die Geometrie:
-const QUADRO = new THREE.Object3D();
-scene.add( QUADRO );
-QUADRO.position.set( 4, 0.2, -34 );
-QUADRO.rotateY(Math.PI);
-//QUADRO.rotateZ(Math.PI);
+</div>
+<div style="display:flex; align-items:flex-end">               
+<span style="display:flex; flex-direction:row; align-items:flex-end">
+
+<button onclick="Loeschen()">Löschen</button>
+<button onclick="Farbe('green')" style="background-color:green">grün</button>
+<button onclick="Farbe('mediumblue')" style="background-color:blue">blau</button>
+<button onclick="Farbe('orange')" style="background-color:orange">orange</button>
+<button onclick="Farbe('red')" style="background-color:red">rot</button>
+<!--span id="link" style="position:relative; top:0px; left:60px; background-color:white"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span-->
+  </span>
+</div>               
+<div id="Ausgabe Downloadtext" style="display:none; white-space:pre-wrap; font-size:50%"> </div>
+<div id="Ausgabe zu tree.js"></div>               
+<div>               
+<button onclick="Richtung(-40,0,0,Faktor)" style="background-color:ccbbff">links</button>
+<button onclick="Richtung(0,-40,0,Faktor)" style="background-color:f7f7f7">hoch</button>
+<button onclick="Richtung(40,0,0,Faktor)" style="background-color:ffeecc">rechts</button>
+<button onclick="Richtung(0,40,0,Faktor)" style="background-color:777733">runter</button>
+<button onclick="Richtung(0,0,-40,Faktor)" style="background-color:444444; color:777777">hinter</button>
+<button onclick="Richtung(0,0,40,Faktor)" style="background-color:ddddff">vor</button>
+Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
+<span onclick="Faktor=10"><input type="radio" id="L10" name="Laenge" value="10"/><label for="L10">10</label></span>
+<span onclick="Faktor=20"><input type="radio" id="L20" name="Laenge" value="20"/><label for="L20">20</label></span>
+<span onclick="Faktor=40"><input type="radio" id="L40" name="Laenge" value="40" checked="checked"/><label for="L40">40</label></span>
+<span onclick="Faktor=80"><input type="radio" id="L80" name="Laenge" value="80"/><label for="L80">80</label></span>
+</span>
+</div>               
+<span id="Logpos" style="display:none"> </span>
+<span id="Log"> </span>
+<span id="Log2" style="white-space:pre-wrap"> </span>
+<div>               
+<button onclick="Richtung(-40,0,0,10)">Mini links</button>
+<button onclick="Richtung(30,-30,0,Faktor)">schräg rechts hoch</button>
+<button onclick="Richtung(30,30,0,Faktor)">schräg rechts runter</button>
+<button onclick="Richtung(-40,0,0,10)">Mini links</button>
+</div>               
+<div>               
+<button onclick="Richtung(40,0,0,10)">Mini rechts</button>
+<button onclick="Richtung(-30,-30,0,Faktor)">schräg links hoch</button>
+<button onclick="Richtung(-30,30,0,Faktor)">schräg links runter</button>
+<button onclick="Richtung(40,0,0,10)">Mini rechts</button>
+</div>
+<div>               
+<button onclick="Richtung(0,-40,0,10)">Mini hoch</button>
+<button onclick="Richtung(0,40,0,10)">Mini runter</button>
+</div>
+
+
+<!--script src="../three.js/build/three.js"></script-->
+<script src="three.js/build/three.js"></script>
+<script src="../three.js/build/three.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script>
+<!--script src="three.js"></script-->
+<script>
+const clock = new THREE.Clock();
+clock.start();
+//alert(clock.getDelta());
+//alert(1);
+//alert(THREE);
+var wsize=window.innerWidth-100;
+var hsize=window.innerHeight-30;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 45, wsize / hsize, 0.1, 1000 );
+var gamma=Math.PI/2.4;
+var delta=0.2;
+var distanz=6;
+camera.position.setFromSphericalCoords(distanz,gamma,delta);
+camera.lookAt(0,0,0);
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( wsize, hsize );
+renderer.domElement.addEventListener("click",Bild_click);
+renderer.domElement.addEventListener("touchstart",Bild_touchstart);
+renderer.domElement.addEventListener("touchmove",Bild_touchmove);
+document.getElementById("Ausgabe zu tree.js").appendChild( renderer.domElement )
+
+
+const planeGeometry = new THREE.PlaneGeometry(20,20);
+const planeMaterial = new THREE.MeshBasicMaterial( { color: 0x777733 } )
+const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+plane.receiveShadow = true;
+plane.position.y=-0.2;
+plane.position.z=-9;
+plane.rotation.x=-90/180*Math.PI;
+//alert(JSON.stringify(plane.toJSON()));
+//alert(JSON.stringify(TREE.toJSON()));
+scene.add( plane );
+
+const skyGeometry = new THREE.PlaneGeometry(20,20);
+const skyMaterial = new THREE.MeshBasicMaterial( { color: 0xddddff } )
+const sky = new THREE.Mesh( skyGeometry, skyMaterial );
+//plane.receiveShadow = true;
+sky.position.y=10-0.2;
+sky.position.z=-19;
+scene.add( sky );
+
+const skylGeometry = new THREE.PlaneGeometry(20,20);
+const skylMaterial = new THREE.MeshBasicMaterial( { color: 0xccbbff } )
+const skyl = new THREE.Mesh( skylGeometry, skylMaterial );
+skyl.position.x=-10;
+skyl.position.y=10-0.2;
+skyl.position.z=-9;
+skyl.rotation.y=90/180*Math.PI;
+scene.add( skyl );
+
+const skyrGeometry = new THREE.PlaneGeometry(20,20);
+const skyrMaterial = new THREE.MeshBasicMaterial( { color: 0xffeecc } )
+const skyr = new THREE.Mesh( skyrGeometry, skyrMaterial );
+skyr.position.x=10;
+skyr.position.y=10-0.2;
+skyr.position.z=-9;
+skyr.rotation.y=-90/180*Math.PI;
+scene.add( skyr );
+
+const skyoGeometry = new THREE.PlaneGeometry(20,20);
+const skyoMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff } )
+const skyo = new THREE.Mesh( skyoGeometry, skyoMaterial );
+skyo.position.x=0;
+skyo.position.y=20-0.2;
+skyo.position.z=-9;
+skyo.rotation.x=90/180*Math.PI;
+scene.add( skyo );
 
 const qGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
-const qMaterial = new THREE.MeshStandardMaterial( { color: 0x00dddd, metalness: 0.5, roughness: 0.1} );
+const qMaterial = new THREE.MeshStandardMaterial( { color: 0x00dddd } );
 const q = new THREE.Mesh( qGeometry, qMaterial );
-QUADRO.add( q );
+scene.add( q );
 Knoten.push(q.position.clone());
 
 const sGeometry = new THREE.SphereGeometry( 0.06, 32, 32 );
-const sMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00, metalness: 0.5, roughness: 0.1 } );
+const sMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00 } );
 const s = new THREE.Mesh( sGeometry, sMaterial );
-QUADRO.add( s );
-
-//QUADRO.add(camera);
-const st= new THREE.Object3D();
-//st.position.set(0,10,13);
-QUADRO.add(st);
-st.add(camera);
-var gamma=Math.PI/2.4;
-var delta2=0.2;
-var distanz=6;
-st.position.setFromSphericalCoords(distanz,gamma,delta2);
-var cl=q.position.clone();
-camera.lookAt(QUADRO.localToWorld(cl.clone()));
-camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
-
-let sminind=0;//fehlt oben
-function Demo1() {
-var t=50;
-setTimeout(Richtung,2*t,0,0,40,Faktor);//vor
-setTimeout(Richtung,4*t,0,-40,0,Faktor);//hoch
-setTimeout(Richtung,6*t,40,0,0,Faktor);//rechts
-setTimeout(Richtung,8*t,0,40,0,Faktor);//runter
-setTimeout(Richtung,10*t,0,0,40,Faktor);//vor
-setTimeout(Richtung,12*t,0,-40,0,Faktor);//hoch
-setTimeout(Richtung,14*t,-40,0,0,Faktor);//links
-setTimeout(Richtung,16*t,0,40,0,Faktor);//runter
-//setTimeout(Demo,18*t);
-}
-
-function Demo() {
-Stange([0,0,0],[1,0,0],1,"orange");
-Stange([1,0,0],[2,0,0],1,"orange");
-Stange([2,0,0],[2,1,0],1,"orange");
-Stange([2,1,0],[2,2,0],1,"red");
-Stange([2,2,0],[2,3,0],1,"green");
-Stange([2,3,0],[1,3,0],1,"green");
-Stange([1,3,0],[0,3,0],1,"green");
-Stange([0,3,0],[0,2,0],1,"green");
-Stange([0,2,0],[1,2,0],1,"red");
-Stange([0,2,0],[0,1,0],1,"red");
-Stange([0,1,0],[0,0,0],1,"orange");
-Stange([0,0,0],[0,0,1],1,"orange");
-Stange([0,0,1],[0,1,1],1,"orange");
-Stange([0,1,1],[0,1,0],1,"red");
-Stange([0,1,0],[1,1,0],1,"red");
-Stange([1,1,0],[1,2,0],1,"red");
-Stange([1,2,0],[1,3,0],1,"green");
-Stange([1,2,0],[2,2,0],1,"red");
-Stange([1,0,0],[1,1,0],1,"orange");
-Stange([2,0,0],[2,0,-1],1,"red");
-Stange([2,0,-1],[2,0,-2],1,"red");
-Stange([2,0,-2],[2,1,-2],1,"red");
-Stange([2,1,-2],[2,2,-2],1,"red");
-Stange([2,2,-2],[2,3,-2],1,"red");
-Stange([2,3,-2],[2,3,0],2,"red");
-Stange([2,2,0],[2,2,-1],1,"red");
-Stange([2,2,-1],[2,2,-2],1,"red");
-Stange([2,1,0],[2,1,-1],1,"red");
-Stange([2,1,-1],[2,1,-2],1,"red");
-Stange([2,2,-1],[2,1,-1],1,"red");
-Stange([2,1,-1],[2,0,-1],1,"red");
-Stange([2,0,-1],[3,0,-1],1,"red");
-Stange([3,0,-1],[3,0,-2],1,"red");
-Stange([3,0,-2],[2,0,-2],1,"red");
-Stange([3,0,-1],[3,1,-1],1,"red");
-Stange([3,1,-1],[2,1,-1],1,"red");
-Stange([3,1,-1],[3,1,-2],1,"red");
-Stange([3,1,-2],[3,0,-2],1,"red");
-Stange([3,1,-2],[2,1,-2],1,"red");
-Stange([0,0,0],[0,0,-2],2,"red");
-Stange([0,1,0],[0,1,-2],2,"red");
-Stange([0,3,0],[0,3,-2],2,"red");
-Stange([0,3,-2],[0,2,-2],1,"red");
-Stange([0,2,-2],[0,1,-2],1,"red");
-Stange([0,1,-2],[0,0,-2],1,"red");
-Stange([0,2,0],[0,2,-1],1,"red");
-Stange([0,2,-1],[0,2,-2],1,"red");
-Stange([0,2,-2],[1,2,-2],1,"red");
-Stange([1,2,-2],[1,3,-2],1,"red");
-Stange([1,3,-2],[2,3,-2],1,"red");
-Stange([1,3,-2],[1,3,-3],1,"red");
-Stange([1,3,-3],[1,2,-3],1,"red");
-Stange([1,2,-3],[1,1,-3],1,"red");
-Stange([1,1,-3],[1,0,-3],1,"red");
-Stange([1,0,-3],[0,0,-3],1,"red");
-Stange([0,0,-3],[0,0,-2],1,"red");
-Stange([0,0,-3],[0,1,-3],1,"red");
-Stange([0,1,-3],[0,1,-2],1,"red");
-Stange([0,1,-3],[1,1,-3],1,"red");
-Stange([1,1,-3],[2,1,-3],1,"red");
-Stange([2,1,-3],[3,1,-3],1,"red");
-Stange([3,1,-3],[3,1,-2],1,"red");
-Stange([3,1,-3],[3,0,-3],1,"red");
-Stange([3,0,-3],[3,0,-2],1,"red");
-Stange([2,0,-2],[1,0,-2],1,"red");
-Stange([1,0,-2],[0,0,-2],1,"red");
-Stange([1,0,-2],[1,1,-2],1,"red");
-Stange([1,1,-2],[0,1,-2],1,"red");
-Stange([1,1,-2],[1,1,-3],1,"red");
-Stange([1,2,-2],[2,2,-2],1,"red");
-Stange([2,2,-1],[1,2,-1],1,"red");
-Stange([1,2,-1],[0,2,-1],1,"red");
-Stange([1,2,0],[1,2,-1],1,"red");
-Stange([1,2,-1],[1,2,-2],1,"red");
-Stange([0,3,0],[-0.25,3,0],0.25,"red");
-Stange([-0.25,3,0],[0.5,3.75,0],1,"red");
-Stange([0.5,3.75,0],[1.25,4.5,0],1,"red");
-Stange([1.25,4.5,0],[2,3.75,0],1,"red");
-Stange([2,3.75,0],[2.75,3,0],1,"red");
-Stange([2.75,3,0],[2.5,3,0],0.25,"red");
-Stange([2.5,3,0],[2,3,0],0.5,"red");
-Stange([0,3,-2],[-0.25,3,-2],0.25,"red");
-Stange([-0.25,3,-2],[0.5,3.75,-2],1,"red");
-Stange([0.5,3.75,-2],[1.25,4.5,-2],1,"red");
-Stange([1.25,4.5,-2],[2,3.75,-2],1,"red");
-Stange([2,3.75,-2],[2.75,3,-2],1,"red");
-Stange([2.75,3,-2],[2.5,3,-2],0.25,"red");
-Stange([2.5,3,-2],[2,3,-2],0.5,"red");
-Stange([0.5,3.75,0],[0.5,3.75,-2],2,"red");
-Stange([1.25,4.5,0],[1.25,4.5,-2],2,"red");
-Stange([2,3.75,0],[2,3.75,-1],1,"red");
-Stange([2,3.75,-1],[2,3.75,-2],1,"red");
-  }
-
-//Test();
-//Richtung(0,0,40,Faktor);//ohne dem passt die Kameraposition nicht
-
-//------------die Tasten
-document.getElementById("links" ).addEventListener('click',function(){Richtung(-40,0,0,Faktor)});
-document.getElementById("rechts").addEventListener('click',function(){Richtung(+40,0,0,Faktor)});
-document.getElementById("hoch"  ).addEventListener('click',function(){Richtung(0,-40,0,Faktor)});
-document.getElementById("runter").addEventListener('click',function(){Richtung(0,+40,0,Faktor)});
-document.getElementById("hinter").addEventListener('click',function(){Richtung(0,0,-40,Faktor)});
-document.getElementById("vor"   ).addEventListener('click',function(){Richtung(0,0,+40,Faktor)});
-document.getElementById("rollercoaster").addEventListener('click',function(){train.add(camera);camera.position.set( 0, 0, 1); camera.lookAt(train.position); q.visible=false});
-document.getElementById("weiter_mit_QUADRO").addEventListener('click',function(){st.add(camera);camera.position.set(0,0,0); camera.lookAt(QUADRO.localToWorld(cl.clone())); q.visible=true});
-document.getElementById("L10").parentNode.addEventListener('click',function(){Faktor=10});
-document.getElementById("L20").parentNode.addEventListener('click',function(){Faktor=20});
-document.getElementById("L40").parentNode.addEventListener('click',function(){Faktor=40});
-document.getElementById("L80").parentNode.addEventListener('click',function(){Faktor=80});
-document.getElementById("Löschen").addEventListener('click',function(){Loeschen()});
-document.getElementById("alles_loeschen").addEventListener('click',function(){alles_loeschen()});
-document.getElementById("grün"  ).addEventListener('click',function(){Farbe('green')});
-document.getElementById("blau"  ).addEventListener('click',function(){Farbe('mediumblue')});
-document.getElementById("orange").addEventListener('click',function(){Farbe('orange')});
-document.getElementById("rot"   ).addEventListener('click',function(){Farbe('red')});
-document.getElementById("Demo").addEventListener('click',function(){Demo()});
-document.getElementById("Mini links1"   ).addEventListener('click',function(){Richtung(-40,0,0,10)});
-document.getElementById("schräg rechts hoch"  ).addEventListener('click',function(){Richtung(30,-30,0,Faktor)});
-document.getElementById("schräg rechts runter").addEventListener('click',function(){Richtung(30,30,0,Faktor)});
-document.getElementById("Mini links2"   ).addEventListener('click',function(){Richtung(-40,0,0,10)});
-document.getElementById("Mini rechts1"  ).addEventListener('click',function(){Richtung(40,0,0,10)});
-document.getElementById("schräg links hoch"  ).addEventListener('click',function(){Richtung(-30,-30,0,Faktor)});
-document.getElementById("schräg links runter").addEventListener('click',function(){Richtung(-30,30,0,Faktor)});
-document.getElementById("Mini rechts2"  ).addEventListener('click',function(){Richtung(40,0,0,10)});
-document.getElementById("Mini hoch"     ).addEventListener('click',function(){Richtung(0,-40,0,10)});
-document.getElementById("Mini runter"   ).addEventListener('click',function(){Richtung(0,40,0,10)});
-document.getElementById("K10").parentNode.addEventListener('click',function(){Ausrichten=1});
-document.getElementById("K20").parentNode.addEventListener('click',function(){Ausrichten=0.05});
-document.getElementById("K40").parentNode.addEventListener('click',function(){Ausrichten=0.005});
-document.getElementById("K80").parentNode.addEventListener('click',function(){Ausrichten=0});
-document.getElementById("Kamera ausrichten").addEventListener('click',function(){Kamera_ausrichten()});
-document.getElementById("downloadstart").addEventListener('click',function(){download(document.getElementById("Ausdabedateiname").value,neuerDownloadtext());document.getElementById("download").click()});
-document.getElementById("Datei öffnen").addEventListener('input',function(){reader.readAsText(event.target.files[0])});
+scene.add( s );
 
 
-//---------------- Lichter
 // White directional light at half intensity shining from the top.
-/*const directionalLight = new THREE.DirectionalLight( 0x44ffff, 0.1 );
-QUADRO.add( directionalLight );
+const directionalLight = new THREE.DirectionalLight( 0x44ffff, 0.1 );
+scene.add( directionalLight );
 const directionalLight2 = new THREE.DirectionalLight( 0x888888, 1 );
 directionalLight2.position.z=-20;
 directionalLight2.position.y=5;
-QUADRO.add( directionalLight2 );
+scene.add( directionalLight2 );
 const directionalLight3 = new THREE.DirectionalLight( 0x555555, 0.3 );
-directionalLight3.position.y=5;
-directionalLight3.position.z=20;
-directionalLight3.position.x=-70;
-QUADRO.add( directionalLight3 );
-*/
-//const light = new THREE.AmbientLight( 0xC0C0C0 ); // soft white light
-//QUADRO.add( light );
-// White directional light at half intensity shining from the top.
-const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.6 );
-directionalLight.position.set(-1,5,2);
-scene.add( directionalLight );
+directionalLight2.position.y=2;
+directionalLight3.position.z=2;
+scene.add( directionalLight3 );
+const light = new THREE.AmbientLight( 0xC0C0C0 ); // soft white light
+scene.add( light );
 
-const directionalLight2 = new THREE.DirectionalLight( 0xffff00, 0.4 );
-directionalLight2.position.set(-4,3,-20);
-scene.add( directionalLight2);
-
-const directionalLight3 = new THREE.DirectionalLight( 0x00ffff, 0.2 );
-directionalLight3.position.set(70,6,-20);
-scene.add( directionalLight3);
-
-
-
-
-
-
-
-
-//-----------------
-
+var cl=q.position.clone();
 var Ausrichten=0.005;
 
-//--------
+var robi1=0;
+function animate() {
+	requestAnimationFrame( animate );
 
-			function render() {
+//cube.rotation.x += 0.01;
+//cube.rotation.y += 0.001;
 
-				const time = performance.now();
-				const delta = time - prevTime;
+//zylinder.rotation.x += -0.01;
+//zylinder.rotation.y += 0.001;
 
-				for ( let i = 0; i < funfairs.length; i ++ ) {
-
-					funfairs[ i ].rotation.y = time * 0.0004;
-
-				}
-
-				//
-
-				progress += velocity;
-				progress = progress % 1;
-
-				position.copy( curve.getPointAt( progress ) );
-				position.y += 0.3;
-
-				train.position.copy( position );
-
-				tangent.copy( curve.getTangentAt( progress ) );
-
-				velocity -= tangent.y * 0.0000001 * delta;
-				velocity = Math.max( 0.00004, Math.min( 0.0002, velocity ) );
-
-				train.lookAt( lookAt.copy( position ).sub( tangent ) );
-
-				//
-
-//----QUADRO
+//if (sphere.position.x>4) sphere.position.x=-0.5; else sphere.position.x+=0.01;
 
   if (q.visible) {
-
+    
     var diff=new THREE.Vector3();
-    diff.subVectors(q.position,cl);
-  
+    diff.subVectors(q.position,cl)
+    
     if (diff.length()>0.01) {
       if (Ausrichten<1) diff.normalize().multiplyScalar(Ausrichten);
       cl.add(diff);
-      st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);
-      camera.lookAt(QUADRO.localToWorld(cl.clone()));
+      camera.lookAt(cl);
+      }
+    
+    var diff2=new THREE.Vector3();
+    diff2.subVectors(camera.position,q.position)
+    
+    //document.getElementById("Log2").firstChild.nodeValue=diff2.length().toFixed(4);
+
+    if (Math.abs(diff2.length()-distanz)>0.01) {
+      diff2.normalize().multiplyScalar(Ausrichten);
+      camera.position.add(diff);
+      camera.lookAt(cl);
       }
 
-    //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(QUADRO.localToWorld(st.position.clone()))+"\n"+JSON.stringify(QUADRO.localToWorld(cl.clone()));
-    //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(st.position.clone())+"\n"+JSON.stringify(QUADRO.localToWorld(st.position.clone()));
-    document.getElementById("Log2").firstChild.nodeValue=gamma+" "+delta2+" "+distanz;
     }
+    
+if (robi1!=0) {
+robi1.rotation.y=Math.sin(clock.getElapsedTime()/7);
+robi2.rotation.x=Math.sin(clock.getElapsedTime())/3+2;
+robi3.rotation.y=Math.sin(clock.getElapsedTime()/5);
+robi4.rotation.x=Math.sin(clock.getElapsedTime()/3)/4+2;
+robi5.rotation.y=Math.sin(clock.getElapsedTime()/3);
+robi6.rotation.x=Math.sin(clock.getElapsedTime())*2;
+robo0.children[0].rotation.y=-Math.sin(clock.getElapsedTime()/7);
+robo0.children[0].children[0].rotation.x=-Math.sin(clock.getElapsedTime())/3+2;
+  }
 
-
-
-
-
-//----------
-
-
-
-				renderer.render( scene, camera );
-
-				prevTime = time;
-
-			}
-
-			renderer.setAnimationLoop( render );
-			
-			
-
-
-
-
-
-//------------------------touchevents
+	renderer.render( scene, camera );
+}
+animate();
 
 var TouchposX=0;
 var TouchposY=0;
@@ -765,29 +320,28 @@ var deltaalt=0;
 var distanzalt=0;
 var touchzahl=0;
 
-
 function Bild_touchstart() {
   var Touch=event.targetTouches.item(0);
   //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
   TouchposX=Touch.clientX;
   TouchposY=Touch.clientY;
-  cameraposalt=st.position.clone();
+  cameraposalt=camera.position.clone();
   gammaalt=gamma;
-  deltaalt=delta2;
+  deltaalt=delta;
   distanzalt=distanz;
   touchzahl=1;
   //event.preventDefault();
   }
 
 function Bild_touchmove() {
-	  //var Log=event.targetTouches.length;
+  var Log=event.targetTouches.length;
   var Touch=event.targetTouches.item(0);
   if (event.targetTouches.length==1&&touchzahl==1) {
     gamma=Math.min(Math.PI-0.01,Math.max(0.01,gammaalt-(Touch.clientY-TouchposY)/8/180*Math.PI));
-    delta2=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
-    //alert(distanz+" "+st.position.clone().sub(cl).length());
-    st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
-    camera.lookAt(QUADRO.localToWorld(cl.clone()));
+    delta=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
+    //alert(distanz+" "+camera.position.clone().sub(cl).length());
+    camera.position.setFromSphericalCoords(distanz,gamma,delta).add(cl);//???gewagt
+    camera.lookAt(q.position);
     //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
     //touchzahl=1;
     } else {
@@ -803,32 +357,32 @@ function Bild_touchmove() {
           distanz=distanzalt-(Math.sqrt((Touch.clientX-Touch2.clientX)**2+(Touch.clientY-Touch2.clientY)**2)-Math.sqrt((TouchposX-Touch2posX)**2+(TouchposY-Touch2posY)**2))/50;
           distanz=Math.min(Math.max(distanz,3),10);
           }
-      st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
-      camera.lookAt(QUADRO.localToWorld(cl.clone()));
-      }
+      camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
+      camera.lookAt(q.position);
+      }+
   //document.getElementById("Log2").firstChild.nodeValue=Log;
   event.preventDefault();
   }
 
-//var sminind=0;//schon oben
+var sminind=0;
 function Bild_click() {
   var mouse=new THREE.Vector3();
-  //var Log="mouse=["+(event.clientX-event.target.getBoundingClientRect().left)+","+(event.clientY-event.target.getBoundingClientRect().top)+"]"+event.target.getBoundingClientRect().width+" "+event.target.getBoundingClientRect().height+"\n";
-  mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / event.target.getBoundingClientRect().width ) * 2 - 1;//+0.34;
-  mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / event.target.getBoundingClientRect().height ) * 2 + 1;// -0.31;
+  var Log="\nmouse=["+(event.clientX-event.target.getBoundingClientRect().left)+","+(event.clientY-event.target.getBoundingClientRect().top)+"]\n";
+  mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / event.target.width ) * 2 - 1;
+  mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / event.target.height ) * 2 + 1;
   mouse.z = 0.96;
-  //Log=Log+"mouse=["+mouse.toArray()+"]; Knoten.length="+Knoten.length+";\n";
+  //Log=Log+mouse.toArray()+"\n"+Knoten.length+"####\n";
   var min=100000;
   var minind=0;
   for (var i=0;i<Knoten.length;i++) {
-    //Log=Log+"Knoten "+i+" = "+Knoten[i].clone().toArray()+"; project="+QUADRO.localToWorld(Knoten[i].clone()).project(camera).toArray()+"\n";
-    var dist=QUADRO.localToWorld(Knoten[i].clone()).project(camera).distanceToSquared(mouse);
+    //Log=Log+i+" "+Knoten[i].clone().toArray()+"\n"+Knoten[i].clone().project(camera).toArray()+"\n";
+    var dist=Knoten[i].clone().project(camera).distanceToSquared(mouse);
     if (dist<min) {min=dist; minind=i}
     //Log=Log+minind+" "+dist+"\n";
     }
 
-  //Log=Log+"q.position.project="+q.position.clone().project(camera).toArray()+"\n";
-  //Log=Log+event.clientX+" "+event.clientY+" "/*+clock.getDelta()*/+"\n";
+  //Log=Log+q.position.clone().project(camera).toArray()+"\n";
+  //Log=Log+event.clientX+" "+event.clientY+" "+clock.getDelta()+"\n";
   //clock.start();
   if (min>0.1) { if (mouse.y>-0.7) q.visible=false; s.visible=false; } else {
     q.visible=true;
@@ -838,8 +392,8 @@ function Bild_click() {
     var smin=100000;
     sminind=0;
     for (var i=0;i<Stangen.length;i++) {
-      //Log=Log+"Stange "+i+" = "+Stangen[i].position.toArray()+";nproject="+QUADRO.localToWorld(Stangen[i].position.clone()).project(camera).toArray()+"\n";
-      var dist=QUADRO.localToWorld(Stangen[i].position.clone()).project(camera).distanceToSquared(mouse);
+      //Log=Log+i+" "+Stangen[i].position.toArray()+"\n"+Stangen[i].position.clone().project(camera).toArray()+"\n";
+      var dist=Stangen[i].position.clone().project(camera).distanceToSquared(mouse);
       if (dist<smin) {smin=dist; sminind=i}
       //Log=Log+"sminind="+sminind+", smin="+smin+"\n";
       }
@@ -852,13 +406,58 @@ function Bild_click() {
 
 function Kamera_ausrichten() {
   cl.copy(q.position);
-  st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
-  camera.lookAt(QUADRO.localToWorld(cl.clone()));
+  camera.position.setFromSphericalCoords(distanz,gamma,delta).add(q.position);
+  camera.lookAt(q.position);    
   }
 
+/*
+Richtung(-80,0,0);
+Richtung(0,-80,0);
+Richtung(80,0,0);
+Richtung(0,80,0);
+//Richtung(0,0,-80);
+Richtung(0,0,80);
+*/
 
-//--------Download
+/*jetzt noch
+ok Zoom
+ok Stange ausrichten mit .up=(1,0,0) und erst dann .lookAt, nö .lookAt, dann .rotateX
+ok unterschiedliche Stangenlängen, ohne Anfangsstange
+ok Stange auswählen
+ok den Mini Abstand noch auf 10 umfunktionieren
+ok farbige Richtungstasten
+.. langsam-schnell-langsam ausrichten
+.. Seitenlicht
+.. Speichern
+*/
+		</script>
 
+<div>
+<hr/>
+<hr/>
+zum Testen: Kamera ausrichten 
+<span id="Ausrichten=1" onclick="Ausrichten=1"><input type="radio" id="K10" name="Ausrichten" value="10"/><label for="K10">sofort</label></span>
+<span onclick="Ausrichten=0.05"><input type="radio" id="K20" name="Ausrichten" value="20"/><label for="K20">schnell</label></span>
+<span onclick="Ausrichten=0.005"><input type="radio" id="K40" name="Ausrichten" value="40" checked="checked"/><label for="K40">langsam</label></span>
+<span onclick="Ausrichten=0"><input type="radio" id="K80" name="Ausrichten" value="80"/><label for="K80">nur bei</label></span>
+<button onclick="Kamera_ausrichten()">Kamera ausrichten</button>
+  </div>               
+
+
+
+
+<hr/>
+<hr/>
+<div>
+Als Datei <input id="Ausdabedateiname" value="Klettern_und_Rutschen.xml"> <button onclick='download(document.getElementById("Ausdabedateiname").value,neuerDownloadtext());document.getElementById("download").click()'>speichern</button>.
+<span style="display:none">  <a id="download"> </a><small> (dieser Download erfolgt mit <a href="http://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file">&lt;a href=... download=...&gt;</a>)</small></span>
+  </div>
+
+<div>
+Zum Zurückladen <b><u>erst ganze Seite reload</u></b> und danach Datei auswählen: <input style="font-size:200%" type="file" id="files" oninput="reader.readAsText(event.target.files[0])"/>
+  </div>
+
+<script>
 var reader = new FileReader();
 reader.onload = function(e) {
   var Eingabe=e.target.result;
@@ -892,9 +491,144 @@ function neuerDownloadtext() {
   Text=Text+"</KLETTERN_UND_RUTSCHEN>\n";
   return Text;
   }
+  </script>
+<div> 
+
+<script>if (1==0) {
+var robi0=new THREE.Mesh( (new THREE.SphereGeometry( 0.1, 32, 32 )),(new THREE.MeshStandardMaterial( { color: "red" } )));
+robi0.position.x=-2;
+robi0.position.y=0;
+robi0.position.z=-1;
+scene.add(robi0);
+
+var robi1=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.0+1,16)),(new THREE.MeshStandardMaterial( { color: "brown" } )));
+robi1.position.x=0;
+robi1.position.y=0.5;
+robi1.position.z=0;
+robi0.add(robi1);
+
+var robi2=new THREE.Mesh( (new THREE.SphereGeometry( 0.01, 32, 32 )),(new THREE.MeshStandardMaterial( { color: "red" } )));
+var robi2a=new THREE.Mesh( (new THREE.CylinderGeometry( 0.07,0.07,0.14,16)),(new THREE.MeshStandardMaterial( { color: "red" } )));
+robi2a.rotateZ(3.1415/2);
+robi2.add(robi2a);
+robi2.position.x=0;
+robi2.position.y=0.5;
+robi2.position.z=0;
+robi1.add(robi2);
+
+var robi3=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.0+1,16)),(new THREE.MeshStandardMaterial( { color: "blue" } )));
+robi3.position.x=0;
+robi3.position.y=0.5;
+robi3.position.z=0;
+robi2.add(robi3);
+
+var robi4=new THREE.Mesh( (new THREE.SphereGeometry( 0.01, 32, 32 )),(new THREE.MeshStandardMaterial( { color: "red" } )));
+var robi4a=new THREE.Mesh( (new THREE.CylinderGeometry( 0.07,0.07,0.14,16)),(new THREE.MeshStandardMaterial( { color: "red" } )));
+robi4a.rotateZ(3.1415/2);
+robi4.add(robi4a);
+robi4.position.x=0;
+robi4.position.y=0.5;
+robi4.position.z=0;
+robi3.add(robi4);
+
+var robi5=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+1,16)),(new THREE.MeshStandardMaterial( { color: "green" } )));
+robi5.position.x=0;
+robi5.position.y=0.5;
+robi5.position.z=0;
+robi4.add(robi5);
+
+var robi6=new THREE.Mesh( (new THREE.SphereGeometry( 0.01, 32, 32 )),(new THREE.MeshStandardMaterial( { color: "red" } )));
+var robi6a=new THREE.Mesh( (new THREE.CylinderGeometry( 0.07,0.07,0.14,16)),(new THREE.MeshStandardMaterial( { color: "red" } )));
+robi6a.rotateZ(3.1415/2);
+robi6.add(robi6a);
+robi6.position.x=0;
+robi6.position.y=0.5;
+robi6.position.z=0;
+robi5.add(robi6);
+
+var robi7=new THREE.Mesh( (new THREE.CylinderGeometry( 0.05,0.05,0.1+1,16)),(new THREE.MeshStandardMaterial( { color: "lightblue" } )));
+robi7.position.x=0;
+robi7.position.y=0.5;
+robi7.position.z=0;
+robi6.add(robi7);
+
+robi1.rotateY(2);
+robi2.rotateX(2);
+robi3.rotateY(2);
+robi4.rotateX(2);
+robi5.rotateY(4.5);
+robi6.rotateX(2);
+
+var robo0=robi0.clone();
+robo0.position.x=-3;
+robo0.position.y=0;
+robo0.position.z=-1;
+scene.add(robo0);
+
+//scene.remove(robi0);
+//scene.remove(robo0);
 
 
-		</script>
 
-</html>
 
+//TubeGeometry
+class CustomSinCurve extends THREE.Curve {
+  constructor(scale) {
+    super();
+    this.scale = scale;
+  }
+  getPoint(t) {
+    const tx = Math.cos(0.5 * Math.PI * t); //t * 3 - 1.5;
+    const ty = Math.sin(0.5 * Math.PI * t);
+    const tz = 0;
+    return new THREE.Vector3(tx, ty, tz).multiplyScalar(this.scale);
+  }
+}
+
+const path = new CustomSinCurve(4);
+const tubularSegments = 40;  // ui: tubularSegments
+const radius = 0.04;  // ui: radius
+const radialSegments = 8;  // ui: radialSegments
+const closed = false;  // ui: closed
+const Tgeometry = new THREE.TubeGeometry(
+    path, tubularSegments, radius, radialSegments, closed);
+var tobi=new THREE.Mesh(Tgeometry,(new THREE.MeshStandardMaterial( { color: "dimgray" } )));
+tobi.rotateX(-Math.PI/2);
+tobi.translateZ(-0.1);
+var tobic=tobi.clone();
+tobic.scale.set(0.9,0.9);
+tobic.translateZ(0);
+
+scene.add(tobi);
+scene.add(tobic);
+
+//var Logtext="";
+//for (var i in THREE) Logtext=Logtext+i+"\n"; alert(Logtext);
+Logtext="";
+//for (var i in robi1) Logtext=Logtext+i+"\n";
+//for (var i in robo0.children[0]) Logtext=Logtext+i+"\n";
+//for (var i in clock) Logtext=Logtext+i+"\n";
+//for (var i in document) Logtext=Logtext+i+"\n";
+//alert(Number("0x234"));
+//alert(THREE.Curve.create);
+//for (var i in window) Logtext=Logtext+i+"\n";alert(document.getElementById("Ausrichten=1"));
+for (var i in document.getElementById("Ausrichten=1")) Logtext=Logtext+i+"\n\n";
+Logtext=Logtext+"<p>"+JSON.stringify(tobi.toJSON())+"</p>";
+document.getElementById("Log").innerHTML=Logtext.replace(/,/g,", ");
+//alert(document.URL);
+//alert(document.documentURI);
+//alert(clock.getDelta());
+//alert(THREE.CylinderGeometry);
+} </script>
+
+<!--script src="QWASNEU/KONSTRUK_javascript.js"></script-->
+
+<script>
+//alert(qtz);
+  </script>
+
+<!--dann noch
+
+  -->
+  </body>
+  </html>
