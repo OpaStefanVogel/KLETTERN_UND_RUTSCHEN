@@ -17,7 +17,7 @@
 Die Knöpfe verraten es dir.
 
 </div>
-<span style="position:relative; top:35px; left:760px" ><small><code>background: https://threejs.org/examples/webxr_vr_rollercoaster.html</code></small></span>
+<span style="position:relative; top:35px; left:760px; color:teal" ><small><code>background: https://threejs.org/examples/webxr_vr_rollercoaster.html</code></small></span>
 <div style="display:flex; align-items:flex-end">               
 <span style="display:flex; flex-direction:row; align-items:flex-end">
 
@@ -140,6 +140,8 @@ mediaElement.play();
 				SkyGeometry
 			} from 'three/addons/misc/RollerCoaster.js';
 			import { VRButton } from 'three/addons/webxr/VRButton.js';
+
+//import * as Testmodul from './modules/Testmodul.js';
 
 			let mesh, material, geometry;
 
@@ -397,6 +399,7 @@ function Richtung(dr,dh,dv,Faktor) {
   sminind=Stangen.length-1;
   s.position.copy(st.position);
   s.visible=true;
+  //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(QUADRO);
   }
 
 var was_geloescht_werden_soll=0;
@@ -728,7 +731,8 @@ var Ausrichten=0.005;
 
     //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(QUADRO.localToWorld(st.position.clone()))+"\n"+JSON.stringify(QUADRO.localToWorld(cl.clone()));
     //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(st.position.clone())+"\n"+JSON.stringify(QUADRO.localToWorld(st.position.clone()));
-    document.getElementById("Log2").firstChild.nodeValue=gamma+" "+delta2+" "+distanz;
+    //document.getElementById("Log2").firstChild.nodeValue=gamma+" "+delta2+" "+distanz;
+    //if (renderer.xr.isPresenting/*getCamera().cameras.length*/) document.getElementById("Log2").firstChild.nodeValue=renderer.xr.getCamera().cameras[0].matrixWorldInverse.elements.slice(12,15).join("  ")+"\n"+renderer.xr.getCamera().cameras[1].matrixWorld.elements.slice(12,15).join("  "); //geht aber nicht über github
     }
 
 
@@ -897,4 +901,3 @@ function neuerDownloadtext() {
 		</script>
 
 </html>
-
