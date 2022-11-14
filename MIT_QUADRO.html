@@ -139,11 +139,20 @@ mediaElement.play();
 				TreesGeometry,
 				SkyGeometry
 			} from 'three/addons/misc/RollerCoaster.js';
+			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 			import { VRButton } from 'three/addons/webxr/VRButton.js';
+			import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
 
 //import * as Testmodul from './modules/Testmodul.js';
 
 			let mesh, material, geometry;
+			let controller1, controller2;
+			let controllerGrip1, controllerGrip2;
+			let raycaster;
+			const intersected = [];
+			const tempMatrix = new THREE.Matrix4();
+			let controls, group;
+
 
 			const renderer = new THREE.WebGLRenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );
@@ -159,7 +168,6 @@ renderer.domElement.addEventListener("touchstart",Bild_touchstart);
 renderer.domElement.addEventListener("touchmove",Bild_touchmove);
 document.body.insertBefore( renderer.domElement, document.getElementById("Ausgabe zu tree.js") );
 document.body.appendChild( VRButton.createButton( renderer ) );
-
 
 			//
 
@@ -341,6 +349,123 @@ scene.add(train);
 
 			}
 
+				// controllers
+				
+				controller1 = renderer.xr.getController( 0 );
+				controller1.addEventListener( 'selectstart', onSelectStart );
+				controller1.addEventListener( 'selectend', onSelectEnd );
+				
+				controller2 = renderer.xr.getController( 1 );
+				controller2.addEventListener( 'selectstart', onSelectStart );
+				controller2.addEventListener( 'selectend', onSelectEnd );
+
+				const controllerModelFactory = new XRControllerModelFactory();
+
+				controllerGrip1 = renderer.xr.getControllerGrip( 0 );
+				controllerGrip1.add( controllerModelFactory.createControllerModel( controllerGrip1 ) );
+
+				controllerGrip2 = renderer.xr.getControllerGrip( 1 );
+				controllerGrip2.add( controllerModelFactory.createControllerModel( controllerGrip2 ) );
+
+				//
+
+				const linegeometry = new THREE.BufferGeometry().setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 1 ) ] );
+
+				const line = new THREE.Line( linegeometry );
+				line.name = 'line';
+				line.scale.z = 5;
+
+				controller1.add( line.clone() );
+				controller2.add( line.clone() );
+
+				raycaster = new THREE.Raycaster();
+
+				//
+			function onSelectStart( event ) {
+
+				const controller = event.target;
+
+				const intersections = getIntersections( controller );
+
+				if ( intersections.length > 0 ) {
+
+					const intersection = intersections[ 0 ];
+
+					const object = intersection.object;
+					object.material.emissive.b = 1;
+					controller.attach( object );
+
+					controller.userData.selected = object;
+
+				}
+
+			}
+
+			function onSelectEnd( event ) {
+
+				const controller = event.target;
+
+				if ( controller.userData.selected !== undefined ) {
+
+					const object = controller.userData.selected;
+					object.material.emissive.b = 0;
+					group.attach( object );
+
+					controller.userData.selected = undefined;
+
+				}
+
+
+			}
+
+			function getIntersections( controller ) {
+
+				tempMatrix.identity().extractRotation( controller.matrixWorld );
+
+				raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
+				raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );
+
+				return raycaster.intersectObjects( group.children, false );
+
+			}
+
+			function intersectObjects( controller ) {
+
+				// Do not highlight when already selected
+
+				if ( controller.userData.selected !== undefined ) return;
+
+				const line = controller.getObjectByName( 'line' );
+				const intersections = getIntersections( controller );
+
+				if ( intersections.length > 0 ) {
+
+					const intersection = intersections[ 0 ];
+
+					const object = intersection.object;
+					object.material.emissive.r = 1;
+					intersected.push( object );
+
+					line.scale.z = intersection.distance;
+
+				} else {
+
+					line.scale.z = 5;
+
+				}
+
+			}
+
+			function cleanIntersected() {
+
+				while ( intersected.length ) {
+
+					const object = intersected.pop();
+					object.material.emissive.r = 0;
+
+				}
+
+			}
 			//
 
 			const position = new THREE.Vector3();
@@ -491,6 +616,10 @@ st.position.setFromSphericalCoords(distanz,gamma,delta2);
 var cl=q.position.clone();
 camera.lookAt(QUADRO.localToWorld(cl.clone()));
 camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
+				st.add( controller1 );
+				st.add( controller2 );
+				st.add( controllerGrip1 );
+				st.add( controllerGrip2 );
 
 let sminind=0;//fehlt oben
 function Demo1() {
@@ -732,7 +861,7 @@ var Ausrichten=0.005;
     //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(QUADRO.localToWorld(st.position.clone()))+"\n"+JSON.stringify(QUADRO.localToWorld(cl.clone()));
     //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(st.position.clone())+"\n"+JSON.stringify(QUADRO.localToWorld(st.position.clone()));
     //document.getElementById("Log2").firstChild.nodeValue=gamma+" "+delta2+" "+distanz;
-    //if (renderer.xr.isPresenting/*getCamera().cameras.length*/) document.getElementById("Log2").firstChild.nodeValue=renderer.xr.getCamera().cameras[0].matrixWorldInverse.elements.slice(12,15).join("  ")+"\n"+renderer.xr.getCamera().cameras[1].matrixWorld.elements.slice(12,15).join("  "); //geht aber nicht über github
+    if (renderer.xr.isPresenting/*getCamera().cameras.length*/) document.getElementById("Log2").firstChild.nodeValue=renderer.xr.getCamera().cameras[0].matrixWorldInverse.elements.slice(12,15).join("  ")+"\n"+renderer.xr.getCamera().cameras[1].matrixWorld.elements.slice(12,15).join("  ");
     }
 
 
@@ -742,6 +871,10 @@ var Ausrichten=0.005;
 //----------
 
 
+		cleanIntersected();
+
+		//intersectObjects( controller1 );
+		//intersectObjects( controller2 );
 
 				renderer.render( scene, camera );
 
