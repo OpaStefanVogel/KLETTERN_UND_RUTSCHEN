@@ -141,17 +141,17 @@ mediaElement.play();
 			} from 'three/addons/misc/RollerCoaster.js';
 			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 			import { VRButton } from 'three/addons/webxr/VRButton.js';
-			import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+		import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
 
 //import * as Testmodul from './modules/Testmodul.js';
 
 			let mesh, material, geometry;
-			let controller1, controller2;
-			let controllerGrip1, controllerGrip2;
-			let raycaster;
-			const intersected = [];
-			const tempMatrix = new THREE.Matrix4();
-			let controls, group;
+		let controller1, controller2;
+		let controllerGrip1, controllerGrip2;
+		let raycaster;
+		const intersected = [];
+		const tempMatrix = new THREE.Matrix4();
+		let controls, group;
 
 
 			const renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -349,7 +349,7 @@ scene.add(train);
 
 			}
 
-				// controllers
+		// controllers
 				
 				controller1 = renderer.xr.getController( 0 );
 				controller1.addEventListener( 'selectstart', onSelectStart );
@@ -409,7 +409,7 @@ scene.add(train);
 
 					const object = controller.userData.selected;
 					object.material.emissive.b = 0;
-					group.attach( object );
+					QUADRO.attach( object );
 
 					controller.userData.selected = undefined;
 
@@ -425,11 +425,11 @@ scene.add(train);
 				raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
 				raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );
 
-				return raycaster.intersectObjects( group.children, false );
+				return raycaster.intersectObjects( QUADRO.children, false );
 
 			}
 
-			function intersectObjects( controller ) {
+			function intersectObjects( controller ) {//dauernd
 
 				// Do not highlight when already selected
 
@@ -874,8 +874,8 @@ var Ausrichten=0.005;
 
 		cleanIntersected();
 
-		//intersectObjects( controller1 );
-		//intersectObjects( controller2 );
+		intersectObjects( controller1 );
+		intersectObjects( controller2 );
 
 				renderer.render( scene, camera );
 
