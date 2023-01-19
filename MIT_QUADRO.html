@@ -167,6 +167,9 @@ mediaElement.play();
 renderer.domElement.addEventListener("click",Bild_click);
 renderer.domElement.addEventListener("touchstart",Bild_touchstart);
 renderer.domElement.addEventListener("touchmove",Bild_touchmove);
+renderer.domElement.addEventListener("mousedown",Bild_dragstart);
+renderer.domElement.addEventListener("mousemove",Bild_dragmove);
+renderer.domElement.addEventListener("mouseup",Bild_dragend);
 document.body.insertBefore( renderer.domElement, document.getElementById("Ausgabe zu tree.js") );
 document.body.appendChild( VRButton.createButton( renderer ) );
 
@@ -1094,9 +1097,6 @@ var Ausrichten=0.005;
 			
 
 
-
-
-
 //------------------------touchevents
 
 var TouchposX=0;
@@ -1200,6 +1200,37 @@ function Kamera_ausrichten() {
   camera.lookAt(QUADRO.localToWorld(cl.clone()));
   }
 
+
+//------------------------dragevents laut https://uxdesign.cc/implementing-a-custom-drag-event-function-in-javascript-and-three-js-dc79ee545d85
+var mouseDown = false, mouseX = 0, mouseY = 0;
+function Bild_dragstart(event) {
+  mouseDown=true;
+  TouchposX=event.clientX;
+  TouchposY=event.clientY;
+  cameraposalt=st.position.clone();
+  gammaalt=gamma;
+  deltaalt=delta2;
+  distanzalt=distanz;
+  event.preventDefault();
+  document.getElementById("Log").innerHTML=[TouchposX,TouchposY,gammaalt,deltaalt,distanzalt];
+  }
+
+function Bild_dragmove() { if (mouseDown==true) {
+  document.getElementById("Log").innerHTML=[event.clientX,event.clientY];
+
+
+  gamma=Math.min(Math.PI-0.01,Math.max(0.01,gammaalt-(event.clientY-TouchposY)/8/180*Math.PI));
+  delta2=deltaalt-(event.clientX-TouchposX)/4/180*Math.PI;
+  st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
+  camera.lookAt(QUADRO.localToWorld(cl.clone()));
+  event.preventDefault();
+  document.getElementById("Log").innerHTML=[TouchposX,TouchposY,gamma,delta2];
+  } }
+
+function Bild_dragend(event) {
+  mouseDown=false;
+  document.getElementById("Log").innerHTML="mouseup";
+  }
 
 //--------Download
 
