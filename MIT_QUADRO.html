@@ -164,7 +164,8 @@ mediaElement.play();
 
 			//document.body.appendChild( VRButton.createButton( renderer ) );
 
-renderer.domElement.addEventListener("click",Bild_click);
+//renderer.domElement.addEventListener("click",Bild_click);
+renderer.domElement.addEventListener("dblclick",Bild_dblclick);
 renderer.domElement.addEventListener("touchstart",Bild_touchstart);
 renderer.domElement.addEventListener("touchmove",Bild_touchmove);
 renderer.domElement.addEventListener("mousedown",Bild_dragstart);
@@ -172,7 +173,8 @@ renderer.domElement.addEventListener("mousemove",Bild_dragmove);
 renderer.domElement.addEventListener("mouseup",Bild_dragend);
 renderer.domElement.addEventListener("wheel",Bild_wheel);
 document.body.insertBefore( renderer.domElement, document.getElementById("Ausgabe zu tree.js") );
-document.body.appendChild( VRButton.createButton( renderer ) );
+var VRButt=VRButton.createButton( renderer );
+document.body.appendChild( VRButt);
 
 			//
 
@@ -1084,8 +1086,10 @@ var Ausrichten=0.005;
 
 		cleanIntersected();
 
+  if(VRButt.textContent!="ENTER VR") {
 		intersectObjects( controller1 );
 		intersectObjects( controller2 );
+    }
 
 				renderer.render( scene, camera );
 
@@ -1146,7 +1150,7 @@ function Bild_touchmove() {
         distanzalt=distanz;
         } else {
           distanz=distanzalt-(Math.sqrt((Touch.clientX-Touch2.clientX)**2+(Touch.clientY-Touch2.clientY)**2)-Math.sqrt((TouchposX-Touch2posX)**2+(TouchposY-Touch2posY)**2))/50;
-          distanz=Math.min(Math.max(distanz,3),10);
+          distanz=Math.min(Math.max(distanz,1),10);
           }
       st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
       camera.lookAt(QUADRO.localToWorld(cl.clone()));
@@ -1156,7 +1160,7 @@ function Bild_touchmove() {
   }
 
 //var sminind=0;//schon oben
-function Bild_click() {
+function Bild_dblclick() {
   var mouse=new THREE.Vector3();
   //var Log="mouse=["+(event.clientX-event.target.getBoundingClientRect().left)+","+(event.clientY-event.target.getBoundingClientRect().top)+"]"+event.target.getBoundingClientRect().width+" "+event.target.getBoundingClientRect().height+"\n";
   mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / event.target.getBoundingClientRect().width ) * 2 - 1;//+0.34;
