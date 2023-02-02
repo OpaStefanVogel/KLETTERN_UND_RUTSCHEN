@@ -9,7 +9,7 @@
 
 		<div id="container"></div>
 
-	<body onload="Demo_Rauner_Lok()">
+	<body id="body" onload="Demo_Rauner_Lok()">
 <p id="Logfile"> </p> 
 <div style="font-style:italic; white-space:pre-wrap;">
 <u>ANLEITUNG:</u>
@@ -88,7 +88,7 @@ Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 <hr/>
 <hr/>
 <div>
-Als Datei <input id="Ausdabedateiname" value="Klettern_und_Rutschen.xml"> <button id="downloadstart">speichern</button>.
+Als Datei <input id="Ausgabedateiname" value="Klettern_und_Rutschen.xml"> <button id="downloadstart">speichern</button>.
 <span style="display:none">  <a id="download"> </a><small> (dieser Download erfolgt mit <a href="http://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file">&lt;a href=... download=...&gt;</a>)</small></span>
   </div>
 
@@ -171,6 +171,7 @@ renderer.domElement.addEventListener("touchmove",Bild_touchmove);
 renderer.domElement.addEventListener("mousedown",Bild_dragstart);
 renderer.domElement.addEventListener("mousemove",Bild_dragmove);
 renderer.domElement.addEventListener("mouseup",Bild_dragend);
+document.getElementById("body").addEventListener("keydown",Bild_keydown);
 renderer.domElement.addEventListener("wheel",Bild_wheel);
 document.body.insertBefore( renderer.domElement, document.getElementById("Ausgabe zu tree.js") );
 var VRButt=VRButton.createButton( renderer );
@@ -989,7 +990,7 @@ document.getElementById("K20").parentNode.addEventListener('click',function(){Au
 document.getElementById("K40").parentNode.addEventListener('click',function(){Ausrichten=0.005});
 document.getElementById("K80").parentNode.addEventListener('click',function(){Ausrichten=0});
 document.getElementById("Kamera ausrichten").addEventListener('click',function(){Kamera_ausrichten()});
-document.getElementById("downloadstart").addEventListener('click',function(){download(document.getElementById("Ausdabedateiname").value,neuerDownloadtext());document.getElementById("download").click()});
+document.getElementById("downloadstart").addEventListener('click',function(){download(document.getElementById("Ausgabedateiname").value,neuerDownloadtext());document.getElementById("download").click()});
 document.getElementById("Datei öffnen").addEventListener('input',function(){reader.readAsText(event.target.files[0])});
 
 
@@ -1202,7 +1203,6 @@ function Bild_dblclick() {
       }
 
     s.position.copy(Stangen[sminind].position);
-    
     }
   //document.getElementById("Log2").firstChild.nodeValue=Log;
   }
@@ -1241,6 +1241,18 @@ function Bild_dragmove() { if (mouseDown==true) {
 function Bild_dragend(event) {
   mouseDown=false;
   document.getElementById("Log").innerHTML="mouseup";
+  }
+
+function Bild_keydown(event) {
+  if (event.code=="Space") {
+    do sminind=sminind+1; while (sminind<Stangen.length&&Stangen[sminind].wheel==undefined);
+    if (sminind==Stangen.length) {
+      sminind=0;
+      do sminind=sminind+1; while (sminind<Stangen.length&&Stangen[sminind].wheel==undefined);
+      }
+    stwheel(0);
+    event.preventDefault();
+    }
   }
 
 function stwheel(deltaY) {
