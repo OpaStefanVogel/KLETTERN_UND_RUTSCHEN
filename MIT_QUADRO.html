@@ -603,6 +603,7 @@ function Stange(qalt,qneu,Faktor,Farbe) {
   sminind=Stangen.length-1;
   s.position.copy(st.position);
   s.visible=true;
+  return st;
   }
 
 
@@ -854,6 +855,13 @@ Stange([0,3,2],[0,3,1],1,"red");
 Stange([0,3,1],[1,3,1],1,"red");
 Stange([-1,3,2],[-1,3,1],1,"red");
 Stange([-1,3,1],[-2,3,1],1,"red");
+Stange([-1,1,-3],[-0.5,1,-3],0.5,"red");
+Stange([-0.5,1,-3],[-0.5,2,-3],1,"red");
+Stange([-0.5,2,-3],[-0.5,3,-3],1,"red");
+Stange([0,1,0],[0.5,1,0],0.5,"red");
+Stange([0.5,1,0],[0.5,1.5,0],0.5,"red").wheel=stwheel;
+Stange([-1,1,0],[-1.5,1,0],0.5,"red");
+Stange([-1.5,1,0],[-1.5,1.5,0],0.5,"red").wheel=stwheel;
 Stange([0,0,0],[0,0,-1],1,"red");
   }
 
@@ -1086,7 +1094,7 @@ var Ausrichten=0.005;
 
 		cleanIntersected();
 
-  if(VRButt.textContent!="ENTER VR") {
+  if((VRButt.textContent!="ENTER VR")&&(VRButt.textContent!="VR NOT SUPPORTED")) {
 		intersectObjects( controller1 );
 		intersectObjects( controller2 );
     }
@@ -1235,12 +1243,24 @@ function Bild_dragend(event) {
   document.getElementById("Log").innerHTML="mouseup";
   }
 
+function stwheel(deltaY) {
+  Stangen[sminind].translateY(-0.25).rotateX(Math.PI/24/53*deltaY).translateY(0.25);
+  Stangen[sminind].updateMatrix();
+  Stangen[sminind].updateMatrixWorld(true);
+  s.position.copy(Stangen[sminind].position);
+  q.position.copy(QUADRO.worldToLocal(Stangen[sminind].localToWorld(new THREE.Vector3(0,0.25,0))));
+    }
+
 function Bild_wheel(event) {
   document.getElementById("Log").innerHTML=[event.deltaX,event.deltaY,event.deltaZ];
   //distanz=distanzalt-(Math.sqrt((Touch.clientX-Touch2.clientX)**2+(Touch.clientY-Touch2.clientY)**2)-Math.sqrt((TouchposX-Touch2posX)**2+(TouchposY-Touch2posY)**2))/50;
-  if (event.deltaY<0) distanz=distanz-0.1; else distanz=distanz+0.1; 
-  distanz=Math.min(Math.max(distanz,3),10);
-  st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
+  if (Stangen[sminind].wheel) {
+   Stangen[sminind].wheel(event.deltaY);
+    } else {
+      if (event.deltaY<0) distanz=distanz-0.1; else distanz=distanz+0.1; 
+      distanz=Math.min(Math.max(distanz,3),10);
+      st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
+      }
   camera.lookAt(QUADRO.localToWorld(cl.clone()));
   event.preventDefault();
   }
