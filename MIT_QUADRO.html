@@ -9,7 +9,7 @@
 
 		<div id="container"></div>
 
-	<body id="body" onload="Demo_Rauner_Lok()">
+	<body onload="Demo_Rauner_Lok()">
 <p id="Logfile"> </p> 
 <div style="font-style:italic; white-space:pre-wrap;">
 <u>ANLEITUNG:</u>
@@ -171,7 +171,7 @@ renderer.domElement.addEventListener("touchmove",Bild_touchmove);
 renderer.domElement.addEventListener("mousedown",Bild_dragstart);
 renderer.domElement.addEventListener("mousemove",Bild_dragmove);
 renderer.domElement.addEventListener("mouseup",Bild_dragend);
-document.getElementById("body").addEventListener("keydown",Bild_keydown);
+document.body.addEventListener("keydown",Bild_keydown);
 renderer.domElement.addEventListener("wheel",Bild_wheel);
 document.body.insertBefore( renderer.domElement, document.getElementById("Ausgabe zu tree.js") );
 var VRButt=VRButton.createButton( renderer );
