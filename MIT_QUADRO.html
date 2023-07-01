@@ -35,6 +35,14 @@ Die Knöpfe verraten es dir.
 </div>               
 <div id="Ausgabe Downloadtext" style="display:none; white-space:pre-wrap; font-size:50%"> </div>
 <div id="Ausgabe zu tree.js"> </div>
+<div>
+<button id="Button_links"  style="background-color:ccbbff">links</button>
+<button id="Button_hoch"   style="background-color:f7f7f7">hoch</button>
+<button id="Button_rechts" style="background-color:ffeecc">rechts</button>
+<button id="Button_runter" style="background-color:777733">runter</button>
+<button id="Button_einsetzen"    style="background-color:lightgray">einsetzen</button>
+<button id="Button_weitergehen"    style="background-color:darkgray">weitergehen</button>
+</div>               
 <div>               
 <button id="links"  style="background-color:ccbbff">links</button>
 <button id="hoch"   style="background-color:f7f7f7">hoch</button>
@@ -622,12 +630,35 @@ QUADRO.position.set( 4, 0.2, -34 );
 QUADRO.rotateY(Math.PI);
 //QUADRO.rotateZ(Math.PI);
 
+//das ist meine Zuglok:
 const qGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
 const qMaterial = new THREE.MeshStandardMaterial( { color: 0x00dddd, metalness: 0.5, roughness: 0.1} );
 const q = new THREE.Mesh( qGeometry, qMaterial );
 QUADRO.add( q );
 Knoten.push(q.position.clone());
 
+//mit Schornstein dazu
+const q1Geometry = new THREE.SphereGeometry( 0.05, 32, 32 );
+const q1Material = new THREE.MeshStandardMaterial( { color: 0x00dddd, metalness: 0.5, roughness: 0.1} );
+const q1 = new THREE.Mesh( q1Geometry, q1Material );
+q1.position.set(0,0,-1);
+q.add( q1 );
+const q2Geometry = new THREE.SphereGeometry( 0.03, 32, 32 );
+const q2Material = new THREE.MeshStandardMaterial( { color: 0x00dddd, metalness: 0.5, roughness: 0.1} );
+const q2 = new THREE.Mesh( q2Geometry, q2Material );
+q2.position.set(0,0.08,0.-1);
+q.add( q2 );
+q.yaw=0;
+q.pitch=0;
+q.roll=0;
+q.GROT=function(yaw,pitch,roll) {q.FROT(q.yaw+yaw,q.pitch+pitch,q.roll+roll)}
+q.FROT=function(yaw,pitch,roll) {
+  q.yaw=yaw; q.pitch=pitch; q.roll=roll;
+  q.setRotationFromEuler(new THREE.Euler(-pitch/180*Math.PI,yaw/180*Math.PI,-+roll/180*Math.PI,'YXZ'));
+  }
+//q.GROT(90,-30,30);
+
+//Kantenmittelpunkt:
 const sGeometry = new THREE.SphereGeometry( 0.06, 32, 32 );
 const sMaterial = new THREE.MeshStandardMaterial( { color: 0xdddd00, metalness: 0.5, roughness: 0.1 } );
 const s = new THREE.Mesh( sGeometry, sMaterial );
@@ -954,6 +985,11 @@ Zylinderradius=Zylinderradius/u0;
 //Richtung(0,0,40,Faktor);//ohne dem passt die Kameraposition nicht
 
 //------------die Tasten
+Button_links. addEventListener('click',function(){q.GROT(90,0,0)});
+Button_rechts.addEventListener('click',function(){q.GROT(-90,0,0)});
+Button_hoch.  addEventListener('click',function(){q.GROT(0,-90,0)});
+Button_runter.addEventListener('click',function(){q.GROT(0,90,0)});
+Button_einsetzen.addEventListener('click',function(){alert(q.localToWorld(q1.position).toArray());/*Stange(q.position.toArray(),q.position.add(q1.position).toArray(),1,"blue");*/});
 document.getElementById("links" ).addEventListener('click',function(){Richtung(-40,0,0,Faktor)});
 document.getElementById("rechts").addEventListener('click',function(){Richtung(+40,0,0,Faktor)});
 document.getElementById("hoch"  ).addEventListener('click',function(){Richtung(0,-40,0,Faktor)});
