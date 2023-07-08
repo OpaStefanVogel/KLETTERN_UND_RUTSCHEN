@@ -35,13 +35,55 @@ Die Knöpfe verraten es dir.
 </div>               
 <div id="Ausgabe Downloadtext" style="display:none; white-space:pre-wrap; font-size:50%"> </div>
 <div id="Ausgabe zu tree.js"> </div>
+<div style="position:fixed; bottom:120px; border:double; left:1060px; font-size: 100%; background-color: red; width:150px;">Drehen:
 <div>
-<button id="Button_links"  style="background-color:ccbbff">links</button>
+  <button id="Button_links"  style="background-color:ccbbff">links</button>
+  <button id="Button_rechts" style="background-color:ffeecc">rechts</button>
+  </div>
+<div>
 <button id="Button_hoch"   style="background-color:f7f7f7">hoch</button>
-<button id="Button_rechts" style="background-color:ffeecc">rechts</button>
 <button id="Button_runter" style="background-color:777733">runter</button>
-<button id="Button_einsetzen"    style="background-color:lightgray">einsetzen</button>
-<button id="Button_weitergehen"    style="background-color:darkgray">weitergehen</button>
+  </div>
+<div>
+Einsetzen:
+  </div>
+<div>
+<button id="Button_Stange_einsetzen"    style="background-color:lightgray">Stange</button>
+  </div>
+<div>
+Weitergehen:
+  </div>
+<div>
+  <button id="Button_weitergehen"    style="background-color:darkgray">vor</button>
+  <button id="Button_halbweitergehen"    style="background-color:darkgray">1/2</button>
+  </div>
+<div>
+<button id="Button_zurueckgehen"    style="background-color:darkgray">zurück</button>
+<button id="Button_halbzurueckgehen"    style="background-color:darkgray">1/2</button>
+  </div>
+<div>
+<button id="Button_nuebergehen"    style="background-color:darkgray">links</button>
+<button id="Button_halbnuebergehen"    style="background-color:darkgray">1/2</button>
+  </div>
+<div>
+<button id="Button_ruebergehen"    style="background-color:darkgray">rechts</button>
+<button id="Button_halbruebergehen"    style="background-color:darkgray">1/2</button>
+  </div>
+<div>
+<button id="Button_hochgehen"    style="background-color:darkgray">hoch</button>
+<button id="Button_halbhochgehen"    style="background-color:darkgray">1/2</button>
+  </div>
+<div>
+<button id="Button_runtergehen"    style="background-color:darkgray">runter</button>
+<button id="Button_halbruntergehen"    style="background-color:darkgray">1/2</button>
+  </div>
+<div>
+Länge:
+  </div>
+<div>
+<button id="Button_verdoppeln"    style="background-color:darkgray">verdoppeln</button>
+<button id="Button_halbieren"    style="background-color:darkgray">halbieren</button>
+  </div>
 </div>               
 <div>               
 <button id="links"  style="background-color:ccbbff">links</button>
@@ -172,8 +214,8 @@ mediaElement.play();
 
 			//document.body.appendChild( VRButton.createButton( renderer ) );
 
-//renderer.domElement.addEventListener("click",Bild_click);
-renderer.domElement.addEventListener("dblclick",Bild_dblclick);
+renderer.domElement.addEventListener("click",Bild_dblclick);
+//renderer.domElement.addEventListener("dblclick",Bild_dblclick);
 renderer.domElement.addEventListener("touchstart",Bild_touchstart);
 renderer.domElement.addEventListener("touchmove",Bild_touchmove);
 renderer.domElement.addEventListener("mousedown",Bild_dragstart);
@@ -595,7 +637,7 @@ function Farbe(farbe) {
 var Zylinderradius=0.05;
 function Stange(qalt,qneu,Faktor,Farbe) {
   //alert(qalt+" "+qneu+" "+Faktor+" "+Farbe);
-  var st=new THREE.Mesh( (new THREE.CylinderGeometry( Zylinderradius,Zylinderradius,0.1+Faktor,16)),(new THREE.MeshStandardMaterial( { color: Farbe, metalness: 0.3, roughness: 0.1 } )));
+  var st=new THREE.Mesh( (new THREE.CylinderGeometry( Zylinderradius,Zylinderradius,0.1+Faktor,16)),(new THREE.MeshStandardMaterial( { color: Farbe, metalness: 0.3, roughness: 0.1} )));
   q.position.x=qneu[0];
   q.position.y=qneu[1];
   q.position.z=qneu[2];
@@ -615,13 +657,14 @@ function Stange(qalt,qneu,Faktor,Farbe) {
   return st;
   }
 
-
-
-
-
-
-
-
+function Stange_von_q_bis_q1(Farbe) {
+  let qmerkpos=q.position.clone();
+  Stange(q.position.toArray(),QUADRO.worldToLocal(q1.getWorldPosition(q.position.clone())).toArray(),q1.position.length()+0.1,Farbe);
+  q.position.copy(qmerkpos);
+  let schondrin=false;
+  for (let i=0;i<Knoten.length;i++) if (Knoten[i].equals(q.position)) schondrin=true;
+  if (schondrin==false) Knoten.push(q.position.clone());
+  }
 
 //---------------------------------------- aus MIT_QUADRO.html die Geometrie:
 const QUADRO = new THREE.Object3D();
@@ -648,6 +691,10 @@ const q2Material = new THREE.MeshStandardMaterial( { color: 0x00dddd, metalness:
 const q2 = new THREE.Mesh( q2Geometry, q2Material );
 q2.position.set(0,0.08,0.-1);
 q.add( q2 );
+const q3=new THREE.Mesh( (new THREE.CylinderGeometry( Zylinderradius*1.01,Zylinderradius*1.01,1,16)),(new THREE.MeshStandardMaterial( { color: "white", metalness: 0.3, roughness: 0.1, transparent:true, opacity:0.4 } )));
+q3.rotateX(-Math.PI/2);
+q3.translateY(0.5);
+q.add( q3 );
 q.yaw=0;
 q.pitch=0;
 q.roll=0;
@@ -989,7 +1036,21 @@ Button_links. addEventListener('click',function(){q.GROT(90,0,0)});
 Button_rechts.addEventListener('click',function(){q.GROT(-90,0,0)});
 Button_hoch.  addEventListener('click',function(){q.GROT(0,-90,0)});
 Button_runter.addEventListener('click',function(){q.GROT(0,90,0)});
-Button_einsetzen.addEventListener('click',function(){alert(q.localToWorld(q1.position).toArray());/*Stange(q.position.toArray(),q.position.add(q1.position).toArray(),1,"blue");*/});
+Button_Stange_einsetzen.addEventListener('click',function(){Stange_von_q_bis_q1("orange")});
+Button_weitergehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( 0, 0.0, -q1.position.length() )).applyEuler(q.rotation))});
+Button_halbweitergehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( 0, 0, -q1.position.length()/2 )).applyEuler(q.rotation))});
+Button_zurueckgehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( 0, 0.0, q1.position.length() )).applyEuler(q.rotation))});
+Button_halbzurueckgehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( 0, 0, q1.position.length()/2 )).applyEuler(q.rotation))});
+Button_ruebergehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( Zylinderradius*2, 0.0, 0 )).applyEuler(q.rotation))});
+Button_halbruebergehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( Zylinderradius, 0, 0 )).applyEuler(q.rotation))});
+Button_nuebergehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( -Zylinderradius*2, 0.0, 0 )).applyEuler(q.rotation))});
+Button_halbnuebergehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( -Zylinderradius, 0, 0 )).applyEuler(q.rotation))});
+Button_hochgehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( 0, Zylinderradius*Math.sqrt(3)*2, 0 )).applyEuler(q.rotation))});
+Button_halbhochgehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( 0, Zylinderradius*Math.sqrt(3), 0 )).applyEuler(q.rotation))});
+Button_runtergehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( 0, -Zylinderradius*Math.sqrt(3)*2, 0 )).applyEuler(q.rotation))});
+Button_halbruntergehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( 0, -Zylinderradius*Math.sqrt(3), 0 )).applyEuler(q.rotation))});
+Button_verdoppeln.addEventListener('click',function(){q2.position.add(q1.position); q1.position.multiplyScalar(2)});
+Button_halbieren.addEventListener('click',function(){q1.position.divideScalar(2); q2.position.sub(q1.position)});
 document.getElementById("links" ).addEventListener('click',function(){Richtung(-40,0,0,Faktor)});
 document.getElementById("rechts").addEventListener('click',function(){Richtung(+40,0,0,Faktor)});
 document.getElementById("hoch"  ).addEventListener('click',function(){Richtung(0,-40,0,Faktor)});
@@ -1351,6 +1412,9 @@ function neuerDownloadtext() {
 
 
 		</script>
-
+<!--
+ok Knoten.push(q.position) nur wenn noch nicht dabei
+  .. besser aber anstelle Array Knoten die Stangenenden durchsuchen
+-->
 	</body>
 </html>
