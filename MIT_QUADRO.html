@@ -23,12 +23,15 @@ Die Knöpfe verraten es dir.
 
 <button id="Löschen">Löschen</button>
 <button id="grün" style="background-color:green">grün</button>
-<button id="blau" style="background-color:blue">blau</button>
-<button id="orange" style="background-color:orange">orange</button>
+<button id="blau" style="background-color:DeepSkyBlue">blau</button>
+<button id="orange" style="background-color:Yellow">gelb</button>
 <button id="rot" style="background-color:red">rot</button> -------
 <button id="Demo" style="background-color:">Demo</button>
 <button id="Demo_Lok">Lok</button>
 <button id="Demo_Rauner_Lok">Rauner Lok</button>
+<button id="Demo_Sommer_2023">Sommer_2023</button>
+<button id="Demo_Diesellok">Diesellok</button>
+<button id="Button_Test">Test</button>
 <button id="alles_loeschen" style="background-color:">alles löschen</button>
 <!--span id="link" style="position:relative; top:0px; left:60px; background-color:white"><small><small> Grafikprogramm=<a href="https://github.com/mrdoob/three.js">mrdoob/three.js</a>, QUADRO=<a href="https://quadro.com">quadro.com</a></small></small></span-->
   </span>
@@ -743,25 +746,25 @@ setTimeout(Richtung,16*t,0,40,0,Faktor);//runter
 }
 
 function Demo() {
-Stange([0,0,0],[1,0,0],1,"orange");
-Stange([1,0,0],[2,0,0],1,"orange");
-Stange([2,0,0],[2,1,0],1,"orange");
-Stange([2,1,0],[2,2,0],1,"orange");
+Stange([0,0,0],[1,0,0],1,"Yellow");
+Stange([1,0,0],[2,0,0],1,"Yellow");
+Stange([2,0,0],[2,1,0],1,"Yellow");
+Stange([2,1,0],[2,2,0],1,"Yellow");
 Stange([2,2,0],[2,3,0],1,"red");
 Stange([2,3,0],[1,3,0],1,"red");
 Stange([1,3,0],[0,3,0],1,"red");
 Stange([0,3,0],[0,2,0],1,"red");
 Stange([0,2,0],[1,2,0],1,"red");
-Stange([0,2,0],[0,1,0],1,"orange");
-Stange([0,1,0],[0,0,0],1,"orange");
-Stange([0,0,0],[0,0,1],1,"orange");
-Stange([0,0,1],[0,1,1],1,"orange");
-Stange([0,1,1],[0,1,0],1,"orange");
-Stange([0,1,0],[1,1,0],1,"orange");
-Stange([1,1,0],[1,2,0],1,"orange");
+Stange([0,2,0],[0,1,0],1,"Yellow");
+Stange([0,1,0],[0,0,0],1,"Yellow");
+Stange([0,0,0],[0,0,1],1,"Yellow");
+Stange([0,0,1],[0,1,1],1,"Yellow");
+Stange([0,1,1],[0,1,0],1,"Yellow");
+Stange([0,1,0],[1,1,0],1,"Yellow");
+Stange([1,1,0],[1,2,0],1,"Yellow");
 Stange([1,2,0],[1,3,0],1,"red");
 Stange([1,2,0],[2,2,0],1,"red");
-Stange([1,0,0],[1,1,0],1,"orange");
+Stange([1,0,0],[1,1,0],1,"Yellow");
 Stange([2,0,0],[2,0,-1],1,"red");
 Stange([2,0,-1],[2,0,-2],1,"red");
 Stange([2,0,-2],[2,1,-2],1,"red");
@@ -785,9 +788,9 @@ Stange([3,1,-2],[2,1,-2],1,"red");
 Stange([0,0,0],[0,0,-2],2,"red");
 Stange([0,1,0],[0,1,-2],2,"red");
 Stange([0,3,0],[0,3,-2],2,"red");
-Stange([0,3,-2],[0,2,-2],1,"mediumblue");
-Stange([0,2,-2],[0,1,-2],1,"mediumblue");
-Stange([0,1,-2],[0,0,-2],1,"mediumblue");
+Stange([0,3,-2],[0,2,-2],1,"DeepSkyBlue");
+Stange([0,2,-2],[0,1,-2],1,"DeepSkyBlue");
+Stange([0,1,-2],[0,0,-2],1,"DeepSkyBlue");
 Stange([0,2,0],[0,2,-1],1,"red");
 Stange([0,2,-1],[0,2,-2],1,"red");
 Stange([0,2,-2],[1,2,-2],1,"red");
@@ -796,12 +799,12 @@ Stange([1,3,-2],[2,3,-2],1,"red");
 Stange([1,3,-2],[1,3,-3],1,"red");
 Stange([1,3,-3],[1,2,-3],1,"green");
 Stange([1,2,-3],[1,1,-3],1,"green");
-Stange([1,1,-3],[1,0,-3],1,"mediumblue");
-Stange([1,0,-3],[0,0,-3],1,"mediumblue");
-Stange([0,0,-3],[0,0,-2],1,"mediumblue");
-Stange([0,0,-3],[0,1,-3],1,"mediumblue");
-Stange([0,1,-3],[0,1,-2],1,"mediumblue");
-Stange([0,1,-3],[1,1,-3],1,"mediumblue");
+Stange([1,1,-3],[1,0,-3],1,"DeepSkyBlue");
+Stange([1,0,-3],[0,0,-3],1,"DeepSkyBlue");
+Stange([0,0,-3],[0,0,-2],1,"DeepSkyBlue");
+Stange([0,0,-3],[0,1,-3],1,"DeepSkyBlue");
+Stange([0,1,-3],[0,1,-2],1,"DeepSkyBlue");
+Stange([0,1,-3],[1,1,-3],1,"DeepSkyBlue");
 Stange([1,1,-3],[2,1,-3],1,"red");
 Stange([2,1,-3],[3,1,-3],1,"red");
 Stange([3,1,-3],[3,1,-2],1,"red");
@@ -810,8 +813,8 @@ Stange([3,0,-3],[3,0,-2],1,"red");
 Stange([2,0,-2],[1,0,-2],1,"red");
 Stange([1,0,-2],[0,0,-2],1,"red");
 Stange([1,0,-2],[1,1,-2],1,"red");
-Stange([1,1,-2],[0,1,-2],1,"mediumblue");
-Stange([1,1,-2],[1,1,-3],1,"mediumblue");
+Stange([1,1,-2],[0,1,-2],1,"DeepSkyBlue");
+Stange([1,1,-2],[1,1,-3],1,"DeepSkyBlue");
 Stange([1,2,-2],[2,2,-2],1,"red");
 Stange([2,2,-1],[1,2,-1],1,"red");
 Stange([1,2,-1],[0,2,-1],1,"red");
@@ -835,7 +838,7 @@ Stange([1.25,4.5,0],[1.25,4.5,-2],2,"red");
 Stange([2,3.75,0],[2,3.75,-1],1,"red");
 Stange([2,3.75,-1],[2,3.75,-2],1,"red");
 Stange([2,3.75,-2],[2.75,3,-2],1,"green");
-Stange([1,0,-3],[1,0,-2],1,"mediumblue");
+Stange([1,0,-3],[1,0,-2],1,"DeepSkyBlue");
   }
 
 function Demo_Lok() {
@@ -1028,6 +1031,203 @@ Zylinderradius=Zylinderradius/u0;
 
   }
 
+function Demo_Sommer_2023() {
+Stange([0,0,0],[1,0,0],1,"red");
+Stange([1,0,0],[2,0,0],1,"red");
+Stange([2,0,0],[3,0,0],1,"red");
+Stange([3,0,0],[3,0,-1],1,"red");
+Stange([3,0,-1],[3,0,-2],1,"red");
+Stange([3,0,-2],[3,0,-3],1,"red");
+Stange([3,0,-3],[2,0,-3],1,"red");
+Stange([2,0,-3],[1,0,-3],1,"red");
+Stange([1,0,-3],[0,0,-3],1,"red");
+Stange([0,0,-3],[0,0,-2],1,"red");
+Stange([0,0,-2],[0,0,-1],1,"red");
+Stange([0,0,-1],[0,0,0],1,"green");
+Stange([1,0,0],[1,0,-1],1,"red");
+Stange([1,0,-1],[0,0,-1],1,"red");
+Stange([2,0,0],[2,0,-1],1,"red");
+Stange([2,0,-1],[2,0,-2],1,"DeepSkyBlue");
+Stange([2,0,-2],[2,0,-3],1,"Yellow");
+Stange([0,0,-3],[-0.5,0,-3],0.5,"red");
+Stange([0,0,-3],[0,2,-3],2,"red");
+Stange([2,0,-2],[2,2,-2],2,"red");
+Stange([1,0,0],[1,2,0],2,"red");
+Stange([0,0,0],[0,1,0],1,"red");
+Stange([0,1,0],[0,2,0],1,"red");
+Stange([0,0,-1],[0,1,-1],1,"DeepSkyBlue");
+Stange([0,1,-1],[0,2,-1],1,"red");
+Stange([0,1,0],[0,1,-1],1,"red");
+Stange([2,0,0],[2,1,0],1,"DeepSkyBlue");
+Stange([2,1,0],[2,2,0],1,"red");
+Stange([3,0,0],[3,1,0],1,"red");
+Stange([3,0,-1],[3,1,-1],1,"red");
+Stange([3,0,-2],[3,1,-2],1,"red");
+Stange([3,0,-3],[3,1,-3],1,"red");
+Stange([2,0,-3],[2,1,-3],1,"green");
+Stange([2,1,-3],[2,2,-3],1,"green");
+Stange([2,1,0],[3,1,0],1,"red");
+Stange([3,1,0],[3,1,-1],1,"red");
+Stange([3,1,-1],[3,1,-2],1,"DeepSkyBlue");
+Stange([3,1,-2],[3,1,-3],1,"DeepSkyBlue");
+Stange([3,1,-3],[2,1,-3],1,"red");
+Stange([0,2,0],[0,2,-1],1,"DeepSkyBlue");
+Stange([0,2,-1],[1,2,-1],1,"DeepSkyBlue");
+Stange([1,2,-1],[2,2,-1],1,"red");
+Stange([2,2,-1],[2,2,-2],1,"red");
+Stange([2,2,-2],[2,2,-3],1,"red");
+Stange([2,2,-3],[1,2,-3],1,"green");
+Stange([1,2,-3],[0,2,-3],1,"red");
+Stange([2,2,0],[2,2,-1],1,"DeepSkyBlue");
+Stange([1,2,0],[1,2,-1],1,"Yellow");
+Stange([0,2,0],[1,2,0],1,"Yellow");
+Stange([1,2,0],[2,2,0],1,"red");
+Stange([-0.5,0,-3],[-0.5,1,-3],1,"DeepSkyBlue");
+Stange([-0.5,1,-3],[-0.5,2,-3],1,"Yellow");
+Stange([-0.5,2,-3],[-0.5,2.5,-3],0.5,"red");
+Stange([0,2,-3],[0,2.5,-3],0.5,"red");
+Stange([2,2,-3],[2,2.5,-3],0.5,"red");
+Stange([1,2,-3],[1,2.5,-3],0.5,"red");
+Stange([2,2,-2],[2,2.5,-2],0.5,"red");
+Stange([2,2,-1],[2,2.5,-1],0.5,"red");
+Stange([2,2,0],[2,2.5,0],0.5,"red");
+Stange([1,2,0],[1,2.5,0],0.5,"red");
+Stange([1,2,-1],[1,2.5,-1],0.5,"red");
+Stange([0,2,0],[0,2.5,0],0.5,"red");
+Stange([0,2,-1],[0,2.5,-1],0.5,"red");
+Stange([0,2.5,0],[0,2.5,-1],1,"Yellow");
+Stange([0,2.5,-1],[1,2.5,-1],1,"red");
+Stange([1,2.5,-1],[2,2.5,-1],1,"red");
+Stange([2,2.5,-1],[2,2.5,-2],1,"DeepSkyBlue");
+Stange([2,2.5,-2],[2,2.5,-3],1,"Yellow");
+Stange([2,2.5,-3],[1,2.5,-3],1,"red");
+Stange([1,2.5,-3],[0,2.5,-3],1,"Yellow");
+Stange([0,2.5,-3],[-0.5,2.5,-3],0.5,"red");
+Stange([0,2.5,0],[1,2.5,0],1,"Yellow");
+Stange([1,2.5,0],[2,2.5,0],1,"Yellow");
+Stange([2,2.5,0],[2,2.5,-1],1,"Yellow");
+Stange([1,2.5,0],[1,2.5,-1],1,"red");
+Stange([1,2,-3],[1,1,-3],1,"red");
+Stange([1,1,-3],[1,0,-3],1,"Yellow");
+Stange([1,1,-3],[2,1,-3],1,"red");
+Stange([1,0,-1],[1,1,-1],1,"green");
+Stange([1,1,-1],[1,2,-1],1,"DeepSkyBlue");
+  }
+
+function Demo_Diesellok() {
+Stange([0,0,0],[1,0,0],1,"DeepSkyBlue");
+Stange([1,0,0],[2,0,0],1,"DeepSkyBlue");
+Stange([2,0,0],[3,0,0],1,"DeepSkyBlue");
+Stange([3,0,0],[3,0,-1],1,"red");
+Stange([3,0,-1],[3,0,-2],1,"red");
+Stange([3,0,-2],[2,0,-2],1,"red");
+Stange([2,0,-2],[2,0,-3],1,"red");
+Stange([2,0,-3],[2,0,-4],1,"red");
+Stange([2,0,-4],[1,0,-4],1,"red");
+Stange([1,0,-4],[1,0,-3],1,"red");
+Stange([1,0,-3],[1,0,-2],1,"red");
+Stange([1,0,-2],[0,0,-2],1,"red");
+Stange([0,0,-2],[0,0,-1],1,"red");
+Stange([0,0,-1],[0,0,0],1,"red");
+Stange([1,0,-2],[2,0,-2],1,"red");
+Stange([0,0,-1],[1,0,-1],1,"red");
+Stange([1,0,-1],[1,0,-1.5],0.5,"red");
+Stange([1,0,-1.5],[0,0,-1.5],1,"red");
+Stange([2,0,-2],[2,0,-1],1,"red");
+Stange([2,0,-1],[3,0,-1],1,"red");
+Stange([0,0,0],[0,1,0],1,"red");
+Stange([1,0,0],[1,1,0],1,"red");
+Stange([2,0,0],[2,1,0],1,"red");
+Stange([3,0,0],[3,1,0],1,"red");
+Stange([3,0,-1],[3,1,-1],1,"red");
+Stange([3,0,-2],[3,1,-2],1,"red");
+Stange([2,0,-2],[2,1,-2],1,"red");
+Stange([1,0,-2],[1,1,-2],1,"red");
+Stange([0,0,-2],[0,1,-2],1,"red");
+Stange([2,0,-1],[2,1,-1],1,"red");
+Stange([0,0,-1.5],[0,1,-1.5],1,"red");
+Stange([0,0,-1],[0,1,-1],1,"red");
+Stange([1,0,-1],[1,1,-1],1,"red");
+Stange([1,0,-1.5],[1,1,-1.5],1,"red");
+Stange([0,1,0],[1,1,0],1,"red");
+Stange([1,1,0],[2,1,0],1,"red");
+Stange([2,1,0],[3,1,0],1,"red");
+Stange([3,1,-1],[3,1,-2],1,"red");
+Stange([3,1,-2],[2,1,-2],1,"red");
+Stange([2,1,-2],[1,1,-2],1,"red");
+Stange([1,1,-2],[0,1,-2],1,"red");
+Stange([0,1,-2],[0,1,-1.5],0.5,"red");
+Stange([0,1,-1.5],[0,1,-1],0.5,"red");
+Stange([0,1,-1],[1,1,-1],1,"red");
+Stange([1,1,-1],[1,1,-1.5],0.5,"red");
+Stange([1,1,-1.5],[0,1,-1.5],1,"red");
+Stange([1,0,-3],[1,1,-3],1,"red");
+Stange([2,0,-3],[2,1,-3],1,"red");
+Stange([1,0,-4],[1,1,-4],1,"red");
+Stange([2,0,-4],[2,1,-4],1,"red");
+Stange([2,1,-2],[2,1,-3],1,"red");
+Stange([2,1,-3],[2,1,-4],1,"red");
+Stange([2,1,-4],[1,1,-4],1,"red");
+Stange([1,1,-4],[1,1,-3],1,"red");
+Stange([1,1,-3],[1,1,-2],1,"red");
+Stange([2,1,-3],[1,1,-3],1,"red");
+Stange([3,1,0],[3,3,0],2,"red");
+Stange([2,1,0],[2,3,0],2,"red");
+Stange([1,1,0],[1,3,0],2,"red");
+Stange([0,1,0],[0,3,0],2,"red");
+Stange([1,1,-1],[1,3,-1],2,"red");
+Stange([2,1,-1],[2,3,-1],2,"red");
+Stange([3,1,-1],[2,1,-1],1,"red");
+Stange([2,1,-1],[2,1,-2],1,"red");
+Stange([3,1,-1],[3,2,-1],1,"red");
+Stange([3,2,-1],[3,2,-2],1,"red");
+Stange([3,2,-1],[3,3,-1],1,"red");
+Stange([3,2,-2],[3,1,-2],1,"red");
+Stange([3,2,-2],[3,3,-2],1,"red");
+Stange([2,1,-2],[2,2,-2],1,"red");
+Stange([2,2,-2],[2,3,-2],1,"red");
+Stange([1,1,-2],[1,2,-2],1,"red");
+Stange([1,2,-2],[1,3,-2],1,"red");
+Stange([0,1,-2],[0,2,-2],1,"red");
+Stange([0,2,-2],[0,3,-2],1,"red");
+Stange([0,1,-1],[0,2,-1],1,"red");
+Stange([0,2,-1],[0,3,-1],1,"red");
+Stange([0,2,-1],[0,2,-2],1,"red");
+Stange([3,3,-2],[2,3,-2],1,"red");
+Stange([2,3,-2],[1,3,-2],1,"red");
+Stange([1,3,-2],[0,3,-2],1,"red");
+Stange([0,3,-2],[0,3,-1],1,"red");
+Stange([0,3,-1],[0,3,0],1,"red");
+Stange([0,3,0],[1,3,0],1,"red");
+Stange([1,3,0],[2,3,0],1,"red");
+Stange([2,3,0],[3,3,0],1,"red");
+Stange([3,3,0],[3,3,-1],1,"red");
+Stange([3,3,-1],[3,3,-2],1,"red");
+Stange([2,3,0],[2,3,-1],1,"red");
+Stange([2,3,-1],[2,3,-2],1,"red");
+Stange([1,3,0],[1,3,-1],1,"red");
+Stange([1,3,-1],[1,3,-2],1,"red");
+Stange([3,3,-1],[2,3,-1],1,"red");
+Stange([2,3,-1],[1,3,-1],1,"red");
+Stange([1,3,-1],[0,3,-1],1,"red");
+Stange([1.5,1,-4],[1.5,2,-4],1.1,"Yellow");
+Stange([1.5,2,-4],[1.5,2,-5],1.1,"Yellow");
+Stange([1.5,2,-5],[1.5000000000000004,1.0000000000000002,-5],1.1,"Yellow");
+Stange([1.5,1,-5],[0.5000000000000004,1,-5],1.1,"Yellow");
+Stange([2.5,1,-5],[1.5,1,-5],1.1,"Yellow");
+Stange([2.5,1,-5],[2.5,-5.551115123125783e-17,-5],1.1,"Yellow");
+Stange([2.5,0,-5],[1.4999999999999996,0,-5],1.1,"green");
+Stange([1.5,0,-5],[0.5000000000000004,0,-5],1.1,"green");
+Stange([1.5,0,-5],[1.5000000000000004,1,-5],1.1,"Yellow");
+Stange([0.5,0,-5],[0.5000000000000004,1,-5],1.1,"Yellow");
+Stange([1.5,2,-4],[1.5,2,-3],1.1,"DeepSkyBlue");
+Stange([1.4999999999999996,1.9999999999999998,-3],[1.4999999999999996,1.9999999999999998,-2],1.1,"DeepSkyBlue");
+  }
+
+
+function Test() {
+  alert(Knoten.length+"\n"+Stangen.length);
+  }
 //Test();
 //Richtung(0,0,40,Faktor);//ohne dem passt die Kameraposition nicht
 
@@ -1036,7 +1236,7 @@ Button_links. addEventListener('click',function(){q.GROT(90,0,0)});
 Button_rechts.addEventListener('click',function(){q.GROT(-90,0,0)});
 Button_hoch.  addEventListener('click',function(){q.GROT(0,-90,0)});
 Button_runter.addEventListener('click',function(){q.GROT(0,90,0)});
-Button_Stange_einsetzen.addEventListener('click',function(){Stange_von_q_bis_q1("orange")});
+Button_Stange_einsetzen.addEventListener('click',function(){Stange_von_q_bis_q1("Yellow")});
 Button_weitergehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( 0, 0.0, -q1.position.length() )).applyEuler(q.rotation))});
 Button_halbweitergehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( 0, 0, -q1.position.length()/2 )).applyEuler(q.rotation))});
 Button_zurueckgehen.addEventListener('click',function(){q.position.add((new THREE.Vector3( 0, 0.0, q1.position.length() )).applyEuler(q.rotation))});
@@ -1066,12 +1266,15 @@ document.getElementById("L80").parentNode.addEventListener('click',function(){Fa
 document.getElementById("Löschen").addEventListener('click',Loeschen);
 document.getElementById("alles_loeschen").addEventListener('click',alles_loeschen);
 document.getElementById("grün"  ).addEventListener('click',function(){Farbe('green')});
-document.getElementById("blau"  ).addEventListener('click',function(){Farbe('mediumblue')});
-document.getElementById("orange").addEventListener('click',function(){Farbe('orange')});
+document.getElementById("blau"  ).addEventListener('click',function(){Farbe('DeepSkyBlue')});
+document.getElementById("orange").addEventListener('click',function(){Farbe('Yellow')});
 document.getElementById("rot"   ).addEventListener('click',function(){Farbe('red')});
 document.getElementById("Demo").addEventListener('click',Demo);
 document.getElementById("Demo_Lok").addEventListener('click',Demo_Lok);
 document.getElementById("Demo_Rauner_Lok").addEventListener('click',Demo_Rauner_Lok);
+document.getElementById("Demo_Sommer_2023").addEventListener('click',Demo_Sommer_2023);
+document.getElementById("Demo_Diesellok").addEventListener('click',Demo_Diesellok);
+document.getElementById("Button_Test").addEventListener('click',Test);
 document.getElementById("Mini links1"   ).addEventListener('click',function(){Richtung(-40,0,0,10)});
 document.getElementById("schräg rechts hoch"  ).addEventListener('click',function(){Richtung(30,-30,0,Faktor)});
 document.getElementById("schräg rechts runter").addEventListener('click',function(){Richtung(30,30,0,Faktor)});
