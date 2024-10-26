@@ -9,7 +9,7 @@
 
 		<div id="container"></div>
 
-	<body onload="Demo_Rauner_Lok()">
+	<body>
 <p id="Logfile" style="font-family:Courier,monospace; white-space:pre-wrap; overflow:auto"> </p> 
 <div style="font-style:italic; white-space:pre-wrap;">
 <u>ANLEITUNG:</u>
@@ -455,7 +455,7 @@ controller2.addEventListener( 'touchstart', onClick );
 
 				//
 
-let J_rechts_selected=false;
+let J_selected=false;
 			function onSelectStart( event ) {
 
 				const controller = event.target;
@@ -469,16 +469,17 @@ let J_rechts_selected=false;
 					const object = intersection.object;
 					object.material.emissive.b = 0;
 //neu ab 2024__10_23 Joystick:♥
-if (object!=J_rechts) {					controller.attach( object ); 
+if (object.parent!=st) {
+                    controller.attach( object ); 
 					controller.userData.selected = object;
-					} else J_rechts_selected=true;
+					} else J_selected=object;
 
 				}
 
 			}
 
 			function onSelectEnd( event ) {
-J_rechts_selected=false;//♥
+J_selected=false;//♥
 				const controller = event.target;
 
 				if ( controller.userData.selected !== undefined ) {
@@ -518,7 +519,7 @@ Logfile.innerHTML='onClick';
 				raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
 				raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );
 
-				return raycaster.intersectObjects( QUADRO.children.concat([J_rechts]), false );
+				return raycaster.intersectObjects( QUADRO.children.concat(st.children), false );
 
 			}
 
@@ -731,28 +732,57 @@ QUADRO.add( s );
 const st= new THREE.Object3D();
 //st.position.set(0,10,13);
 QUADRO.add(st);
-st.add(camera);
+//camera.rotateX(Math.Pi);
 var gamma=Math.PI/2.4;
-var delta2=0.2;
+var delta2=0.2;//Math.PI/1;//war 0.2
 var distanz=6;
 st.position.setFromSphericalCoords(distanz,gamma,delta2);
 var cl=q.position.clone();
 st.lookAt(QUADRO.localToWorld(cl.clone()));
-camera.lookAt(QUADRO.localToWorld(cl.clone()));
-camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
+st.rotateY(-Math.PI);
+st.add(camera);
+//delta2=Math.PI/2;
+//st.position.setFromSphericalCoords(distanz,gamma,delta2);
+st.rotateY(-Math.PI/2*0);
+//camera.rotateY(Math.PI);
+//st.lookAt(QUADRO.localToWorld(cl.clone()));
+//st.lookAt(QUADRO.localToWorld(cl.clone()));
+//camera.lookAt(QUADRO.localToWorld(cl.clone()));
+//camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
 				st.add( controller1 );
 				st.add( controller2 );
 				st.add( controllerGrip1 );
 				st.add( controllerGrip2 );
 
 //neu ab 2024__10_23 Joystick:♥
-const J_rechts_Geometry = new THREE.SphereGeometry( 0.11, 32, 32 );
-const J_rechts_Material = new THREE.MeshStandardMaterial( { color: 0xdddddd, metalness: 0.5, roughness: 0.1} );
-const J_rechts = new THREE.Mesh( J_rechts_Geometry, J_rechts_Material );
+//const J_rechts_Geometry = new THREE.SphereGeometry( 0.11, 32, 32 );
+//const J_rechts_Material = new THREE.MeshStandardMaterial( { color: 0xdddddd, metalness: 0.5, roughness: 0.1, side: THREE.DoubleSide} );
+//const J_rechts_Material = new THREE.MeshBasicMaterial( { color: 0xdddddd, side: THREE.DoubleSide} );
+const Pfeilgeometrie=  new THREE.ShapeGeometry(
+    (new THREE.Shape)
+    .moveTo(0,0)
+    .lineTo(0.1,0)
+    .lineTo(0.1,-0.05)
+    .lineTo(0.2,0.05)
+    .lineTo(0.1,0.15)
+    .lineTo(0.1,0.1)
+    .lineTo(0,0.1)
+    .lineTo(0,0)
+    );
+const J_rechts_Material = new THREE.MeshStandardMaterial( { color: 0x654321, side: THREE.DoubleSide, wireframe: false} );
+const J_rechts = new THREE.Mesh( Pfeilgeometrie, J_rechts_Material );
 //J_rechts.position.copy(q.position.clone().add(st.position).divideScalar(2).add(new THREE.Vector3(0,0,0)));
 //QUADRO.add( J_rechts );
-J_rechts.position.copy(new THREE.Vector3(-0.2,0,1));
+J_rechts.position.copy(new THREE.Vector3(0.2,-0.2,-1));
 st.add( J_rechts );
+
+const J_links = new THREE.Mesh(
+  Pfeilgeometrie,
+  new THREE.MeshStandardMaterial( { color: 0x123456, side: THREE.DoubleSide} )
+  );
+J_links.position.set(-0.2,-0.2,-1);
+J_links.rotateY(Math.PI);
+st.add( J_links );
 
 
 
@@ -1407,7 +1437,9 @@ let Distanzrichtung=new THREE.Vector3();
       if (Ausrichten<1) diff.normalize().multiplyScalar(Ausrichten);
       cl.add(diff);
       st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);
-      camera.lookAt(QUADRO.localToWorld(cl.clone()));
+      st.lookAt(QUADRO.localToWorld(cl.clone()));
+st.rotateY(-Math.PI);
+//      camera.lookAt(QUADRO.localToWorld(cl.clone()));
       }
 
     //document.getElementById("Log2").firstChild.nodeValue=JSON.stringify(QUADRO.localToWorld(st.position.clone()))+"\n"+JSON.stringify(QUADRO.localToWorld(cl.clone()));
@@ -1418,16 +1450,17 @@ let Distanzrichtung=new THREE.Vector3();
 
     //neu ab 2024__10_23:♥
 
-if (J_rechts_selected) {
+if (J_selected) {
    //distanz=distanz+1.0;
-   delta2=delta2+0.01;
+   if (J_selected==J_rechts) delta2=delta2+0.01;
+   if (J_selected==J_links) delta2=delta2-0.01;
    st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
    //st.rotateY(0.01);//eigentlich müsste hier camera.lookAt(QUADRO.localToWorld(cl.clone())) stehen, geht aber nicht
    st.lookAt(QUADRO.localToWorld(cl.clone()))
+st.rotateY(-Math.PI);
 //was alles nicht geht:
 //   camera.rotateZ(0.1);
-//   camera.lookAt(QUADRO.localToWorld(cl.position.clone()));
-//   camera.lookAt(QUADRO.localToWorld(cl.position.clone()));
+//   camera.lookAt(QUADRO.localToWorld(cl.clone()));
 //   camera.updateProjectionMatrix();
 //   controller.lookAt(QUADRO.localToWorld(J_rechts.position.clone()));
 //   renderer.xr.updateCamera(camera);//Richtung lookAt(q.position) funktioniert leider nicht
@@ -1448,6 +1481,7 @@ if (J_rechts_selected) {
       +';\n Distanzrichtung='+JSON.stringify(Distanzrichtung)
       +';\n camera.getWorldDirection()='+JSON.stringify(worldDirection) 
       +';\n st.position='+JSON.stringify(st.position) 
+      +';\n st.getWorldDirection()='+JSON.stringify(st.getWorldDirection(worldDirection)) 
       ;
 
 
@@ -1458,7 +1492,7 @@ if (J_rechts_selected) {
 
 		cleanIntersected();
 
-  if((VRButt.textContent!="ENTER VR")&&(VRButt.textContent!="VR NOT SUPPORTED")) {
+  if((VRButt.textContent!="ENTER VR")&&(VRButt.textContent!="VR NOT SUPPORTED")&&(J_selected==false)) {
 		intersectObjects( controller1 );//CONT lässt die Stangen aufleuchten
 		intersectObjects( controller2 );
     }
@@ -1508,8 +1542,9 @@ function Bild_touchmove() {
     delta2=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
     //alert(distanz+" "+st.position.clone().sub(cl).length());
     st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
-    st.lookAt(QUADRO.localToWorld(cl.clone()));//♥neu zusätzlich
-    camera.lookAt(QUADRO.localToWorld(cl.clone()));
+    st.lookAt(QUADRO.localToWorld(cl.clone()));//♥neu zusätzlich, sogar mit rotate
+st.rotateY(-Math.PI);
+//    camera.lookAt(QUADRO.localToWorld(cl.clone()));
     //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
     //touchzahl=1;
     } else {
@@ -1525,8 +1560,10 @@ function Bild_touchmove() {
           distanz=distanzalt-(Math.sqrt((Touch.clientX-Touch2.clientX)**2+(Touch.clientY-Touch2.clientY)**2)-Math.sqrt((TouchposX-Touch2posX)**2+(TouchposY-Touch2posY)**2))/50;
           distanz=Math.min(Math.max(distanz,1),10);
           }
-      st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
-      camera.lookAt(QUADRO.localToWorld(cl.clone()));
+      st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);
+      st.lookAt(QUADRO.localToWorld(cl.clone()));//♥neu zusätzlich, sogar mit rotate
+st.rotateY(-Math.PI);
+//      camera.lookAt(QUADRO.localToWorld(cl.clone()));
       }
   //document.getElementById("Log2").firstChild.nodeValue=Log;
   event.preventDefault();
@@ -1574,7 +1611,9 @@ function Bild_dblclick() {//let inputSourceList = xrSession.inputSources;alert(i
 function Kamera_ausrichten() {
   cl.copy(q.position);
   st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
-  camera.lookAt(QUADRO.localToWorld(cl.clone()));
+  st.lookAt(QUADRO.localToWorld(cl.clone()));//♥neu zusätzlich, sogar mit rotate
+st.rotateY(-Math.PI);
+//  camera.lookAt(QUADRO.localToWorld(cl.clone()));
   }
 
 
@@ -1597,7 +1636,9 @@ function Bild_dragmove() { if (mouseDown==true) {
   gamma=Math.min(Math.PI-0.01,Math.max(0.01,gammaalt-(event.clientY-TouchposY)/8/180*Math.PI));
   delta2=deltaalt-(event.clientX-TouchposX)/4/180*Math.PI;
   st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
-  camera.lookAt(QUADRO.localToWorld(cl.clone()));
+  st.lookAt(QUADRO.localToWorld(cl.clone()));//♥neu zusätzlich, sogar mit rotate
+st.rotateY(-Math.PI);
+//  camera.lookAt(QUADRO.localToWorld(cl.clone()));
   event.preventDefault();
   document.getElementById("Log").innerHTML=[TouchposX,TouchposY,gamma,delta2];
   } }
@@ -1637,7 +1678,9 @@ function Bild_wheel(event) {
       distanz=Math.min(Math.max(distanz,3),10);
       st.position.setFromSphericalCoords(distanz,gamma,delta2).add(q.position);
       }
-  camera.lookAt(QUADRO.localToWorld(cl.clone()));
+  st.lookAt(QUADRO.localToWorld(cl.clone()));//♥neu zusätzlich, sogar mit rotate
+st.rotateY(-Math.PI);
+//  camera.lookAt(QUADRO.localToWorld(cl.clone()));
   event.preventDefault();
   }
 
@@ -1677,7 +1720,7 @@ function neuerDownloadtext() {
   return Text;
   }
 
-
+Demo();
 		</script>
 <!--
 ok Knoten.push(q.position) nur wenn noch nicht dabei
