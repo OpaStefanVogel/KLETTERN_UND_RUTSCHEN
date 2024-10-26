@@ -453,6 +453,7 @@ controller2.addEventListener( 'touchstart', onClick );
 				raycaster = new THREE.Raycaster();
 
 				//
+
 			function onSelectStart( event ) {
 
 				const controller = event.target;
@@ -470,9 +471,14 @@ if (object!=J_rechts)					controller.attach( object ); else  {
    //distanz=distanz+1.0;
    delta2=delta2+0.1;
    st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
-   st.lookAt(QUADRO.localToWorld(cl.clone()));
-   camera.lookAt(QUADRO.localToWorld(cl.clone()));
-//   alert(delta2);
+   st.rotateY(0.1);
+//was alles nicht geht:
+//   camera.rotateZ(0.1);
+//   camera.lookAt(QUADRO.localToWorld(cl.position.clone()));
+//   camera.lookAt(QUADRO.localToWorld(cl.position.clone()));
+//   camera.updateProjectionMatrix();
+//   controller.lookAt(QUADRO.localToWorld(J_rechts.position.clone()));
+//   renderer.xr.updateCamera(camera);//Richtung lookAt(q.position) funktioniert leider nicht
    }
 
 					controller.userData.selected = object;
@@ -1421,9 +1427,7 @@ let Himmelsrichtung=0;
       +';\n st='+JSON.stringify(st.position)
       +';\n QUADRO='+JSON.stringify(QUADRO.position)
       +';\n J_rechts='+JSON.stringify(J_rechts.position)
-      +';\n Himmelsrichtung='+Himmelsrichtung
-      +';\n controller1.userData.selected='+controller1.userData.selected;
-      
+      +';\n Himmelsrichtung='+Himmelsrichtung      
       ;
 
 
