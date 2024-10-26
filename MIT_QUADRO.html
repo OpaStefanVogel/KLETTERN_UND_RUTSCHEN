@@ -469,8 +469,9 @@ let J_rechts_selected=false;
 					const object = intersection.object;
 					object.material.emissive.b = 0;
 //neu ab 2024__10_23 Joystick:♥
-if (object!=J_rechts)					controller.attach( object ); else J_rechts_selected=true;
+if (object!=J_rechts) {					controller.attach( object ); 
 					controller.userData.selected = object;
+					} else J_rechts_selected=true;
 
 				}
 
@@ -517,8 +518,7 @@ Logfile.innerHTML='onClick';
 				raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
 				raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );
 
-//				return raycaster.intersectObjects( QUADRO.children.concat([J_rechts]), false );
-				return raycaster.intersectObjects( [J_rechts], false );
+				return raycaster.intersectObjects( QUADRO.children.concat([J_rechts]), false );
 
 			}
 
@@ -746,7 +746,7 @@ camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
 				st.add( controllerGrip2 );
 
 //neu ab 2024__10_23 Joystick:♥
-const J_rechts_Geometry = new THREE.SphereGeometry( 0.01, 32, 32 );
+const J_rechts_Geometry = new THREE.SphereGeometry( 0.11, 32, 32 );
 const J_rechts_Material = new THREE.MeshStandardMaterial( { color: 0xdddddd, metalness: 0.5, roughness: 0.1} );
 const J_rechts = new THREE.Mesh( J_rechts_Geometry, J_rechts_Material );
 //J_rechts.position.copy(q.position.clone().add(st.position).divideScalar(2).add(new THREE.Vector3(0,0,0)));
@@ -1422,8 +1422,8 @@ if (J_rechts_selected) {
    //distanz=distanz+1.0;
    delta2=delta2+0.01;
    st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
-//   st.rotateY(0.01);//eigentlich müsste hier camera.lookAt(QUADRO.localToWorld(cl.position.clone())) stehen, geht aber nicht
-   st.lookAt(QUADRO.localToWorld(cl.position.clone()))
+   //st.rotateY(0.01);//eigentlich müsste hier camera.lookAt(QUADRO.localToWorld(cl.clone())) stehen, geht aber nicht
+   st.lookAt(QUADRO.localToWorld(cl.clone()))
 //was alles nicht geht:
 //   camera.rotateZ(0.1);
 //   camera.lookAt(QUADRO.localToWorld(cl.position.clone()));
