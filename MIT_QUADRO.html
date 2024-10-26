@@ -517,7 +517,8 @@ Logfile.innerHTML='onClick';
 				raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
 				raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );
 
-				return raycaster.intersectObjects( QUADRO.children, false );
+//				return raycaster.intersectObjects( QUADRO.children.concat([J_rechts]), false );
+				return raycaster.intersectObjects( [J_rechts], false );
 
 			}
 
@@ -736,6 +737,7 @@ var delta2=0.2;
 var distanz=6;
 st.position.setFromSphericalCoords(distanz,gamma,delta2);
 var cl=q.position.clone();
+st.lookAt(QUADRO.localToWorld(cl.clone()));
 camera.lookAt(QUADRO.localToWorld(cl.clone()));
 camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
 				st.add( controller1 );
@@ -747,8 +749,10 @@ camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
 const J_rechts_Geometry = new THREE.SphereGeometry( 0.01, 32, 32 );
 const J_rechts_Material = new THREE.MeshStandardMaterial( { color: 0xdddddd, metalness: 0.5, roughness: 0.1} );
 const J_rechts = new THREE.Mesh( J_rechts_Geometry, J_rechts_Material );
-J_rechts.position.copy(q.position.clone().add(st.position).divideScalar(2).add(new THREE.Vector3(0,0,0)));
-QUADRO.add( J_rechts );
+//J_rechts.position.copy(q.position.clone().add(st.position).divideScalar(2).add(new THREE.Vector3(0,0,0)));
+//QUADRO.add( J_rechts );
+J_rechts.position.copy(new THREE.Vector3(-0.2,0,1));
+st.add( J_rechts );
 
 
 
@@ -1358,7 +1362,7 @@ scene.add( directionalLight3);
 var Ausrichten=0.005;
 let Himmelsrichtung=0;
 let worldDirection=new THREE.Vector3();
-let Distanzrichtungsvektor=new THREE.Vector3();
+let Distanzrichtung=new THREE.Vector3();
 
 //--------
 
@@ -1418,7 +1422,8 @@ if (J_rechts_selected) {
    //distanz=distanz+1.0;
    delta2=delta2+0.01;
    st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
-   st.rotateY(0.01);//eigentlich müsste hier camera.lookAt(QUADRO.localToWorld(cl.position.clone())) stehen, geht aber nicht
+//   st.rotateY(0.01);//eigentlich müsste hier camera.lookAt(QUADRO.localToWorld(cl.position.clone())) stehen, geht aber nicht
+   st.lookAt(QUADRO.localToWorld(cl.position.clone()))
 //was alles nicht geht:
 //   camera.rotateZ(0.1);
 //   camera.lookAt(QUADRO.localToWorld(cl.position.clone()));
@@ -1430,18 +1435,19 @@ if (J_rechts_selected) {
 
 
     Himmelsrichtung=Math.atan2(st.position.x-cl.x,st.position.z-cl.z);
-    Distanzrichtungsvektor=cl.clone().sub(st.position).normalize();
+    Distanzrichtung=cl.clone().sub(st.position).normalize();
     camera.getWorldDirection(worldDirection)//nicht verwendet
     //J_rechts.position.set((st.position.x+q.position.x)/2+Math.cos(Himmelsrichtung),(st.position.y+q.position.y)/2,(st.position.z+q.position.z)/2-Math.sin(Himmelsrichtung));
     //J_rechts.position.set((st.position.x-worldDirection.x)+Math.cos(Himmelsrichtung)*0.2,(st.position.y+worldDirection.y),(st.position.z-worldDirection.z)-Math.sin(Himmelsrichtung)*0.2);
-    J_rechts.position.set((st.position.x+Distanzrichtungsvektor.x)+Math.cos(Himmelsrichtung)*0.1,(st.position.y+Distanzrichtungsvektor.y),(st.position.z+Distanzrichtungsvektor.z)-Math.sin(Himmelsrichtung)*0.1);
+//    J_rechts.position.set((st.position.x+Distanzrichtung.x)+Math.cos(Himmelsrichtung)*0.1,(st.position.y+Distanzrichtung.y),(st.position.z+Distanzrichtung.z)-Math.sin(Himmelsrichtung)*0.1);
     Log3.innerHTML='q='+JSON.stringify(q.position)
       +';\n st='+JSON.stringify(st.position)
       +';\n QUADRO='+JSON.stringify(QUADRO.position)
       +';\n J_rechts='+JSON.stringify(J_rechts.position)
       +';\n Himmelsrichtung='+Himmelsrichtung      
-      +';\n Distanzrichtungsvektor='+JSON.stringify(Distanzrichtungsvektor)
+      +';\n Distanzrichtung='+JSON.stringify(Distanzrichtung)
       +';\n camera.getWorldDirection()='+JSON.stringify(worldDirection) 
+      +';\n st.position='+JSON.stringify(st.position) 
       ;
 
 
@@ -1502,6 +1508,7 @@ function Bild_touchmove() {
     delta2=deltaalt-(Touch.clientX-TouchposX)/4/180*Math.PI;
     //alert(distanz+" "+st.position.clone().sub(cl).length());
     st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
+    st.lookAt(QUADRO.localToWorld(cl.clone()));//♥neu zusätzlich
     camera.lookAt(QUADRO.localToWorld(cl.clone()));
     //document.getElementById("Log").firstChild.nodeValue=Touch.clientX+" "+Touch.clientY;
     //touchzahl=1;
