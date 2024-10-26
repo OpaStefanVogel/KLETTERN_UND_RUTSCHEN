@@ -454,6 +454,7 @@ controller2.addEventListener( 'touchstart', onClick );
 
 				//
 
+let J_rechts_selected=false;
 			function onSelectStart( event ) {
 
 				const controller = event.target;
@@ -467,20 +468,7 @@ controller2.addEventListener( 'touchstart', onClick );
 					const object = intersection.object;
 					object.material.emissive.b = 0;
 //neu ab 2024__10_23 Joystick:♥
-if (object!=J_rechts)					controller.attach( object ); else  {
-   //distanz=distanz+1.0;
-   delta2=delta2+0.1;
-   st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
-   st.rotateY(0.1);
-//was alles nicht geht:
-//   camera.rotateZ(0.1);
-//   camera.lookAt(QUADRO.localToWorld(cl.position.clone()));
-//   camera.lookAt(QUADRO.localToWorld(cl.position.clone()));
-//   camera.updateProjectionMatrix();
-//   controller.lookAt(QUADRO.localToWorld(J_rechts.position.clone()));
-//   renderer.xr.updateCamera(camera);//Richtung lookAt(q.position) funktioniert leider nicht
-   }
-
+if (object!=J_rechts)					controller.attach( object ); else J_rechts_selected=true;
 					controller.userData.selected = object;
 
 				}
@@ -488,7 +476,7 @@ if (object!=J_rechts)					controller.attach( object ); else  {
 			}
 
 			function onSelectEnd( event ) {
-
+J_rechts_selected=false;//♥
 				const controller = event.target;
 
 				if ( controller.userData.selected !== undefined ) {
@@ -1430,6 +1418,19 @@ let Himmelsrichtung=0;
       +';\n Himmelsrichtung='+Himmelsrichtung      
       ;
 
+if (J_rechts_selected) {
+   //distanz=distanz+1.0;
+   delta2=delta2+0.01;
+   st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
+   st.rotateY(0.01);//eigentlich müsste hier camera.lookAt(QUADRO.localToWorld(cl.position.clone())) stehen, geht aber nicht
+//was alles nicht geht:
+//   camera.rotateZ(0.1);
+//   camera.lookAt(QUADRO.localToWorld(cl.position.clone()));
+//   camera.lookAt(QUADRO.localToWorld(cl.position.clone()));
+//   camera.updateProjectionMatrix();
+//   controller.lookAt(QUADRO.localToWorld(J_rechts.position.clone()));
+//   renderer.xr.updateCamera(camera);//Richtung lookAt(q.position) funktioniert leider nicht
+   }
 
 
 
