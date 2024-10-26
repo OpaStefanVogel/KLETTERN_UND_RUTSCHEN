@@ -773,7 +773,7 @@ const Pfeilgeometrie=  new THREE.ShapeGeometry(
     .lineTo(0.1,-0.1)
     .lineTo(0,0)
     );
-const J_rechts_Material = new THREE.MeshStandardMaterial( { color: 0x654321, side: THREE.DoubleSide, wireframe: false} );
+const J_rechts_Material = new THREE.MeshStandardMaterial( { color: 0x654321, transparent: true, opacity:0.4} );
 const J_rechts = new THREE.Mesh( Pfeilgeometrie, J_rechts_Material );
 //J_rechts.position.copy(q.position.clone().add(st.position).divideScalar(2).add(new THREE.Vector3(0,0,0)));
 //QUADRO.add( J_rechts );
@@ -783,17 +783,52 @@ st.add( J_rechts );
 
 const J_links = new THREE.Mesh(
   Pfeilgeometrie,
-  new THREE.MeshStandardMaterial( { color: 0x123456, side: THREE.DoubleSide} )
+  new THREE.MeshStandardMaterial( { color: 0x765432, transparent: true, opacity:0.4} )
   );
 J_links.position.set(-0.2,-0.2,-1);
 st.add( J_links );
 
+const J_vor = new THREE.Mesh(
+  Pfeilgeometrie,
+  new THREE.MeshStandardMaterial( { color: 0x876543, transparent: true, opacity:0.4} )
+  );
+J_vor.position.set(+0.3,-0.2,-1);
+J_vor.rotateZ(-Math.PI/2);
+J_vor.rotateY(-Math.PI/2);
+st.add( J_vor );
+
+const J_zurueck = new THREE.Mesh(
+  Pfeilgeometrie,
+  new THREE.MeshStandardMaterial( { color: 0x123456, transparent: true, opacity:0.4} )
+  );
+J_zurueck.position.set(+0.3,-0.2,-1);
+J_zurueck.rotateZ(+Math.PI/2);
+J_zurueck.rotateY(+Math.PI/2);
+st.add( J_zurueck );
+
+const J_hoch = new THREE.Mesh(
+  Pfeilgeometrie,
+  new THREE.MeshStandardMaterial( { color: 0x234567, transparent: true, opacity:0.4} )
+  );
+J_hoch.position.set(-0.3,-0.2,-1);
+J_hoch.rotateZ(-Math.PI/2);
+st.add( J_hoch );
+
+const J_runter = new THREE.Mesh(
+  Pfeilgeometrie,
+  new THREE.MeshStandardMaterial( { color: 0x345678, transparent: true, opacity:0.4} )
+  );
+J_runter.position.set(-0.3,-0.2,-1);
+J_runter.rotateZ(Math.PI/2);
+st.add( J_runter );
+
+
 const J_rollercoaster = new THREE.Mesh(
   Pfeilgeometrie,
-  new THREE.MeshStandardMaterial( { color: 0x123456, side: THREE.DoubleSide} )
+  new THREE.MeshStandardMaterial( { color: 0x456789, transparent: true, opacity:0.4} )
   );
-J_rollercoaster.position.set(-0.8,-0.2,-1);
-J_rollercoaster.rotateZ(-Math.PI/1.5);
+J_rollercoaster.position.set(-0.6,-0.2,-1);
+J_rollercoaster.rotateZ(-Math.PI/5);
 st.add( J_rollercoaster );
 
 
@@ -1466,6 +1501,10 @@ if (J_selected) {
    //distanz=distanz+1.0;
    if (J_selected==J_rechts) delta2=delta2+0.01;
    if (J_selected==J_links) delta2=delta2-0.01;
+   if (J_selected==J_hoch) gamma=gamma-0.01;
+   if (J_selected==J_runter) gamma=gamma+0.01;
+   if (J_selected==J_vor) distanz=distanz-0.01;
+   if (J_selected==J_zurueck) distanz=distanz+0.01;
    st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
    //st.rotateY(0.01);//eigentlich müsste hier camera.lookAt(QUADRO.localToWorld(cl.clone())) stehen, geht aber nicht
    st.lookAt(QUADRO.localToWorld(cl.clone()))
@@ -1506,7 +1545,7 @@ st.rotateY(-Math.PI);
 
   if((VRButt.textContent!="ENTER VR")&&(VRButt.textContent!="VR NOT SUPPORTED")&&(J_selected==false)) {
 		intersectObjects( controller1 );//CONT lässt die Stangen aufleuchten
-		intersectObjects( controller2 );
+		//intersectObjects( controller2 );
     }
 
 				renderer.render( scene, camera );
