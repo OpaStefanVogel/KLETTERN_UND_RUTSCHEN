@@ -457,6 +457,7 @@ controller2.addEventListener( 'touchstart', onClick );
 
 let J_selected=false;
 			function onSelectStart( event ) {
+if (camera.parent==train) {weiter_mit_QUADRO.click();return}
 
 				const controller = event.target;
 
@@ -472,7 +473,10 @@ let J_selected=false;
 if (object.parent!=st) {
                     controller.attach( object ); 
 					controller.userData.selected = object;
-					} else J_selected=object;
+					} else {
+					  J_selected=object;
+					  if (J_selected==J_rollercoaster) rollercoaster.click();
+					  }
 
 				}
 
@@ -761,12 +765,12 @@ st.rotateY(-Math.PI/2*0);
 const Pfeilgeometrie=  new THREE.ShapeGeometry(
     (new THREE.Shape)
     .moveTo(0,0)
-    .lineTo(0.1,0)
-    .lineTo(0.1,-0.05)
-    .lineTo(0.2,0.05)
-    .lineTo(0.1,0.15)
     .lineTo(0.1,0.1)
-    .lineTo(0,0.1)
+    .lineTo(0.1,0.03)
+    .lineTo(0.2,0.03)
+    .lineTo(0.2,-0.03)
+    .lineTo(0.1,-0.03)
+    .lineTo(0.1,-0.1)
     .lineTo(0,0)
     );
 const J_rechts_Material = new THREE.MeshStandardMaterial( { color: 0x654321, side: THREE.DoubleSide, wireframe: false} );
@@ -774,6 +778,7 @@ const J_rechts = new THREE.Mesh( Pfeilgeometrie, J_rechts_Material );
 //J_rechts.position.copy(q.position.clone().add(st.position).divideScalar(2).add(new THREE.Vector3(0,0,0)));
 //QUADRO.add( J_rechts );
 J_rechts.position.copy(new THREE.Vector3(0.2,-0.2,-1));
+J_rechts.rotateZ(Math.PI);
 st.add( J_rechts );
 
 const J_links = new THREE.Mesh(
@@ -781,8 +786,15 @@ const J_links = new THREE.Mesh(
   new THREE.MeshStandardMaterial( { color: 0x123456, side: THREE.DoubleSide} )
   );
 J_links.position.set(-0.2,-0.2,-1);
-J_links.rotateY(Math.PI);
 st.add( J_links );
+
+const J_rollercoaster = new THREE.Mesh(
+  Pfeilgeometrie,
+  new THREE.MeshStandardMaterial( { color: 0x123456, side: THREE.DoubleSide} )
+  );
+J_rollercoaster.position.set(-0.8,-0.2,-1);
+J_rollercoaster.rotateZ(-Math.PI/1.5);
+st.add( J_rollercoaster );
 
 
 
@@ -1720,7 +1732,7 @@ function neuerDownloadtext() {
   return Text;
   }
 
-Demo();
+Demo(); //weil in body onload='Demo()' nicht funktioniert
 		</script>
 <!--
 ok Knoten.push(q.position) nur wenn noch nicht dabei
