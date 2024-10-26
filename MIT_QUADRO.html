@@ -420,6 +420,7 @@ controller1.addEventListener( 'touchstart', onClick );
 controller1.addEventListener( 'mousedown', onClick );
 controller1.addEventListener( 'keypress', onClick );
 controller1.addEventListener( 'keyup', onClick );
+controller1.addEventListener( 'squeezestart', function() {alert('squeezestart')} );
 //for (let i in controller1) alert(i);
 //for (let i in controller1._listeners) alert(i);
 //Logfile.innerHTML=JSON.stringify(controller1);
@@ -743,8 +744,8 @@ camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
 				st.add( controllerGrip2 );
 
 //neu ab 2024__10_23 Joystick:♥
-const J_rechts_Geometry = new THREE.SphereGeometry( 0.32, 32, 32 );
-const J_rechts_Material = new THREE.MeshStandardMaterial( { color: 0xdd0000, metalness: 0.5, roughness: 0.1} );
+const J_rechts_Geometry = new THREE.SphereGeometry( 0.01, 32, 32 );
+const J_rechts_Material = new THREE.MeshStandardMaterial( { color: 0xdddddd, metalness: 0.5, roughness: 0.1} );
 const J_rechts = new THREE.Mesh( J_rechts_Geometry, J_rechts_Material );
 J_rechts.position.copy(q.position.clone().add(st.position).divideScalar(2).add(new THREE.Vector3(0,0,0)));
 QUADRO.add( J_rechts );
@@ -1356,6 +1357,9 @@ scene.add( directionalLight3);
 
 var Ausrichten=0.005;
 let Himmelsrichtung=0;
+let worldDirection=new THREE.Vector3();
+let Distanzrichtungsvektor=new THREE.Vector3();
+
 //--------
 
 			function render() {
@@ -1409,14 +1413,6 @@ let Himmelsrichtung=0;
     }
 
     //neu ab 2024__10_23:♥
-    Himmelsrichtung=Math.atan2(st.position.x-q.position.x,st.position.z-q.position.z);
-    J_rechts.position.set((st.position.x+q.position.x)/2+Math.cos(Himmelsrichtung),(st.position.y+q.position.y)/2,(st.position.z+q.position.z)/2-Math.sin(Himmelsrichtung));
-    Log3.innerHTML='q='+JSON.stringify(q.position)
-      +';\n st='+JSON.stringify(st.position)
-      +';\n QUADRO='+JSON.stringify(QUADRO.position)
-      +';\n J_rechts='+JSON.stringify(J_rechts.position)
-      +';\n Himmelsrichtung='+Himmelsrichtung      
-      ;
 
 if (J_rechts_selected) {
    //distanz=distanz+1.0;
@@ -1431,6 +1427,22 @@ if (J_rechts_selected) {
 //   controller.lookAt(QUADRO.localToWorld(J_rechts.position.clone()));
 //   renderer.xr.updateCamera(camera);//Richtung lookAt(q.position) funktioniert leider nicht
    }
+
+
+    Himmelsrichtung=Math.atan2(st.position.x-cl.x,st.position.z-cl.z);
+    Distanzrichtungsvektor=cl.clone().sub(st.position).normalize();
+    camera.getWorldDirection(worldDirection)//nicht verwendet
+    //J_rechts.position.set((st.position.x+q.position.x)/2+Math.cos(Himmelsrichtung),(st.position.y+q.position.y)/2,(st.position.z+q.position.z)/2-Math.sin(Himmelsrichtung));
+    //J_rechts.position.set((st.position.x-worldDirection.x)+Math.cos(Himmelsrichtung)*0.2,(st.position.y+worldDirection.y),(st.position.z-worldDirection.z)-Math.sin(Himmelsrichtung)*0.2);
+    J_rechts.position.set((st.position.x+Distanzrichtungsvektor.x)+Math.cos(Himmelsrichtung)*0.1,(st.position.y+Distanzrichtungsvektor.y),(st.position.z+Distanzrichtungsvektor.z)-Math.sin(Himmelsrichtung)*0.1);
+    Log3.innerHTML='q='+JSON.stringify(q.position)
+      +';\n st='+JSON.stringify(st.position)
+      +';\n QUADRO='+JSON.stringify(QUADRO.position)
+      +';\n J_rechts='+JSON.stringify(J_rechts.position)
+      +';\n Himmelsrichtung='+Himmelsrichtung      
+      +';\n Distanzrichtungsvektor='+JSON.stringify(Distanzrichtungsvektor)
+      +';\n camera.getWorldDirection()='+JSON.stringify(worldDirection) 
+      ;
 
 
 
