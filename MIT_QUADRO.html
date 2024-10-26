@@ -103,11 +103,13 @@ Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 <button id="rollercoaster">zwischendurch im rollercoaster mitfahren</button>
 <button id="weiter_mit_QUADRO">dann QUADRO weiter machen</button>
 </span>
-</div>               
-<span id="Logpos" style="display:none"> </span>
-<span id="Log"> </span>
-<span id="Log2" style="white-space:pre-wrap"> </span>
-<span id="Log3" style="white-space:pre-wrap"> </span>
+</div>
+<div style='display:none'>
+  <span id="Logpos" style="display:none"> </span>
+  <span id="Log"> </span>
+  <span id="Log2" style="white-space:pre-wrap"> </span>
+  <span id="Log3" style="white-space:pre-wrap"> </span>
+  </div>
 <div>               
 <button id="Mini links1">Mini links</button>
 <button id="schräg rechts hoch">schräg rechts hoch</button>
@@ -765,36 +767,38 @@ st.rotateY(-Math.PI/2*0);
 const Pfeilgeometrie=  new THREE.ShapeGeometry(
     (new THREE.Shape)
     .moveTo(0,0)
-    .lineTo(0.1,0.1)
+    .lineTo(0,0.03)
     .lineTo(0.1,0.03)
-    .lineTo(0.2,0.03)
-    .lineTo(0.2,-0.03)
-    .lineTo(0.1,-0.03)
+    .lineTo(0.1,0.1)
+    .lineTo(0.2,0)
     .lineTo(0.1,-0.1)
+    .lineTo(0.1,-0.03)
+    .lineTo(0,-0.03)
     .lineTo(0,0)
     );
 const J_rechts_Material = new THREE.MeshStandardMaterial( { color: 0x654321, transparent: true, opacity:0.4} );
 const J_rechts = new THREE.Mesh( Pfeilgeometrie, J_rechts_Material );
 //J_rechts.position.copy(q.position.clone().add(st.position).divideScalar(2).add(new THREE.Vector3(0,0,0)));
 //QUADRO.add( J_rechts );
-J_rechts.position.copy(new THREE.Vector3(0.2,-0.2,-1));
-J_rechts.rotateZ(Math.PI);
+J_rechts.position.copy(new THREE.Vector3(0,-0.2,-1));
 st.add( J_rechts );
 
 const J_links = new THREE.Mesh(
   Pfeilgeometrie,
   new THREE.MeshStandardMaterial( { color: 0x765432, transparent: true, opacity:0.4} )
   );
-J_links.position.set(-0.2,-0.2,-1);
+J_links.position.set(0,-0.2,-1);
+J_links.rotateZ(Math.PI);
 st.add( J_links );
 
 const J_vor = new THREE.Mesh(
   Pfeilgeometrie,
-  new THREE.MeshStandardMaterial( { color: 0x876543, transparent: true, opacity:0.4} )
+  new THREE.MeshStandardMaterial( { color: 0x012345, transparent: true, opacity:0.4} )
   );
 J_vor.position.set(+0.3,-0.2,-1);
-J_vor.rotateZ(-Math.PI/2);
-J_vor.rotateY(-Math.PI/2);
+J_vor.scale.set(1.5,1.5,1.5);
+J_vor.rotateZ(+Math.PI/2);
+J_vor.rotateY(+Math.PI/2);
 st.add( J_vor );
 
 const J_zurueck = new THREE.Mesh(
@@ -802,8 +806,9 @@ const J_zurueck = new THREE.Mesh(
   new THREE.MeshStandardMaterial( { color: 0x123456, transparent: true, opacity:0.4} )
   );
 J_zurueck.position.set(+0.3,-0.2,-1);
-J_zurueck.rotateZ(+Math.PI/2);
-J_zurueck.rotateY(+Math.PI/2);
+J_zurueck.scale.set(1.5,1.5,1.5);
+J_zurueck.rotateZ(-Math.PI/2);
+J_zurueck.rotateY(-Math.PI/2);
 st.add( J_zurueck );
 
 const J_hoch = new THREE.Mesh(
@@ -811,7 +816,7 @@ const J_hoch = new THREE.Mesh(
   new THREE.MeshStandardMaterial( { color: 0x234567, transparent: true, opacity:0.4} )
   );
 J_hoch.position.set(-0.3,-0.2,-1);
-J_hoch.rotateZ(-Math.PI/2);
+J_hoch.rotateZ(Math.PI/2);
 st.add( J_hoch );
 
 const J_runter = new THREE.Mesh(
@@ -819,7 +824,7 @@ const J_runter = new THREE.Mesh(
   new THREE.MeshStandardMaterial( { color: 0x345678, transparent: true, opacity:0.4} )
   );
 J_runter.position.set(-0.3,-0.2,-1);
-J_runter.rotateZ(Math.PI/2);
+J_runter.rotateZ(-Math.PI/2);
 st.add( J_runter );
 
 
@@ -827,10 +832,9 @@ const J_rollercoaster = new THREE.Mesh(
   Pfeilgeometrie,
   new THREE.MeshStandardMaterial( { color: 0x456789, transparent: true, opacity:0.4} )
   );
-J_rollercoaster.position.set(-0.6,-0.2,-1);
-J_rollercoaster.rotateZ(-Math.PI/5);
+J_rollercoaster.position.set(-0.4,-0.2,-1);
+J_rollercoaster.rotateZ(Math.PI*0.8);
 st.add( J_rollercoaster );
-
 
 
 
