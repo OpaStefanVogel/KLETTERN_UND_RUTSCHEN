@@ -10,7 +10,7 @@
 		<div id="container"></div>
 
 	<body onload="Demo_Rauner_Lok()">
-<p id="Logfile"> </p> 
+<p id="Logfile" style="font-family:Courier,monospace; white-space:pre-wrap; overflow:auto"> </p> 
 <div style="font-style:italic; white-space:pre-wrap;">
 <u>ANLEITUNG:</u>
 
@@ -107,6 +107,7 @@ Länge=<span style="display:inline-flex; flex-direction:row; font-size:200%">
 <span id="Logpos" style="display:none"> </span>
 <span id="Log"> </span>
 <span id="Log2" style="white-space:pre-wrap"> </span>
+<span id="Log3" style="white-space:pre-wrap"> </span>
 <div>               
 <button id="Mini links1">Mini links</button>
 <button id="schräg rechts hoch">schräg rechts hoch</button>
@@ -413,9 +414,15 @@ scene.add(train);
 		// controllers
 				
 				controller1 = renderer.xr.getController( 0 );
-				controller1.addEventListener( 'selectstart', onSelectStart );
-				controller1.addEventListener( 'selectend', onSelectEnd );
+				controller1.addEventListener( 'selectstart', onSelectStart );//CONT Stange greifen
+				controller1.addEventListener( 'selectend', onSelectEnd );    //CONT Stange loslassen
 controller1.addEventListener( 'touchstart', onClick );
+controller1.addEventListener( 'mousedown', onClick );
+controller1.addEventListener( 'keypress', onClick );
+controller1.addEventListener( 'keyup', onClick );
+//for (let i in controller1) alert(i);
+//for (let i in controller1._listeners) alert(i);
+//Logfile.innerHTML=JSON.stringify(controller1);
 				
 				controller2 = renderer.xr.getController( 1 );
 				controller2.addEventListener( 'selectstart', onSelectStart );
@@ -423,6 +430,8 @@ controller1.addEventListener( 'touchstart', onClick );
 controller2.addEventListener( 'touchstart', onClick );
 
 				const controllerModelFactory = new XRControllerModelFactory();
+//Logfile.innerHTML=controllerModelFactory.createControllerModel;
+//for (let i in controllerModelFactory) alert(i);
 
 				controllerGrip1 = renderer.xr.getControllerGrip( 0 );
 				controllerGrip1.add( controllerModelFactory.createControllerModel( controllerGrip1 ) );
@@ -455,8 +464,16 @@ controller2.addEventListener( 'touchstart', onClick );
 					const intersection = intersections[ 0 ];
 
 					const object = intersection.object;
-					object.material.emissive.b = 1;
-					controller.attach( object );
+					object.material.emissive.b = 0;
+//neu ab 2024__10_23 Joystick:♥
+if (object!=J_rechts)					controller.attach( object ); else  {
+   //distanz=distanz+1.0;
+   delta2=delta2+0.1;
+   st.position.setFromSphericalCoords(distanz,gamma,delta2).add(cl);//???gewagt
+   st.lookAt(QUADRO.localToWorld(cl.clone()));
+   camera.lookAt(QUADRO.localToWorld(cl.clone()));
+//   alert(delta2);
+   }
 
 					controller.userData.selected = object;
 
@@ -471,7 +488,7 @@ controller2.addEventListener( 'touchstart', onClick );
 				if ( controller.userData.selected !== undefined ) {
 
 					const object = controller.userData.selected;
-					object.material.emissive.b = 0;
+					object.material.emissive.b = 0.3;
 					QUADRO.attach( object );
 
 					controller.userData.selected = undefined;
@@ -481,8 +498,8 @@ controller2.addEventListener( 'touchstart', onClick );
 
 			}
 
-function onClick( event ) {
-alert(1);return;
+function onClick( event ) {//alert(1111);return;
+Logfile.innerHTML='onClick';
 				const controller = event.target;
 
 				if ( controller.userData.selected !== undefined ) {
@@ -730,6 +747,17 @@ camera.lookAt(QUADRO.localToWorld(cl.clone()));//zweimal sonst geht das nicht
 				st.add( controller2 );
 				st.add( controllerGrip1 );
 				st.add( controllerGrip2 );
+
+//neu ab 2024__10_23 Joystick:♥
+const J_rechts_Geometry = new THREE.SphereGeometry( 0.32, 32, 32 );
+const J_rechts_Material = new THREE.MeshStandardMaterial( { color: 0xdd0000, metalness: 0.5, roughness: 0.1} );
+const J_rechts = new THREE.Mesh( J_rechts_Geometry, J_rechts_Material );
+J_rechts.position.copy(q.position.clone().add(st.position).divideScalar(2).add(new THREE.Vector3(0,0,0)));
+QUADRO.add( J_rechts );
+
+
+
+
 
 let sminind=0;//fehlt oben
 function Demo1() {
@@ -1333,7 +1361,7 @@ scene.add( directionalLight3);
 //-----------------
 
 var Ausrichten=0.005;
-
+let Himmelsrichtung=0;
 //--------
 
 			function render() {
@@ -1386,6 +1414,18 @@ var Ausrichten=0.005;
     if (renderer.xr.isPresenting/*getCamera().cameras.length*/) document.getElementById("Log2").firstChild.nodeValue=renderer.xr.getCamera().cameras[0].matrixWorldInverse.elements.slice(12,15).join("  ")+"\n"+renderer.xr.getCamera().cameras[1].matrixWorld.elements.slice(12,15).join("  ");
     }
 
+    //neu ab 2024__10_23:♥
+    Himmelsrichtung=Math.atan2(st.position.x-q.position.x,st.position.z-q.position.z);
+    J_rechts.position.set((st.position.x+q.position.x)/2+Math.cos(Himmelsrichtung),(st.position.y+q.position.y)/2,(st.position.z+q.position.z)/2-Math.sin(Himmelsrichtung));
+    Log3.innerHTML='q='+JSON.stringify(q.position)
+      +';\n st='+JSON.stringify(st.position)
+      +';\n QUADRO='+JSON.stringify(QUADRO.position)
+      +';\n J_rechts='+JSON.stringify(J_rechts.position)
+      +';\n Himmelsrichtung='+Himmelsrichtung
+      +';\n controller1.userData.selected='+controller1.userData.selected;
+      
+      ;
+
 
 
 
@@ -1396,7 +1436,7 @@ var Ausrichten=0.005;
 		cleanIntersected();
 
   if((VRButt.textContent!="ENTER VR")&&(VRButt.textContent!="VR NOT SUPPORTED")) {
-		intersectObjects( controller1 );
+		intersectObjects( controller1 );//CONT lässt die Stangen aufleuchten
 		intersectObjects( controller2 );
     }
 
@@ -1469,7 +1509,7 @@ function Bild_touchmove() {
   }
 
 //var sminind=0;//schon oben
-function Bild_dblclick() {
+function Bild_dblclick() {//let inputSourceList = xrSession.inputSources;alert(inputSourceList);
   var mouse=new THREE.Vector3();
   //var Log="mouse=["+(event.clientX-event.target.getBoundingClientRect().left)+","+(event.clientY-event.target.getBoundingClientRect().top)+"]"+event.target.getBoundingClientRect().width+" "+event.target.getBoundingClientRect().height+"\n";
   mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / event.target.getBoundingClientRect().width ) * 2 - 1;//+0.34;
