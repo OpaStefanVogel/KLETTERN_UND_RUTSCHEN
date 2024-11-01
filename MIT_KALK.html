@@ -8,8 +8,7 @@
   </head>
 
 <body>
-<div id="Ausgabe zu tree.js"> </div>
-<div id='Log'>xy</div>
+<div id="Ausgabe zu tree.js"></div><div id='Log' style='font-family:Courier,monospace; white-space:pre;'> </div>
 
     <!--importmap nur noch wegen OrbitControls.js-->
     <!--XRControllerModelFactory.js lädt nur in der alten Version three.js-->
@@ -96,6 +95,9 @@ function raycast() {
   const intersects = raycaster.intersectObjects(scene.children);
   for (let i = 0; i < intersects.length; i++) {
     intersects[i].object.material.color.set(0x00ff00);
+    if (intersects[i].object.userData.Ecke) Log.innerHTML= JSON.stringify(intersects[i].object.userData)+'\nuv='+JSON.stringify(intersects[i].object.userData.Ecke.clone().project(camera));
+
+ 
     }
   }
 
@@ -123,8 +125,16 @@ function Flaeche(xmin,xmax,ymin,ymax,zmin,zmax,farbe) {
     new THREE.MeshStandardMaterial( {color: farbe, transparent:true, opacity:0.8} )
     );
   fl.position.set((xmin+xmax)/2,(ymin+ymax)/2,(zmin+zmax)/2);
-  //alert(fl.raycast);
   scene.add(fl);
+  let p00=new THREE.Mesh(
+    new THREE.SphereGeometry(0.1,10,10),
+    new THREE.MeshStandardMaterial( {color: 0x888888, transparent:true, opacity:1.0} 
+    )
+    );
+  //p00.visible=false;
+  p00.position.set(xmin,ymin,zmin);
+  p00.userData={'Ecke':new THREE.Vector3(xmin,ymin,zmin)};
+  scene.add(p00);
   }
 
 /*  
