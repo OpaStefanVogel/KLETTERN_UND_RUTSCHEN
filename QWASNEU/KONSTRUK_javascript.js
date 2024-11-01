@@ -597,6 +597,10 @@ var KREUZ=function(a,b) { //Kreuzprodukt
 //    k9=[3,21,16,23,18,21,null,[16,23]]
 //    k32=[17,18,14,16,9,12,null,[14,16]]
 
+//alert(Math.atan2(0,0.1));//0
+//alert(Math.atan2(0,-0.1));//pi
+//alert(Math.atan2(Math.sin(0.123),Math.cos(0.123)));//0.123
+
 var KRWG=function(OBJ) { //Kanten mit nur 1 bestimmende Ebene entfernen
   var E=OBJ[0];
   var P=OBJ[2];
@@ -617,11 +621,21 @@ var KRWG=function(OBJ) { //Kanten mit nur 1 bestimmende Ebene entfernen
     //if (K[i][7].length>2) alert(K[i][7]);
     var EL=[];//zu sortierende Liste der Richtungsvektoren
     for (var j=0;j<K[i][7].length;j++) EL.push([0,KREUZ(V,E[K[i][7][j]]).slice(0,4),-1,-1,K[i][7][j]]);
-    for (var j=0;j<K[i][7].length;j++) EL.push([-EL[j][0],MSCAL(-1,EL[j][1]),-1,-1,EL[j][4]]);
+    if (Logflag) {Logtext=Logtext+"  EL0=\n"; for (let j=0;j<EL.length;j++) Logtext=Logtext+"    ["+EL[j][0]+',['+EL[j][1]+'],'+EL[j].slice(2)+']\n'}
+    for (var j=0;j<K[i][7].length;j++) EL.push([-EL[j][0],MSCAL(-1,EL[j][1].slice()),-1,-1,EL[j][4]]);//oder ohne slice
+    if (Logflag) {Logtext=Logtext+"  EL1=\n"; for (let j=0;j<EL.length;j++) Logtext=Logtext+"    ["+EL[j][0]+',['+EL[j][1]+'],'+EL[j].slice(2)+']\n'}
     for (var j=0;j<EL.length;j++) {
-      var KR=KREUZ(EL[0][1],EL[j][1]);
+      var KR=KREUZ(EL[0][1],EL[j][1]);//♦
+      if (PDOT(KR,V)<0) KR[4]=-1; else KR[4]=1;//♦oder 1 -1 noch herausfinden
       EL[j][0]=Math.atan2(dist(KR,[0,0,0])*KR[4],PDOT(EL[0][1],EL[j][1]))*180/Math.PI;
+      EL[j][6]='♦';
+      EL[j][7]=PDOT(KR,V);
+      EL[j][8]=dist(KR,[0,0,0])*KR[4];
+      EL[j][9]=PDOT(EL[0][1],EL[j][1]);
+      EL[j][10]=KR;
       }
+//    if (Logflag) {Logtext=Logtext+"  EL2=\n"; for (let j=0;j<EL.length;j++) Logtext=Logtext+"    ["+EL[j][0]+',['+EL[j][1]+'],'+EL[j].slice(2)+']; KR='+EL[j][10]+'\n'}
+    if (Logflag) {Logtext=Logtext+"  EL2=\n"; for (let j=0;j<EL.length;j++) Logtext=Logtext+"    "+JSON.stringify(EL[j])+'\n'}
     EL.sort(Asort).reverse();
     EL.push(EL[0]);
     for (var j=0;j<EL.length-1;j++) {
