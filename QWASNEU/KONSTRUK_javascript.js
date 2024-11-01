@@ -199,6 +199,19 @@ function Zsort(a,b) {if (a<b) return -1;if (a==b) return 0; return 1}
 function Asort(a,b) {if (a[0]<b[0]) return -1;if (a[0]==b[0]) return 0; return 1}
 
 var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
+  if (Logflag) Logtext=Logtext+"starte KFILL(OBJ)\n";
+//  if (Logflag) OBJ[2][1][5]=[3,4,7,8];
+  if (Logflag) KDUMP(OBJ);
+  for (let ii=0;ii<OBJ[2].length;ii++) {
+    let P=OBJ[2][ii];
+    if (P[6]&&P[6].length>0) {
+      for (jj=0;jj<P[6].length;jj++) {
+        if (P[5].indexOf(P[6][jj])==-1) P[5].push(P[6][jj]);
+        }
+      P[5].sort();
+      }
+    //delete P[6];
+    }
   //local M,PNR,PZZS,PZZT;
   DFILL(OBJ);
 //  if (Logflag) alert(99);
@@ -243,6 +256,8 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
         }
       }
     }
+  if (Logflag) KDUMP(OBJ);
+  if (Logflag) Logtext=Logtext+"return aus KFILL(OBJ)\n";
   }
       
 KFILL(BALKEN1);
@@ -263,7 +278,7 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
       var W=DURCHGUCKER(OBJ2,U);
       if (Logflag) Logtext=Logtext+"W="+W+" ";
       if (W==2&&Math.abs(U[3])>0.0001) {
-        ERG.push([0,1,ENR,U]);
+        ERG.push([0,1,ENR,U,,,[0,1]]);//[0,1]
         if (Logflag) Logtext=Logtext+"♥ drin" 
         } else if (Logflag) Logtext=Logtext+"draußen";
       if (Logflag) Logtext=Logtext+"\n";      
@@ -288,7 +303,9 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
       if (Logflag) Logtext=Logtext+"W="+W+" ";
       if ((V==2)&(W==2)) {
       //if ((F<3)&(W==2)) {
-        ERG.push([KANTE[2],KANTE[3],ENR,U]);
+        let KX=[];
+        if (KANTE[7]) KX=KANTE[7].slice();
+        ERG.push([KANTE[2],KANTE[3],ENR,U,,,KX]);
         if (Logflag) Logtext=Logtext+"♥ drin" 
         } else if (Logflag) Logtext=Logtext+"draußen";
       //if ((F<3)&(V==3)) if (Logflag) Logtext=Logtext+"----------";
@@ -313,16 +330,17 @@ var SCHNITTPUNKTE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten eines OBJ mit
   if (Logflag) Logtext=Logtext+"GERADEXEBENE(OBJ1,OBJ2) "+JSON.stringify(TRU)+"\n";
   var ERG12=GERADEXEBENE(OBJ1,OBJ2);
   //for (var E of ERG12) E[2]=E[2]+TRU;
-  for (var iE in ERG12) { var E=ERG12[iE]; E[2]=E[2]+TRU}
+  for (var iE in ERG12) { var E=ERG12[iE]; E[2]=E[2]+TRU; if (E[6].length) E[6].push(E[2])}
   if (Logflag) Logtext=Logtext+"ERG12 "+JSON.stringify(ERG12)+"\n";
   if (Logflag) Logtext=Logtext+"GERADEXEBENE(OBJ2,OBJ1) "+JSON.stringify(TRU)+"\n";
   var ERG21=GERADEXEBENE(OBJ2,OBJ1);
   if (Logflag) Logtext=Logtext+"ERG21 "+JSON.stringify(ERG21)+"\n";
   //for (var E of ERG21) { 
   for (var iE in ERG21) { var E=ERG21[iE];
-    E[0]=E[0]+TRU; E[1]=E[1]+TRU;
+    E[0]=E[0]+TRU; E[1]=E[1]+TRU; if (E[6].length) {for (let ii=0;ii<E[6].length;ii++) E[6][ii]=E[6][ii]+TRU; E[6].push(E[2])}
     var MERK=E[2];E[2]=E[1];E[1]=E[0];E[0]=MERK; //sortiert lassen
     }
+  if (Logflag) Logtext=Logtext+"ERG12+21 "+JSON.stringify(ERG12.concat(ERG21))+"\n";
   return ERG12.concat(ERG21);
   }
 
@@ -609,7 +627,7 @@ var KRWG=function(OBJ) { //Kanten mit nur 1 bestimmende Ebene entfernen
         +"\n";
       }
 */
-    K[i][7]=eneu;
+    //K[i][7]=eneu;//rausgenommen bei der Fehlersuche Button NUT_UND_FEDER_defekt
     if (eneu.length>1) KNEU.push(K[i]);
     }
   OBJ[3]=KNEU;K=KNEU;
@@ -702,12 +720,19 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   KEBN(ERG); //gleiche Ebenen bestimmen
   KASP(ERG); //gleiche Punkte zusammenfassen
   KFILL(ERG);
-  KANZ(ERG); //gleiche Kanten zusammenfassen
+//  KANZ(ERG); //gleiche Kanten zusammenfassen
+  if (Logflag) Logtext=Logtext+"nach KANZ(ERG):\n";
+  if (Logflag) KDUMP(ERG);
 //  KENT(ERG); //Entgraten
 //  KFILL(ERG);
 //  KANZ(ERG);
-  KRWG(ERG); //Kanten mit nur 1 bestimmende Ebene entfernen
-  KPWG(ERG); //Punkte mit nur 2 Kanten entfernen
+//  KRWG(ERG); //Kanten mit nur 1 bestimmende Ebene entfernen
+  if (Logflag) Logtext=Logtext+"nach KRWG(ERG):\n";
+  if (Logflag) KDUMP(ERG);
+//  KPWG(ERG); //Punkte mit nur 2 Kanten entfernen
+  if (Logflag) Logtext=Logtext+"nach KPWG(ERG):\n";
+  if (Logflag) KDUMP(ERG);
+  if (Logflag) Logtext=Logtext+"nach return RUMPS(OBJ1,OBJ2,bit):\n";
   return ERG;
   }
 
