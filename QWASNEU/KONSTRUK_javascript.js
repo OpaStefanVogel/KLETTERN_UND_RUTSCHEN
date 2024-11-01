@@ -194,7 +194,7 @@ var DFILL=function(OBJ) { //füllt eine temporäre separate Liste MERK12 mit Kan
           if (M[2]==M[0]) alert(M+'\n'+punkt+'\n'+P[5]+'\n'+[j,i,kk]);
           }
         }
-      if (M.length>2) MERK.push(M); //♥wie kann hier M.length==2 sein? Bei NUT_UND_FEDER
+      if (M.length>2) MERK.push(M); //wie kann hier M.length==2 sein? Bei NUT_UND_FEDER
       }
     }
   }
@@ -211,9 +211,6 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
   if (Logflag) Logtext=Logtext+"starte KFILL(OBJ)\n";
 //  if (Logflag) alert("starte KFILL(OBJ)\n");
 //  if (Logflag) OBJ[2][0][5]=[4,10,15,16];//bei NUT_UND_FEDER_defekt♥
-//  if (Logflag) OBJ[2][1][5]=[3,4,7,8];//bei QUADER_defekt♥
-//  if (Logflag) OBJ[3][3][4]=17;//bei Flaechen♥
-//  if (Logflag) OBJ[3][3][4]=8;//bei Flaechen♥
   if (Logflag) KDUMP(OBJ);
   for (let ii=0;ii<OBJ[2].length;ii++) {
     let P=OBJ[2][ii];
@@ -221,7 +218,7 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
       for (jj=0;jj<P[6].length;jj++) {
         if (P[5].indexOf(P[6][jj])==-1) P[5].push(P[6][jj]);
         }
-      P[5]=P[5].slice().sort(Zsort);//♥warum nicht nur .sort()
+      P[5]=P[5].sort(Zsort);//war zwischendurch .slice().sort(Zsort)
       }
     //delete P[6];
     }

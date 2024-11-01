@@ -9,18 +9,11 @@
   <meta charset="utf-8"/>
   <title>MIT_KONSTRUK_FF.html</title>
 
-  <script src="../three.js/build/three.js"></script> <!--nur für MGit-->
-  <script src="../threejs-cookbook/libs/three.js"></script>
-  <script src="../threejs-cookbook/libs/OrbitControls.js"></script>
-  <script src="../threejs-cookbook/libs/Projector.js"></script>
-  <script src="../threejs-cookbook/libs/dat.gui.min.js"></script>
-  <script src="../threejs-cookbook/libs/clock.js"></script>
-
-  <script src="threejs-cookbook/libs/three.js"></script> <!--für git-->
-  <script src="threejs-cookbook/libs/OrbitControls.js"></script>
-  <script src="threejs-cookbook/libs/Projector.js"></script>
-  <script src="threejs-cookbook/libs/dat.gui.min.js"></script>
-  <script src="threejs-cookbook/libs/clock.js"></script>
+  <script src="./threejs-cookbook/libs/three.js"></script> <!--für git-->
+  <script src="./threejs-cookbook/libs/OrbitControls.js"></script>
+  <script src="./threejs-cookbook/libs/Projector.js"></script>
+  <script src="./threejs-cookbook/libs/dat.gui.min.js"></script>
+  <script src="./threejs-cookbook/libs/clock.js"></script>
   </head>
 <body onload="Beispiel9()">
 <!--canvas id="Uhr"> </canvas-->
@@ -533,12 +526,12 @@ LT=[
 "TSchneiden()",
 "TQ(118.27229099826182,651.8166393945107,-14.999999999999993,6)",
 "TA()",
-"TQ(177.50000000000006,700,-4.733165431326071e-30,3);Logflag=true",
-"TSchneiden()",//♥ warum das? geht jedenfalls nicht. Aha, die Löcher in die Rückwand
+"TQ(177.50000000000006,700,-4.733165431326071e-30,3)",
+"TSchneiden()",//Löcher in die Rückwand
 "TQ(237.04536360786378,652.0196427372484,-15.000000000000014,4)",
 "TA();//Testflag=true",
 "TQ(177.50000000000006,700,-4.733165431326071e-30,3)",
-"TSchneiden()",//♥ warum das? geht jedenfalls nicht. Aha, die Löcher in die Rückwand
+"TSchneiden()",//Löcher in die Rückwand
 "TQ(190,0,1250,1)",
 "TA()",
 "TQ(190,120,1250,1)",
@@ -2106,7 +2099,7 @@ function raycast ( e ) {
   mouse.x = ( (event.clientX-event.target.getBoundingClientRect().left) / canvas_width/*window.innerWidth*/ ) * 2 - 1;
   mouse.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / canvas_height/*window.innerHeight/*event.target.height*/ ) * 2 + 1;
   mouse.z = 1;
-  document.getElementById("mouse").firstChild.nodeValue=JSON.stringify(mouse);
+//  document.getElementById("mouse").firstChild.nodeValue=JSON.stringify(mouse);
   if (Logflag) Logtext=Logtext+JSON.stringify(mouse)+"\n";
   cmin=0;
   var dmin=0;
