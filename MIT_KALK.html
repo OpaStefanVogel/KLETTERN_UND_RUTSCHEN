@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>MIT_KALK.html</title>
+  </head>
+
+<body>
+<div id="Ausgabe zu tree.js"> </div>
+
+<script type="module">
+import * as THREE from './three.js/build/three.module.js';
+import { OrbitControls } from './three.js/examples/jsm/controls/OrbitControls.js';
+import { VRButton } from './three.js/examples/jsm/webxr/VRButton.js';
+import { XRControllerModelFactory } from './three.js/examples/jsm/webxr/XRControllerModelFactory.js';
+
+const renderer = new THREE.WebGLRenderer( { antialias: true } );
+renderer.setPixelRatio( window.devicePixelRatio );
+renderer.setSize( window.innerWidth*0.9, window.innerHeight*0.9);
+renderer.xr.enabled = true;
+renderer.xr.setReferenceSpaceType( 'local' );
+document.body.appendChild( renderer.domElement );
+
+const VRButt=VRButton.createButton( renderer );
+document.body.appendChild( VRButt);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color( 0xf0f0ff );
+
+const light = new THREE.HemisphereLight( 0xfff0f0, 0x606066 );
+light.position.set( 1, 1, 1 );
+scene.add( light );
+
+//			const train = new THREE.Object3D();
+//			scene.add( train );
+const geometry = new THREE.BoxGeometry( 1,0.5,2 );
+const material = new THREE.MeshNormalMaterial( {color: 0x8080ff} );
+const quader = new THREE.Mesh( geometry, material );
+quader.position.set(-2,-1,-3);
+scene.add(quader);
+
+const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 500 );
+scene.add( camera );
+
+
+function render() {
+  renderer.render( scene, camera );
+  }
+
+renderer.setAnimationLoop( render );
+
+  </script></body></html>
