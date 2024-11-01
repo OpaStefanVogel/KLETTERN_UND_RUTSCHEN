@@ -24,7 +24,7 @@
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { VRButton } from 'three/addons/webxr/VRButton.js';
+import { XRButton } from 'three/addons/webxr/XRButton.js';
 //import { XRControllerModelFactory } from './three.js-dev/examples/jsm/webxr/XRControllerModelFactory.js';
 
 const renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -36,8 +36,8 @@ const renderer = new THREE.WebGLRenderer( { antialias: true } );
   document.body.appendChild( renderer.domElement );
 
 
-const VRButt=VRButton.createButton( renderer );
-  document.body.appendChild( VRButt);
+const XRButt=XRButton.createButton( renderer );
+  document.body.appendChild( XRButt);
 
 const scene = new THREE.Scene();
   scene.background = new THREE.Color( 0xf0f0ff );
