@@ -198,22 +198,6 @@ var DFILL=function(OBJ) { //füllt eine temporäre separate Liste MERK12 mit Kan
       }
     }
   }
-DFILLX=function(OBJ) { //füllt eine temporäre separate Liste MERK12 mit Kantenfluchtlinien
-  MERK12=[];
-  MERK=[];
-  //for (P of OBJ[2]) {//alert(JSON.stringify(P));
-  for (var iP in OBJ[2]) {var P=OBJ[2][iP]
-    if (P[5]) ; else P[5]=[P[0],P[1],P[2]];
-    for (var i=1; i<P[5].length;i++) for (var j=0;j<i;j++) if (MERK12.indexOf("["+[P[5][j],P[5][i]]+"]")==-1) {
-      MERK12.push("["+[P[5][j],P[5][i]]+"]");
-      var M=[P[5][j],P[5][i]];
-      if (j==0&&i==1) M.push(P[5][2]);
-      if (j==0&&i>1) M.push(P[5][1]);
-      if (j>0) M.push(P[5][0]);
-      MERK.push(M);
-      }
-    }
-  }
 DFILL(BALKEN1); 
 //alert("MERK12="+JSON.stringify(MERK12));
 //alert("MERK="+JSON.stringify(MERK));
@@ -749,6 +733,7 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
     PNEU[0]=PNEU[0]+TRU;
     PNEU[1]=PNEU[1]+TRU;
     PNEU[2]=PNEU[2]+TRU;
+    if (PNEU[6]) for (let i=0;i<PNEU[6].length;i++) PNEU[6][i]=PNEU[6][i]+TRU;//♥
     for (var i=0;i<PNEU[5].length;i++) PNEU[5][i]=PNEU[5][i]+TRU;
     if (Logflag) Logtext=Logtext+"OBJ2 P="+JSON.stringify(P)+" drin="+DURCHGUCKER(ERG,P[3])+" als PNEU="+JSON.stringify(PNEU)+"\n";
     if (DURCHGUCKER(ERG,P[3])!=3) ERG[2].push(PNEU);
