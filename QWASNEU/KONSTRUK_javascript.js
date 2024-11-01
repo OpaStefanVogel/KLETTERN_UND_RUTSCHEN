@@ -182,9 +182,17 @@ var DFILL=function(OBJ) { //füllt eine temporäre separate Liste MERK12 mit Kan
     for (var i=1; i<P[5].length;i++) for (var j=0;j<i;j++) if (MERK12.indexOf("["+[P[5][j],P[5][i]]+"]")==-1) {
       MERK12.push("["+[P[5][j],P[5][i]]+"]");
       var M=[P[5][j],P[5][i]];
-      if (j==0&&i==1) M.push(P[5][2]);
-      if (j==0&&i>1) M.push(P[5][1]);
-      if (j>0) M.push(P[5][0]);
+//      if (j==0&&i==1) M.push(P[5][2]);
+//      if (j==0&&i>1) M.push(P[5][1]);
+//      if (j>0) M.push(P[5][0]);
+      let weiter_suchen=true;
+      for (let kk=0;kk<P[5].length;kk++) if (weiter_suchen) {
+        let punkt=DREIEBENEN(OBJ[0][M[0]],OBJ[0][M[1]],OBJ[0][P[5][kk]]);
+        if (punkt[3]>0.5) {
+          M.push(P[5][kk]);
+          weiter_suchen=false;
+          }
+        }
       MERK.push(M);
       }
     }
@@ -200,7 +208,7 @@ function Asort(a,b) {if (a[0]<b[0]) return -1;if (a[0]==b[0]) return 0; return 1
 
 var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
   if (Logflag) Logtext=Logtext+"starte KFILL(OBJ)\n";
-//  if (Logflag) OBJ[2][1][5]=[3,4,7,8];
+  if (Logflag) OBJ[2][0][5]=[4,10,15,16];//♥
   if (Logflag) KDUMP(OBJ);
   for (let ii=0;ii<OBJ[2].length;ii++) {
     let P=OBJ[2][ii];
@@ -214,7 +222,8 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
     }
   //local M,PNR,PZZS,PZZT;
   DFILL(OBJ);
-//  if (Logflag) alert(99);
+  if (Logflag) Logtext=Logtext+'MERK=\n'+MERK.join('\n')+'\n';
+  if (Logflag) Logtext=Logtext+'MERK12=\n'+MERK12.join('\n')+'\n';
   OBJ[3]=[];
   //for (var M of MERK) {
   for (var iM in MERK) { var M=MERK[iM];
@@ -225,10 +234,10 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
       var P=OBJ[2][PNR];//alert(PNR);
       if (P[5]) ; else P[5]=[P[0],P[1],P[2]];
       for (var i=0; i<P[5].length;i++) for (var j=0;j<i;j++) 
-        if (M[0]==P[5][i]&M[1]==P[5][j]||M[1]==P[5][i]&M[0]==P[5][j]) {
-          if (j==0&&i==1) PZZT.push([PUNKTWERT(OBJ[0][M[2]],P[3]),PNR,P[5][2]]);
-          if (j==0&&i>1) PZZT.push([PUNKTWERT(OBJ[0][M[2]],P[3]),PNR,P[5][1]]);
-          if (j>0) PZZT.push([PUNKTWERT(OBJ[0][M[2]],P[3]),PNR,P[5][0]]);
+        if ((M[0]==P[5][i]&&M[1]==P[5][j])||(M[1]==P[5][i]&&M[0]==P[5][j])) {
+          if (j==0&&i==1) PZZT.push([PUNKTWERT(OBJ[0][M[2]],P[3]),PNR,P[5][2],P[5]]);
+          if (j==0&&i>1) PZZT.push([PUNKTWERT(OBJ[0][M[2]],P[3]),PNR,P[5][1],P[5]]);
+          if (j>0) PZZT.push([PUNKTWERT(OBJ[0][M[2]],P[3]),PNR,P[5][0],P[5]]);
           }
       }
     var PZZS=PZZT.sort(Asort);
@@ -720,16 +729,16 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   KEBN(ERG); //gleiche Ebenen bestimmen
   KASP(ERG); //gleiche Punkte zusammenfassen
   KFILL(ERG);
-  KANZ(ERG); //gleiche Kanten zusammenfassen
+if (Logflag) ; else    KANZ(ERG); //gleiche Kanten zusammenfassen
   if (Logflag) Logtext=Logtext+"nach KANZ(ERG):\n";
   if (Logflag) KDUMP(ERG);
 //  KENT(ERG); //Entgraten
 //  KFILL(ERG);
 //  KANZ(ERG);
-  KRWG(ERG); //Kanten mit nur 1 bestimmende Ebene entfernen
+if (Logflag) ; else    KRWG(ERG); //Kanten mit nur 1 bestimmende Ebene entfernen
   if (Logflag) Logtext=Logtext+"nach KRWG(ERG):\n";
   if (Logflag) KDUMP(ERG);
-  KPWG(ERG); //Punkte mit nur 2 Kanten entfernen
+if (Logflag) ; else    KPWG(ERG); //Punkte mit nur 2 Kanten entfernen♥
   if (Logflag) Logtext=Logtext+"nach KPWG(ERG):\n";
   if (Logflag) KDUMP(ERG);
   if (Logflag) Logtext=Logtext+"nach return RUMPS(OBJ1,OBJ2,bit):\n";
