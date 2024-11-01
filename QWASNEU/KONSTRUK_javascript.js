@@ -211,6 +211,8 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
 //  if (Logflag) alert("starte KFILL(OBJ)\n");
 //  if (Logflag) OBJ[2][0][5]=[4,10,15,16];//bei NUT_UND_FEDER_defekt♥
 //  if (Logflag) OBJ[2][1][5]=[3,4,7,8];//bei QUADER_defekt♥
+//  if (Logflag) OBJ[3][3][4]=17;//bei Flaechen♥
+//  if (Logflag) OBJ[3][3][4]=8;//bei Flaechen♥
   if (Logflag) KDUMP(OBJ);
   for (let ii=0;ii<OBJ[2].length;ii++) {
     let P=OBJ[2][ii];
@@ -218,7 +220,7 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
       for (jj=0;jj<P[6].length;jj++) {
         if (P[5].indexOf(P[6][jj])==-1) P[5].push(P[6][jj]);
         }
-      P[5].sort(Zsort);//♥warum nicht nur .sort()
+      P[5]=P[5].slice().sort(Zsort);//♥warum nicht nur .sort()
       }
     //delete P[6];
     }
@@ -281,6 +283,10 @@ KFILL(BALKEN1);
 if (Logflag) Logtext=Logtext+"Kanten [Punkt1,Punkt2,Ebene1,Ebene2]: "+JSON.stringify(BALKEN1[3])+"\n";
 
 //9
+var dist=function(A,B) { return Math.sqrt((A[0]-B[0])*(A[0]-B[0])+(A[1]-B[1])*(A[1]-B[1])+(A[2]-B[2])*(A[2]-B[2])) }//war vor 11
+var dist4=function(A,B) { return Math.sqrt((A[0]-B[0])*(A[0]-B[0])+(A[1]-B[1])*(A[1]-B[1])+(A[2]-B[2])*(A[2]-B[2])+(A[3]-B[3])*(A[3]-B[3])) }
+var dist4M=function(A,B) { return Math.sqrt((A[0]+B[0])*(A[0]+B[0])+(A[1]+B[1])*(A[1]+B[1])+(A[2]+B[2])*(A[2]+B[2])+(A[3]+B[3])*(A[3]+B[3])) }
+
 var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit Ebenen von OBJ2
   //local U,V,W,KANTE,EBENE,ERG,ENR;
   var ERG=[];
@@ -312,7 +318,8 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
       //var V=DURCHGUCKER(OBJ1,U,[KANTE[3],KANTE[4]]);
       //var F=DURCHGUCKER(OBJ1,U,[KANTE[4],KANTE[5]]);
       //if (Logflag) Logtext=Logtext+"IL=["+[KANTE[4],KANTE[5]]+"] F="+F+" ";
-      if ((TFIND(OBJ1,KANTE[4],U)+TFIND(OBJ1,KANTE[4],OBJ1[2][KANTE[1]][3])!=4)&(TFIND(OBJ1,KANTE[5],U)+TFIND(OBJ1,KANTE[5],OBJ1[2][KANTE[0]][3])!=4)) V=2;
+//      if ((TFIND(OBJ1,KANTE[4],U)+TFIND(OBJ1,KANTE[4],OBJ1[2][KANTE[1]][3])!=4)&(TFIND(OBJ1,KANTE[5],U)+TFIND(OBJ1,KANTE[5],OBJ1[2][KANTE[0]][3])!=4)) V=2; //ging nicht mehr in Beispiel "Flächen" weil KANTE[4] und KANTE[5] nicht stimmt, jetzt mit udist4
+      if ((dist4(U,OBJ1[2][KANTE[1]][3])<=dist4(OBJ1[2][KANTE[0]][3],OBJ1[2][KANTE[1]][3])+0.00001)&&(dist4(U,OBJ1[2][KANTE[0]][3])<=dist4(OBJ1[2][KANTE[0]][3],OBJ1[2][KANTE[1]][3])+0.00001)) V=2;
       if (Logflag) Logtext=Logtext+"V="+V+" ";
       var W=DURCHGUCKER(OBJ2,U);
       if (Logflag) Logtext=Logtext+"W="+W+" ";
@@ -386,10 +393,6 @@ var KDUMP=function(OBJ) {
   }
 
 //vor 11 RUMPS:
-var dist=function(A,B) { return Math.sqrt((A[0]-B[0])*(A[0]-B[0])+(A[1]-B[1])*(A[1]-B[1])+(A[2]-B[2])*(A[2]-B[2])) }
-var dist4=function(A,B) { return Math.sqrt((A[0]-B[0])*(A[0]-B[0])+(A[1]-B[1])*(A[1]-B[1])+(A[2]-B[2])*(A[2]-B[2])+(A[3]-B[3])*(A[3]-B[3])) }
-var dist4M=function(A,B) { return Math.sqrt((A[0]+B[0])*(A[0]+B[0])+(A[1]+B[1])*(A[1]+B[1])+(A[2]+B[2])*(A[2]+B[2])+(A[3]+B[3])*(A[3]+B[3])) }
-
 var KEBN=function(OBJ) { //fast gleiche Ebenen finden
   var E=OBJ[0];
   for (var i=0;i<E.length;i++) {
