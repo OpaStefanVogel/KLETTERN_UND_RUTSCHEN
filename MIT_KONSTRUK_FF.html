@@ -22,7 +22,7 @@
   <script src="threejs-cookbook/libs/dat.gui.min.js"></script>
   <script src="threejs-cookbook/libs/clock.js"></script>
   </head>
-<body onload="Beispiel9()">
+<body onload="Beispiel5()">
 <!--canvas id="Uhr"> </canvas-->
 <div>zur Zeit 8 Eingabebeispiele: 
   <button onclick="Beispiel1()">REST5</button>,
@@ -534,11 +534,11 @@ LT=[
 "TQ(118.27229099826182,651.8166393945107,-14.999999999999993,6)",
 "TA()",
 "TQ(177.50000000000006,700,-4.733165431326071e-30,3)",
-"TSchneiden()",
+//"TSchneiden()",//♥ warum das? geht jedenfalls nicht
 "TQ(237.04536360786378,652.0196427372484,-15.000000000000014,4)",
 "TA();//Testflag=true",
 "TQ(177.50000000000006,700,-4.733165431326071e-30,3)",
-"TSchneiden()",
+//"TSchneiden()",//♥ warum das? geht jedenfalls nicht
 "TQ(190,0,1250,1)",
 "TA()",
 "TQ(190,120,1250,1)",
@@ -1202,11 +1202,12 @@ var Beispiel5=function() {
 //Logflag=true;
 //Testflag=true';
 
+
 LT=[
 "/*0*/ TNeu(300,100,200)",
-"/*1*/ TQ(60-5*1,65,50,0)",
-"/*2*/ TNeu(100+5*1,50,60)",
-"/*3*/ TQ(60,70-5*0,100+10*0,0)",
+"/*1*/ TQ(55,65,50,0)",
+"/*2*/ TNeu(105,50,60)",
+"/*3*/ TQ(60,70,100,0)",
 "/*4*/ TNeu(100,50,60)",
 "/*5*/ TQ(60,70,40,1)",
 "/*6*/ TA()",
@@ -1216,9 +1217,53 @@ LT=[
 "/*10*/ TA()",
 "/*11*/ TQ(0,0,0,0)",
 "/*12*/ TSchneiden()",
-"/*13*/ TQ(0,0,0,0);TA();TS();TD()",
+"/*13*/ TQ(0,0,0,0)",
+"/*14*/ TA()",
+"/*15*/ TS()",
+"/*16*/ TD()",
+"/*17*/ TQ(55,65,110,0)",
+"/*18*/ TA()",
+"/*19*/ TQ(60,70,100,2)",
+"/*20*/ TS()",
+"/*21*/ TQ(160,115,50,1)",
+"/*22*/ TVerschieben()",
+"/*23*/ TVerschieben()",
+"/*24*/ TQ(170,125,30,1)",
+"/*25*/ TA()",
+"/*26*/ TQ(0,100,200,0)",
+"/*27*/ TSchneiden()",
+"/*28*/ TQ(55,65,110,0)",
+"/*29*/ TA()",
+"/*30*/ TQ(60,70,100,2)",
+"/*31*/ TS()",
+"/*32*/ TQ(170,125,30,1)",
+"/*33*/ TVerschieben()",
+"/*34*/ TVerschieben()",
+"/*35*/ TVerschieben()",
+"/*36*/ TVerschieben()",
+"/*37*/ TVerschieben()",
+"/*38*/ TVerschieben()",
+"/*39*/ TVerschieben()",
+"/*40*/ TVerschieben()",
+"/*41*/ TQ(160,120,100,2)",
+"/*42*/ TUmdrehen()",
+"/*43*/ TVerschieben()",
+"/*44*/ TVerschieben()",
+"/*45*/ TVerschieben()",
+"/*46*/ TVerschieben()",
+"/*47*/ TVerschieben()",
+"/*48*/ TVerschieben()",
+"/*49*/ TVerschieben()",
+"/*50*/ TVerschieben()",
+"/*51*/ TVerschieben()",
+"/*52*/ TVerschieben()",
+"/*53*/ TVerschieben()",
+"/*54*/ TVerschieben()",
+"/*55*/ TVerschieben()",
+"/*56*/ TVerschieben()",
 ];
-
+  
+  
 /*
 09 Vector (0.0, 0.0, 200.0)
 08 Vector (0.0, 0.0, 0.0)
@@ -1597,7 +1642,7 @@ LT=[
 "/*31*/ TQ(20,200,0,1)",
 "/*32*/ TS()",
 "/*33*/ TUmdrehen()",
-"/*34*/ TQ(0,200,50,0);Logflag=true",
+"/*34*/ TQ(0,200,50,0)",
 "/*35*/ TSchneiden()",
 "/*36*/ TQ(20,200,15,0)",
 "/*37*/ TA()",
@@ -1668,12 +1713,20 @@ LT=[
 "/*102*/ TQ(20,170,25,0)",
 "/*103*/ TS()",
 "/*104*/ TQ(35,200,15,0)",
-"/*105*/ TD();Logflag=true",
-"/*106*/ //TSchneiden()",
-"/*107*/ //TQ(120,200,50,1)",
-"/*108*/ //TA()",
-"/*109*/ //TS()",
-"/*110*/ //TD()",
+"/*105*/ TD()",
+"/*106*/ TSchneiden()",
+"/*107*/ TQ(50,170,0,0)",
+"/*108*/ TA()",
+"/*109*/ TQ(20,185,20,0)",
+"/*110*/ TS()",
+"/*111*/ TUmdrehen()",
+"/*112*/ TMerken()",
+"/*113*/ TQ(50,170,0,0)",
+"/*114*/ TA()",
+"/*115*/ TQ(80,185,15,0)",
+"/*116*/ TS()",
+"/*117*/ TUmdrehen()",
+"/*118*/ TSchneiden()",
 ];
   
   LTeval(LT,0);
