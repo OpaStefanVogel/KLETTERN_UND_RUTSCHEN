@@ -727,14 +727,16 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
     }
   //for (var P of OBJ2[2]) {
   for (var iP in OBJ2[2]) { var P=OBJ2[2][iP];
+    //if (iP==0) alert(P.join('\n')+'\n\n'+TRU);
     var PNEU=P.slice();
     if (PNEU[5]) ; else PNEU[5]=[PNEU[0],PNEU[1],PNEU[2]];
     PNEU[5]=PNEU[5].slice();
     PNEU[0]=PNEU[0]+TRU;
     PNEU[1]=PNEU[1]+TRU;
     PNEU[2]=PNEU[2]+TRU;
-    if (PNEU[6]) for (let i=0;i<PNEU[6].length;i++) PNEU[6][i]=PNEU[6][i]+TRU;//♥
+    if (PNEU[6]) {PNEU[6]=PNEU[6].slice(); for (let i=0;i<PNEU[6].length;i++) PNEU[6][i]=PNEU[6][i]+TRU;}//♥
     for (var i=0;i<PNEU[5].length;i++) PNEU[5][i]=PNEU[5][i]+TRU;
+    //if (iP==0) alert(PNEU.join('\n')+'\nX\n'+TRU);
     if (Logflag) Logtext=Logtext+"OBJ2 P="+JSON.stringify(P)+" drin="+DURCHGUCKER(ERG,P[3])+" als PNEU="+JSON.stringify(PNEU)+"\n";
     if (DURCHGUCKER(ERG,P[3])!=3) ERG[2].push(PNEU);
     }
