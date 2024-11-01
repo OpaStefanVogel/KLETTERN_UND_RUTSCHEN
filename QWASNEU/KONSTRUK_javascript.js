@@ -208,15 +208,16 @@ function Asort(a,b) {if (a[0]<b[0]) return -1;if (a[0]==b[0]) return 0; return 1
 
 var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
   if (Logflag) Logtext=Logtext+"starte KFILL(OBJ)\n";
-  if (Logflag) OBJ[2][0][5]=[4,10,15,16];//♥
+//  if (Logflag) OBJ[2][0][5]=[4,10,15,16];//bei NUT_UND_FEDER_defekt♥
+//  if (Logflag) OBJ[2][1][5]=[3,4,7,8];//bei QUADER_defekt♥
   if (Logflag) KDUMP(OBJ);
   for (let ii=0;ii<OBJ[2].length;ii++) {
     let P=OBJ[2][ii];
     if (P[6]&&P[6].length>0) {
       for (jj=0;jj<P[6].length;jj++) {
-        if (P[5].indexOf(P[6][jj])==-1) P[5].push(P[6][jj]);
+//        if (P[5].indexOf(P[6][jj])==-1) P[5].push(P[6][jj]);
         }
-      P[5].sort();
+      P[5].sort(Zsort);//♥warum nicht nur .sort()
       }
     //delete P[6];
     }
@@ -287,7 +288,7 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
       var W=DURCHGUCKER(OBJ2,U);
       if (Logflag) Logtext=Logtext+"W="+W+" ";
       if (W==2&&Math.abs(U[3])>0.0001) {
-        ERG.push([0,1,ENR,U,,,[]]);//[0,1]
+        ERG.push([0,1,ENR,U,,,[0,1]]);//[0,1]
         if (Logflag) Logtext=Logtext+"♥ drin" 
         } else if (Logflag) Logtext=Logtext+"draußen";
       if (Logflag) Logtext=Logtext+"\n";      
@@ -314,8 +315,11 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
       //if ((F<3)&(W==2)) {
         let KX=[];
         //if (KANTE[7]) KX=KANTE[7].slice();
+        let KY1=OBJ1[2][KANTE[0]][5];
+        let KY2=OBJ1[2][KANTE[1]][5];
+        for (let j=0;j<KY1.length;j++) if (KY2.indexOf(KY1[j])>-1) KX.push(KY1[j]);
         ERG.push([KANTE[2],KANTE[3],ENR,U,,,KX]);
-        if (Logflag) Logtext=Logtext+"♥ drin" 
+        if (Logflag) Logtext=Logtext+"♥ drin mit ["+KY1+']&cap;['+KY2+']=['+KX+']';
         } else if (Logflag) Logtext=Logtext+"draußen";
       //if ((F<3)&(V==3)) if (Logflag) Logtext=Logtext+"----------";
       if (Logflag) Logtext=Logtext+"\n";
