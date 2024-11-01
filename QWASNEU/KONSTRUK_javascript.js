@@ -188,12 +188,29 @@ var DFILL=function(OBJ) { //füllt eine temporäre separate Liste MERK12 mit Kan
       let weiter_suchen=true;
       for (let kk=0;kk<P[5].length;kk++) if (weiter_suchen) {
         let punkt=DREIEBENEN(OBJ[0][M[0]],OBJ[0][M[1]],OBJ[0][P[5][kk]]);
-        if (punkt[3]>0.5) {
+        if (kk!=i&&kk!=j&&punkt[3]>0.5) {//nochmal ohne kk!=j&&kk!=i schauen warum da bei j==0 i==1 kk==0 punkt[3]==1 ist
           M.push(P[5][kk]);
           weiter_suchen=false;
+          if (M[2]==M[0]) alert(M+'\n'+punkt+'\n'+P[5]+'\n'+[j,i,kk]);
           }
         }
       if (M.length>2) MERK.push(M); //♥wie kann hier M.length==2 sein? Bei NUT_UND_FEDER
+      }
+    }
+  }
+DFILLX=function(OBJ) { //füllt eine temporäre separate Liste MERK12 mit Kantenfluchtlinien
+  MERK12=[];
+  MERK=[];
+  //for (P of OBJ[2]) {//alert(JSON.stringify(P));
+  for (var iP in OBJ[2]) {var P=OBJ[2][iP]
+    if (P[5]) ; else P[5]=[P[0],P[1],P[2]];
+    for (var i=1; i<P[5].length;i++) for (var j=0;j<i;j++) if (MERK12.indexOf("["+[P[5][j],P[5][i]]+"]")==-1) {
+      MERK12.push("["+[P[5][j],P[5][i]]+"]");
+      var M=[P[5][j],P[5][i]];
+      if (j==0&&i==1) M.push(P[5][2]);
+      if (j==0&&i>1) M.push(P[5][1]);
+      if (j>0) M.push(P[5][0]);
+      MERK.push(M);
       }
     }
   }
