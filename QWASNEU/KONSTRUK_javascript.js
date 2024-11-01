@@ -193,7 +193,7 @@ var DFILL=function(OBJ) { //füllt eine temporäre separate Liste MERK12 mit Kan
           weiter_suchen=false;
           }
         }
-      MERK.push(M);
+      if (M.length>2) MERK.push(M); //♥wie kann hier M.length==2 sein? Bei NUT_UND_FEDER
       }
     }
   }
@@ -208,6 +208,7 @@ function Asort(a,b) {if (a[0]<b[0]) return -1;if (a[0]==b[0]) return 0; return 1
 
 var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
   if (Logflag) Logtext=Logtext+"starte KFILL(OBJ)\n";
+//  if (Logflag) alert("starte KFILL(OBJ)\n");
 //  if (Logflag) OBJ[2][0][5]=[4,10,15,16];//bei NUT_UND_FEDER_defekt♥
 //  if (Logflag) OBJ[2][1][5]=[3,4,7,8];//bei QUADER_defekt♥
   if (Logflag) KDUMP(OBJ);
@@ -215,24 +216,27 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
     let P=OBJ[2][ii];
     if (P[6]&&P[6].length>0) {
       for (jj=0;jj<P[6].length;jj++) {
-//        if (P[5].indexOf(P[6][jj])==-1) P[5].push(P[6][jj]);
+        if (P[5].indexOf(P[6][jj])==-1) P[5].push(P[6][jj]);
         }
       P[5].sort(Zsort);//♥warum nicht nur .sort()
       }
     //delete P[6];
     }
   //local M,PNR,PZZS,PZZT;
+//  if (Logflag) alert("starte DFILL(OBJ)\n");
   DFILL(OBJ);
   if (Logflag) Logtext=Logtext+'MERK=\n'+MERK.join('\n')+'\n';
+//  if (Logflag) alert('MERK=\n'+MERK.join('\n')+'\n');
   if (Logflag) Logtext=Logtext+'MERK12=\n'+MERK12.join('\n')+'\n';
+//  if (Logflag) alert('MERK12=\n'+MERK12.join('\n'));
   OBJ[3]=[];
   //for (var M of MERK) {
   for (var iM in MERK) { var M=MERK[iM];
-//    if (Logflag) alert(iM+" "+MERK.length+" "+JSON.stringify(M));
     if (Logflag) Logtext=Logtext+"Kantenfluchtlinie "+M+"\n";
     var PZZT=[];
     for (var PNR=0;PNR<OBJ[2].length;PNR++) {
       var P=OBJ[2][PNR];//alert(PNR);
+//      if (Logflag) alert(iM+" "+MERK.length+" Kantenfluchtlinie "+JSON.stringify(M)+' PNR='+PNR+';\nP='+JSON.stringify(P));
       if (P[5]) ; else P[5]=[P[0],P[1],P[2]];
       for (var i=0; i<P[5].length;i++) for (var j=0;j<i;j++) 
         if ((M[0]==P[5][i]&&M[1]==P[5][j])||(M[1]==P[5][i]&&M[0]==P[5][j])) {
@@ -242,6 +246,7 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
           }
       }
     var PZZS=PZZT.sort(Asort);
+//    if (Logflag) alert("PZZS="+JSON.stringify(PZZS));
     //var PZZR=[PZZS[0]];
     //for (var i=1;i<PZZS.length;i++) if (PZZS[i][0]-PZZS[i-1][0]>=0.0001) PZZR.push(PZZS[i]);
     //PZZS=PZZR;
