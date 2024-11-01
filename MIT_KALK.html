@@ -9,6 +9,7 @@
 
 <body>
 <div id="Ausgabe zu tree.js"> </div>
+<div id='Log'>xy</div>
 
     <!--importmap nur noch wegen OrbitControls.js-->
     <!--XRControllerModelFactory.js lädt nur in der alten Version three.js-->
@@ -27,12 +28,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { XRButton } from 'three/addons/webxr/XRButton.js';
 import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
 
+let canvas_width=0.9*window.innerWidth;
+let canvas_height=0.9*window.innerHeight;
 const renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( window.innerWidth*0.9, window.innerHeight*0.9);
+  renderer.setSize( canvas_width, canvas_height );
   renderer.xr.enabled = true;
   renderer.xr.setReferenceSpaceType( 'local' );
-  renderer.setAnimationLoop( render );
+  renderer.setAnimationLoop( animate );
   document.body.appendChild( renderer.domElement );
 
 
@@ -47,20 +50,20 @@ const light = new THREE.HemisphereLight( 0xfff0f0, 0x606066 );
   scene.add( light );
 
 const directionalLight = new THREE.DirectionalLight( 0xff0000, 1 );
-directionalLight.position.set(-40,-1,0);
-scene.add( directionalLight );
+  directionalLight.position.set(-40,-1,0);
+  scene.add( directionalLight );
 
 const directionalLight2 = new THREE.DirectionalLight( 0x00ff00, 1 );
-directionalLight2.position.set(0,40,0);
-scene.add( directionalLight2);
+  directionalLight2.position.set(0,40,0);
+  scene.add( directionalLight2);
 
 const directionalLight3 = new THREE.DirectionalLight( 0x0000ff, 1 );
-directionalLight3.position.set(40,-1,0);
-scene.add( directionalLight3);
+  directionalLight3.position.set(40,-1,0);
+  scene.add( directionalLight3);
 
 const directionalLight4 = new THREE.DirectionalLight( 0xffffff, 1 );
-directionalLight4.position.set(0,0,40);
-scene.add( directionalLight4);
+  directionalLight4.position.set(0,0,40);
+   scene.add( directionalLight4);
 
 const geometry = new THREE.BoxGeometry( 0.05,0.5,1 );
 const material = new THREE.MeshStandardMaterial( {color: 0x00FFFF} );
@@ -68,7 +71,7 @@ const quader = new THREE.Mesh( geometry, material );
   quader.position.set(-0,-0.5,-3);
   scene.add(quader);
 
-const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 500 );
+const camera = new THREE.PerspectiveCamera( 50, canvas_width / canvas_height, 0.1, 500 );
   scene.add( camera );
 
 const controls = new OrbitControls( camera, renderer.domElement );
@@ -85,12 +88,35 @@ const controls = new OrbitControls( camera, renderer.domElement );
 const controller0 = renderer.xr.getController( 0 );
   controller0.addEventListener( 'selectstart', function() {alert('event selectstart ist noch nicht dabei')} );
 
-function Flaeche(xmin,xmax,ymin,ymax,zmin,zmax) {
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector3();
+
+function raycast() {
+  raycaster.setFromCamera(pointer, camera);
+  const intersects = raycaster.intersectObjects(scene.children);
+  for (let i = 0; i < intersects.length; i++) {
+    intersects[i].object.material.color.set(0x00ff00);
+    }
+  }
+
+function onClick(event) {
+  // calculate pointer position in normalized device coordinates, (-1 to +1) for both components
+  pointer.x = ( (event.clientX-event.target.getBoundingClientRect().left) / canvas_width) * 2 - 1;
+  pointer.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / canvas_height) * 2 + 1;
+  pointer.z = 1;
+  document.getElementById("Log").firstChild.nodeValue=pointer.x+'♥'+pointer.y;
+  raycast();
+  }
+//window.addEventListener('pointermove', onPointerMove);
+renderer.domElement.addEventListener('click', onClick);
+
+function Flaeche(xmin,xmax,ymin,ymax,zmin,zmax,farbe) {
   let fl=new THREE.Mesh(
     new THREE.BoxGeometry( Math.abs(xmax-xmin),Math.abs(ymax-ymin),Math.abs(zmax-zmin)),
-    new THREE.MeshStandardMaterial( {color: 0xFFFFFF, transparent:true, opacity:0.6} )
+    new THREE.MeshStandardMaterial( {color: farbe, transparent:true, opacity:0.8} )
     );
   fl.position.set((xmin+xmax)/2,(ymin+ymax)/2,(zmin+zmax)/2);
+  //alert(fl.raycast);
   scene.add(fl);
   }
 
@@ -101,10 +127,13 @@ function Flaeche(xmin,xmax,ymin,ymax,zmin,zmax) {
 "TNeu(5,500,2000,'neuer Putz')",
 */
 
-Flaeche(-1,-0.8,-1,-0.5,-5,-5.005);
-Flaeche(-1,-1.005,-1,-0.5,-3,-5);
+//Ausgangspunkt ist momentan (-1,-1,-5)
+Flaeche(-1,-0.8,-1,-0.5,-5,-5.005,0xffffff);
+Flaeche(-1,-1.005,-1,-0.5,-3,-5,'hsl(0,100%,50%)');
+Flaeche(-1,-1.005,-0.5,4,-4.5,-5,'hsl(10,100%,50%)');
+Flaeche(-1,-0.6,-0.5,4,-5,-5.005,'hsl(10,100%,50%)');
 
-function render() {
+function animate(currentTime,currentXRFrame) {
   controls.update();
   renderer.render( scene, camera );
   }
