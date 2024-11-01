@@ -603,7 +603,7 @@ var KRWG=function(OBJ) { //Kanten mit nur 1 bestimmende Ebene entfernen
     var eneu=[]; //verwendete Ebenen
     //if (K[i][7].length>2) alert(K[i][7]);
     var EL=[];//zu sortierende Liste der Richtungsvektoren
-    for (var j=0;j<K[i][7].length;j++) EL.push([0,KREUZ(V,E[K[i][7][j]]).slice(0,3),-1,-1,K[i][7][j]]);
+    for (var j=0;j<K[i][7].length;j++) EL.push([0,KREUZ(V,E[K[i][7][j]]).slice(0,4),-1,-1,K[i][7][j]]);
     for (var j=0;j<K[i][7].length;j++) EL.push([-EL[j][0],MSCAL(-1,EL[j][1]),-1,-1,EL[j][4]]);
     for (var j=0;j<EL.length;j++) {
       var KR=KREUZ(EL[0][1],EL[j][1]);
@@ -617,7 +617,9 @@ var KRWG=function(OBJ) { //Kanten mit nur 1 bestimmende Ebene entfernen
       EL[j+1][3]=DG;
       }
     //if (K[i][7].length>2) alert(EL.join("\n"));
+    if (Logflag) {Logtext=Logtext+"  EL=\n"; for (let j=0;j<EL.length;j++) Logtext=Logtext+"    ["+EL[j][0]+',['+EL[j][1]+'],'+EL[j].slice(2)+']\n'}
     for (var j=0;j<EL.length-1;j++) if (EL[j][2]!=EL[j][3]&&eneu.indexOf(EL[j][4])==-1) eneu.push(EL[j][4]);
+    if (Logflag) Logtext=Logtext+"  eneu=["+eneu+"]\n";
     //if (K[i][7].length>2) alert("eneu=["+eneu+"]");
 /*
     var eneu=[]; //verwendete Ebenen
@@ -729,16 +731,16 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   KEBN(ERG); //gleiche Ebenen bestimmen
   KASP(ERG); //gleiche Punkte zusammenfassen
   KFILL(ERG);
-if (Logflag) ; else    KANZ(ERG); //gleiche Kanten zusammenfassen
+  KANZ(ERG); //gleiche Kanten zusammenfassen
   if (Logflag) Logtext=Logtext+"nach KANZ(ERG):\n";
   if (Logflag) KDUMP(ERG);
 //  KENT(ERG); //Entgraten
 //  KFILL(ERG);
 //  KANZ(ERG);
-if (Logflag) ; else    KRWG(ERG); //Kanten mit nur 1 bestimmende Ebene entfernen
+  KRWG(ERG); //Kanten mit nur 1 bestimmende Ebene entfernen
   if (Logflag) Logtext=Logtext+"nach KRWG(ERG):\n";
   if (Logflag) KDUMP(ERG);
-if (Logflag) ; else    KPWG(ERG); //Punkte mit nur 2 Kanten entfernen♥
+  KPWG(ERG); //Punkte mit nur 2 Kanten entfernen
   if (Logflag) Logtext=Logtext+"nach KPWG(ERG):\n";
   if (Logflag) KDUMP(ERG);
   if (Logflag) Logtext=Logtext+"nach return RUMPS(OBJ1,OBJ2,bit):\n";
