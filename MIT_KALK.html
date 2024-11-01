@@ -85,14 +85,14 @@ const controls = new OrbitControls( camera, renderer.domElement );
   controls.target.set(0,0,-3);
   controls.object.position.set(0,0,0);
 
-const controller0 = renderer.xr.getController( 0 );
-  controller0.addEventListener( 'selectstart', function() {alert('event selectstart ist noch nicht dabei')} );
+const controller1 = renderer.xr.getController( 0 );
+  controller1.addEventListener( 'selectstart', onSelectStart );
+  scene.add( controller1 );
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector3();
 
 function raycast() {
-  raycaster.setFromCamera(pointer, camera);
   const intersects = raycaster.intersectObjects(scene.children);
   for (let i = 0; i < intersects.length; i++) {
     intersects[i].object.material.color.set(0x00ff00);
@@ -104,11 +104,18 @@ function onClick(event) {
   pointer.x = ( (event.clientX-event.target.getBoundingClientRect().left) / canvas_width) * 2 - 1;
   pointer.y = - ( (event.clientY-event.target.getBoundingClientRect().top) / canvas_height) * 2 + 1;
   pointer.z = 1;
-  document.getElementById("Log").firstChild.nodeValue=pointer.x+'♥'+pointer.y;
+  raycaster.setFromCamera(pointer, camera);
   raycast();
   }
 //window.addEventListener('pointermove', onPointerMove);
 renderer.domElement.addEventListener('click', onClick);
+
+function onSelectStart( event ) {
+  const controller = event.target;
+  controller.updateMatrixWorld();
+  raycaster.setFromXRController(controller);
+  raycast();
+  }
 
 function Flaeche(xmin,xmax,ymin,ymax,zmin,zmax,farbe) {
   let fl=new THREE.Mesh(
@@ -133,7 +140,7 @@ Flaeche(-1,-1.005,-1,-0.5,-3,-5,'hsl(0,100%,50%)');
 Flaeche(-1,-1.005,-0.5,4,-4.5,-5,'hsl(10,100%,50%)');
 Flaeche(-1,-0.6,-0.5,4,-5,-5.005,'hsl(10,100%,50%)');
 
-function animate(currentTime,currentXRFrame) {
+function animate(timestamp,frame) {
   controls.update();
   renderer.render( scene, camera );
   }
