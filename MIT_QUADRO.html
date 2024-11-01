@@ -166,17 +166,6 @@ Zum Zurückladen <b><u>erst ganze Seite reload</u></b> und danach Datei auswähl
 		<!-- Remove this when import maps will be widely supported -->
 		<!--script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script-->
 
-
-
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "./three.js/build/three.module.js",
-					"three/addons/": "./three.js/examples/jsm/"
-				}
-			}
-		</script>
-
 		<script type="module">
 
 /*
@@ -187,7 +176,7 @@ const mediaElement = new Audio( file );
 mediaElement.play();
 */
 
-			import * as THREE from 'three';
+			import * as THREE from './three.js/build/three.module.js';
 
 			import {
 				RollerCoasterGeometry,
@@ -195,10 +184,10 @@ mediaElement.play();
 				RollerCoasterLiftersGeometry,
 				TreesGeometry,
 				SkyGeometry
-			} from 'three/addons/misc/RollerCoaster.js';
-			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-			import { VRButton } from 'three/addons/webxr/VRButton.js';
-		import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+			} from './three.js/examples/jsm/misc/RollerCoaster.js';
+			import { OrbitControls } from './three.js/examples/jsm/controls/OrbitControls.js';
+			import { VRButton } from './three.js/examples/jsm/webxr/VRButton.js';
+		import { XRControllerModelFactory } from './three.js/examples/jsm/webxr/XRControllerModelFactory.js';
 
 //import * as Testmodul from './modules/Testmodul.js';
 
