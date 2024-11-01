@@ -25,7 +25,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { XRButton } from 'three/addons/webxr/XRButton.js';
-//import { XRControllerModelFactory } from './three.js-dev/examples/jsm/webxr/XRControllerModelFactory.js';
+//import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
 
 const renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setPixelRatio( window.devicePixelRatio );
@@ -59,7 +59,7 @@ const controls = new OrbitControls( camera, renderer.domElement );
   controls.listenToKeyEvents( window );
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
-  controls.screenSpacePanning = false;
+  controls.screenSpacePanning = true;
   controls.minDistance = 0.1;
   controls.maxDistance = 100;
   controls.maxPolarAngle = Math.PI / 2;
