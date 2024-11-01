@@ -584,11 +584,7 @@ var PDOT=function(a,b) { //Dotprodukt
 
 var sign=1;
 var KREUZ=function(a,b) { //Kreuzprodukt
-  var sign=1;
-  if (a[1]*b[2]-a[2]*b[1]<0) sign=-sign; ///als extra var machen
-  if (a[2]*b[0]-a[0]*b[2]<0) sign=-sign;
-  if (a[0]*b[1]-a[1]*b[0]<0) sign=-sign;
-  return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0],1,sign];
+  return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0],1];
   }
 //    p3=[16,18,23,[193.0224597294723,101.13086532308243,1552.2459729472316,1],[5,25],[16,18,23]]
 //    p17=[9,14,16,[193.01715769148177,101.12927041360496,1551.7157691481762,1],[21],[9,14,16]]
@@ -620,17 +616,18 @@ var KRWG=function(OBJ) { //Kanten mit nur 1 bestimmende Ebene entfernen
     var eneu=[]; //verwendete Ebenen
     //if (K[i][7].length>2) alert(K[i][7]);
     var EL=[];//zu sortierende Liste der Richtungsvektoren
-    for (var j=0;j<K[i][7].length;j++) EL.push([0,KREUZ(V,E[K[i][7][j]]).slice(0,4),-1,-1,K[i][7][j]]);
+    for (var j=0;j<K[i][7].length;j++) EL.push([0,KREUZ(V,E[K[i][7][j]]),-1,-1,K[i][7][j]]);
     if (Logflag) {Logtext=Logtext+"  EL0=\n"; for (let j=0;j<EL.length;j++) Logtext=Logtext+"    ["+EL[j][0]+',['+EL[j][1]+'],'+EL[j].slice(2)+']\n'}
     for (var j=0;j<K[i][7].length;j++) EL.push([-EL[j][0],MSCAL(-1,EL[j][1].slice()),-1,-1,EL[j][4]]);//oder ohne slice
     if (Logflag) {Logtext=Logtext+"  EL1=\n"; for (let j=0;j<EL.length;j++) Logtext=Logtext+"    ["+EL[j][0]+',['+EL[j][1]+'],'+EL[j].slice(2)+']\n'}
     for (var j=0;j<EL.length;j++) {
       var KR=KREUZ(EL[0][1],EL[j][1]);//♦
-      if (PDOT(KR,V)<0) KR[4]=-1; else KR[4]=1;//♦oder 1 -1 noch herausfinden
-      EL[j][0]=Math.atan2(dist(KR,[0,0,0])*KR[4],PDOT(EL[0][1],EL[j][1]))*180/Math.PI;
+      let sign=1;
+      if (PDOT(KR,V)<0) sign=-1;//♦oder bei >0, noch herausfinden
+      EL[j][0]=Math.atan2(dist(KR,[0,0,0])*sign,PDOT(EL[0][1],EL[j][1]))*180/Math.PI;
       EL[j][6]='♦';
       EL[j][7]=PDOT(KR,V);
-      EL[j][8]=dist(KR,[0,0,0])*KR[4];
+      EL[j][8]=dist(KR,[0,0,0])*sign;
       EL[j][9]=PDOT(EL[0][1],EL[j][1]);
       EL[j][10]=KR;
       }
