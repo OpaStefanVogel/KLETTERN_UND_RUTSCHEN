@@ -97,6 +97,15 @@ function raycast() {
     intersects[i].object.material.color.set(0x00ff00);
     }
   //Log.innerHTML=JSON.stringify(Ecken)
+  let Dist = 0;
+  let minDist = 100000;
+  let gefunden = 0;
+  for (let i = 0; i < Ecken.length; i++) {
+    Dist = raycaster.ray.direction.angleTo(Ecken[i].position.clone().sub(raycaster.ray.origin))
+    if (Dist < minDist) { minDist = Dist; gefunden = Ecken[i].position }
+    }
+  Log.innerHTML = JSON.stringify(gefunden);
+  Ecke.position.copy(gefunden);
   }
 
 function onClick(event) {
@@ -106,15 +115,6 @@ function onClick(event) {
   pointer.z = 1;
   raycaster.setFromCamera(pointer, camera);
   raycast();
-  let Dist=0;
-  let minDist=100000;
-  let gefunden=0;
-  for (let i=0;i<Ecken.length;i++) {
-    Dist=pointer.distanceTo(Ecken[i].position.clone().project(camera))
-    if (Dist<minDist) {minDist=Dist;gefunden=Ecken[i].position}
-    }
-  Log.innerHTML=JSON.stringify(gefunden);
-  Ecke.position.copy(gefunden);
   }
 //window.addEventListener('pointermove', onPointerMove);
 renderer.domElement.addEventListener('click', onClick);
