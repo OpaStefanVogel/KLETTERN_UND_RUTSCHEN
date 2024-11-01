@@ -278,7 +278,7 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
       var W=DURCHGUCKER(OBJ2,U);
       if (Logflag) Logtext=Logtext+"W="+W+" ";
       if (W==2&&Math.abs(U[3])>0.0001) {
-        ERG.push([0,1,ENR,U,,,[0,1]]);//[0,1]
+        ERG.push([0,1,ENR,U,,,[]]);//[0,1]
         if (Logflag) Logtext=Logtext+"♥ drin" 
         } else if (Logflag) Logtext=Logtext+"draußen";
       if (Logflag) Logtext=Logtext+"\n";      
@@ -304,7 +304,7 @@ var GERADEXEBENE=function(OBJ1,OBJ2) { //Schnittpunkte der Kanten von OBJ1 mit E
       if ((V==2)&(W==2)) {
       //if ((F<3)&(W==2)) {
         let KX=[];
-        if (KANTE[7]) KX=KANTE[7].slice();
+        //if (KANTE[7]) KX=KANTE[7].slice();
         ERG.push([KANTE[2],KANTE[3],ENR,U,,,KX]);
         if (Logflag) Logtext=Logtext+"♥ drin" 
         } else if (Logflag) Logtext=Logtext+"draußen";
@@ -720,16 +720,16 @@ var RUMPS=function(OBJ1,OBJ2,BIT) { //Schnittkoerper (OBJ1 and OBJ2)
   KEBN(ERG); //gleiche Ebenen bestimmen
   KASP(ERG); //gleiche Punkte zusammenfassen
   KFILL(ERG);
-//  KANZ(ERG); //gleiche Kanten zusammenfassen
+  KANZ(ERG); //gleiche Kanten zusammenfassen
   if (Logflag) Logtext=Logtext+"nach KANZ(ERG):\n";
   if (Logflag) KDUMP(ERG);
 //  KENT(ERG); //Entgraten
 //  KFILL(ERG);
 //  KANZ(ERG);
-//  KRWG(ERG); //Kanten mit nur 1 bestimmende Ebene entfernen
+  KRWG(ERG); //Kanten mit nur 1 bestimmende Ebene entfernen
   if (Logflag) Logtext=Logtext+"nach KRWG(ERG):\n";
   if (Logflag) KDUMP(ERG);
-//  KPWG(ERG); //Punkte mit nur 2 Kanten entfernen
+  KPWG(ERG); //Punkte mit nur 2 Kanten entfernen
   if (Logflag) Logtext=Logtext+"nach KPWG(ERG):\n";
   if (Logflag) KDUMP(ERG);
   if (Logflag) Logtext=Logtext+"nach return RUMPS(OBJ1,OBJ2,bit):\n";
