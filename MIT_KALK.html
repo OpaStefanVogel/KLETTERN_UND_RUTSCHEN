@@ -46,10 +46,26 @@ const light = new THREE.HemisphereLight( 0xfff0f0, 0x606066 );
   light.position.set( 1, 1, 1 );
   scene.add( light );
 
-const geometry = new THREE.BoxGeometry( 1,0.5,2 );
-const material = new THREE.MeshNormalMaterial( {color: 0x8080ff} );
+const directionalLight = new THREE.DirectionalLight( 0xff0000, 1 );
+directionalLight.position.set(-40,-1,0);
+scene.add( directionalLight );
+
+const directionalLight2 = new THREE.DirectionalLight( 0x00ff00, 1 );
+directionalLight2.position.set(0,40,0);
+scene.add( directionalLight2);
+
+const directionalLight3 = new THREE.DirectionalLight( 0x0000ff, 1 );
+directionalLight3.position.set(40,-1,0);
+scene.add( directionalLight3);
+
+const directionalLight4 = new THREE.DirectionalLight( 0xffffff, 1 );
+directionalLight4.position.set(0,0,40);
+scene.add( directionalLight4);
+
+const geometry = new THREE.BoxGeometry( 0.05,0.5,4 );
+const material = new THREE.MeshStandardMaterial( {color: 0xFFFFFF} );
 const quader = new THREE.Mesh( geometry, material );
-  quader.position.set(-2,-1,-3);
+  quader.position.set(-0,-0.5,-3);
   scene.add(quader);
 
 const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 500 );
@@ -63,8 +79,15 @@ const controls = new OrbitControls( camera, renderer.domElement );
   controls.minDistance = 0.1;
   controls.maxDistance = 100;
   controls.maxPolarAngle = Math.PI / 2;
-  controls.target.set(0,0,0);
-  controls.object.position.set(0,0,1);
+  controls.target.set(0,0,-3);
+  controls.object.position.set(0,0,0);
+
+/*  
+"TQ(-900,0,0,0)",
+"TNeu(200,500,5,'neuer Putz')",
+"TQ(-900,0,5,0)",
+"TNeu(5,500,2000,'neuer Putz')",
+*/
 
 function render() {
   controls.update();
