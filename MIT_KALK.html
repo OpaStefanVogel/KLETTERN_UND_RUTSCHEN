@@ -89,9 +89,11 @@ const controller1 = renderer.xr.getController( 0 );
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector3();
+const Flaechen = new THREE.Object3D();
+  scene.add(Flaechen);
 
 function raycast() {
-  const intersects = raycaster.intersectObjects(scene.children);
+  const intersects = raycaster.intersectObjects(Flaechen.children);
   for (let i = 0; i < intersects.length; i++) {
     intersects[i].object.material.color.set(0x00ff00);
     }
@@ -139,7 +141,14 @@ function Flaeche(xmin,xmax,ymin,ymax,zmin,zmax,farbe) {
     new THREE.MeshStandardMaterial( {color: farbe, transparent:true, opacity:0.8} )
     );
   fl.position.set((xmin+xmax)/2,(ymin+ymax)/2,(zmin+zmax)/2);
-  scene.add(fl);
+  Flaechen.add(fl);
+  const edges = new THREE.EdgesGeometry(fl.geometry);
+  const fline = new THREE.LineSegments(
+    new THREE.EdgesGeometry(fl.geometry),
+    new THREE.LineBasicMaterial({ color: 0x0 })
+    );
+  fline.position.set((xmin+xmax)/2,(ymin+ymax)/2,(zmin+zmax)/2);
+  scene.add(fline);
   Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmin , ymin , zmin ) } )
   Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmin , ymin , zmax ) } )
   Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmin , ymax , zmin ) } )
@@ -158,10 +167,16 @@ function Flaeche(xmin,xmax,ymin,ymax,zmin,zmax,farbe) {
 */
 
 //Ausgangspunkt ist momentan (-1,-1,-5)
-Flaeche(-1,-0.8,-1,-0.5,-5,-5.005,0xffffff);
+let b1=0.80,b2=1.26,b3=0.40,b4=1.26,b5=80;
+let h1=1,h2=2,h3=0.32;
+let t1=0.26,t2=0.45;
+Flaeche(-1,-1+0.2,-1,-0.5,-5,-5.005,0xffffff);
 Flaeche(-1,-1.005,-1,-0.5,-3,-5,'hsl(0,100%,50%)');
-Flaeche(-1,-1.005,-0.5,4,-4.5,-5,'hsl(10,100%,50%)');
-Flaeche(-1,-0.6,-0.5,4,-5,-5.005,'hsl(10,100%,50%)');
+Flaeche(-1,-1.005,-0.5,2,-4.5,-5,'hsl(10,100%,50%)');
+Flaeche(-1,-1+b1,-0.5,2,-5,-5.005,'hsl(20,100%,50%)');
+Flaeche(-1+b1,-1+b1+b2+b3+b4,h2-h3,h2,-5,-5.005,'hsl(30,100%,50%)');
+Flaeche(-1+b1,-1+b1-0.005,0,h2-h3,-5,-5-t2,'hsl(31,100%,50%)');
+Flaeche(-1+b1,-1+b1-0.005,0,-h1,-5,-5-t1,'hsl(32,100%,50%)');
 
 function animate(timestamp,frame) {
   controls.update();
