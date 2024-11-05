@@ -8,7 +8,7 @@
   </head>
 
 <body>
-<div id="Ausgabe zu tree.js"></div><div id='Log' style='font-family:Courier,monospace; white-space:pre;'> </div>
+<div id="canvas"></div><div id='Log' style='font-family:Courier,monospace; white-space:pre;'> </div>
 
 <!--importmap muß bleiben weil die module auch three aufrufen-->
 		<script type="importmap">
@@ -34,7 +34,7 @@ const renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.xr.enabled = true;
   renderer.xr.setReferenceSpaceType( 'local' );
   renderer.setAnimationLoop( animate );
-  document.body.appendChild( renderer.domElement );
+  canvas.appendChild( renderer.domElement );
 
 
 const XRButt=XRButton.createButton( renderer );
@@ -76,11 +76,11 @@ const controls = new OrbitControls( camera, renderer.domElement );
   controls.listenToKeyEvents( window );
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
-  //controls.screenSpacePanning = false;//nur horizontal verschiebbar
+  controls.screenSpacePanning = true; //false = nur horizontal verschiebbar
   controls.minDistance = 0;
   controls.maxDistance = 100;
-  controls.maxPolarAngle = Math.PI / 2;
-  controls.minPolarAngle = -Math.PI / 3;//funktioniert leider nur wie 0
+  controls.maxPolarAngle = 2*Math.PI / 2;//das geht, original 1*
+  controls.minPolarAngle = 0;
   controls.target.set(0,0,-3);
   controls.object.position.set(0,0,0);
 
