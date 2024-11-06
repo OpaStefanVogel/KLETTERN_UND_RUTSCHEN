@@ -22,7 +22,8 @@ function alle_Punkte(Obj) {
 	   for (let j=0;j<i;j++) 
 	     for (let k=0;k<j;k++) 
 	       PL.push([DREIEBENEN(EL[i],EL[j],EL[k]),[]]);
-	       
+	 for (let i=0;i<PL.length;i++)
+  	 for (let j=0;j<EL.length;j++) PL[i][1].push(TFIND(OBJ_X,j,PL[i][0]));
   
   Obj.alle_Punkte=PL;
   }
@@ -32,6 +33,6 @@ function alle_Punkte(Obj) {
 function ANF_Test() {
   ANF(OBJ_X);
   alle_Punkte(OBJ_X);
-  console.log(OBJ_X);
-  console.error(JSON.stringify(OBJ_X.alle_Punkte[0]));
+  //console.log(TFIND(OBJ_X,);
+  console.error(JSON.stringify(OBJ_X.alle_Punkte.slice(0,2)));
   }
