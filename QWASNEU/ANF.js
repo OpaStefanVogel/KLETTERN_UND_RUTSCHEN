@@ -14,31 +14,64 @@ let FFF = [1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 3, 2, 1, 1, 2, 3, 2, 1, 1, 
 //-ANF2=[-[g*h*k]*-[p*q*r]]=[[-g+-h+-k]*[-p+-q+-r]]
 //     =[[-g*-p]+[-g*-q]+[-g*-r]+[-h*-p]+[-h*-q]+[-h*-r]+[-k*-p]+[-k*-q]+[-k*-r]];
 
+let and_tab=[[0,1,2,3],[1,1,2,2],[2,2,2,2],[3,2,2,3]];
+let not_tab=[0,3,2,1];
 
+function ANF_new(OBJ,i,r) {
+	   
+	 let RET=[];
+	 for (let i=0;i<OBJ[0].length;i++) RET[i]=0;
+	 RET[i]=r;
+	 return [RET];
+  }
 
+function ANF_and(OBJ,ANF1,ANF2) {
+	 let RET=[];
+	 let R=[];
+	 for (let i=0;i<ANF1.length;i++) for (let j=0;j<ANF2.length;j++) {
+	 	 R=[];
+	 	 for (let k=0;k<ANF1[i].length;k++) R[k]=and_tab[ANF1[i][k]][ANF2[j][k]];
+	 	 RET.push(R)
+  	 }
+  return RET;
+  }
+
+function ANF_not(OBJ,ANF1) {
+ 	if (ANF1.length>1) alert('ERROR: ANF1.length>1 ist noch nicht drin');
+	 let RET = [];
+	 let R = [];
+	 for (let i=0;i<ANF1.length;i++) {
+	//  	for (let j = 0; j < ANF2.length; j++) {
+	 		R = [];
+	 		for (let k = 0;k<ANF1[i].length;k++) if(ANF1[i][k]>0) R.push(ANF_new(OBJ,k,not_tab[ANF1[i][k]])[0]);
+		 	RET.push(R)
+		  }
+	 return R;
+  }
 
 function ANF(OBJ) {
   
-  OBJ.ANF=[
-//  	 [1,1,1,1,1,1,3,0],
-//  	 [1,1,1,1,1,1,0,3],
-  	 [1,1,1,1,1,1,3,0,3,0,3,0,3,0],
-  	 [1,1,1,1,1,1,3,0,3,0,3,0,0,3],
-  	 [1,1,1,1,1,1,3,0,3,0,0,3,3,0],
-  	 [1,1,1,1,1,1,3,0,3,0,0,3,0,3],
-  	 [1,1,1,1,1,1,3,0,0,3,3,0,3,0],
-  	 [1,1,1,1,1,1,3,0,0,3,3,0,0,3],
-  	 [1,1,1,1,1,1,3,0,0,3,0,3,3,0],
-  	 [1,1,1,1,1,1,3,0,0,3,0,3,0,3],
-  	 [1,1,1,1,1,1,0,3,3,0,3,0,3,0],
-  	 [1,1,1,1,1,1,0,3,3,0,3,0,0,3],
-  	 [1,1,1,1,1,1,0,3,3,0,0,3,3,0],
-  	 [1,1,1,1,1,1,0,3,3,0,0,3,0,3],
-  	 [1,1,1,1,1,1,0,3,0,3,3,0,3,0],
-  	 [1,1,1,1,1,1,0,3,0,3,3,0,0,3],
-  	 [1,1,1,1,1,1,0,3,0,3,0,3,3,0],
-  	 [1,1,1,1,1,1,0,3,0,3,0,3,0,3],
-  	 ];
+	 let STAPEL=[];
+	 let T=OBJ[1];
+	 let enr=0;
+	 let ANF1=[];
+	 let ANF2=[];
+	 for (let v=0;v<T.length;v++) {
+	 	 
+	 	 if (T[v]==1) {STAPEL.push(ANF_new(OBJ,enr,1));enr=enr+1}
+	 	 if (T[v]==2) {
+	 	 	 ANF2=STAPEL.pop();
+	 	 	 ANF1=STAPEL.pop();
+	 	 	 STAPEL.push(ANF_and(OBJ,ANF1,ANF2));
+	 	 	 }
+	 	 if (T[v]==3) {
+	 	 	 ANF1=STAPEL.pop();
+	 	 	 STAPEL.push(ANF_not(OBJ,ANF1));
+	 	 	 }
+    console.log(JSON.stringify(STAPEL));
+	   }
+
+  OBJ.ANF=STAPEL[0];
   }
 
 function alle_Punkte(OBJ) {
@@ -84,12 +117,12 @@ function alle_konvexen_Teile(OBJ) {
 
 
 //---------------
-function ANF_Test() {
-  ANF(OBJ_X);
-  alle_Punkte(OBJ_X);
+function ANF_Test(OBJ) {
+  ANF(OBJ);
+  alle_Punkte(OBJ);
   //console.log(TFIND(OBJ_X,0,);
-  alle_konvexen_Teile(OBJ_X);
+  alle_konvexen_Teile(OBJ);
   exportiere.innerHTML='cpoints='+JSON.stringify(OBJ_X.konv)+"\n";
   selectText("exportiere");
-  console.error(JSON.stringify(OBJ_X.PL.slice(0,2))+'#'+JSON.stringify(OBJ_X.konv));
+  console.error(JSON.stringify(OBJ.PL.slice(0,2))+'#'+JSON.stringify(OBJ.konv.slice(0,2)));
   }

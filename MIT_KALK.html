@@ -203,6 +203,9 @@ let cpoints=[
 
 cpoints=[[[0,0,0,1],[0,100,0,1],[0,0,50,1],[0,100,50,1],[100,0,0,1],[100,100,0,1],[100,0,50,1],[100,100,50,1],[0,50,0,1],[0,50,50,1],[100,75,0,1],[100,75,50,1]],[[0,0,0,1],[200,0,0,1],[200,100,0,1],[0,0,50,1],[200,0,50,1],[200,100,50,1],[100,0,0,1],[100,0,50,1],[0,50,0,1],[200,100,0,1],[200,100,0,1],[0,50,50,1],[200,100,50,1],[200,100,50,1],[100,75,0,1],[100,75,50,1]]];
 
+//hierher in die nächste Zeile cpoints= aus Button ANF_Test() in MIT_KONSTRUK.html einfügen:
+
+
 let cmax=Math.max(...(cpoints.flat(2).map(Math.abs)));//alert(cmax);
 for (let c=0;c<cpoints.length;c++) for (let i=0;i<cpoints[c].length;i++) cpoints[c][i]=new THREE.Vector3(cpoints[c][i][0]/cmax,cpoints[c][i][1]/cmax,cpoints[c][i][2]/cmax);
 

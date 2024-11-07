@@ -57,6 +57,7 @@ schaue_von_und_nach(<span id="camerapos" onclick='selectText("camerapos")'>...</
 <div>Export zu freeCAD: 
   <button onclick="export_object()">ausgewähltes Objekt</button>, 
   <button onclick="export_object()">Verlauf</button>
+  <button onclick="ANF_Test(OBJ_X)">ANF_Test()</button>
   </div>
 <div id="exportiere" style="display:flex; white-space:pre; font-family:monospace; overflow:auto; border:solid; width:90%; height:200px"> export</div>
 
@@ -1559,7 +1560,7 @@ LT=[
 "/*73*/ TVerschieben()",
 "/*74*/ TVerschieben()",
 "/*75*/ TQ(140,170,50,1);TA();TS();TD();",
-"/*76*/ TQ(0,170,0,0);ANF_Test()",
+"/*76*/ TQ(0,170,0,0)",
 ];
 
 
@@ -1799,7 +1800,7 @@ LT=[
 "/*13*/ TQ(200,100,25,0)",
 "/*14*/ TA()",
 "/*15*/ TQ(200,100,50,0)",
-"/*16*/ TS();Logflag=true;ANF_Test()",
+"/*16*/ TS();Logflag=true",
 "/*17*/ //TSchneiden()",
 ];
   
