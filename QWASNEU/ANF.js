@@ -83,7 +83,7 @@ function alle_Punkte(OBJ) {
 	   for (let j=0;j<i;j++) 
 	     for (let k=0;k<j;k++) {
 	     	 dr=DREIEBENEN(EL[i], EL[j], EL[k]);
-	       if (dr[3]==1) PL.push([dr,[]]);
+	       if (dr[3]==1&&DURCHGUCKER(OBJ,dr)<3) PL.push([dr,[]]);
 	       }
 	 for (let i=0;i<PL.length;i++)
   	 for (let j=0;j<EL.length;j++) PL[i][1].push(TFIND(OBJ,j,PL[i][0]));
@@ -105,7 +105,7 @@ function alle_konvexen_Teile(OBJ) {
 	   	 	 if (drin!=OBJ.ANF[c][j]&&OBJ.ANF[c][j]>0&&drin!=2) flag=false;
   	   	 }
 	   	 
-  	   if (flag) RET[c].push(OBJ.PL[i][0]);
+  	   if (flag) RET[c].push(i);
 	     }
 	   }
 	 OBJ.konv=RET;
@@ -122,7 +122,7 @@ function ANF_Test(OBJ) {
   alle_Punkte(OBJ);
   //console.log(TFIND(OBJ_X,0,);
   alle_konvexen_Teile(OBJ);
-  exportiere.innerHTML='cpoints='+JSON.stringify(OBJ_X.konv)+"\n";
+  exportiere.innerHTML='//insgesamt '+OBJ.PL.length+' Punkte und '+OBJ.konv.length+' konvexe Teile:\nPL='+JSON.stringify(OBJ.PL.map(function(i){return i[0]}))+';\ncpoints='+JSON.stringify(OBJ.konv)+";\n";
   selectText("exportiere");
-  console.error(JSON.stringify(OBJ.PL.slice(0,2))+'#'+JSON.stringify(OBJ.konv.slice(0,2)));
+  console.error('kein Fehler alles gut: '+JSON.stringify(OBJ.PL.slice(0,2))+'#'+JSON.stringify(OBJ.konv.slice(0,2)));
   }
