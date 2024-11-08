@@ -101,7 +101,7 @@ function alle_konvexen_Teile(OBJ) {
 	   for (let i=0;i<OBJ.PL.length;i++) {
 	   	 flag=true;
 	   	 for (let j=0;j<OBJ.ANF[c].length;j++) {
-	   	 	 drin=TFIND(OBJ,j,OBJ.PL[i][0]);
+	   	 	 drin=PL[i][1][j];//TFIND(OBJ,j,OBJ.PL[i][0]);
 	   	 	 if (drin!=OBJ.ANF[c][j]&&OBJ.ANF[c][j]>0&&drin!=2) flag=false;
   	   	 }
 	   	 
