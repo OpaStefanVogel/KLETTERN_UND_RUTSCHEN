@@ -231,6 +231,7 @@ for (let c=0;c<cpoints.length;c++) if (cpoints[c].length>0) {
 
 function animate(timestamp,frame) {
   controls.update();
+  Ecke.position.copy(controls.target);
   renderer.render( scene, camera );
   }
 
