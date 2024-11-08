@@ -76,6 +76,7 @@ function ANF(OBJ) {
 
 function alle_Punkte(OBJ) {
 	 let PL=[];
+	 let CL=[];
 	 let EL=OBJ[0];
 	 let xyz=[];
 	 let dr=0;
@@ -83,12 +84,22 @@ function alle_Punkte(OBJ) {
 	   for (let j=0;j<i;j++) 
 	     for (let k=0;k<j;k++) {
 	     	 dr=DREIEBENEN(EL[i], EL[j], EL[k]);
-	       if (dr[3]==1&&DURCHGUCKER(OBJ,dr)<3) PL.push([dr,[]]);
+	       if (dr[3]==1&&DURCHGUCKER(OBJ,dr)<3) PL.push(dr);
 	       }
-	 for (let i=0;i<PL.length;i++)
-  	 for (let j=0;j<EL.length;j++) PL[i][1].push(TFIND(OBJ,j,PL[i][0]));
-  
+	 for (let i=0;i<PL.length;i++) {
+	   CL[i]=[];
+  	 for (let j=0;j<EL.length;j++) CL[i].push(TFIND(OBJ,j,PL[i]));
+	   }
   OBJ.PL=PL;
+  OBJ.CL=CL;
+  PL=[];
+  CL=[];
+  for (let i=0;i<OBJ.PL.length;i++) if (JSON.stringify(CL).indexOf(JSON.stringify(OBJ.CL[i]))==-1) {
+  	 PL.push(OBJ.PL[i]);
+  	 CL.push(OBJ.CL[i]);
+    }
+  OBJ.PL=PL;
+  OBJ.CL=CL;
   }
 
 function alle_konvexen_Teile(OBJ) {
@@ -101,7 +112,7 @@ function alle_konvexen_Teile(OBJ) {
 	   for (let i=0;i<OBJ.PL.length;i++) {
 	   	 flag=true;
 	   	 for (let j=0;j<OBJ.ANF[c].length;j++) {
-	   	 	 drin=PL[i][1][j];//TFIND(OBJ,j,OBJ.PL[i][0]);
+	   	 	 drin=OBJ.CL[i][j];
 	   	 	 if (drin!=OBJ.ANF[c][j]&&OBJ.ANF[c][j]>0&&drin!=2) flag=false;
   	   	 }
 	   	 
@@ -115,14 +126,13 @@ function alle_konvexen_Teile(OBJ) {
 
 
 
-
 //---------------
 function ANF_Test(OBJ) {
   ANF(OBJ);
   alle_Punkte(OBJ);
   //console.log(TFIND(OBJ_X,0,);
   alle_konvexen_Teile(OBJ);
-  exportiere.innerHTML='//insgesamt '+OBJ.PL.length+' Punkte und '+OBJ.konv.length+' konvexe Teile:\nPL='+JSON.stringify(OBJ.PL.map(function(i){return i[0]}))+';\ncpoints='+JSON.stringify(OBJ.konv)+";\n";
+  exportiere.innerHTML='//insgesamt '+OBJ.PL.length+' Punkte und '+OBJ.konv.length+' konvexe Teile:\nPL='+JSON.stringify(OBJ.PL.map(function(i){return i})).replace(/\],\[/g,'],\n  [')+';\ncpoints='+JSON.stringify(OBJ.konv).replace(/\],\[/g,'],\n  [')+";\n";
   selectText("exportiere");
   console.error('kein Fehler alles gut: '+JSON.stringify(OBJ.PL.slice(0,2))+'#'+JSON.stringify(OBJ.konv.slice(0,2)));
   }
