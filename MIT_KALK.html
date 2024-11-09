@@ -8,7 +8,7 @@
   </head>
 
 <body>
-<div id="Ausgabe zu tree.js"></div><div id='Log' style='font-family:Courier,monospace; white-space:pre;'> </div>
+<div id="canvas"></div><div id='Log' style='font-family:Courier,monospace; white-space:pre;'> </div>
 
 <!--importmap muß bleiben weil die module auch three aufrufen-->
 		<script type="importmap">
@@ -25,6 +25,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { XRButton } from 'three/addons/webxr/XRButton.js';
 import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
 
 let canvas_width=0.9*window.innerWidth;
 let canvas_height=0.9*window.innerHeight;
@@ -34,7 +35,7 @@ const renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.xr.enabled = true;
   renderer.xr.setReferenceSpaceType( 'local' );
   renderer.setAnimationLoop( animate );
-  document.body.appendChild( renderer.domElement );
+  canvas.appendChild( renderer.domElement );
 
 
 const XRButt=XRButton.createButton( renderer );
@@ -76,10 +77,11 @@ const controls = new OrbitControls( camera, renderer.domElement );
   controls.listenToKeyEvents( window );
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
-  controls.screenSpacePanning = true;
-  controls.minDistance = 0.1;
+  controls.screenSpacePanning = true; //false = nur horizontal verschiebbar
+  controls.minDistance = 0;
   controls.maxDistance = 100;
-  controls.maxPolarAngle = Math.PI / 2;
+  controls.maxPolarAngle = 2*Math.PI / 2;//das geht, original 1*
+  controls.minPolarAngle = 0;
   controls.target.set(0,0,-3);
   controls.object.position.set(0,0,0);
 
@@ -89,9 +91,11 @@ const controller1 = renderer.xr.getController( 0 );
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector3();
+const Flaechen = new THREE.Object3D();
+  scene.add(Flaechen);
 
 function raycast() {
-  const intersects = raycaster.intersectObjects(scene.children);
+  const intersects = raycaster.intersectObjects(Flaechen.children);
   for (let i = 0; i < intersects.length; i++) {
     intersects[i].object.material.color.set(0x00ff00);
     }
@@ -139,7 +143,14 @@ function Flaeche(xmin,xmax,ymin,ymax,zmin,zmax,farbe) {
     new THREE.MeshStandardMaterial( {color: farbe, transparent:true, opacity:0.8} )
     );
   fl.position.set((xmin+xmax)/2,(ymin+ymax)/2,(zmin+zmax)/2);
-  scene.add(fl);
+  Flaechen.add(fl);
+  const edges = new THREE.EdgesGeometry(fl.geometry);
+  const fline = new THREE.LineSegments(
+    new THREE.EdgesGeometry(fl.geometry),
+    new THREE.LineBasicMaterial({ color: 0x0 })
+    );
+  fline.position.set((xmin+xmax)/2,(ymin+ymax)/2,(zmin+zmax)/2);
+  scene.add(fline);
   Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmin , ymin , zmin ) } )
   Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmin , ymin , zmax ) } )
   Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmin , ymax , zmin ) } )
@@ -158,13 +169,69 @@ function Flaeche(xmin,xmax,ymin,ymax,zmin,zmax,farbe) {
 */
 
 //Ausgangspunkt ist momentan (-1,-1,-5)
-Flaeche(-1,-0.8,-1,-0.5,-5,-5.005,0xffffff);
-Flaeche(-1,-1.005,-1,-0.5,-3,-5,'hsl(0,100%,50%)');
-Flaeche(-1,-1.005,-0.5,4,-4.5,-5,'hsl(10,100%,50%)');
-Flaeche(-1,-0.6,-0.5,4,-5,-5.005,'hsl(10,100%,50%)');
+let ax=-1,ay=-1.8,az=-5;
+let b1=0.80,b2=1.26,b3=0.40,b4=1.26,b5=0.80;
+let h1=1,h2=3,h3=0.32;
+let t1=0.26,t2=0.45;
+Flaeche(ax,ax+0.2,ay,ay+0.5,az,az-0.005,0xffffff);
+Flaeche(ax,ax-0.005,ay,ay+0.5,az+2,az,'hsl(0,100%,50%)');
+Flaeche(ax,ax-0.005,ay+0.5,ay+h2,az+0.5,az,'hsl(10,100%,50%)');
+Flaeche(ax,ax+b1,ay+0.5,ay+h2,az,az-0.005,'hsl(20,100%,50%)');
+Flaeche(ax+0.2,ax+b1,ay,ay+0.5,az,az-0.005,'hsl(20,100%,50%)');
+Flaeche(ax+b1,ax+b1+b2+b3+b4,ay+h2-h3,ay+h2,az,az-0.005,'hsl(30,100%,50%)');
+Flaeche(ax+b1,ax+b1-0.005,ay+h1,ay+h2-h3,az,az-t2,'hsl(31,100%,50%)');
+Flaeche(ax+b1,ax+b1-0.005,ay+h1,ay,az,az-t1,'hsl(32,100%,50%)');
+Flaeche(ax+b1,ax+b1+b2+b3+b4,ay+h1,ay,az-t1,az-t1-0.005,'hsl(33,100%,50%)');
+Flaeche(ax+b1+b2,ax+b1+b2+b3,ay+h1,ay+h2-h3,az-t1,az-t1-0.005,'hsl(33,100%,50%)');
+Flaeche(ax+b1+b2,ax+b1+b2+b3,ay+h2-h3,ay+h2-h3+0.005,az,az-t1,'hsl(34,100%,50%)');
+Flaeche(ax+b1+b2+b3+b4,ax+b1+b2+b3+b4+0.005,ay+h1,ay,az,az-t1,'hsl(32,100%,50%)');
+Flaeche(ax+b1+b2+b3+b4,ax+b1+b2+b3+b4+0.005,ay+h1,ay+h2-h3,az,az-t2,'hsl(32,100%,50%)');
+Flaeche(ax+b1+b2+b3+b4,ax+b1+b2+b3+b4+b5,ay,ay+h2,az,az-0.005,'hsl(31,100%,50%)');
+Flaeche(ax+b1+b2+b3+b4+b5,ax+b1+b2+b3+b4+b5+0.005,ay,ay+h2,az,az+0.5,'hsl(10,100%,50%)');
+Flaeche(ax+b1,ax+b1+b2,ay+h1,ay+h1-0.005,az-t1,az-t2,'hsl(35,100%,50%)');
+Flaeche(ax+b1+b2,ax+b1+b2+0.005,ay+h1,ay+h2-h3,az-t1,az-t2,'hsl(36,100%,50%)');
+Flaeche(ax+b1+b2+b3,ax+b1+b2+b3-0.005,ay+h1,ay+h2-h3,az-t1,az-t2,'hsl(36,100%,50%)');
+Flaeche(ax+b1+b2+b3,ax+b1+b2+b3+b4,ay+h1,ay+h1-0.005,az-t1,az-t2,'hsl(35,100%,50%)');
+Flaeche(ax+b1,ax+b1+b2,ay+h2-h3,ay+h2-h3+0.005,az,az-t2,'hsl(34,100%,50%)');
+Flaeche(ax+b1+b2+b3,ax+b1+b2+b3+b4,ay+h2-h3,ay+h2-h3+0.005,az,az-t2,'hsl(34,100%,50%)');
+
+let PL=[];
+let cpoints=[];
+
+//insgesamt 22 Punkte und 2 konvexe Teile:
+PL = [[0, 0, 0, 1], [200, 0, 0, 1], [0, 100, 0, 1], [200, 100, 0, 1], [0, 0, 50, 1], [200, 0, 50, 1], [0, 100, 50, 1], [200, 100, 50, 1], [100, 0, 0, 1], [100, 100, 0, 1], [100, 0, 50, 1], [100, 100, 50, 1], [0, 50, 0, 1], [-200, 0, 0, 1], [200, 100, 0, 1], [200, 100, 0, 1], [0, 50, 50, 1], [-200, 0, 50, 1], [200, 100, 50, 1], [200, 100, 50, 1], [100, 75, 0, 1], [100, 75, 50, 1]];
+cpoints = [[0, 2, 4, 6, 8, 9, 10, 11, 12, 16, 20, 21], [0, 1, 3, 4, 5, 7, 8, 10, 12, 14, 15, 16, 18, 19, 20, 21]];
+
+
+//hierher in die nächste Zeile PL= und cpoints= aus Button MIT_KONSTRUK.html/#ANF_Test() in MIT_KONSTRUK.html einfügen:
+
+
+
+
+
+
+let cmax=Math.max(...(PL.flat(2).map(Math.abs)));//alert('cmax='+cmax);
+for (let c=0;c<cpoints.length;c++) for (let i=0;i<cpoints[c].length;i++) {
+  let p=PL[cpoints[c][i]];
+  cpoints[c][i]=new THREE.Vector3(p[0]/cmax,p[1]/cmax,p[2]/cmax);
+  }
+
+let cgeometry,cmaterial,cmesh;
+
+for (let c=0;c<cpoints.length;c++) if (cpoints[c].length>0) {
+  cgeometry = new ConvexGeometry(cpoints[c]);
+  cmaterial = new THREE.MeshStandardMaterial({ color: 0xf080f0+c*0x000000, roughness:0.3, metalness:0.1, transparent: true, opacity: 1 });
+  cmesh = new THREE.Mesh(cgeometry, cmaterial);
+  cmesh.position.set(0.1,0.1,-2.9);
+  cmesh.rotateY(Math.PI);
+  //cmesh.scale=new THREE.Vector3(0.01,0.01,0.01);//fumktioniert nicht
+  scene.add(cmesh);
+  }
+
 
 function animate(timestamp,frame) {
   controls.update();
+  Ecke.position.copy(controls.target);
   renderer.render( scene, camera );
   }
 
