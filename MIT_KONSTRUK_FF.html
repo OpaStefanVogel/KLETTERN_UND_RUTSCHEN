@@ -3016,7 +3016,7 @@ var TS=function() {//setzt Punkt S auf Punkt Q
 var TD=function() {//setzt Punkt D auf Punkt Q
   Logtext2.push("TD()");
   PD.position.copy(q.position);
-  EASD.geometry.verticesNeedUpdate = true;
+  //EASD.geometry.verticesNeedUpdate = true;
   EASD.geometry.setFromPoints([PA.position,PD.position]);
   OBJ_Y=0;
   SCHNITTVEKTOR_AS=0;
@@ -3035,7 +3035,8 @@ var TUmdrehen=function() {//AS oder AD umdrehen
     PS.position.x=2*PA.position.x-PS.position.x;
     PS.position.y=2*PA.position.y-PS.position.y;
     PS.position.z=2*PA.position.z-PS.position.z;
-    VAS.geometry.verticesNeedUpdate = true;
+    //VAS.geometry.verticesNeedUpdate = true;
+    VAS.geometry.setFromPoints([PA.position,PS.position]);
     Logtext="SCHNITTVEKTOR_AS nach -AS:\n";KDUMP(SCHNITTVEKTOR_AS);Logfile();
     } else if (SCHNITTEBENE_ASD!=0) {
       SCHNITTEBENE_ASD[0][0][0]=-SCHNITTEBENE_ASD[0][0][0];
@@ -3045,7 +3046,8 @@ var TUmdrehen=function() {//AS oder AD umdrehen
       PD.position.x=2*PA.position.x-PD.position.x;
       PD.position.y=2*PA.position.y-PD.position.y;
       PD.position.z=2*PA.position.z-PD.position.z;
-      EASD.geometry.verticesNeedUpdate = true;
+      //EASD.geometry.verticesNeedUpdate = true;
+      EASD.geometry.setFromPoints([PA.position,PD.position]);
       Logtext="SCHNITTEBENE_ASD nach -AD:\n";KDUMP(SCHNITTEBENE_ASD);Logfile();
       }
   History_update();
