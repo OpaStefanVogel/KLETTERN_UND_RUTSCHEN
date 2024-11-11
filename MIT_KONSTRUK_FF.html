@@ -43,19 +43,19 @@
 
 
 <div style="max-width:86%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt das render.domElement rein</div>
-<button id='button_Test' onclick='alert(DURCHGUCKER(OBJ_X,[51.25,170,25,1]));//alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
-<button id='button_Zentrieren' onclick='contr.target.copy(q.position)'>Zentrieren</button>
-<button id='button_einzeln' onclick='Einzelobjekt()'>einzeln</button>
-schaue_von_und_nach(<span id="camerapos" moduleclick='selectText("camerapos")'>...</span>);
+<button id='button_Test'>Test</button>
+<button id='button_Zentrieren'>Zentrieren</button>
+<button id='button_einzeln'>einzeln</button>
+schaue_von_und_nach(<span id="camerapos">...</span>);
 <span id="Pdisp">...</span>;
   </div>
 <div id="Log2" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
 <div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
 <div id="KPLOTelement">KPLOT</div>
 <div>Export zu freeCAD: 
-  <button id='button_Auswaehlen' onclick="export_object()">ausgewähltes Objekt</button>, 
-  <button id='button_Verlauf' onclick="export_object()">Verlauf</button>
-  <button id='button_ANF_Test' onclick="ANF_Test(OBJ_X)">ANF_Test()</button>
+  <button id='button_Auswaehlen'>ausgewähltes Objekt</button>, 
+  <button id='button_Verlauf'>Verlauf</button>
+  <button id='button_ANF_Test'>ANF_Test()</button>
   </div>
 <div id="exportiere" style="display:flex; white-space:pre; font-family:monospace; overflow:auto; border:solid; width:90%; height:368px"> export</div>
 
@@ -1200,8 +1200,7 @@ function ANF_Test(OBJ) {
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-//alert(1);import('./threejs2024/build/three.module.js');
-//alert(2);import('./threejs2024/examples/jsm/controls/OrbitControls.js');
+import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
 
 
 
@@ -3212,7 +3211,7 @@ function Logfile2(Resttext) {
   if (!Resttext) var Resttext="";
   var Log2element=document.getElementById("Log2");
   var Log2element_innerHTML='<span style="white-space:pre; font-family:monospace">\nLT=[\n';
-  for (let t in Logtext2) Log2element_innerHTML=Log2element_innerHTML+'<span onclick="History_t('+t+')">"/*'+t+"*/ "+Logtext2[t]+'",</span>\n';
+  for (let t in Logtext2) Log2element_innerHTML=Log2element_innerHTML+'<span moduleclick="History_t('+t+')">"/*'+t+"*/ "+Logtext2[t]+'",</span>\n';
   Log2element_innerHTML=Log2element_innerHTML+Resttext+'];\n\  \n  </span>';
   Log2element.innerHTML=Log2element_innerHTML;
   Log2element.scrollTo({//mit dem geht Kopieren nicht
@@ -3359,7 +3358,7 @@ var History_update=function() {
   
 var History_t=function(t) {
   for (var i in Castlist) scene.remove(Castlist[i][4]);
-  Castlist=[];  
+  Castlist=[];
   eval(History[t]);
   }
 
@@ -3491,6 +3490,26 @@ var spline = new THREE.SplineCurve3([
 
 
 
+let PL=[];
+let cpoints=[];
+function ANF_display(OBJ) {
+  PL=OBJ.PL;
+  cpoints=OBJ.konv;
+  let cmax=Math.max(...(PL.flat(2).map(Math.abs)));//alert('cmax='+cmax);
+  for (let c=0;c<cpoints.length;c++) for (let i=0;i<cpoints[c].length;i++) {
+    let p=PL[cpoints[c][i]];
+    cpoints[c][i]=new THREE.Vector3(p[0]/zoom,p[1]/zoom,p[2]/zoom);//oder /cmax
+    }
+  let cgeometry,cmaterial,cmesh;
+  for (let c=0;c<cpoints.length;c++) if (cpoints[c].length>0) {
+    cgeometry = new ConvexGeometry(cpoints[c]);
+    cmaterial = new THREE.MeshStandardMaterial({ color: 0xf080f0+c*0x000000, roughness:0.3, metalness:0.1, transparent: true, opacity: 1 });
+    cmesh = new THREE.Mesh(cgeometry, cmaterial);
+    scene.add(cmesh);
+    }
+  }
+
+
 
 /*
   DRU X wählt ein OBJEKT X
@@ -3543,10 +3562,12 @@ FEHLERTEXT ( nr --> adr n )
 
 
 function Logclick() {
-	 eval(event.target.getAttribute('moduleclick'));
+  let ev=event.target.getAttribute('moduleclick');
+  eval(ev);
   }
 
 Log.addEventListener('click',Logclick);
+Log2.addEventListener('click',Logclick);
 button_Beispiel1.addEventListener('click',Beispiel1);
 button_Beispiel2.addEventListener('click',Beispiel2);
 button_Beispiel3.addEventListener('click',Beispiel3);
@@ -3573,18 +3594,10 @@ button_einzeln.addEventListener('click',Einzelobjekt);
 button_Auswaehlen.addEventListener('click',export_object);
 button_Verlauf.addEventListener('click',export_object);
 button_Auswaehlen.addEventListener('click',export_object);
-button_ANF_Test.addEventListener('click',function(){ANF_Test(OBJ_X)});
+button_ANF_Test.addEventListener('click',function(){ANF_Test(OBJ_X);ANF_display(OBJ_X)});
 
 
-/*
 
-  <button id='button_Auswaehlen' onclick="export_object()">ausgewähltes Objekt</button>, 
-  <button id='button_Verlauf' onclick="export_object()">Verlauf</button>
-  <button id='ANF_Test' onclick="ANF_Test(OBJ_X)">ANF_Test()</button>
-  </div>
-<div id="exportiere" style="display:flex; white-space:pre; font-family:monospace; overflow:auto; border:solid; width:90%; height:368px"> export</div>
-
-*/
 Beispiel10();
 console.error('kein Fehler, alles ok')
 
