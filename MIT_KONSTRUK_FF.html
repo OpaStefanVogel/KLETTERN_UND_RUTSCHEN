@@ -15,14 +15,14 @@
 <body>
 <!--canvas id="Uhr"> </canvas-->
 <div>zur Zeit 8 Eingabebeispiele: 
-  <button onclick="Beispiel1()">REST5</button>,
+  <button onclick="button_Beispiel1">REST5</button>,
   <button onclick="Beispiel2()">GOKART</button> und
   <button onclick="Beispiel3()">DACH</button>.
   <button onclick="Beispiel4()">QUADER</button>.
   <button onclick="Beispiel5()">FLÄCHEN</button>.
   <button onclick="Beispiel6()">WINKEL</button>.
   <button onclick="Beispiel7()">SCHUSTERBURG</button>.
-  <button onclick="Beispiel8()">NUT_UND_FEDER</button>.
+  <button id="button_Beispiel8">NUT_UND_FEDER</button>.
   <button onclick="Beispiel9()">NUT_UND_FEDER_extrem</button>.
   <button onclick="Beispiel10()">QUADER_defekt</button>.
   </div>
@@ -3537,6 +3537,12 @@ FEHLERTEXT ( nr --> adr n )
     R> DROP ENDIF
   ;
   */
+
+button_Beispiel8.addEventListener('click',Beispiel8);
+
+
+
+
 Beispiel10();
 console.error('kein Fehler, alles ok')
 
