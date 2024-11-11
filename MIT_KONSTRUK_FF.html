@@ -9,13 +9,10 @@
   <meta charset="utf-8"/>
   <title>MIT_KONSTRUK_FF.html</title>
 
-  <script src="./threejs-cookbook/libs/three.js999"></script> <!--für git-->
-  <script src="./threejs-cookbook/libs/OrbitControls.js"></script>
-  <!--script src="./threejs-cookbook/libs/Projector.js"></script>
-  <script src="./threejs-cookbook/libs/dat.gui.min.js"></script>
-  <script src="./threejs-cookbook/libs/clock.js"></script-->
+  <!--script src="./threejs-cookbook/libs/three.js"></script-->
+  <!--script src="./threejs-cookbook/libs/OrbitControls.js"></script-->
   </head>
-<body onload="Beispiel80();">
+<body>
 <!--canvas id="Uhr"> </canvas-->
 <div>zur Zeit 8 Eingabebeispiele: 
   <button onclick="Beispiel1()">REST5</button>,
@@ -61,8 +58,8 @@ schaue_von_und_nach(<span id="camerapos" onclick='selectText("camerapos")'>...</
   </div>
 <div id="exportiere" style="display:flex; white-space:pre; font-family:monospace; overflow:auto; border:solid; width:90%; height:368px"> export</div>
 
-<script src="QWASNEU/KONSTRUK_javascript.js"></script>
-<script src="QWASNEU/ANF.js"></script>
+<!--script src="QWASNEU/KONSTRUK_javascript.js"></script-->
+<!--script src="QWASNEU/ANF.js"></script-->
 
 <script>
 //var Uhr = document.getElementById('Uhr'); 
@@ -89,7 +86,6 @@ schaue_von_und_nach(<span id="camerapos" onclick='selectText("camerapos")'>...</
 
 
 
-if (1==1) {
 //Veränderungen zu GAP:
 //1.PGGT ohne /-P[3]
 //in KFILL if (PZZS[2*PNR][1]<=PZZS[2*PNR+1][1])
@@ -107,8 +103,8 @@ if (1==1) {
 //.. doppeltes TEbeneASD() vermeiden
 //.. und fast übereinanderliegende Ebenen zusammenfassen
 
-Logtext="";
-Logflag=false;
+let Logtext="";
+let Logflag=false;
 Logtext=Logtext+"KONSTRUK_javascript.js laden...\n";
 var Testflag=false;
 
@@ -136,7 +132,7 @@ var TFIND=function(OBJ,ENR,P) {
 
 //2
 var STAPEL=[];
-DURCHGUCKER=function(OBJ,P) { // ob P im Inneren oder auf Rand von OBJ
+let DURCHGUCKER=function(OBJ,P) { // ob P im Inneren oder auf Rand von OBJ
   //außerdem, wenn IL gegeben ist, nur die Ebenen in IL auswerten
   //local X,Y,T,ETNR;
   if (P[0]==0&P[1]==0&P[2]==0&P[3]==0) return 3;
@@ -306,7 +302,7 @@ var KFILL=function(OBJ) { //fuellt Kantenliste [pnr1,pnr2,enr1,enr2]
   for (let ii=0;ii<OBJ[2].length;ii++) {
     let P=OBJ[2][ii];
     if (P[6]&&P[6].length>0) {
-      for (jj=0;jj<P[6].length;jj++) {
+      for (let jj=0;jj<P[6].length;jj++) {
         if (P[5].indexOf(P[6][jj])==-1) P[5].push(P[6][jj]);
         }
       P[5]=P[5].sort(Zsort);//war zwischendurch .slice().sort(Zsort)
@@ -916,8 +912,8 @@ TRANSFORM(REST1,A);
 
 //TRANSFORM(REST1,B);
 var ALPHA=0.1;
-CDF=[[Math.cos(ALPHA),Math.sin(ALPHA),0,0],[-Math.sin(ALPHA),Math.cos(ALPHA),0,0],[0,0,1,0],[0,0,0,1]];
-FDC=[[Math.cos(ALPHA),-Math.sin(ALPHA),0,0],[Math.sin(ALPHA),Math.cos(ALPHA),0,0],[0,0,1,0],[0,0,0,1]];
+let CDF=[[Math.cos(ALPHA),Math.sin(ALPHA),0,0],[-Math.sin(ALPHA),Math.cos(ALPHA),0,0],[0,0,1,0],[0,0,0,1]];
+let FDC=[[Math.cos(ALPHA),-Math.sin(ALPHA),0,0],[Math.sin(ALPHA),Math.cos(ALPHA),0,0],[0,0,1,0],[0,0,0,1]];
 //TRANSFORM(REST1,CDF);
 //TRANSFORM(BALKEN1,CDF);
 //TRANSFORM(BALKEN1,CDF);
@@ -1037,7 +1033,7 @@ VERSCHIEB(SCHEUNE,3650,1070,-1500);
 
 Logtext=Logtext+"...KONSTRUK_javascript.js soweit geladen\n";
 
-}
+
 
 
 
@@ -3541,11 +3537,12 @@ FEHLERTEXT ( nr --> adr n )
     R> DROP ENDIF
   ;
   */
-
 Beispiel10();
+console.error('kein Fehler, alles ok')
 
 
   </script>
+
 <!--svg height="300px">
 <path d="M0,0 L100,100 L100,200 L0,0 L200,100 L100,100 L0,0 L200,200 L200,100 L0,0 L200,200 L100,200 L0,0 L130,180 L150,120 L0,0 L170,180 L130,180 L0,0 L170,180 L150,120 L0,0 Z" stroke="none" fill="orange" fill-rule="evenodd"/>
 <path d="M10,10 L20,10 M20,20 L20,20 L10,20" stroke="green" fill="orange" fill-rule="evenodd"/>
