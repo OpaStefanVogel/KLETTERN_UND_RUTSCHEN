@@ -46,7 +46,7 @@
 <button id='button_Test' onclick='alert(DURCHGUCKER(OBJ_X,[51.25,170,25,1]));//alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
 <button id='button_Zentrieren' onclick='contr.target.copy(q.position)'>Zentrieren</button>
 <button id='button_einzeln' onclick='Einzelobjekt()'>einzeln</button>
-schaue_von_und_nach(<span id="camerapos" onclick='selectText("camerapos")'>...</span>);
+schaue_von_und_nach(<span id="camerapos" moduleclick='selectText("camerapos")'>...</span>);
 <span id="Pdisp">...</span>;
   </div>
 <div id="Log2" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
@@ -55,7 +55,7 @@ schaue_von_und_nach(<span id="camerapos" onclick='selectText("camerapos")'>...</
 <div>Export zu freeCAD: 
   <button id='button_Auswaehlen' onclick="export_object()">ausgewähltes Objekt</button>, 
   <button id='button_Verlauf' onclick="export_object()">Verlauf</button>
-  <button id='ANF_Test' onclick="ANF_Test(OBJ_X)">ANF_Test()</button>
+  <button id='button_ANF_Test' onclick="ANF_Test(OBJ_X)">ANF_Test()</button>
   </div>
 <div id="exportiere" style="display:flex; white-space:pre; font-family:monospace; overflow:auto; border:solid; width:90%; height:368px"> export</div>
 
@@ -463,7 +463,7 @@ var markObj=function(cmin,ekp,i,value) {
   alert([cmin,ekp,i,value].join("+"));
   }
 var spanObj=function(cmin,ekp,i,value) {
-  var ret='<span onclick="markObj('+cmin+','+ekp+','+i+','+value+')">'+"etpk"[ekp]+i+"="+value+"</span>";
+  var ret='<span moduleclick="markObj('+cmin+','+ekp+','+i+','+value+')">'+"etpk"[ekp]+i+"="+value+"</span>";
   return ret;
   }
 
@@ -3539,6 +3539,12 @@ FEHLERTEXT ( nr --> adr n )
   ;
   */
 
+
+function Logclick() {
+	 eval(event.target.getAttribute('moduleclick'));
+  }
+
+Log.addEventListener('click',Logclick);
 button_Beispiel1.addEventListener('click',Beispiel1);
 button_Beispiel2.addEventListener('click',Beispiel2);
 button_Beispiel3.addEventListener('click',Beispiel3);
@@ -3559,21 +3565,17 @@ button_TVerschieben.addEventListener('click',TVerschieben);
 button_TDrehen.addEventListener('click',TDrehen);
 button_TSchneiden.addEventListener('click',TSchneiden);
 button_TLoeschen.addEventListener('click',TLoeschen);
+button_Test.addEventListener('click',function(){alert('Testbutton ohne Funktion')});
+button_Zentrieren.addEventListener('click',function(){contr.target.copy(q.position)});
+button_einzeln.addEventListener('click',Einzelobjekt);
+button_Auswaehlen.addEventListener('click',export_object);
+button_Verlauf.addEventListener('click',export_object);
+button_Auswaehlen.addEventListener('click',export_object);
+button_ANF_Test.addEventListener('click',function(){ANF_Test(OBJ_X)});
 
 
 /*
 
-<div style="max-width:86%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt das render.domElement rein</div>
-<button id='button_Test' onclick='alert(DURCHGUCKER(OBJ_X,[51.25,170,25,1]));//alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
-<button id='button_Zentrieren' onclick='contr.target.copy(q.position)'>Zentrieren</button>
-<button id='button_einzeln' onclick='Einzelobjekt()'>einzeln</button>
-schaue_von_und_nach(<span id="camerapos" onclick='selectText("camerapos")'>...</span>);
-<span id="Pdisp">...</span>;
-  </div>
-<div id="Log2" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
-<div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
-<div id="KPLOTelement">KPLOT</div>
-<div>Export zu freeCAD: 
   <button id='button_Auswaehlen' onclick="export_object()">ausgewähltes Objekt</button>, 
   <button id='button_Verlauf' onclick="export_object()">Verlauf</button>
   <button id='ANF_Test' onclick="ANF_Test(OBJ_X)">ANF_Test()</button>
