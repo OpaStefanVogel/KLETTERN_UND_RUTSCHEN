@@ -15,36 +15,37 @@
 <body>
 <!--canvas id="Uhr"> </canvas-->
 <div>zur Zeit 8 Eingabebeispiele: 
-  <button onclick="button_Beispiel1">REST5</button>,
-  <button onclick="Beispiel2()">GOKART</button> und
-  <button onclick="Beispiel3()">DACH</button>.
-  <button onclick="Beispiel4()">QUADER</button>.
-  <button onclick="Beispiel5()">FLÄCHEN</button>.
-  <button onclick="Beispiel6()">WINKEL</button>.
-  <button onclick="Beispiel7()">SCHUSTERBURG</button>.
-  <button id="button_Beispiel8">NUT_UND_FEDER</button>.
-  <button onclick="Beispiel9()">NUT_UND_FEDER_extrem</button>.
-  <button onclick="Beispiel10()">QUADER_defekt</button>.
+  <button id='button_Beispiel1'>REST5</button>,
+  <button id='button_Beispiel2'>GOKART</button> und
+  <button id='button_Beispiel3'>DACH</button>.
+  <button id='button_Beispiel4'>QUADER</button>.
+  <button id='button_Beispiel5'>FLÄCHEN</button>.
+  <button id='button_Beispiel6'>WINKEL</button>.
+  <button id='button_Beispiel7'>SCHUSTERBURG</button>.
+  <button id='button_Beispiel8'>NUT_UND_FEDER</button>.
+  <button id='button_Beispiel9'>NUT_UND_FEDER_extrem</button>.
+  <button id='button_Beispiel10'>QUADER_defekt</button>.
   </div>
-<button onclick='TA()'>TA()</button>
-<button onclick='TS()'>TS()</button>
-<button onclick='TD()'>TD()</button>
+<hr/>
+<button id='button_TA'>TA()</button>
+<button id='button_TS'>TS()</button>
+<button id='button_TD'>TD()</button>
 
-<button onclick='TUmdrehen()'>umdrehen</button>
-<button onclick='TMerken()'>merken</button>
-<button onclick='TKopieren()'>kopieren</button>
-<button onclick='TVerschieben()'>verschieben</button>
-<button onclick='TDrehen()'>drehen</button>
-<button onclick='TSchneiden()'>schneiden</button>
-<button onclick='TLoeschen()'>löschen</button>
+<button id='button_TUmdrehen'>umdrehen</button>
+<button id='button_TMerken'>merken</button>
+<button id='button_TKopieren'>kopieren</button>
+<button id='button_TVerschieben'>verschieben</button>
+<button id='button_TDrehen'>drehen</button>
+<button id='button_TSchneiden'>schneiden</button>
+<button id='button_TLoeschen'>löschen</button>
 <span id="mouse"> </span>
 
 
 
 <div style="max-width:86%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt das render.domElement rein</div>
-<button onclick='alert(DURCHGUCKER(OBJ_X,[51.25,170,25,1]));//alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
-<button onclick='contr.target.copy(q.position)'>Zentrieren</button>
-<button onclick='Einzelobjekt()'>einzeln</button>
+<button id='button_Test' onclick='alert(DURCHGUCKER(OBJ_X,[51.25,170,25,1]));//alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
+<button id='button_Zentrieren' onclick='contr.target.copy(q.position)'>Zentrieren</button>
+<button id='button_einzeln' onclick='Einzelobjekt()'>einzeln</button>
 schaue_von_und_nach(<span id="camerapos" onclick='selectText("camerapos")'>...</span>);
 <span id="Pdisp">...</span>;
   </div>
@@ -52,8 +53,8 @@ schaue_von_und_nach(<span id="camerapos" onclick='selectText("camerapos")'>...</
 <div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
 <div id="KPLOTelement">KPLOT</div>
 <div>Export zu freeCAD: 
-  <button onclick="export_object()">ausgewähltes Objekt</button>, 
-  <button onclick="export_object()">Verlauf</button>
+  <button id='button_Auswaehlen' onclick="export_object()">ausgewähltes Objekt</button>, 
+  <button id='button_Verlauf' onclick="export_object()">Verlauf</button>
   <button id='ANF_Test' onclick="ANF_Test(OBJ_X)">ANF_Test()</button>
   </div>
 <div id="exportiere" style="display:flex; white-space:pre; font-family:monospace; overflow:auto; border:solid; width:90%; height:368px"> export</div>
@@ -3538,11 +3539,48 @@ FEHLERTEXT ( nr --> adr n )
   ;
   */
 
+button_Beispiel1.addEventListener('click',Beispiel1);
+button_Beispiel2.addEventListener('click',Beispiel2);
+button_Beispiel3.addEventListener('click',Beispiel3);
+button_Beispiel4.addEventListener('click',Beispiel4);
+button_Beispiel5.addEventListener('click',Beispiel5);
+button_Beispiel6.addEventListener('click',Beispiel6);
+button_Beispiel7.addEventListener('click',Beispiel7);
 button_Beispiel8.addEventListener('click',Beispiel8);
+button_Beispiel9.addEventListener('click',Beispiel9);
+button_Beispiel10.addEventListener('click',Beispiel10);
+button_TA.addEventListener('click',TA);
+button_TS.addEventListener('click',TS);
+button_TD.addEventListener('click',TD);
+button_TUmdrehen.addEventListener('click',TUmdrehen);
+button_TMerken.addEventListener('click',TMerken);
+button_TKopieren.addEventListener('click',TKopieren);
+button_TVerschieben.addEventListener('click',TVerschieben);
+button_TDrehen.addEventListener('click',TDrehen);
+button_TSchneiden.addEventListener('click',TSchneiden);
+button_TLoeschen.addEventListener('click',TLoeschen);
 
 
+/*
 
+<div style="max-width:86%; border:solid; border-color:red; overflow:hidden" id="canvas"	>hier kommt das render.domElement rein</div>
+<button id='button_Test' onclick='alert(DURCHGUCKER(OBJ_X,[51.25,170,25,1]));//alert(JSON.stringify(VAS.geometry.vertices));alert(document.getElementById("canvas").scrollHeight)'>Test</button>
+<button id='button_Zentrieren' onclick='contr.target.copy(q.position)'>Zentrieren</button>
+<button id='button_einzeln' onclick='Einzelobjekt()'>einzeln</button>
+schaue_von_und_nach(<span id="camerapos" onclick='selectText("camerapos")'>...</span>);
+<span id="Pdisp">...</span>;
+  </div>
+<div id="Log2" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
+<div id="Log" style="display:flex; overflow:auto; border:solid; width:90%; height:200px"> div</div>
+<div id="KPLOTelement">KPLOT</div>
+<div>Export zu freeCAD: 
+  <button id='button_Auswaehlen' onclick="export_object()">ausgewähltes Objekt</button>, 
+  <button id='button_Verlauf' onclick="export_object()">Verlauf</button>
+  <button id='ANF_Test' onclick="ANF_Test(OBJ_X)">ANF_Test()</button>
+  </div>
+<div id="exportiere" style="display:flex; white-space:pre; font-family:monospace; overflow:auto; border:solid; width:90%; height:368px"> export</div>
 
+*/
 Beispiel10();
 console.error('kein Fehler, alles ok')
 
