@@ -46,6 +46,7 @@
 <button id='button_Test'>Test</button>
 <button id='button_Zentrieren'>Zentrieren</button>
 <button id='button_einzeln'>einzeln</button>
+<button id='button_ANF_Test'>gefüllt</button>
 schaue_von_und_nach(<span id="camerapos">...</span>);
 <span id="Pdisp">...</span>;
   </div>
@@ -55,7 +56,6 @@ schaue_von_und_nach(<span id="camerapos">...</span>);
 <div>Export zu freeCAD: 
   <button id='button_Auswaehlen'>ausgewähltes Objekt</button>, 
   <button id='button_Verlauf'>Verlauf</button>
-  <button id='button_ANF_Test'>ANF_Test()</button>
   </div>
 <div id="exportiere" style="display:flex; white-space:pre; font-family:monospace; overflow:auto; border:solid; width:90%; height:368px"> export</div>
 
@@ -1115,7 +1115,7 @@ function ANF(OBJ) {
 	 	 	 ANF1=STAPEL.pop();
 	 	 	 STAPEL.push(ANF_not(OBJ,ANF1));
 	 	 	 }
-    console.log(JSON.stringify(STAPEL));
+    //console.log(JSON.stringify(STAPEL));
 	   }
 
   OBJ.ANF=STAPEL[0];
@@ -1250,6 +1250,7 @@ var requestAnimationFrameID=0;
 var ASdistanz=1;
 var Verschiebedistanz=1;
 let contr=0;
+let OBJ_gefuellt=0;
 
 function init() {
   zoom=20;
@@ -1283,7 +1284,10 @@ function init() {
         light.position.set(1200, 1200, 1200);
         scene.add(light);
 
-  // create a cube and add to scene
+  OBJ_gefuellt=new THREE.Group();
+  scene.add(OBJ_gefuellt);
+  
+// create a cube and add to scene
   var cubeGeometry = new THREE.BoxGeometry(0.1/QASDzoom /* 10 * Math.random()*/, 0.1/QASDzoom, 0.1/QASDzoom);
 //alert(JSON.stringify(cubeGeometry.faces));
   var cubeMaterial = new THREE.MeshNormalMaterial();
@@ -1439,7 +1443,7 @@ KPLOT([REST1]);
 KPLOT([REST4]);
 KPLOT([REST5]);
 Castlist.push(REST5);
-cube.geometry.faces[0].color = new THREE.Color(0x000000); 
+//cube.geometry.faces[0].color = new THREE.Color(0x000000);
 AddObjekt(scene,REST5);
 TQ(20,0,0,0);
 TA();
@@ -3382,9 +3386,10 @@ function AddObjekt(OBJ1,OBJ2) {
     var middle = new THREE.Vector3(OBJ2[2][K[0]][3][0]/zoom, OBJ2[2][K[0]][3][1]/zoom, OBJ2[2][K[0]][3][2]/zoom);   
     var end = new THREE.Vector3(OBJ2[2][K[1]][3][0]/zoom, OBJ2[2][K[1]][3][1]/zoom, OBJ2[2][K[1]][3][2]/zoom);
 
-    if (Linientyp==0) {alert('QuadraticBezierCurve3 geht wohl nicht')
+    if (Linientyp==0) {//alert('QuadraticBezierCurve3 geht wohl nicht')
+      var numPoints = 33;
       var curveQuad = new THREE.QuadraticBezierCurve3(start, middle, end); 
-      var tube = new THREE.TubeGeometry(curveQuad, numPoints, 0.05, 33, false);   
+      var tube = new THREE.TubeGeometry(curveQuad, numPoints, 0.05, 33, false);
       var mesh11 = new THREE.Mesh(tube, new THREE.MeshNormalMaterial({opacity: 0.99,     transparent: true   }));   
       temp.add(mesh11);
       } else {
@@ -3498,6 +3503,7 @@ var spline = new THREE.SplineCurve3([
 let PL=[];
 let cpoints=[];
 function ANF_display(OBJ) {
+	 OBJ_gefuellt.remove(...OBJ_gefuellt.children);
   PL=OBJ.PL;
   cpoints=OBJ.konv;
   let cmax=Math.max(...(PL.flat(2).map(Math.abs)));//alert('cmax='+cmax);
@@ -3510,7 +3516,7 @@ function ANF_display(OBJ) {
     cgeometry = new ConvexGeometry(cpoints[c]);
     cmaterial = new THREE.MeshStandardMaterial({ color: 0xf080f0+c*0x000000, roughness:0.3, metalness:0.1, transparent: true, opacity: 1 });
     cmesh = new THREE.Mesh(cgeometry, cmaterial);
-    scene.add(cmesh);
+    OBJ_gefuellt.add(cmesh);
     }
   }
 
