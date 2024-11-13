@@ -46,7 +46,7 @@
 <button id='button_Test'>Test</button>
 <button id='button_Zentrieren'>Zentrieren</button>
 <button id='button_einzeln'>einzeln</button>
-<button id='button_ANF_Test'>gefüllt</button>
+<button id='button_ANF_Test'>füllen</button>
 schaue_von_und_nach(<span id="camerapos">...</span>);
 <span id="Pdisp">...</span>;
   </div>
@@ -1259,8 +1259,6 @@ function init() {
   Castlist=[];
   cancelAnimationFrame(requestAnimationFrameID);
 
-  // create a scene, that will hold all our elements such as objects, cameras and lights.
-  scene = new THREE.Scene();
   canvas_width=0.85*window.innerWidth;  //document.getElementById("canvas").clientWidth;
   canvas_height=0.5*canvas_width; //window.innerHeight;//document.getElementById("canvas").clientHeight;
 //  canvas_height=512;
@@ -1274,15 +1272,37 @@ function init() {
 
   // create a render, sets the background color and the size
   renderer = new THREE.WebGLRenderer();
-  renderer.setClearColor(0xCCCC00, 1.0);
+  //renderer.setClearColor(0xCCCC00, 1.0);
   renderer.setSize(canvas_width, canvas_height);
   renderer.domElement.addEventListener( 'click', raycast, false );
   renderer.domElement.addEventListener( 'mousemove', function() {if (event.shiftKey) raycast()}, false );
 
-        // add light
-        var light = new THREE.DirectionalLight();
-        light.position.set(1200, 1200, 1200);
-        scene.add(light);
+  // create a scene, that will hold all our elements such as objects, cameras and lights.
+  scene = new THREE.Scene();
+  // add light
+  scene.background = new THREE.Color( 0xCCCC00 );
+
+
+  const light = new THREE.HemisphereLight( 0xfff0f0, 0x006066 );
+  //light.position.set( 1, 1, 1 );
+  scene.add( light );
+
+  const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.6 );
+  directionalLight.position.set(-1,5,2);
+  scene.add( directionalLight );
+
+  const directionalLight2 = new THREE.DirectionalLight( 0xffff00, 0.8 );
+  directionalLight2.position.set(-4,3,-2);
+  scene.add( directionalLight2);
+
+  const directionalLight3 = new THREE.DirectionalLight( 0x00ffff, 0.7 );
+  directionalLight3.position.set(7,6,-3);
+  scene.add( directionalLight3);
+
+  const directionalLight4 = new THREE.DirectionalLight( 0xff00ff, 0.5 );
+  directionalLight4.position.set(0,-6,-4);
+  scene.add( directionalLight4);
+
 
   OBJ_gefuellt=new THREE.Group();
   scene.add(OBJ_gefuellt);
@@ -3491,7 +3511,7 @@ var spline = new THREE.SplineCurve3([
    var geometry = new THREE.BufferGeometry();
    var splinePoints = spline.getPoints(50);
    var material = new THREE.LineBasicMaterial({ color: 0xff00f0   });
-//   geometry.vertices = [new THREE.Vector3(0, 2, 0),new THREE.Vector3(2, 0, 2)]; //splinePoints;
+   //geometry.vertices = [new THREE.Vector3(0, 2, 0),new THREE.Vector3(2, 0, 2)]; //splinePoints;
    geometry.vertices = splinePoints;
    var sline = new THREE.Line(geometry, material);
    sline.name='sline';
@@ -3503,7 +3523,7 @@ var spline = new THREE.SplineCurve3([
 let PL=[];
 let cpoints=[];
 function ANF_display(OBJ) {
-	 OBJ_gefuellt.remove(...OBJ_gefuellt.children);
+  OBJ_gefuellt.remove(...OBJ_gefuellt.children);
   PL=OBJ.PL;
   cpoints=OBJ.konv;
   let cmax=Math.max(...(PL.flat(2).map(Math.abs)));//alert('cmax='+cmax);
@@ -3514,7 +3534,7 @@ function ANF_display(OBJ) {
   let cgeometry,cmaterial,cmesh;
   for (let c=0;c<cpoints.length;c++) if (cpoints[c].length>0) {
     cgeometry = new ConvexGeometry(cpoints[c]);
-    cmaterial = new THREE.MeshStandardMaterial({ color: 0xf080f0+c*0x000000, roughness:0.3, metalness:0.1, transparent: true, opacity: 1 });
+    cmaterial = new THREE.MeshStandardMaterial({ color: 0xf080f0+c*0x000000, roughness:0.2, metalness:0.3});
     cmesh = new THREE.Mesh(cgeometry, cmaterial);
     OBJ_gefuellt.add(cmesh);
     }
