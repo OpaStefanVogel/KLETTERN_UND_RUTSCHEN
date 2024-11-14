@@ -1277,6 +1277,7 @@ function init() {
   renderer.setSize(canvas_width, canvas_height);
   renderer.domElement.addEventListener( 'click', raycast, false );
   renderer.domElement.addEventListener( 'mousemove', function() {if (event.shiftKey) raycast()}, false );
+  renderer.setAnimationLoop( animate );
 
   // create a scene, that will hold all our elements such as objects, cameras and lights.
   scene = new THREE.Scene();
@@ -1497,15 +1498,6 @@ TD();
   //alert(xm.serializeToString(renderer.domElement));
   //alert(renderer.domElement);
  
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -1757,16 +1749,6 @@ LT=[
 
   Logfile("das war Beispiel2");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2249,16 +2231,6 @@ LT=[
   LTeval(LT,0);
   Logfile("das war Beispiel3");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2331,16 +2303,6 @@ LT=[
 
   Logfile("das war Beispiel4");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2468,16 +2430,6 @@ Vector (160.0, 70.0, 100.0)
 
   Logfile("das war Beispiel5");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2552,16 +2504,6 @@ Vector (450.319570939185, 167.0264492094712, 232.34074692090005)
 
   Logfile("das war Beispiel6");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2628,16 +2570,6 @@ LT=[
 
   Logfile("das war Beispiel7");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2747,16 +2679,6 @@ LT=[
 
   Logfile("das war Beispiel8");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2929,16 +2851,6 @@ LT=[
 
   Logfile("das war Beispiel9");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2987,24 +2899,24 @@ LT=[
 
 
   Logfile("das war Beispiel10");
+  }
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    ////camera.position.x+=0.0;
-    if (zflag) {
-      let cp=cl.clone();
-      if (cl.distanceTo(q.position)<0.02) {cl.copy(q.position);zflag=false} 
-        else cl.add(q.position.clone().sub(cl).normalize().multiplyScalar(0.02));
-      contr.target.copy(cl);
-      camera.position.add(cl.clone().sub(cp))
-      }
-    cube.position.copy(contr.target);
-    contr.update();
-    renderer.render(scene, camera);
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
+function animate() {
+  //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
+  ////camera.position.x+=0.0;
+  if (zflag) {
+  		let cp = cl.clone();
+  		if (cl.distanceTo(q.position) < 0.02) { 
+      cl.copy(q.position);
+      zflag = false 
+  	   }	else cl.add(q.position.clone().sub(cl).normalize().multiplyScalar(0.02));
+  		contr.target.copy(cl);
+  		camera.position.add(cl.clone().sub(cp))
+    }
+  cube.position.copy(contr.target);
+  contr.update();
+  renderer.render(scene, camera);
+  zeige_Kameraposition();
   }
 
 
