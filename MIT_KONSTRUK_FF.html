@@ -1251,7 +1251,8 @@ var ASdistanz=1;
 var Verschiebedistanz=1;
 let contr=0;
 let OBJ_gefuellt=0;
-
+let cl = new THREE.Vector3();
+  
 function init() {
   zoom=20;
   Linientyp=0;
@@ -1325,6 +1326,7 @@ function init() {
   //q.position.z=150/zoom;
   scene.add( q );
   //Knoten.push(q.position.clone());
+  cl=q.position.clone();
 
   var AGeometry = new THREE.SphereGeometry( 0.09/QASDzoom, 32, 32 );
   var AMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, opacity:0.5, transparent:true } );
@@ -1431,7 +1433,6 @@ var neuen_Balken_plazieren=function(x,y,z,l,b,h) {
   AddObjekt(scene,RET);
   return RET;
   }
-
 
 
 var Beispiel1=function() {
@@ -2941,7 +2942,6 @@ LT=[
   }
 
 
-  
 
 var Beispiel10=function() {
   QASDzoom=8;
@@ -2990,10 +2990,17 @@ LT=[
 
   function render() {
     //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
     ////camera.position.x+=0.0;
+    if (zflag) {
+      let cp=cl.clone();
+      if (cl.distanceTo(q.position)<0.02) {cl.copy(q.position);zflag=false} 
+        else cl.add(q.position.clone().sub(cl).normalize().multiplyScalar(0.02));
+      contr.target.copy(cl);
+      camera.position.add(cl.clone().sub(cp))
+      }
     cube.position.copy(contr.target);
     contr.update();
+    renderer.render(scene, camera);
     requestAnimationFrameID=requestAnimationFrame(render);
     zeige_Kameraposition();
     }    
@@ -3592,6 +3599,11 @@ FEHLERTEXT ( nr --> adr n )
   */
 
 
+let zflag=false;
+function Zentrieren() {
+  zflag=true;
+  }
+
 function Logclick() {
   let ev=event.target.getAttribute('moduleclick');
   eval(ev);
@@ -3620,7 +3632,7 @@ button_TDrehen.addEventListener('click',TDrehen);
 button_TSchneiden.addEventListener('click',TSchneiden);
 button_TLoeschen.addEventListener('click',TLoeschen);
 button_Test.addEventListener('click',function(){alert('Testbutton ohne Funktion')});
-button_Zentrieren.addEventListener('click',function(){contr.target.copy(q.position)});
+button_Zentrieren.addEventListener('click',Zentrieren);
 button_einzeln.addEventListener('click',Einzelobjekt);
 button_Auswaehlen.addEventListener('click',export_object);
 button_Verlauf.addEventListener('click',export_object);
