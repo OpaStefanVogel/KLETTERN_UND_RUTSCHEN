@@ -46,6 +46,7 @@
 <button id='button_Test'>Test</button>
 <button id='button_Zentrieren'>Zentrieren</button>
 <button id='button_einzeln'>einzeln</button>
+<button id='button_ANF_Test'>füllen</button>
 schaue_von_und_nach(<span id="camerapos">...</span>);
 <span id="Pdisp">...</span>;
   </div>
@@ -55,7 +56,6 @@ schaue_von_und_nach(<span id="camerapos">...</span>);
 <div>Export zu freeCAD: 
   <button id='button_Auswaehlen'>ausgewähltes Objekt</button>, 
   <button id='button_Verlauf'>Verlauf</button>
-  <button id='button_ANF_Test'>ANF_Test()</button>
   </div>
 <div id="exportiere" style="display:flex; white-space:pre; font-family:monospace; overflow:auto; border:solid; width:90%; height:368px"> export</div>
 
@@ -1115,7 +1115,7 @@ function ANF(OBJ) {
 	 	 	 ANF1=STAPEL.pop();
 	 	 	 STAPEL.push(ANF_not(OBJ,ANF1));
 	 	 	 }
-    console.log(JSON.stringify(STAPEL));
+    //console.log(JSON.stringify(STAPEL));
 	   }
 
   OBJ.ANF=STAPEL[0];
@@ -1154,20 +1154,25 @@ function alle_konvexen_Teile(OBJ) {
 	 let RET0=[];
 	 let flag=true;
 	 let drin=0;
+	 //alert(OBJ.ANF.join('\n'));
 	 for (let c=0;c<OBJ.ANF.length;c++) {
 	   RET[c]=[];
 	   for (let i=0;i<OBJ.PL.length;i++) {
 	   	 flag=true;
+	   	 let anzahl2=0;
 	   	 for (let j=0;j<OBJ.ANF[c].length;j++) {
 	   	 	 drin=OBJ.CL[i][j];
 	   	 	 if (drin!=OBJ.ANF[c][j]&&OBJ.ANF[c][j]>0&&drin!=2) flag=false;
+	   	 	 if (drin==2&&OBJ.ANF[c][j]>0) anzahl2=anzahl2+1;
   	   	 }
+  	   if (anzahl2<3) flag=false;
+    	 //if (flag) alert('c='+c+'; i='+i+';\n'+OBJ.ANF[c]+'\n'+OBJ.CL[i]+'\n'+anzahl2+' '+flag);
 	   	 
   	   if (flag) RET[c].push(i);
 	     }
 	   }
 	 OBJ.konv=RET;
-  }
+	 }
 
 
 
@@ -1245,7 +1250,9 @@ var requestAnimationFrameID=0;
 var ASdistanz=1;
 var Verschiebedistanz=1;
 let contr=0;
-
+let OBJ_gefuellt=0;
+let cl = new THREE.Vector3();
+  
 function init() {
   zoom=20;
   Linientyp=0;
@@ -1253,8 +1260,6 @@ function init() {
   Castlist=[];
   cancelAnimationFrame(requestAnimationFrameID);
 
-  // create a scene, that will hold all our elements such as objects, cameras and lights.
-  scene = new THREE.Scene();
   canvas_width=0.85*window.innerWidth;  //document.getElementById("canvas").clientWidth;
   canvas_height=0.5*canvas_width; //window.innerHeight;//document.getElementById("canvas").clientHeight;
 //  canvas_height=512;
@@ -1268,17 +1273,43 @@ function init() {
 
   // create a render, sets the background color and the size
   renderer = new THREE.WebGLRenderer();
-  renderer.setClearColor(0xCCCC00, 1.0);
+  //renderer.setClearColor(0xCCCC00, 1.0);
   renderer.setSize(canvas_width, canvas_height);
   renderer.domElement.addEventListener( 'click', raycast, false );
   renderer.domElement.addEventListener( 'mousemove', function() {if (event.shiftKey) raycast()}, false );
+  renderer.setAnimationLoop( animate );
 
-        // add light
-        var light = new THREE.DirectionalLight();
-        light.position.set(1200, 1200, 1200);
-        scene.add(light);
+  // create a scene, that will hold all our elements such as objects, cameras and lights.
+  scene = new THREE.Scene();
+  // add light
+  scene.background = new THREE.Color( 0xCCCC00 );
 
-  // create a cube and add to scene
+
+  const light = new THREE.HemisphereLight( 0xfff0f0, 0x006066 );
+  //light.position.set( 1, 1, 1 );
+  scene.add( light );
+
+  const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.6 );
+  directionalLight.position.set(-1,5,2);
+  scene.add( directionalLight );
+
+  const directionalLight2 = new THREE.DirectionalLight( 0xffff00, 0.8 );
+  directionalLight2.position.set(-4,3,-2);
+  scene.add( directionalLight2);
+
+  const directionalLight3 = new THREE.DirectionalLight( 0x00ffff, 0.7 );
+  directionalLight3.position.set(7,6,-3);
+  scene.add( directionalLight3);
+
+  const directionalLight4 = new THREE.DirectionalLight( 0xff00ff, 0.5 );
+  directionalLight4.position.set(0,-6,-4);
+  scene.add( directionalLight4);
+
+
+  OBJ_gefuellt=new THREE.Group();
+  scene.add(OBJ_gefuellt);
+  
+// create a cube and add to scene
   var cubeGeometry = new THREE.BoxGeometry(0.1/QASDzoom /* 10 * Math.random()*/, 0.1/QASDzoom, 0.1/QASDzoom);
 //alert(JSON.stringify(cubeGeometry.faces));
   var cubeMaterial = new THREE.MeshNormalMaterial();
@@ -1296,6 +1327,7 @@ function init() {
   //q.position.z=150/zoom;
   scene.add( q );
   //Knoten.push(q.position.clone());
+  cl=q.position.clone();
 
   var AGeometry = new THREE.SphereGeometry( 0.09/QASDzoom, 32, 32 );
   var AMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, opacity:0.5, transparent:true } );
@@ -1404,7 +1436,6 @@ var neuen_Balken_plazieren=function(x,y,z,l,b,h) {
   }
 
 
-
 var Beispiel1=function() {
   QASDzoom=1;
   init();
@@ -1434,7 +1465,7 @@ KPLOT([REST1]);
 KPLOT([REST4]);
 KPLOT([REST5]);
 Castlist.push(REST5);
-cube.geometry.faces[0].color = new THREE.Color(0x000000); 
+//cube.geometry.faces[0].color = new THREE.Color(0x000000);
 AddObjekt(scene,REST5);
 TQ(20,0,0,0);
 TA();
@@ -1467,15 +1498,6 @@ TD();
   //alert(xm.serializeToString(renderer.domElement));
   //alert(renderer.domElement);
  
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -1727,16 +1749,6 @@ LT=[
 
   Logfile("das war Beispiel2");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2219,16 +2231,6 @@ LT=[
   LTeval(LT,0);
   Logfile("das war Beispiel3");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2301,16 +2303,6 @@ LT=[
 
   Logfile("das war Beispiel4");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2438,16 +2430,6 @@ Vector (160.0, 70.0, 100.0)
 
   Logfile("das war Beispiel5");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2522,16 +2504,6 @@ Vector (450.319570939185, 167.0264492094712, 232.34074692090005)
 
   Logfile("das war Beispiel6");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2598,16 +2570,6 @@ LT=[
 
   Logfile("das war Beispiel7");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2717,16 +2679,6 @@ LT=[
 
   Logfile("das war Beispiel8");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
@@ -2899,20 +2851,9 @@ LT=[
 
   Logfile("das war Beispiel9");
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
   }
 
 
-  
 
 var Beispiel10=function() {
   QASDzoom=8;
@@ -2958,17 +2899,24 @@ LT=[
 
 
   Logfile("das war Beispiel10");
+  }
 
-  function render() {
-    //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-    renderer.render(scene, camera);
-    ////camera.position.x+=0.0;
-    cube.position.copy(contr.target);
-    contr.update();
-    requestAnimationFrameID=requestAnimationFrame(render);
-    zeige_Kameraposition();
-    }    
-  render();
+function animate() {
+  //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
+  ////camera.position.x+=0.0;
+  if (zflag) {
+  		let cp = cl.clone();
+  		if (cl.distanceTo(q.position) < 0.02) { 
+      cl.copy(q.position);
+      zflag = false 
+  	   }	else cl.add(q.position.clone().sub(cl).normalize().multiplyScalar(0.02));
+  		contr.target.copy(cl);
+  		camera.position.add(cl.clone().sub(cp))
+    }
+  cube.position.copy(contr.target);
+  contr.update();
+  renderer.render(scene, camera);
+  zeige_Kameraposition();
   }
 
 
@@ -3377,9 +3325,10 @@ function AddObjekt(OBJ1,OBJ2) {
     var middle = new THREE.Vector3(OBJ2[2][K[0]][3][0]/zoom, OBJ2[2][K[0]][3][1]/zoom, OBJ2[2][K[0]][3][2]/zoom);   
     var end = new THREE.Vector3(OBJ2[2][K[1]][3][0]/zoom, OBJ2[2][K[1]][3][1]/zoom, OBJ2[2][K[1]][3][2]/zoom);
 
-    if (Linientyp==0) {alert('QuadraticBezierCurve3 geht wohl nicht')
+    if (Linientyp==0) {//alert('QuadraticBezierCurve3 geht wohl nicht')
+      var numPoints = 33;
       var curveQuad = new THREE.QuadraticBezierCurve3(start, middle, end); 
-      var tube = new THREE.TubeGeometry(curveQuad, numPoints, 0.05, 33, false);   
+      var tube = new THREE.TubeGeometry(curveQuad, numPoints, 0.05, 33, false);
       var mesh11 = new THREE.Mesh(tube, new THREE.MeshNormalMaterial({opacity: 0.99,     transparent: true   }));   
       temp.add(mesh11);
       } else {
@@ -3481,7 +3430,7 @@ var spline = new THREE.SplineCurve3([
    var geometry = new THREE.BufferGeometry();
    var splinePoints = spline.getPoints(50);
    var material = new THREE.LineBasicMaterial({ color: 0xff00f0   });
-//   geometry.vertices = [new THREE.Vector3(0, 2, 0),new THREE.Vector3(2, 0, 2)]; //splinePoints;
+   //geometry.vertices = [new THREE.Vector3(0, 2, 0),new THREE.Vector3(2, 0, 2)]; //splinePoints;
    geometry.vertices = splinePoints;
    var sline = new THREE.Line(geometry, material);
    sline.name='sline';
@@ -3493,6 +3442,7 @@ var spline = new THREE.SplineCurve3([
 let PL=[];
 let cpoints=[];
 function ANF_display(OBJ) {
+  OBJ_gefuellt.remove(...OBJ_gefuellt.children);
   PL=OBJ.PL;
   cpoints=OBJ.konv;
   let cmax=Math.max(...(PL.flat(2).map(Math.abs)));//alert('cmax='+cmax);
@@ -3503,9 +3453,9 @@ function ANF_display(OBJ) {
   let cgeometry,cmaterial,cmesh;
   for (let c=0;c<cpoints.length;c++) if (cpoints[c].length>0) {
     cgeometry = new ConvexGeometry(cpoints[c]);
-    cmaterial = new THREE.MeshStandardMaterial({ color: 0xf080f0+c*0x000000, roughness:0.3, metalness:0.1, transparent: true, opacity: 1 });
+    cmaterial = new THREE.MeshStandardMaterial({ color: 0xf080f0+c*0x000000, roughness:0.2, metalness:0.3});
     cmesh = new THREE.Mesh(cgeometry, cmaterial);
-    scene.add(cmesh);
+    OBJ_gefuellt.add(cmesh);
     }
   }
 
@@ -3561,6 +3511,11 @@ FEHLERTEXT ( nr --> adr n )
   */
 
 
+let zflag=false;
+function Zentrieren() {
+  zflag=true;
+  }
+
 function Logclick() {
   let ev=event.target.getAttribute('moduleclick');
   eval(ev);
@@ -3589,7 +3544,7 @@ button_TDrehen.addEventListener('click',TDrehen);
 button_TSchneiden.addEventListener('click',TSchneiden);
 button_TLoeschen.addEventListener('click',TLoeschen);
 button_Test.addEventListener('click',function(){alert('Testbutton ohne Funktion')});
-button_Zentrieren.addEventListener('click',function(){contr.target.copy(q.position)});
+button_Zentrieren.addEventListener('click',Zentrieren);
 button_einzeln.addEventListener('click',Einzelobjekt);
 button_Auswaehlen.addEventListener('click',export_object);
 button_Verlauf.addEventListener('click',export_object);
