@@ -2901,15 +2901,21 @@ LT=[
   Logfile("das war Beispiel10");
   }
 
-function animate() {
-  //ist erst hier, damit alle darin aufgerufenen Objekte schon definiert sind
-  ////camera.position.x+=0.0;
+//=======================
+let Anfangszeit=0;
+let Anfangsort=0;
+let Zeitdifferenz=0;
+function animate(timestamp,frame) {
   if (zflag) {
+    if (Anfangszeit==0) {Anfangszeit=timestamp; Anfangsort=cl.clone()}
+    Zeitdifferenz=timestamp-Anfangszeit;
   		let cp = cl.clone();
-  		if (cl.distanceTo(q.position) < 0.02) { 
+  		if (Zeitdifferenz>999.9) { 
       cl.copy(q.position);
-      zflag = false 
-  	   }	else cl.add(q.position.clone().sub(cl).normalize().multiplyScalar(0.02));
+      zflag = false;
+      Anfangszeit=0;
+  	   }	else cl.lerpVectors(Anfangsort,q.position,Zeitdifferenz/1000);
+  	   //}	else cl.add(q.position.clone().sub(cl).normalize().multiplyScalar(0.02));
   		contr.target.copy(cl);
   		camera.position.add(cl.clone().sub(cp))
     } else cl.copy(contr.target);
@@ -2918,7 +2924,7 @@ function animate() {
   renderer.render(scene, camera);
   zeige_Kameraposition();
   }
-
+//=======================
 
   
 //Eingabefunktionen für Log2
