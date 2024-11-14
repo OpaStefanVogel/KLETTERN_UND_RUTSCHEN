@@ -2912,7 +2912,7 @@ function animate() {
   	   }	else cl.add(q.position.clone().sub(cl).normalize().multiplyScalar(0.02));
   		contr.target.copy(cl);
   		camera.position.add(cl.clone().sub(cp))
-    }
+    } else cl.copy(contr.target);
   cube.position.copy(contr.target);
   contr.update();
   renderer.render(scene, camera);
