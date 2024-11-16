@@ -2914,7 +2914,7 @@ function animate(timestamp,frame) {
       cl.copy(q.position);
       zflag = false;
       Anfangszeit=0;
-  	   }	else cl.lerpVectors(Anfangsort,q.position,Zeitdifferenz/1000);
+  	   }	else cl.lerpVectors(Anfangsort,q.position,0.7*(Zeitdifferenz/1000)+0.3*1/(1+Math.E**(-(Zeitdifferenz/1000-0.5)*12)));
   	   //}	else cl.add(q.position.clone().sub(cl).normalize().multiplyScalar(0.02));
   		contr.target.copy(cl);
   		camera.position.add(cl.clone().sub(cp))
