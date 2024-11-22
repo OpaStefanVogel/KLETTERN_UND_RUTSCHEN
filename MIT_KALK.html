@@ -64,12 +64,6 @@ const directionalLight4 = new THREE.DirectionalLight( 0xffffff, 1 );
   directionalLight4.position.set(0,0,40);
    scene.add( directionalLight4);
 
-const geometry = new THREE.BoxGeometry( 0.05,0.5,1 );
-const material = new THREE.MeshStandardMaterial( {color: 0x00FFFF} );
-const quader = new THREE.Mesh( geometry, material );
-  quader.position.set(-0,-0.5,-3);
-  scene.add(quader);
-
 const camera = new THREE.PerspectiveCamera( 50, canvas_width / canvas_height, 0.1, 500 );
   scene.add( camera );
 
@@ -169,7 +163,7 @@ function Flaeche(xmin,xmax,ymin,ymax,zmin,zmax,farbe) {
 */
 
 //Ausgangspunkt ist momentan (-1,-1,-5)
-let ax=-1,ay=-1.8,az=-5;
+let ax=-3,ay=-1.4,az=-3.50;
 let b1=0.80,b2=1.26,b3=0.40,b4=1.26,b5=0.80;
 let h1=1,h2=3,h3=0.32;
 let t1=0.26,t2=0.45;
@@ -195,6 +189,8 @@ Flaeche(ax+b1+b2+b3,ax+b1+b2+b3+b4,ay+h1,ay+h1-0.005,az-t1,az-t2,'hsl(35,100%,50
 Flaeche(ax+b1,ax+b1+b2,ay+h2-h3,ay+h2-h3+0.005,az,az-t2,'hsl(34,100%,50%)');
 Flaeche(ax+b1+b2+b3,ax+b1+b2+b3+b4,ay+h2-h3,ay+h2-h3+0.005,az,az-t2,'hsl(34,100%,50%)');
 
+let sx=0.36, sy=0.76, sz=0.66;
+Flaeche(ax+sx,ax+sx+0.70,ay+sy,ay+sy+0.05,az+sz,az+sz+1.36,'hsl(40,100%,00%)'); //STisch
 
 
 function animate(timestamp,frame) {
