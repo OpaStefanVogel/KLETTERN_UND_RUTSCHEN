@@ -1197,6 +1197,20 @@ function ANF_Test(OBJ) {
   //console.log(TFIND(OBJ_X,0,);
   alle_konvexen_Teile(OBJ);
   exportiere.innerHTML='//insgesamt '+OBJ.PL.length+' Punkte und '+OBJ.konv.length+' konvexe Teile:\nPL='+JSON.stringify(OBJ.PL.map(function(i){return i})).replace(/\],\[/g,'],\n  [')+';\ncpoints='+JSON.stringify(OBJ.konv).replace(/\],\[/g,'],\n  [')+";\n";
+  let etext='';
+	 for (let c=0;c<OBJ.ANF.length;c++) {
+    etext=etext+'ANF['+c+']=['+OBJ.ANF[c]+']\n';
+    etext=etext+'  konv['+c+']=['+OBJ.konv[c]+']\n';
+	   for (let j=0;j<OBJ.ANF[c].length;j++) if (OBJ.ANF[c][j]>0) {
+      etext=etext+'  j='+j+'; ';
+      let pkt=[];
+      for (let k=0;k<OBJ.konv[c].length;k++) {
+        if (OBJ.BL[OBJ.konv[c][k]].indexOf(j)>-1) etext=etext+' '+OBJ.BL[OBJ.konv[c][k]];
+        }
+      etext=etext+'\n';
+	     }
+	   }
+  exportiere.innerHTML=etext;
   selectText("exportiere");
   console.error('kein Fehler alles gut: '+JSON.stringify(OBJ.PL.slice(0,2))+'#'+JSON.stringify(OBJ.konv.slice(0,2)));
   }
