@@ -196,6 +196,22 @@ Flaeche(ax+b1+b2+b3,ax+b1+b2+b3+b4,ay+h2-h3,ay+h2-h3+0.005,az,az-t2,'hsl(34,100%
 let sx=0.36, sy=0.76, sz=0.66;
 Flaeche(ax+sx,ax+sx+0.70,ay+sy,ay+sy+0.05,az+sz,az+sz+1.36,'hsl(35,100%,40%)'); //STisch
 
+//neu ab 2025: Ostseite weiter
+let nz1=az+2.00,ny1=ay,nx1=ax;
+let nz2=az+5.00,ny2=ay+0.5;
+let nz3=az+0.50,nz4=az+2.50,ny3=ay+h2;
+let ny4=ay+2.00,nz5=az+3.50;
+let ny5=ay+2.50
+Flaeche(nx1,nx1-0.005,ny1,ny2,nz1,nz2,'hsl(140,100%,50%)');
+Flaeche(nx1,nx1-0.005,ny2,ny3,nz3,nz4,'hsl(140,100%,50%)');
+Flaeche(nx1,nx1-0.005,ny2,ny4,nz4,nz5,'hsl(140,100%,50%)');
+Flaeche(nx1,nx1-0.005,ny5,ny3,nz4,nz5,'hsl(140,100%,50%)');
+Flaeche(nx1,nx1-0.005,ny2,ny3,nz5,nz2,'hsl(140,100%,50%)');
+Flaeche(nx1,nx1-0.005,ny5,ny3,nz4,nz5,'hsl(140,100%,50%)');
+Flaeche(nx1,nx1-0.2,ny5,ny5+0.005,nz4,nz5,'hsl(140,100%,50%)');
+Flaeche(nx1,nx1-0.2,ny4,ny5,nz4,nz4-0.005,'hsl(140,100%,50%)');
+Flaeche(nx1,nx1-0.2,ny4,ny5,nz5,nz5+0.005,'hsl(140,100%,50%)');
+Flaeche(nx1,nx1-0.2,ny4,ny4-0.005,nz4,nz5,'hsl(35,100%,40%)');
 
 
 function animate(timestamp,frame) {
