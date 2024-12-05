@@ -1202,7 +1202,6 @@ function alle_konvexen_Flaechen(OBJ) {
       etext=etext+'  j='+j+'; ';
       let pkt=[];
       let pkt2=[];
-      let rkant=[];
       for (let k=0;k<OBJ.konv[c].length;k++) {
         let pnr=OBJ.konv[c][k];
         let eck=OBJ.BL[pnr];
@@ -1217,13 +1216,14 @@ function alle_konvexen_Flaechen(OBJ) {
       if (pkt.length>0) etext=etext+' pkt='+pkt+' pkt2='+pkt2;
       etext=etext+'\n';
       RET[c][j]=pkt2;
-      for (let p=0;p<pkt2.length;p++) {
-        let eee=OBJ.BL[pkt2[p]];
-        for (let q=0;q<p;q++) {
-        	 let fff=[];
-        	 for (let e=0;e<3;e++) if (eee[e]!=j&&OBJ.BL[pkt2[q]].indexOf(eee[e])>-1) fff.push(pkt2[p],pkt2[q]);
-          if (fff.length==2) rkant.push(fff);
+      let rkant=[];
+      for (let i=0;i<OBJ.ANF[c].length;i++) {
+        let fff=[];
+        for (let p=0;p<pkt2.length;p++) {
+          let eee=OBJ.BL[pkt2[p]];
+        	 for (let e=0;e<3;e++) if (i!=j&&eee[e]==i) fff.push(pkt2[p]);
           }
+        rkant.push(fff);
         }
       RET2[c][j]=rkant;
 	     }
@@ -1248,7 +1248,8 @@ function ANF_Test(OBJ) {
     +':\nPL='+JSON.stringify(OBJ.PL.map(function(i){return i})).replace(/\],\[/g,'],\n  [')
     +';\ncpoints='+JSON.stringify(OBJ.konv).replace(/\],\[/g,'],\n  [')
     +";\nOBJ.flaechen="+JSON.stringify(OBJ.flaechen)
-    +";\nOBJ.relevante_Kanten="+JSON.stringify(OBJ.relevante_Kanten);
+    +";\nOBJ.relevante_Kanten="+JSON.stringify(OBJ.relevante_Kanten)
+    +";\n ";
   exportiere.innerHTML=etext;
   selectText("exportiere");
   console.error('kein Fehler alles gut: '+JSON.stringify(OBJ.PL.slice(0,2))+'#'+JSON.stringify(OBJ.konv.slice(0,2)));
@@ -3367,7 +3368,7 @@ markObj=function(cmin,ekpi,i,value) {
         d=d+"L"+P1[0]+","+P1[1]+" L"+P2[0]+","+P2[1]+" L10,-10 ";
         }
       console.log('d='+d);
-/*Fehlersuch: [13,12],[14,12],[14,13] ist nur [13,12]
+/*Fehlersuch: [13,12],[14,12],[14,13] ist nur [13,12], das ist die konvexe Hülle
 12  [0,50,0,1],25,25
 13  [200,100,0,1],250,50
 14  [200,100,0,1],250,50
@@ -3377,6 +3378,9 @@ markObj=function(cmin,ekpi,i,value) {
 [[13,12],[14,12],[14,13],[15,12],[16,13],[16,15],[17,14],[17,15],[17,16]]
 [[13,12],[13,12],[13,13],[15,12],[16,13],[16,15],[16,13],[16,15],[16,16]]
 [[13,12],[15,12],[16,13],[16,15]]
+
+zweite Variante funktioniert auch nicht, von [13,16], [14,17] nur [13,16]
+[[12,15],[],[12,13,14],[13,16],[14,17],[15,16,17],[],[]]
 */
       }
     //alert(KLISTE);
