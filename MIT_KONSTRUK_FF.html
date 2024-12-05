@@ -1190,9 +1190,11 @@ function alle_konvexen_Teile(OBJ) {
 
 function alle_konvexen_Flaechen(OBJ) {
   let RET=[];
+  let RET2=[];
   let konvzahl=0;
 	 for (let c=0;c<OBJ.ANF.length;c++) if (OBJ.konv[c].length>0) {
 	 	 RET[c]=[];
+	 	 RET2[c]=[];
     etext=etext+'ANF['+c+']=['+OBJ.ANF[c]+']\n';
     etext=etext+'  konv['+c+']=['+OBJ.konv[c]+']\n';
     konvzahl=konvzahl+1;
@@ -1200,6 +1202,7 @@ function alle_konvexen_Flaechen(OBJ) {
       etext=etext+'  j='+j+'; ';
       let pkt=[];
       let pkt2=[];
+      let rkant=[];
       for (let k=0;k<OBJ.konv[c].length;k++) {
         let pnr=OBJ.konv[c][k];
         let eck=OBJ.BL[pnr];
@@ -1214,11 +1217,20 @@ function alle_konvexen_Flaechen(OBJ) {
       if (pkt.length>0) etext=etext+' pkt='+pkt+' pkt2='+pkt2;
       etext=etext+'\n';
       RET[c][j]=pkt2;
+      for (let p=0;p<pkt2.length;p++) {
+        let eee=OBJ.BL[pkt2[p]];
+        for (let q=0;q<p;q++) {
+        	 let fff=[];
+        	 for (let e=0;e<3;e++) if (eee[e]!=j&&OBJ.BL[pkt2[q]].indexOf(eee[e])>-1) fff.push(pkt2[p],pkt2[q]);
+          if (fff.length==2) rkant.push(fff);
+          }
+        }
+      RET2[c][j]=rkant;
 	     }
 	   }
 	 etext='konvzahl='+konvzahl+'\n'+etext;
-	 OBJ.flaechen=RET
-	 OBJ.relevante_Kanten=[];
+	 OBJ.flaechen=RET;
+	 OBJ.relevante_Kanten=RET2;
   }
 
 
@@ -1232,7 +1244,11 @@ function ANF_Test(OBJ) {
   //console.log(TFIND(OBJ_X,0,);
   alle_konvexen_Teile(OBJ);
   alle_konvexen_Flaechen(OBJ);
-  etext=etext+'//insgesamt '+OBJ.PL.length+' Punkte und '+OBJ.konv.length+' konvexe Teile:\nPL='+JSON.stringify(OBJ.PL.map(function(i){return i})).replace(/\],\[/g,'],\n  [')+';\ncpoints='+JSON.stringify(OBJ.konv).replace(/\],\[/g,'],\n  [')+";\nOBJ.flaechen="+JSON.stringify(OBJ.flaechen);
+  etext=etext+'//insgesamt '+OBJ.PL.length+' Punkte und '+OBJ.konv.length+' konvexe Teile'
+    +':\nPL='+JSON.stringify(OBJ.PL.map(function(i){return i})).replace(/\],\[/g,'],\n  [')
+    +';\ncpoints='+JSON.stringify(OBJ.konv).replace(/\],\[/g,'],\n  [')
+    +";\nOBJ.flaechen="+JSON.stringify(OBJ.flaechen)
+    +";\nOBJ.relevante_Kanten="+JSON.stringify(OBJ.relevante_Kanten);
   exportiere.innerHTML=etext;
   selectText("exportiere");
   console.error('kein Fehler alles gut: '+JSON.stringify(OBJ.PL.slice(0,2))+'#'+JSON.stringify(OBJ.konv.slice(0,2)));
