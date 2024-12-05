@@ -1175,7 +1175,7 @@ function alle_konvexen_Teile(OBJ) {
 	   	 	 //false:[1,3],[3,1]
 	   	 	 //if (drin!=OBJ.ANF[c][j]&&OBJ.ANF[c][j]>0&&drin!=2) flag=false;
 	   	 	 if (drin==1&&OBJ.ANF[c][j]==3||drin==3&&OBJ.ANF[c][j]==1
-	   	 	   //||OBJ.ANF[c][OBJ.BL[i][0]]==0||OBJ.ANF[c][OBJ.BL[i][1]]==0||OBJ.ANF[c][OBJ.BL[i][2]]==0 //nur Eckpunkte
+	   	 	   ||OBJ.ANF[c][OBJ.BL[i][0]]==0||OBJ.ANF[c][OBJ.BL[i][1]]==0||OBJ.ANF[c][OBJ.BL[i][2]]==0 //nur Eckpunkte
 	   	 	   ) flag=false;
   	   	 //if (drin==2&&OBJ.ANF[c][j]>0) anzahl2=anzahl2+1;
 	   	 	 }
@@ -1198,7 +1198,7 @@ function alle_konvexen_Flaechen(OBJ) {
     etext=etext+'ANF['+c+']=['+OBJ.ANF[c]+']\n';
     etext=etext+'  konv['+c+']=['+OBJ.konv[c]+']\n';
     konvzahl=konvzahl+1;
-	   for (let j=0;j<OBJ.ANF[c].length;j++) /*if (OBJ.ANF[c][j]>0)*/ {
+	   for (let j=0;j<OBJ.ANF[c].length;j++) /*if (OBJ.ANF[c][j]>0)*/ { //*
       etext=etext+'  j='+j+'; ';
       let pkt=[];
       let pkt2=[];
@@ -2955,7 +2955,7 @@ LT=[
 "/*13*/ TQ(200,100,25,0)",
 "/*14*/ TA()",
 "/*15*/ TQ(200,100,50,0)",
-"/*16*/ TS();Logflag=true",
+"/*16*/ TS()//;Logflag=true",
 "/*17*/ //TSchneiden()",
 ];
   
@@ -3358,13 +3358,33 @@ markObj=function(cmin,ekpi,i,value) {
         d=d+"L"+P1[0]+","+P1[1]+" L"+P2[0]+","+P2[1]+" L0,0 ";
         }
       }
+    if (OBJC.relevante_Kanten) {
+      d='M10,-10 ';
+      for (let r=0;r<OBJC.relevante_Kanten.length;r++) for (let s=0;s<OBJC.relevante_Kanten[r][i].length;s++) {
+      	 let fff=OBJC.relevante_Kanten[r][i][s];//alert(fff+'\n'+d);
+      	 var P1=PUNKT2D(OBJC.PL[fff[0]]);
+        var P2=PUNKT2D(OBJC.PL[fff[1]]);
+        d=d+"L"+P1[0]+","+P1[1]+" L"+P2[0]+","+P2[1]+" L10,-10 ";
+        }
+      console.log('d='+d);
+/*Fehlersuch: [13,12],[14,12],[14,13] ist nur [13,12]
+12  [0,50,0,1],25,25
+13  [200,100,0,1],250,50
+14  [200,100,0,1],250,50
+15  [0,50,50,1],25,75
+16  [200,100,50,1],250,100
+17  [200,100,50,1],250,100
+[[13,12],[14,12],[14,13],[15,12],[16,13],[16,15],[17,14],[17,15],[17,16]]
+[[13,12],[13,12],[13,13],[15,12],[16,13],[16,15],[16,13],[16,15],[16,16]]
+[[13,12],[15,12],[16,13],[16,15]]
+*/
+      }
     //alert(KLISTE);
     //alert(PLISTE.join("\n"));
     d=d+"Z";
     document.getElementById("Eiderdaus").setAttribute("d",d);    
     }
   }
-
 
 
 //History
