@@ -8,7 +8,9 @@
   </head>
 
 <body>
-<div id="canvas"></div><div id='Log' style='font-family:Courier,monospace; white-space:pre;'> </div>
+<div id="canvas"></div>
+<div id='Log' style='font-family:Courier,monospace; white-space:pre;'> </div>
+<div id='Tdok' style='font-family:Courier,monospace; white-space:pre;'> </div>
 <div><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
 
 <!--importmap muß bleiben weil die module auch three aufrufen-->
@@ -101,6 +103,7 @@ function raycast() {
   const intersects = raycaster.intersectObjects(Flaechen.children);
   for (let i = 0; i < intersects.length; i++) {
     intersects[i].object.material.color.set(0x00ff00);
+    Tdok.innerHTML=intersects[i].object.userData.tdok;
     }
   //Log.innerHTML=JSON.stringify(Ecken)
   let Dist = 0;
@@ -146,6 +149,7 @@ function Flaeche(xmin,xmax,ymin,ymax,zmin,zmax,farbe) {
     new THREE.MeshStandardMaterial( {color: farbe, transparent:true, opacity:0.9} )
     );
   fl.position.set((xmin+xmax)/2,(ymin+ymax)/2,(zmin+zmax)/2);
+  fl.userData={tdok:tdok};
   Flaechen.add(fl);
   const edges = new THREE.EdgesGeometry(fl.geometry);
   const fline = new THREE.LineSegments(
@@ -171,11 +175,23 @@ function Flaeche(xmin,xmax,ymin,ymax,zmin,zmax,farbe) {
 "TNeu(5,500,2000,'neuer Putz')",
 */
 
+let tdok='';
+function Interpretiere(text) {
+  let tt=text.split('\n');
+  for (let t of tt) {
+    //alert(t);
+    tdok=t;
+    eval(t);
+    }
+  }
+
 //Ausgangspunkt ist momentan (-1,-1,-5)
 let ax=-3,ay=-1.4,az=-3.50;
 let b1=0.80,b2=1.26,b3=0.40,b4=1.26,b5=0.80;
 let h1=1,h2=3,h3=0.32;
 let t1=0.26,t2=0.45;
+
+Interpretiere(`
 Flaeche(ax,ax+0.2,ay,ay+0.5,az,az-0.005,0xffffff);
 Flaeche(ax,ax-0.005,ay,ay+0.5,az+2,az,'hsl(0,100%,100%)');
 Flaeche(ax,ax-0.005,ay+0.5,ay+h2,az+0.5,az,'hsl(10,100%,100%)');
@@ -197,20 +213,29 @@ Flaeche(ax+b1+b2+b3,ax+b1+b2+b3-0.005,ay+h1,ay+h2-h3,az-t1,az-t2,'hsl(36,100%,10
 Flaeche(ax+b1+b2+b3,ax+b1+b2+b3+b4,ay+h1,ay+h1-0.005,az-t1,az-t2,'hsl(35,100%,40%)');
 Flaeche(ax+b1,ax+b1+b2,ay+h2-h3,ay+h2-h3+0.005,az,az-t2,'hsl(34,100%,100%)');
 Flaeche(ax+b1+b2+b3,ax+b1+b2+b3+b4,ay+h2-h3,ay+h2-h3+0.005,az,az-t2,'hsl(34,100%,100%)');
+`);
 
 let sx=0.36, sy=0.76, sz=0.66;
+Interpretiere(`
 Flaeche(ax+sx,ax+sx+0.70,ay+sy,ay+sy+0.05,az+sz,az+sz+1.36,'hsl(35,100%,40%)'); //STisch
+`);
 
 //außen
 let ox=ax-0.5, oy=ay+3.00, oz=az+9.00;
 let ox1=ox-3.50, oy1=ay-0.30;
 let ox2=ox-4.50, oy2=oy-0.30;
 let ox3=ox-5.00;
+
+Interpretiere(`
 Flaeche(ox,ox1,oy1,oy,oz,oz+0.005,'hsl(200,100%,100%)');
 Flaeche(ox1,ox2,oy2,oy,oz,oz+0.005,'hsl(200,100%,100%)');
 Flaeche(ox2,ox3,oy1,oy,oz,oz+0.005,'hsl(200,100%,100%)');
+`);
+
 let tx=ox, ty=ay, tz=oz-0.20;
 let tx1=tx+0.20, ty1=ty+2.30, tz1=tz-0.60;
+
+Interpretiere(`
 Flaeche(tx,tx1,ty,ty1,tz,tz+0.005,'hsl(200,100%,100%)');
 Flaeche(tx,tx1,ty1,ty1+0.005,tz,tz1,'hsl(200,100%,100%)');
 Flaeche(tx,tx1,ty,ty1,tz1,tz1-0.005,'hsl(200,100%,100%)');
@@ -218,6 +243,8 @@ Flaeche(tx,tx+0.005,ty,oy,oz,tz,'hsl(200,100%,100%)');
 Flaeche(tx,tx+0.005,ty1,oy,tz,tz1,'hsl(200,100%,100%)');
 Flaeche(tx,tx-0.30,ty,ty-0.15,oz,tz1-0.30,'hsl(35,100%,40%)');
 Flaeche(tx,tx-0.60,ty-0.15,ty-0.30,oz,tz1-0.30,'hsl(35,100%,40%)');
+`);
+
 //controls.target.set(ox-1,oy-1,oz-1);
 //controls.object.position.set(ox-1,oy-1,oz-3);
 
@@ -227,17 +254,19 @@ let nz2=az+5.00,ny2=ay+0.5;
 let nz3=az+0.50,nz4=az+2.50,ny3=ay+h2;
 let ny4=ay+2.00,nz5=az+3.50;
 let ny5=ay+2.50
-Flaeche(nx1,nx1-0.005,ny1,ny2,nz1,nz2,'hsl(140,100%,50%)');
-Flaeche(nx1,nx1-0.005,ny2,ny3,nz3,nz4,'hsl(140,100%,50%)');
-Flaeche(nx1,nx1-0.005,ny2,ny4,nz4,nz5,'hsl(140,100%,50%)');
-Flaeche(nx1,nx1-0.005,ny5,ny3,nz4,nz5,'hsl(140,100%,50%)');
-Flaeche(nx1,nx1-0.005,ny2,ny3,nz5,nz2,'hsl(140,100%,50%)');
-Flaeche(nx1,nx1-0.005,ny5,ny3,nz4,nz5,'hsl(140,100%,50%)');
-Flaeche(nx1,nx1-0.2,ny5,ny5+0.005,nz4,nz5,'hsl(140,100%,50%)');
-Flaeche(nx1,nx1-0.2,ny4,ny5,nz4,nz4-0.005,'hsl(140,100%,50%)');
-Flaeche(nx1,nx1-0.2,ny4,ny5,nz5,nz5+0.005,'hsl(140,100%,50%)');
-Flaeche(nx1,nx1-0.2,ny4,ny4-0.005,nz4,nz5,'hsl(35,100%,40%)');
 
+Interpretiere(`
+Flaeche(nx1,nx1-0.005,ny1,ny2,nz1,nz2,'hsl(140,100%,99%)');
+Flaeche(nx1,nx1-0.005,ny2,ny3,nz3,nz4,'hsl(140,100%,99%)');
+Flaeche(nx1,nx1-0.005,ny2,ny4,nz4,nz5,'hsl(140,100%,99%)');
+Flaeche(nx1,nx1-0.005,ny5,ny3,nz4,nz5,'hsl(140,100%,99%)');
+Flaeche(nx1,nx1-0.005,ny2,ny3,nz5,nz2,'hsl(140,100%,99%)');
+Flaeche(nx1,nx1-0.005,ny5,ny3,nz4,nz5,'hsl(140,100%,99%)');
+Flaeche(nx1,nx1-0.2,ny5,ny5+0.005,nz4,nz5,'hsl(140,100%,99%)');
+Flaeche(nx1,nx1-0.2,ny4,ny5,nz4,nz4-0.005,'hsl(140,100%,99%)');
+Flaeche(nx1,nx1-0.2,ny4,ny5,nz5,nz5+0.005,'hsl(140,100%,99%)');
+Flaeche(nx1,nx1-0.2,ny4,ny4-0.005,nz4,nz5,'hsl(35,100%,40%)');
+`);
 
 function animate(timestamp,frame) {
   controls.update();
