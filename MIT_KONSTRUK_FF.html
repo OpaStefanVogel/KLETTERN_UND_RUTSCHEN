@@ -18,6 +18,7 @@
   <button id='button_Beispiel1'>REST5</button>,
   <button id='button_Beispiel2'>GOKART</button> und
   <button id='button_Beispiel3'>DACH</button>.
+  <button id='button_Beispiel3a'>DACH2</button>.
   <button id='button_Beispiel4'>QUADER</button>.
   <button id='button_Beispiel5'>FLÄCHEN</button>.
   <button id='button_Beispiel6'>WINKEL</button>.
@@ -2296,9 +2297,190 @@ LT=[
   
   LTeval(LT,0);
   Logfile("das war Beispiel3");
-
   }
 
+var Beispiel3a=function() {
+  QASDzoom=1;
+  init();
+  zoom=20;
+  Linientyp=1; //dünne Linie
+  Logtext2=[];
+  Logflag=false;
+  History=[];
+  
+  // position and point the camera to
+  // schaue_von_und_nach(-700,300,600, 0.00,0.00,0.00);
+  schaue_von_und_nach(-44.61,676.75,692.83, 0.00,0.00,0.00);
+
+let P0=[0,0,0,1];
+let P5=[4600,4160,-3520,1];
+let P200=[0,0,-5750,1];
+let PG=[2*4600,0,0,1];
+let PH=[2*4600,0,-5750,1];
+let P201=[4600,4160,-5750-3520,1];
+S4.lookAt(...P5);
+var Dach=[[
+  DREIPUNKTE(P0,P5,PG),
+  DREIPUNKTE(P0,P200,P5),
+  DREIPUNKTE(P0,PG,P200),
+  DREIPUNKTE(P5,PH,PG),
+  DREIPUNKTE(P200,PH,P201),
+  ],
+  [TEBN,TEBN,TAND,TEBN,TAND,TEBN,TAND,TEBN,TAND],
+  [],[]];
+  QFILL(Dach);
+  KFILL(Dach);
+  AddObjekt(scene,Dach);
+
+var Balken=neuen_Balken_plazieren(0,0,50,8000,150,100);
+var Hilfsklotz=neuen_Balken_plazieren(0,-80,300,800,80,80);
+var Fußpfette=neuen_Balken_plazieren(250,10,-5000,90,90,5000);
+var Fußpfette_Giebel=neuen_Balken_plazieren(0,0,500,5000,90,90);
+
+LT=[
+"/*0*/ TQ(0,0,500,0)",
+"/*1*/ TA()",
+"/*2*/ TQ(0,0,0,0)",
+"/*3*/ TS()",
+"/*4*/ TQ(0,150,100,1)",
+"/*5*/ TA()",
+"/*6*/ TQ(0,0,0,0)",
+"/*7*/ TS()",
+"/*8*/ TQ(0,150,150,1)",
+"/*9*/ TVerschieben()",
+"/*10*/ TQ(0,0,0,0)",
+"/*11*/ TA()",
+"/*12*/ TQ(9200,0,0,0)",
+"/*13*/ TS()",
+"/*14*/ TQ(4600,4160,-3520,0)",
+"/*15*/ TD()",
+"/*16*/ TQ(0,-150,-50,1)",
+"/*17*/ TDrehen()",
+"/*18*/ TQ(4600,4160,-3520,0)",
+"/*19*/ TA()",
+"/*20*/ TQ(0,0,0,0)",
+"/*21*/ TS()",
+"/*22*/ TQ(39.1047053346,-121.8341425144,-92.8830648637,1)",
+"/*23*/ TSchneiden()",//l=7131
+"/*24*/ TQ(0,0,0,0)",
+"/*25*/ TA()",
+"/*26*/ TQ(0,0,-5750,0)",
+"/*27*/ TS()",
+"/*28*/ TQ(39.1047053346,-121.8341425144,-92.8830648637,1)",
+"/*29*/ TSchneiden()",//G1
+"/*30*/ TQ(9200,0,0,0)",
+"/*31*/ TS()",
+"/*32*/ TQ(99.8753456427,-121.8341425144,-13.4668871885,1)",
+"/*33*/ TSchneiden()",//G2
+"/*34*/ TQ(0,0,0,0)",
+"/*35*/ TA()",
+"/*36*/ TQ(6900,2080,-1760,0)",
+"/*37*/ TS()",
+"/*38*/ TQ(9200,0,0,0)",
+"/*39*/ TD()",
+"/*40*/ TQ(99.8753456427,-121.8341425144,-13.4668871885,1)",
+"/*41*/ TSchneiden()",//G3
+"/*42*/ TQ(0,0,-5750,0)",
+"/*43*/ TS()",
+"/*44*/ TQ(2300,2080,-7510,0)",
+"/*45*/ TD()",
+"/*46*/ TQ(99.8753456427,-121.8341425144,-13.4668871885,1)",
+"/*47*/ TSchneiden()",//G4
+"/*48*/ TQ(0,-80,300,2)",
+"/*49*/ TA()",
+"/*50*/ TQ(400,-80,380,2)",
+"/*51*/ TS()",
+"/*52*/ TQ(800,-80,340,2)",
+"/*53*/ TD()",
+"/*54*/ TQ(69.4900254887,-121.8341425144,-53.1749760261,1)",
+"/*55*/ TSchneiden()",//G5
+"/*56*/ TQ(4600,0,0,0)",
+"/*57*/ TA()",
+"/*58*/ TQ(0,0,0,0)",
+"/*59*/ TS()",
+"/*60*/ TQ(99.8753456427,-121.8341425144,-13.4668871885,1)",
+"/*61*/ TSchneiden()",//G7
+"/*62*/ TQ(4600,4160,-3520,1)",
+"/*63*/ TA()",
+"/*64*/ TQ(4600,4160,-6395,0)",
+"/*65*/ TS()",
+"/*66*/ TUmdrehen()",
+"/*67*/ TQ(4600,4085.5933604202,-3457.0405357402,1)",
+"/*68*/ TSchneiden()",//G6
+"/*69*/ TQ(115.7489330767,-80,-88.5730966152,1)",
+"/*70*/ TA()",
+"/*71*/ TQ(85.3636129226,-80,-128.2811854528,1)",
+"/*72*/ TS()",
+"/*73*/ TQ(250,100,0,3)",
+"/*74*/ TSchneiden()",//P35
+//"/*75*/ TQ(250,100,-191.3043478264,3)",
+//"/*76*/ TA()",
+//"/*77*/ TQ(250,10,-191.3043478264,3)",
+//"/*78*/ TS()",
+//"/*79*/ TUmdrehen()",
+//"/*80*/ TMerken()",
+//"/*81*/ TQ(250,100,-5000,3)",
+//"/*82*/ TS()",
+//"/*83*/ TUmdrehen()",
+//"/*80*/ TMerken()",
+//"/*86*/ TQ(250,100,-5000,3)",
+//"/*87*/ TS()",
+//"/*88*/ TQ(250,10,-5000,3)",
+//"/*89*/ TD()",
+//"/*91*/ TQ(250,100,-5000,3)",
+//"/*92*/ TA()",
+//"/*93*/ TQ(340,100,-5000,3)",
+//"/*94*/ TS()",
+//"/*84*/ TQ(43.7958840886,-80,-37.3121969297,1)",
+//"/*83*/ TUmdrehen()",
+//"/*85*/ TSchneiden()",
+"/*75*/ TQ(0,90,590,4)",
+"/*76*/ TA()",
+"/*77*/ TQ(250,100,-191.3043478264,3)",
+"/*78*/ TS()",
+"/*79*/ TQ(0,0,590,4)",
+"/*80*/ TVerschieben()",
+"/*81*/ TQ(250,10,-281.3043478264,4)",
+"/*82*/ TA()",
+"/*83*/ TQ(15.2439420902,-80,-74.6243938593,1)",
+"/*84*/ TSchneiden()",//Fußpfettenkerve
+"/*85*/ TQ(340,10,-260.1739130441,3)",
+"/*86*/ TA()",
+"/*87*/ TQ(340,100,-260.1739130441,3)",
+"/*88*/ TS()",
+"/*89*/ TQ(250,10,-191.3043478264,3)",
+"/*90*/ TD()",
+"/*91*/ TMerken()",
+"/*92*/ TQ(340,100,-260.1739130441,3)",
+"/*93*/ TA()",
+"/*94*/ TQ(340,10,-260.1739130441,3)",
+"/*95*/ TS()",
+"/*96*/ TQ(340,10,-5000,3)",
+"/*97*/ TD()",
+"/*98*/ TQ(5250,10,-236.3043478264,4)",
+"/*99*/ TSchneiden()",
+  
+];
+  
+   
+    
+/*♥was noch nicht (wieder) geht:
+.. 3 Ebenen merken und dann schneiden
+.. Einzelschritte vor und zurück
+.. QASD größer und deutlicher
+.. VR
+.. Ausgabe UVW bei Beispiel3a
+.. Fußpfette_Gibel füllen stimmt nicht wenn mit Q-A geschnitten
+
+*/  
+  
+  
+
+  
+  LTeval(LT,0);
+  Logfile("das war Beispiel3a");
+
+  }
 
 
 
@@ -3267,7 +3449,7 @@ var LTeval=function(LT,ltind) {
   }
 
 
-  
+let S4=new THREE.Object3D();
 //raycast
 function raycast ( e ) {
   //raycaster.setFromCamera( mouse, camera ) aus three.pdf ging nicht
@@ -3312,7 +3494,8 @@ function raycast ( e ) {
 //alert("cmin="+cmin+", dmin="+dmin+",pmin="+JSON.stringify(pmin)+", mindist="+mindist);
 //alert(JSON.stringify((new THREE.Vector3((pmin[0][0]+pmin[1][0])/2/zoom,(pmin[0][1]+pmin[1][1])/2/zoom,(pmin[0][2]+pmin[1][2])/2/zoom)).project(camera))); 
   TQ((pmin[0][0]+pmin[1][0])/2,(pmin[0][1]+pmin[1][1])/2,(pmin[0][2]+pmin[1][2])/2,cmin);
-  document.getElementById("Pdisp").firstChild.nodeValue=pk+dmin+"=["+[(q.position.x*zoom).toFixed(2),(q.position.y*zoom).toFixed(2),(q.position.z*zoom).toFixed(2)]+'] in "OBJ'+cmin+" ("+Castlist[cmin][5]+')"';
+  let lq=S4.worldToLocal(q.position.clone());
+  document.getElementById("Pdisp").firstChild.nodeValue=pk+dmin+"=["+[(q.position.x*zoom).toFixed(2),(q.position.y*zoom).toFixed(2),(q.position.z*zoom).toFixed(2)]+"]; XYZ=["+[(q.position.y*zoom).toFixed(2),(q.position.x*zoom).toFixed(2),(-q.position.z*zoom).toFixed(2)]+'] in "OBJ'+cmin+" ("+Castlist[cmin][5]+')"; UVW=['+[(lq.y*zoom).toFixed(2)+', '+(lq.z*zoom).toFixed(2)+', '+(lq.x*zoom).toFixed(2)]+']';
   }
 
 
@@ -3621,6 +3804,7 @@ Log2.addEventListener('click',Logclick);
 button_Beispiel1.addEventListener('click',Beispiel1);
 button_Beispiel2.addEventListener('click',Beispiel2);
 button_Beispiel3.addEventListener('click',Beispiel3);
+button_Beispiel3a.addEventListener('click',Beispiel3a);
 button_Beispiel4.addEventListener('click',Beispiel4);
 button_Beispiel5.addEventListener('click',Beispiel5);
 button_Beispiel6.addEventListener('click',Beispiel6);
@@ -3648,9 +3832,9 @@ button_ANF_Test.addEventListener('click',function(){ANF_Test(OBJ_X);ANF_display(
 
 
 
-Beispiel10();
+Beispiel3a();//Beispiel10();
 console.error('kein Fehler, alles ok');
-setTimeout(function(){button_ANF_Test.click()},1000);
+//setTimeout(function(){button_ANF_Test.click()},1000);//=Füllen
 
   </script>
 
