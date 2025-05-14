@@ -1297,9 +1297,8 @@ var Castlist=[];
 var q; //PUNKT_Q;
 var PA,PS,PD;
 var VAS;
-let VAS_Bild;
+let SAEGE;
 var EASD;
-let EASD_Bild;
 var canvas_height=0;
 var canvas_width=0;
 var zoom=20;
@@ -1434,10 +1433,16 @@ function init() {
   VAS = new THREE.Line(VASgeometry, VASmaterial);
   scene.add( VAS );
 
-  let VAS_Bild_geometry = new THREE.CylinderGeometry(2/QASDzoom, 2/QASDzoom, 0.1/QASDzoom);
-  var VAS_Bild_material = new THREE.MeshBasicMaterial( { color: 0xFF0000, opacity:0.2, transparent:true } );
-  VAS_Bild = new THREE.Mesh(VAS_Bild_geometry, VAS_Bild_material);
-  scene.add( VAS_Bild );
+  let SAEGE_geometry = new THREE.CircleGeometry(2/QASDzoom);
+  var SAEGE_material = new THREE.MeshBasicMaterial( { color: 0x0000FF, opacity:0.2, transparent:true } );
+  SAEGE = new THREE.Mesh(SAEGE_geometry, SAEGE_material);
+  scene.add( SAEGE );
+
+  let SAEGE_geometry2 = new THREE.CircleGeometry(2/QASDzoom);
+  var SAEGE_material2 = new THREE.MeshBasicMaterial( { color: 0xFF0000, opacity:0.4, transparent:true } );
+  let SAEGE2 = new THREE.Mesh(SAEGE_geometry2, SAEGE_material2);
+  SAEGE2.rotateX(Math.PI);
+  SAEGE.add( SAEGE2 );
 
   var EASDmaterial = new THREE.LineBasicMaterial({ color: 0x996633, linewidth:1});
   //var EASDgeometry = new THREE.BufferGeometry();
@@ -1445,11 +1450,6 @@ function init() {
   let EASDgeometry = new THREE.BufferGeometry().setFromPoints( [PA.position,PD.position] );
   EASD = new THREE.Line(EASDgeometry, EASDmaterial);
   scene.add( EASD );
-
-  let EASD_Bild_geometry = new THREE.CylinderGeometry(2/QASDzoom, 2/QASDzoom, 0.1/QASDzoom);
-  var EASD_Bild_material = new THREE.MeshBasicMaterial( { color: 0x0000FF, opacity:0.2, transparent:true } );
-  EASD_Bild = new THREE.Mesh(EASD_Bild_geometry, EASD_Bild_material);
-  scene.add( EASD_Bild );
 
   // position and point the camera to the center of the scene
   camera.position.x = 5; //15;
@@ -2490,13 +2490,14 @@ LT=[
 ok QASD größer und deutlicher
 ok VR
   nö Startposition und -richtung noch einstellen, so wie bei QUADRO mit st.add(camera), nö, geht nicht mit diesem controller;
+  .. VRButt.style.left='100px' wirkt nicht
 ok Ausgabe UVW bei Beispiel3a
 .. Fußpfette_Gibel füllen stimmt nicht wenn mit Q-A geschnitten
   .. Fußpfette aus Gibel ausschneiden und dann füllen stimmt auch nicht
-.. ASDA und ASA, dabei AQ schneiden als AAQ machen
-.. VRButt.style.left='100px' wirkt nicht
-.. AS und ASD mit Sägeebene zeichnen
-.. Q als transparent gefüllt zeichnen
+.. ASDA und ASA, dabei AQ schneiden als AAQ machen, nö, besser ASDS statt ASDA,
+ok AS und ASD mit Sägeebene zeichnen
+  .. jetzt noch .clone() bei TMerken
+.. Objekt Q als transparent gefüllt zeichnen
 
 */  
   
@@ -3221,6 +3222,7 @@ var TQ=function(x,y,z,cmin) {//setzt Koordinaten von q und damit OBJ_X
 var TA=function() {//setzt Punkt A auf Punkt Q
   Logtext2.push("TA()");
   PA.position.copy(q.position); OBJ_Y=OBJ_X;
+  SAEGE.visible=false; 
   History_update();
   Logfile2();
   }
@@ -3231,12 +3233,11 @@ var TS=function() {//setzt Punkt S auf Punkt Q
   ASdistanz=PS.position.distanceTo(PA.position)*zoom;
   Verschiebedistanz=ASdistanz;
   //VAS.geometry.verticesNeedUpdate = true;
-  EASD_Bild.position.set(100000,10000,10000);
-  if (PS.position.distanceTo(PA.position)<0.0001) {VAS_Bild.position.set(100000,10000,10000); return}
   VAS.geometry.setFromPoints([PA.position,PS.position]);
-  VAS_Bild.position.copy(PA.position);
-  VAS_Bild.lookAt(PS.position);
-  VAS_Bild.rotateX(Math.PI/2);
+  if (PS.position.distanceTo(PA.position)<0.0001) {SAEGE.visible=false; return}
+  SAEGE.visible=true;
+  SAEGE.position.copy(PA.position);
+  SAEGE.lookAt(PS.position);
   OBJ_Y=0;
   SCHNITTVEKTOR_AS=[[EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x+(PA.position.y-PS.position.y)*PA.position.y+(PA.position.z-PS.position.z)*PA.position.z)*zoom])],[TEBN],[],[]];
   KDUMP(SCHNITTVEKTOR_AS);
@@ -3249,19 +3250,18 @@ var TD=function() {//setzt Punkt D auf Punkt Q
   Logtext2.push("TD()");
   PD.position.copy(q.position);
   //EASD.geometry.verticesNeedUpdate = true;
-  VAS_Bild.position.set(100000,10000,10000);
-  if ((PS.position.distanceTo(PA.position)<0.0001)||(PD.position.distanceTo(PA.position)<0.0001)||(PS.position.distanceTo(PD.position)<0.0001)) {
-    EASD_Bild.position.set(100000,10000,10000); return}
   EASD.geometry.setFromPoints([PA.position,PD.position]);
-  EASD_Bild.position.copy(PA.position);
+  if ((PS.position.distanceTo(PA.position)<0.0001)||(PD.position.distanceTo(PA.position)<0.0001)||(PS.position.distanceTo(PD.position)<0.0001)) {
+     SAEGE.visible=false; return}
+  SAEGE.visible=true;
+  SAEGE.position.copy(PA.position);
   let QS=PS.position.clone();
   QS.sub(PA.position);
   let QD=PD.position.clone();
   QD.sub(PA.position);
   QS.cross(QD);
   QS.add(PA.position);
-  EASD_Bild.lookAt(QS);
-  EASD_Bild.rotateX(Math.PI/2);
+  SAEGE.lookAt(QS);
   OBJ_Y=0;
   SCHNITTVEKTOR_AS=0;
   SCHNITTEBENE_ASD=[[DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1])],[TEBN],[],[]];
@@ -3279,8 +3279,8 @@ var TUmdrehen=function() {//AS oder AD umdrehen
     PS.position.x=2*PA.position.x-PS.position.x;
     PS.position.y=2*PA.position.y-PS.position.y;
     PS.position.z=2*PA.position.z-PS.position.z;
-    //VAS.geometry.verticesNeedUpdate = true;
     VAS.geometry.setFromPoints([PA.position,PS.position]);
+    SAEGE.rotateX(Math.PI);
     Logtext="SCHNITTVEKTOR_AS nach -AS:\n";KDUMP(SCHNITTVEKTOR_AS);Logfile();
     } else if (SCHNITTEBENE_ASD!=0) {
       SCHNITTEBENE_ASD[0][0][0]=-SCHNITTEBENE_ASD[0][0][0];
@@ -3292,6 +3292,7 @@ var TUmdrehen=function() {//AS oder AD umdrehen
       PD.position.z=2*PA.position.z-PD.position.z;
       //EASD.geometry.verticesNeedUpdate = true;
       EASD.geometry.setFromPoints([PA.position,PD.position]);
+      SAEGE.rotateX(Math.PI);
       Logtext="SCHNITTEBENE_ASD nach -AD:\n";KDUMP(SCHNITTEBENE_ASD);Logfile();
       }
   History_update();
