@@ -1297,7 +1297,9 @@ var Castlist=[];
 var q; //PUNKT_Q;
 var PA,PS,PD;
 var VAS;
+let VAS_Bild;
 var EASD;
+let EASD_Bild;
 var canvas_height=0;
 var canvas_width=0;
 var zoom=20;
@@ -1432,6 +1434,11 @@ function init() {
   VAS = new THREE.Line(VASgeometry, VASmaterial);
   scene.add( VAS );
 
+  let VAS_Bild_geometry = new THREE.CylinderGeometry(2/QASDzoom, 2/QASDzoom, 0.1/QASDzoom);
+  var VAS_Bild_material = new THREE.MeshBasicMaterial( { color: 0xFF0000, opacity:0.2, transparent:true } );
+  VAS_Bild = new THREE.Mesh(VAS_Bild_geometry, VAS_Bild_material);
+  scene.add( VAS_Bild );
+
   var EASDmaterial = new THREE.LineBasicMaterial({ color: 0x996633, linewidth:1});
   //var EASDgeometry = new THREE.BufferGeometry();
   //EASDgeometry.vertices = [PA.position,PD.position];
@@ -1439,12 +1446,16 @@ function init() {
   EASD = new THREE.Line(EASDgeometry, EASDmaterial);
   scene.add( EASD );
 
+  let EASD_Bild_geometry = new THREE.CylinderGeometry(2/QASDzoom, 2/QASDzoom, 0.1/QASDzoom);
+  var EASD_Bild_material = new THREE.MeshBasicMaterial( { color: 0x0000FF, opacity:0.2, transparent:true } );
+  EASD_Bild = new THREE.Mesh(EASD_Bild_geometry, EASD_Bild_material);
+  scene.add( EASD_Bild );
+
   // position and point the camera to the center of the scene
   camera.position.x = 5; //15;
   camera.position.y = 5; //16;
   camera.position.z = -12; //13
   camera.lookAt(scene.position);
-
   // add the output of the renderer to the html element
   document.getElementById("canvas").replaceChild(renderer.domElement,document.getElementById("canvas").firstChild);
 
@@ -2473,15 +2484,19 @@ LT=[
     
 /*♥was noch nicht (wieder) geht:
 .. 3 Ebenen merken und dann schneiden
-.. Einzelschritte vor und zurück
+.. Einzelschritte vor und zurück, History ist ja schon drin zum Anklicken,
+  .. da also noch A S D Q anfügen
+  .. und Buttons +1 -1
 ok QASD größer und deutlicher
 ok VR
-  .. Startposition und -richtung noch einstellen, so wie bei QUADRO mit st.add(camera);
+  nö Startposition und -richtung noch einstellen, so wie bei QUADRO mit st.add(camera), nö, geht nicht mit diesem controller;
 ok Ausgabe UVW bei Beispiel3a
 .. Fußpfette_Gibel füllen stimmt nicht wenn mit Q-A geschnitten
+  .. Fußpfette aus Gibel ausschneiden und dann füllen stimmt auch nicht
 .. ASDA und ASA, dabei AQ schneiden als AAQ machen
 .. VRButt.style.left='100px' wirkt nicht
-
+.. AS und ASD mit Sägeebene zeichnen
+.. Q als transparent gefüllt zeichnen
 
 */  
   
@@ -3175,8 +3190,8 @@ function animate(timestamp,frame) {
       Anfangszeit=0;
   	   }	else cl.lerpVectors(Anfangsort,q.position,0.7*(Zeitdifferenz/1000)+0.3*1/(1+Math.E**(-(Zeitdifferenz/1000-0.5)*12)));
   	   //}	else cl.add(q.position.clone().sub(cl).normalize().multiplyScalar(0.02));
-  		contr.target.copy(cl);
-  		camera.position.add(cl.clone().sub(cp))
+    contr.target.copy(cl);
+    camera.position.add(cl.clone().sub(cp))
     } else cl.copy(contr.target);
   cube.position.copy(contr.target);
   contr.update();
@@ -3216,7 +3231,12 @@ var TS=function() {//setzt Punkt S auf Punkt Q
   ASdistanz=PS.position.distanceTo(PA.position)*zoom;
   Verschiebedistanz=ASdistanz;
   //VAS.geometry.verticesNeedUpdate = true;
+  EASD_Bild.position.set(100000,10000,10000);
+  if (PS.position.distanceTo(PA.position)<0.0001) {VAS_Bild.position.set(100000,10000,10000); return}
   VAS.geometry.setFromPoints([PA.position,PS.position]);
+  VAS_Bild.position.copy(PA.position);
+  VAS_Bild.lookAt(PS.position);
+  VAS_Bild.rotateX(Math.PI/2);
   OBJ_Y=0;
   SCHNITTVEKTOR_AS=[[EGGT([PA.position.x-PS.position.x,PA.position.y-PS.position.y,PA.position.z-PS.position.z,-((PA.position.x-PS.position.x)*PA.position.x+(PA.position.y-PS.position.y)*PA.position.y+(PA.position.z-PS.position.z)*PA.position.z)*zoom])],[TEBN],[],[]];
   KDUMP(SCHNITTVEKTOR_AS);
@@ -3229,7 +3249,19 @@ var TD=function() {//setzt Punkt D auf Punkt Q
   Logtext2.push("TD()");
   PD.position.copy(q.position);
   //EASD.geometry.verticesNeedUpdate = true;
+  VAS_Bild.position.set(100000,10000,10000);
+  if ((PS.position.distanceTo(PA.position)<0.0001)||(PD.position.distanceTo(PA.position)<0.0001)||(PS.position.distanceTo(PD.position)<0.0001)) {
+    EASD_Bild.position.set(100000,10000,10000); return}
   EASD.geometry.setFromPoints([PA.position,PD.position]);
+  EASD_Bild.position.copy(PA.position);
+  let QS=PS.position.clone();
+  QS.sub(PA.position);
+  let QD=PD.position.clone();
+  QD.sub(PA.position);
+  QS.cross(QD);
+  QS.add(PA.position);
+  EASD_Bild.lookAt(QS);
+  EASD_Bild.rotateX(Math.PI/2);
   OBJ_Y=0;
   SCHNITTVEKTOR_AS=0;
   SCHNITTEBENE_ASD=[[DREIPUNKTE([PA.position.x*zoom,PA.position.y*zoom,PA.position.z*zoom,1],[PD.position.x*zoom,PD.position.y*zoom,PD.position.z*zoom,1],[PS.position.x*zoom,PS.position.y*zoom,PS.position.z*zoom,1])],[TEBN],[],[]];
@@ -3589,7 +3621,8 @@ zweite Variante funktioniert auch nicht, von [13,16], [14,17] nur [13,16]
 var History_update=function() {
   var hist="";
   for (var i in Castlist) hist=hist+"AddObjekt(scene,"+JSON.stringify(Castlist[i].slice(0,4))+");\n";
-  History.push(hist);
+  History[Logtext2.length-1]=hist;
+  //alert(History.length+' '+Logtext2.length);
   return hist;
   }
   
