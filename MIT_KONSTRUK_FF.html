@@ -2496,8 +2496,9 @@ ok Ausgabe UVW bei Beispiel3a
   .. Fußpfette aus Gibel ausschneiden und dann füllen stimmt auch nicht
 .. ASDA und ASA, dabei AQ schneiden als AAQ machen, nö, besser ASDS statt ASDA,
 ok AS und ASD mit Sägeebene zeichnen
-  .. jetzt noch .clone() bei TMerken
+  ok jetzt noch .clone() bei TMerken
 .. Objekt Q als transparent gefüllt zeichnen
+.. aus Gratsparren einen schmalen Keil aussägen da ist die Oberkante zuviel dann.
 
 */  
   
@@ -3298,7 +3299,7 @@ var TUmdrehen=function() {//AS oder AD umdrehen
   History_update();
   }
 
-var TMerken_Hilfsfunktion=function() {//
+var TMerken_Hilfsfunktion=function() {
   if (SCHNITTVEKTOR_AS!=0) {
     MERKOBJEKT[0].push(SCHNITTVEKTOR_AS[0][0]);
     MERKOBJEKT[1].push(TEBN);
@@ -3310,8 +3311,12 @@ var TMerken_Hilfsfunktion=function() {//
       }
   }
 
+let SAEGEN_MERK=[];
 var TMerken=function() {//legt Ebene ASD fest
   Logtext2.push("TMerken()");
+  let SAEGE2=SAEGE.clone();
+  SAEGEN_MERK.push(SAEGE2);
+  scene.add(SAEGE2);
   TMerken_Hilfsfunktion();
   Logtext="MERKEBENE nach TMerken():\n";
   KDUMP(MERKOBJEKT);
@@ -3381,6 +3386,7 @@ var TSchneiden=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
   AddObjekt(scene,OBJ_X);Castlist.pop();
   Castlist[cind]=OBJ_X;
   MERKOBJEKT=[[],[],[],[]];
+  while (SAEGEN_MERK.length>0) scene.remove(SAEGEN_MERK.pop());
   History_update();
   Logfile();
   Logfile2();
@@ -3392,6 +3398,7 @@ var TLoeschen=function() {//schneidet von OBJ_X das Objekt SAMMELEBENE ab
   var cind=Castlist.indexOf(OBJ_X);
   Castlist[cind]=Castlist.pop();
   MERKOBJEKT=[[],[],[],[]];
+  while (SAEGEN_MERK.length>0) scene.remove(SAEGEN_MERK.pop());
   History_update();
   Logfile();
   Logfile2();
