@@ -274,5 +274,50 @@ function animate(timestamp,frame) {
   Ecke.position.copy(controls.target);
   renderer.render( scene, camera );
   }
+  </script>
 
+
+<script>
+let KANTEN=[
+  [,[0,1],,[0,3],[0,4],[0,5]],
+  [[1,0],,[1,2],,[1,4],[1,5]],
+  [,[2,1],,[2,3],[2,4],[2,5]],
+  [[3,0],,[3,2],,[3,4],[3,5]],
+  [[4,0],[4,1],[4,2],[4,3],,],
+  [[5,0],[5,1],[5,2],[5,3],,]];
+
+let ECKEN=[
+  [,[0,1,4],,[0,3,5],[0,4,3],[0,5,1]],
+  [[1,0,5],,[1,2,4],,[1,4,0],[1,5,2]],
+  [,[2,1,5],,[2,3,4],[2,4,1],[2,5,3]],
+  [[3,0,4],,[3,2,5],,[3,4,2],[3,5,0]],
+  [[4,0,1],[4,1,2],[4,2,3],[4,3,0],,],
+  [[5,0,3],[5,1,0],[5,2,1],[5,3,2],,]];
+
+let D=[[1,5,3,4,1,5,3,4],[0,5,2,4,0,5,2,4],[1,5,3,4,1,5,3,4],[2,5,0,4,2,5,0,4],[0,3,2,1,0,3,2,1],[0,1,2,3,0,1,2,3]];
+
+let WW=[structuredClone(KANTEN),structuredClone(ECKEN),structuredClone(KANTEN),structuredClone(ECKEN)];
+
+alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n'));
+
+function drehe(n) {
+  let d=D[n];
+  let WWNEU=structuredClone(WW);
+  for (let i=0;i<4;i++) {//alert(WW[0][n][d[i]])
+    WWNEU[0][n][d[i+1]]=structuredClone(WW[0][n][d[i]]);//ob das auch ohne clone() geht?
+    WWNEU[0][d[i+1]][n]=structuredClone(WW[0][d[i]][n]);
+    WWNEU[1][n][d[i+1]]=structuredClone(WW[1][n][d[i]]);
+    WWNEU[1][d[i+1]][d[i]]=structuredClone(WW[1][d[i]][d[i+3]]);
+    WWNEU[1][d[i+1]][n]=structuredClone(WW[1][d[i]][n]);
+    
+    }
+  WW=WWNEU;
+  
+  
+  };
+
+for (let n=0;n<6;n++) for (let k=0;k<4;k++) {
+  drehe(n);
+  alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n')+'\n\nnach drehe('+n+') für k='+k);
+  } 
   </script></body></html>
