@@ -88,8 +88,8 @@ const controls = new OrbitControls( camera, renderer.domElement );
   controls.maxDistance = 100;
   controls.maxPolarAngle = 2*Math.PI / 2;//das geht, original 1*
   controls.minPolarAngle = 0;
-  controls.target.set(0,0,-3);
-  controls.object.position.set(0,0,0);
+  controls.target.set(0,0,0);
+  controls.object.position.set(0,0,3);
 
 const controller1 = renderer.xr.getController( 0 );
   controller1.addEventListener( 'selectstart', onSelectStart );
@@ -139,7 +139,7 @@ function onSelectStart( event ) {
 const Ecken=[];
 let Ecke=new THREE.Mesh(
   new THREE.SphereGeometry(0.04,32,32),
-  new THREE.MeshStandardMaterial( {color: 'red', transparent:true, opacity:0.8} )
+  new THREE.MeshStandardMaterial( {color: 'green', transparent:true, opacity:0.8} )
   );
   Ecke.position.set(0,0,-3);
   scene.add(Ecke);
@@ -274,10 +274,9 @@ function animate(timestamp,frame) {
   Ecke.position.copy(controls.target);
   renderer.render( scene, camera );
   }
-  </script>
 
+//Start Rubik’s cube
 
-<script>
 let KANTEN=[
   [,[0,1],,[0,3],[0,4],[0,5]],
   [[1,0],,[1,2],,[1,4],[1,5]],
@@ -287,37 +286,93 @@ let KANTEN=[
   [[5,0],[5,1],[5,2],[5,3],,]];
 
 let ECKEN=[
-  [,[0,1,4],,[0,3,5],[0,4,3],[0,5,1]],
+  [,[0,1,4,99],,[0,3,5],[0,4,3],[0,5,1]],
   [[1,0,5],,[1,2,4],,[1,4,0],[1,5,2]],
   [,[2,1,5],,[2,3,4],[2,4,1],[2,5,3]],
   [[3,0,4],,[3,2,5],,[3,4,2],[3,5,0]],
   [[4,0,1],[4,1,2],[4,2,3],[4,3,0],,],
   [[5,0,3],[5,1,0],[5,2,1],[5,3,2],,]];
 
-let D=[[1,5,3,4,1,5,3,4],[0,5,2,4,0,5,2,4],[1,5,3,4,1,5,3,4],[2,5,0,4,2,5,0,4],[0,3,2,1,0,3,2,1],[0,1,2,3,0,1,2,3]];
+let D=[[1,5,3,4,1,5,3,4],[0,4,2,5,0,4,2,5],[1,5,3,4,1,5,3,4],[2,5,0,4,2,5,0,4],[0,3,2,1,0,3,2,1],[0,1,2,3,0,1,2,3]];
 
 let WW=[structuredClone(KANTEN),structuredClone(ECKEN),structuredClone(KANTEN),structuredClone(ECKEN)];
 
 alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n'));
 
+let structuredClon=function(W){return W};
+
 function drehe(n) {
   let d=D[n];
   let WWNEU=structuredClone(WW);
-  for (let i=0;i<4;i++) {//alert(WW[0][n][d[i]])
-    WWNEU[0][n][d[i+1]]=structuredClone(WW[0][n][d[i]]);//ob das auch ohne clone() geht?
-    WWNEU[0][d[i+1]][n]=structuredClone(WW[0][d[i]][n]);
-    WWNEU[1][n][d[i+1]]=structuredClone(WW[1][n][d[i]]);
-    WWNEU[1][d[i+1]][d[i]]=structuredClone(WW[1][d[i]][d[i+3]]);
-    WWNEU[1][d[i+1]][n]=structuredClone(WW[1][d[i]][n]);
+  for (let i=0;i<4;i++) {//alert(WW[1][n][d[i]]);
+    WWNEU[0][n][d[i+1]]=structuredClon(WW[0][n][d[i]]);//ob das auch ohne clone() geht?
+    WWNEU[0][d[i+1]][n]=structuredClon(WW[0][d[i]][n]);
+    WWNEU[1][n][d[i+1]]=structuredClon(WW[1][n][d[i]]);
+    WWNEU[1][d[i+1]][d[i]]=structuredClon(WW[1][d[i]][d[i+3]]);
+    WWNEU[1][d[i]][n]=structuredClon(WW[1][d[i+3]][n]);
+    if (WW[1][n][d[i]][3]) {alert(WW[1][n][d[i]]);K014['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
+    if (WW[1][d[i]][d[i+3]][3]) {alert(WW[1][d[i]][d[i+3]]);K014['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
+    if (WW[1][d[i+3]][n][3]) {alert(WW[1][d[i+3]][n]);K014['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
     
     }
+  
+  alert(WW[1].join('\n')+'\n\n'+WWNEU[1].join('\n'));
   WW=WWNEU;
+  //K014['rotateOnWorldAxis'](z_Achse,m90);
+  //alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n'));
   
   
   };
-
 for (let n=0;n<6;n++) for (let k=0;k<4;k++) {
-  drehe(n);
-  alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n')+'\n\nnach drehe('+n+') für k='+k);
-  } 
+//  drehe(n);
+//  alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n')+'\n\nnach drehe('+n+') für k='+k);
+  }
+
+
+
+//oder: dreh(0)= [1,1,1],[1,1,-1],[-1,1,-1],[-1,1,1],[1,1,1]  [x,y,z],[z,y,-x] [1,1,0],[
+let K014=new THREE.Group();
+let K014W=new THREE.Mesh(
+  new THREE.BoxGeometry(0.1,0.1,0.1),
+  new THREE.MeshStandardMaterial( {color: 'gray', transparent:true, opacity:0.8} )
+  );
+  K014W.position.set(0.2,0.2,0.2)
+  K014.add(K014W);
+let K0140=new THREE.Mesh(
+  new THREE.PlaneGeometry(0.08,0.08),
+  new THREE.MeshStandardMaterial( {color: 'red', transparent:false} )
+  );
+  K0140.position.set(0.2,0.2,0.251)
+  K014.add(K0140);
+let K0141=new THREE.Mesh(
+  new THREE.PlaneGeometry(0.08,0.08),
+  new THREE.MeshStandardMaterial( {color: 'green', transparent:false} )
+  );
+  K0141.position.set(0.251,0.2,0.2)
+  K0141.rotateY(Math.PI/2);
+  K014.add(K0141);
+let K0144=new THREE.Mesh(
+  new THREE.PlaneGeometry(0.08,0.08),
+  new THREE.MeshStandardMaterial( {color: 'yellow', transparent:false} )
+  );
+  K0144.position.set(0.2,0.251,0.2)
+  K0144.rotateX(-Math.PI/2);
+  K014.add(K0144);
+  scene.add(K014);
+  //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
+  
+let x_Achse=new THREE.Vector3(1,0,0);
+let y_Achse=new THREE.Vector3(0,1,0);
+let z_Achse=new THREE.Vector3(0,0,1);
+let m90=-Math.PI/2;
+let p90=Math.PI/2;
+let Achsen=[z_Achse,x_Achse];
+let Winkel=[m90,m90];
+id_drehe0.addEventListener('click',function() {drehe(0)});
+id_drehe1.addEventListener('click',function() {drehe(1)});
+  </script>
+
+<button id='id_drehe0'>drehe(0)</button>
+<button id='id_drehe1'>drehe(1)</button>
+<script>
   </script></body></html>
