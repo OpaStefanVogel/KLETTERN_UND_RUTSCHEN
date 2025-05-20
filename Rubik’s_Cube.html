@@ -89,7 +89,7 @@ const controls = new OrbitControls( camera, renderer.domElement );
   controls.maxPolarAngle = 2*Math.PI / 2;//das geht, original 1*
   controls.minPolarAngle = 0;
   controls.target.set(0,0,0);
-  controls.object.position.set(0,0,3);
+  controls.object.position.set(0.5,1,2);
 
 const controller1 = renderer.xr.getController( 0 );
   controller1.addEventListener( 'selectstart', onSelectStart );
@@ -276,6 +276,9 @@ function animate(timestamp,frame) {
   }
 
 //Start Rubik’s cube
+let m90=-Math.PI/2;
+let p180=Math.PI;
+let p90=Math.PI/2;
 
 let KANTEN=[
   [,[0,1],,[0,3],[0,4],[0,5]],
@@ -286,18 +289,18 @@ let KANTEN=[
   [[5,0],[5,1],[5,2],[5,3],,]];
 
 let ECKEN=[
-  [,[0,1,4,99],,[0,3,5],[0,4,3],[0,5,1]],
+  [,[0,1,4,12],,[0,3,5,14],[0,4,3],[0,5,1,13]],
   [[1,0,5],,[1,2,4],,[1,4,0],[1,5,2]],
-  [,[2,1,5],,[2,3,4],[2,4,1],[2,5,3]],
+  [,[2,1,5,18],,[2,3,4,16],[2,4,1,17],[2,5,3,19]],
   [[3,0,4],,[3,2,5],,[3,4,2],[3,5,0]],
-  [[4,0,1],[4,1,2],[4,2,3],[4,3,0],,],
+  [[4,0,1],[4,1,2],[4,2,3],[4,3,0,15],,],
   [[5,0,3],[5,1,0],[5,2,1],[5,3,2],,]];
 
 let D=[[1,5,3,4,1,5,3,4],[0,4,2,5,0,4,2,5],[1,5,3,4,1,5,3,4],[2,5,0,4,2,5,0,4],[0,3,2,1,0,3,2,1],[0,1,2,3,0,1,2,3]];
 
 let WW=[structuredClone(KANTEN),structuredClone(ECKEN),structuredClone(KANTEN),structuredClone(ECKEN)];
 
-alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n'));
+//alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n'));
 
 let structuredClon=function(W){return W};
 
@@ -309,14 +312,15 @@ function drehe(n) {
     WWNEU[0][d[i+1]][n]=structuredClon(WW[0][d[i]][n]);
     WWNEU[1][n][d[i+1]]=structuredClon(WW[1][n][d[i]]);
     WWNEU[1][d[i+1]][d[i]]=structuredClon(WW[1][d[i]][d[i+3]]);
+
     WWNEU[1][d[i]][n]=structuredClon(WW[1][d[i+3]][n]);
-    if (WW[1][n][d[i]][3]) {alert(WW[1][n][d[i]]);K014['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
-    if (WW[1][d[i]][d[i+3]][3]) {alert(WW[1][d[i]][d[i+3]]);K014['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
-    if (WW[1][d[i+3]][n][3]) {alert(WW[1][d[i+3]][n]);K014['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
+    if (WW[1][n][d[i]][3]!=undefined) {LISTE[WW[1][n][d[i]][3]]['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
+    if (WW[1][d[i]][d[i+3]][3]!=undefined) {LISTE[WW[1][d[i]][d[i+3]][3]]['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
+    if (WW[1][d[i+3]][n][3]!=undefined) {LISTE[WW[1][d[i+3]][n][3]]['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
     
     }
   
-  alert(WW[1].join('\n')+'\n\n'+WWNEU[1].join('\n'));
+  //alert(WW[1]k.join('\n')+'\n\n'+WWNEU[1].join('\n'));
   WW=WWNEU;
   //K014['rotateOnWorldAxis'](z_Achse,m90);
   //alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n'));
@@ -330,7 +334,9 @@ for (let n=0;n<6;n++) for (let k=0;k<4;k++) {
 
 
 
-//oder: dreh(0)= [1,1,1],[1,1,-1],[-1,1,-1],[-1,1,1],[1,1,1]  [x,y,z],[z,y,-x] [1,1,0],[
+//oder: dreh(0)= [1,1,1],[1,1,-1],[-1,1,-1],[-1,1,1],[1,1,1]  [x,y,z],[z,y,-x] [1,1,0],[...
+
+function Erzeuge_Ecke(rot,gruen,gelb) {
 let K014=new THREE.Group();
 let K014W=new THREE.Mesh(
   new THREE.BoxGeometry(0.1,0.1,0.1),
@@ -339,35 +345,47 @@ let K014W=new THREE.Mesh(
   K014W.position.set(0.2,0.2,0.2)
   K014.add(K014W);
 let K0140=new THREE.Mesh(
-  new THREE.PlaneGeometry(0.08,0.08),
-  new THREE.MeshStandardMaterial( {color: 'red', transparent:false} )
+  new THREE.PlaneGeometry(0.09,0.09),
+  new THREE.MeshStandardMaterial( {color: rot, transparent:false} )
   );
   K0140.position.set(0.2,0.2,0.251)
   K014.add(K0140);
 let K0141=new THREE.Mesh(
-  new THREE.PlaneGeometry(0.08,0.08),
-  new THREE.MeshStandardMaterial( {color: 'green', transparent:false} )
+  new THREE.PlaneGeometry(0.09,0.09),
+  new THREE.MeshStandardMaterial( {color: gruen, transparent:false} )
   );
   K0141.position.set(0.251,0.2,0.2)
   K0141.rotateY(Math.PI/2);
   K014.add(K0141);
 let K0144=new THREE.Mesh(
-  new THREE.PlaneGeometry(0.08,0.08),
-  new THREE.MeshStandardMaterial( {color: 'yellow', transparent:false} )
+  new THREE.PlaneGeometry(0.09,0.09),
+  new THREE.MeshStandardMaterial( {color: gelb, transparent:false} )
   );
   K0144.position.set(0.2,0.251,0.2)
   K0144.rotateX(-Math.PI/2);
   K014.add(K0144);
   scene.add(K014);
   //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
-  
+  return K014;
+  }
+
+let K014=Erzeuge_Ecke('red','green','yellow');
+let K051=Erzeuge_Ecke('red','white','green'); K051.rotateZ(m90);
+let K035=Erzeuge_Ecke('red','blue','white'); K035.rotateZ(p180);
+let K043=Erzeuge_Ecke('red','yellow','blue'); K043.rotateZ(p90);
+let K234=Erzeuge_Ecke('orange','blue','yellow'); K234.rotateY(p180);
+let K241=Erzeuge_Ecke('orange','yellow','green'); K241.rotateY(p180);K241.rotateZ(p90);
+let K215=Erzeuge_Ecke('orange','green','white'); K215.rotateY(p180);K215.rotateZ(p180);
+let K253=Erzeuge_Ecke('orange','white','blue'); K253.rotateY(p180);K253.rotateZ(m90);
+
+
+
+let LISTE=[,,,,,,,,,,,,K014,K051,K035,K043,K234,K241,K215,K253]; 
 let x_Achse=new THREE.Vector3(1,0,0);
 let y_Achse=new THREE.Vector3(0,1,0);
 let z_Achse=new THREE.Vector3(0,0,1);
-let m90=-Math.PI/2;
-let p90=Math.PI/2;
-let Achsen=[z_Achse,x_Achse];
-let Winkel=[m90,m90];
+let Achsen=[z_Achse,x_Achse,z_Achse,x_Achse,y_Achse,y_Achse];
+let Winkel=[m90,m90,p90,p90,m90,p90];
 id_drehe0.addEventListener('click',function() {drehe(0)});
 id_drehe1.addEventListener('click',function() {drehe(1)});
   </script>
