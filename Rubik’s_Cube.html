@@ -307,10 +307,16 @@ let WW=[structuredClone(KANTEN),structuredClone(ECKEN),structuredClone(KANTEN),s
 //alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n'));
 
 let structuredClon=function(W){return W};
+let Drehliste_gesamt=[];
+let index_Drehliste_gesamt=-1;
 let Drehliste=[];
-let Drehstart=0;
+let Drehstart=-1000000;
 
 function drehe(n) {
+  Drehliste_gesamt.push(n);
+  }
+
+function drehe2(n) {
   let d=D[n];
   let WWNEU=structuredClone(WW);
   Drehliste=[];
@@ -331,7 +337,7 @@ function drehe(n) {
   WW=WWNEU;
   //K014['rotateOnWorldAxis'](z_Achse,m90);
   //alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n'));
-  
+
 //  if (WW[1][d[i+3]][n][3]!=undefined) {LISTE[WW[1][d[i+3]][n][3]]['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
   animate_start();
   };
@@ -409,13 +415,12 @@ function animate_start() {
     d[4]=Obj.rotation.clone();
     Obj.rotateOnWorldAxis(Achs,-Wink);
     }
-  Drehstart=frametime;
   //alert(Drehliste[0][3].toArray()+'\n'+Drehliste[0][4].toArray()+'\n'+Drehstart);
   }
 
-function animate_go() {Log2.innerHTML=Drehstart+' '+frametime;
-  if (frametime<Drehstart+600) {
-    let alpha=Math.min((frametime-Drehstart)/500,1);
+function animate_go() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+(Drehliste_gesamt.length-1-index_Drehliste_gesamt);
+  if (frametime<Drehstart+1600) {
+    let alpha=Math.min((frametime-Drehstart)/1500,1);
     for (let dd=0;dd<Drehliste.length;dd++) {
       let d=Drehliste[dd];
       let Obj=LISTE[d[0]];
@@ -424,7 +429,12 @@ function animate_go() {Log2.innerHTML=Drehstart+' '+frametime;
       Obj.setRotationFromEuler(d[3]);
       Obj.rotateOnWorldAxis(Achs,alpha*Wink);
       }
-    }
+    } else if (index_Drehliste_gesamt+1<Drehliste_gesamt.length) {
+      index_Drehliste_gesamt=index_Drehliste_gesamt+1;
+      Drehstart=frametime;
+      drehe2(Drehliste_gesamt[index_Drehliste_gesamt]);
+      }
+
   }
 
   </script>
