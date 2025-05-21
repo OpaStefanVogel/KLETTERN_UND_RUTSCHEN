@@ -12,6 +12,7 @@
 <div id='Log' style='font-family:Courier,monospace; white-space:pre;'> </div>
 <div id='Tdok' style='font-family:Courier,monospace; white-space:pre;'> </div>
 <div><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
+<div id='Log2' style='font-family:Courier,monospace; white-space:pre;'> </div>
 
 <!--importmap muß bleiben weil die module auch three aufrufen-->
 		<script type="importmap">
@@ -269,9 +270,12 @@ Flaeche(nx1,nx1-0.2,ny4,ny5,nz5,nz5+0.005,'hsl(140,100%,99%)');
 Flaeche(nx1,nx1-0.2,ny4,ny4-0.005,nz4,nz5,'hsl(35,100%,40%)');
 `);
 
+let frametime=0;
 function animate(timestamp,frame) {
+  frametime=timestamp;
   controls.update();
   Ecke.position.copy(controls.target);
+  animate_go();
   renderer.render( scene, camera );
   }
 
@@ -303,10 +307,13 @@ let WW=[structuredClone(KANTEN),structuredClone(ECKEN),structuredClone(KANTEN),s
 //alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n'));
 
 let structuredClon=function(W){return W};
+let Drehliste=[];
+let Drehstart=0;
 
 function drehe(n) {
   let d=D[n];
   let WWNEU=structuredClone(WW);
+  Drehliste=[];
   for (let i=0;i<4;i++) {//alert(WW[1][n][d[i]]);
     WWNEU[0][n][d[i+1]]=structuredClon(WW[0][n][d[i]]);//ob das auch ohne clone() geht?
     WWNEU[0][d[i+1]][n]=structuredClon(WW[0][d[i]][n]);
@@ -314,9 +321,9 @@ function drehe(n) {
     WWNEU[1][d[i+1]][d[i]]=structuredClon(WW[1][d[i]][d[i+3]]);
 
     WWNEU[1][d[i]][n]=structuredClon(WW[1][d[i+3]][n]);
-    if (WW[1][n][d[i]][3]!=undefined) {LISTE[WW[1][n][d[i]][3]]['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
-    if (WW[1][d[i]][d[i+3]][3]!=undefined) {LISTE[WW[1][d[i]][d[i+3]][3]]['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
-    if (WW[1][d[i+3]][n][3]!=undefined) {LISTE[WW[1][d[i+3]][n][3]]['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
+    if (WW[1][n][d[i]][3]!=undefined) Drehliste.push([WW[1][n][d[i]][3],Achsen[n],Winkel[n]]);
+    if (WW[1][d[i]][d[i+3]][3]!=undefined) Drehliste.push([WW[1][d[i]][d[i+3]][3],Achsen[n],Winkel[n]]);
+    if (WW[1][d[i+3]][n][3]!=undefined) Drehliste.push([WW[1][d[i+3]][n][3],Achsen[n],Winkel[n]]);
     
     }
   
@@ -325,8 +332,10 @@ function drehe(n) {
   //K014['rotateOnWorldAxis'](z_Achse,m90);
   //alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n'));
   
-  
+//  if (WW[1][d[i+3]][n][3]!=undefined) {LISTE[WW[1][d[i+3]][n][3]]['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
+  animate_start();
   };
+
 for (let n=0;n<6;n++) for (let k=0;k<4;k++) {
 //  drehe(n);
 //  alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n')+'\n\nnach drehe('+n+') für k='+k);
@@ -388,6 +397,36 @@ let Achsen=[z_Achse,x_Achse,z_Achse,x_Achse,y_Achse,y_Achse];
 let Winkel=[m90,m90,p90,p90,m90,p90];
 id_drehe0.addEventListener('click',function() {drehe(0)});
 id_drehe1.addEventListener('click',function() {drehe(1)});
+
+function animate_start() {
+  for (let dd=0;dd<Drehliste.length;dd++) {
+    let d=Drehliste[dd];
+    let Obj=LISTE[d[0]];
+    let Achs=d[1];
+    let Wink=d[2];
+    d[3]=Obj.rotation.clone();
+    Obj.rotateOnWorldAxis(Achs,Wink);
+    d[4]=Obj.rotation.clone();
+    Obj.rotateOnWorldAxis(Achs,-Wink);
+    }
+  Drehstart=frametime;
+  //alert(Drehliste[0][3].toArray()+'\n'+Drehliste[0][4].toArray()+'\n'+Drehstart);
+  }
+
+function animate_go() {Log2.innerHTML=Drehstart+' '+frametime;
+  if (frametime<Drehstart+600) {
+    let alpha=Math.min((frametime-Drehstart)/500,1);
+    for (let dd=0;dd<Drehliste.length;dd++) {
+      let d=Drehliste[dd];
+      let Obj=LISTE[d[0]];
+      let Achs=d[1];
+      let Wink=d[2];
+      Obj.setRotationFromEuler(d[3]);
+      Obj.rotateOnWorldAxis(Achs,alpha*Wink);
+      }
+    }
+  }
+
   </script>
 
 <button id='id_drehe0'>drehe(0)</button>
