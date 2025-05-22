@@ -285,7 +285,7 @@ let p180=Math.PI;
 let p90=Math.PI/2;
 
 let KANTEN=[
-  [,[0,1],,[0,3],[0,4],[0,5]],
+  [,[0,1,0],,[0,3],[0,4],[0,5]],
   [[1,0],,[1,2],,[1,4],[1,5]],
   [,[2,1],,[2,3],[2,4],[2,5]],
   [[3,0],,[3,2],,[3,4],[3,5]],
@@ -326,6 +326,8 @@ function drehe2(n,j,k) {
     WWNEU[1][n][d[i+j]]=WW[1][n][d[i+k]];
     WWNEU[1][d[i+j]][d[i+3*k]]=WW[1][d[i+k]][d[i+3*j]];
     WWNEU[1][d[i+3*k]][n]=WW[1][d[i+3*j]][n];
+    if (WW[0][n][d[i+k]][2]!=undefined) Drehliste.push([WW[0][n][d[i+k]][2],Achsen[n],(j-k)*Winkel[n]]);
+    if (WW[0][d[i+k]][n][2]!=undefined) Drehliste.push([WW[0][d[i+k]][n][2],Achsen[n],(j-k)*Winkel[n]]);
     if (WW[1][n][d[i+k]][3]!=undefined) Drehliste.push([WW[1][n][d[i+k]][3],Achsen[n],(j-k)*Winkel[n]]);
     if (WW[1][d[i+k]][d[i+3*j]][3]!=undefined) Drehliste.push([WW[1][d[i+k]][d[i+3*j]][3],Achsen[n],(j-k)*Winkel[n]]);
     if (WW[1][d[i+3*j]][n][3]!=undefined) Drehliste.push([WW[1][d[i+3*j]][n][3],Achsen[n],(j-k)*Winkel[n]]);
@@ -383,6 +385,33 @@ let K0144=new THREE.Mesh(
   return K014;
   }
 
+function Erzeuge_Kante(rot,gruen) {
+let K014=new THREE.Group();
+let K014W=new THREE.Mesh(
+  new THREE.BoxGeometry(0.1,0.1,0.1),
+  new THREE.MeshStandardMaterial( {color: 'gray', transparent:true, opacity:0.8} )
+  );
+  K014W.position.set(0.2,0,0.2)
+  K014.add(K014W);
+let K0140=new THREE.Mesh(
+  new THREE.PlaneGeometry(0.09,0.09),
+  new THREE.MeshStandardMaterial( {color: rot, transparent:false} )
+  );
+  K0140.position.set(0.2,0,0.251)
+  K014.add(K0140);
+let K0141=new THREE.Mesh(
+  new THREE.PlaneGeometry(0.09,0.09),
+  new THREE.MeshStandardMaterial( {color: gruen, transparent:false} )
+  );
+  K0141.position.set(0.251,0,0.2)
+  K0141.rotateY(Math.PI/2);
+  K014.add(K0141);
+  scene.add(K014);
+  //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
+  return K014;
+  }
+
+
 let K014=Erzeuge_Ecke('red','green','yellow');
 let K051=Erzeuge_Ecke('red','white','green'); K051.rotateZ(m90);
 let K035=Erzeuge_Ecke('red','blue','white'); K035.rotateZ(p180);
@@ -391,10 +420,11 @@ let K234=Erzeuge_Ecke('orange','blue','yellow'); K234.rotateY(p180);
 let K241=Erzeuge_Ecke('orange','yellow','green'); K241.rotateY(p180);K241.rotateZ(p90);
 let K215=Erzeuge_Ecke('orange','green','white'); K215.rotateY(p180);K215.rotateZ(p180);
 let K253=Erzeuge_Ecke('orange','white','blue'); K253.rotateY(p180);K253.rotateZ(m90);
+let K01=Erzeuge_Kante('red','green');
 
 
 
-let LISTE=[,,,,,,,,,,,,K014,K051,K035,K043,K234,K241,K215,K253]; 
+let LISTE=[K01,,,,,,,,,,,,K014,K051,K035,K043,K234,K241,K215,K253]; 
 let x_Achse=new THREE.Vector3(1,0,0);
 let y_Achse=new THREE.Vector3(0,1,0);
 let z_Achse=new THREE.Vector3(0,0,1);
