@@ -300,7 +300,7 @@ let ECKEN=[
   [[4,0,1],[4,1,2],[4,2,3],[4,3,0,15],,],
   [[5,0,3],[5,1,0],[5,2,1],[5,3,2],,]];
 
-let D=[[1,5,3,4,1,5,3,4],[0,4,2,5,0,4,2,5],[1,5,3,4,1,5,3,4],[2,5,0,4,2,5,0,4],[0,3,2,1,0,3,2,1],[0,1,2,3,0,1,2,3]];
+let D=[[1,5,3,4,1,5,3,4],[0,4,2,5,0,4,2,5],[1,4,3,5,1,4,3,5],[2,4,0,5,2,4,0,5],[0,3,2,1,0,3,2,1],[0,1,2,3,0,1,2,3]];
 
 let WW=[structuredClone(KANTEN),structuredClone(ECKEN),structuredClone(KANTEN),structuredClone(ECKEN)];
 
@@ -316,20 +316,19 @@ function drehe(n) {
   Drehliste_gesamt.push(n);
   }
 
-function drehe2(n) {
+function drehe2(n,j,k) {
   let d=D[n];
   let WWNEU=structuredClone(WW);
   Drehliste=[];
   for (let i=0;i<4;i++) {//alert(WW[1][n][d[i]]);
-    WWNEU[0][n][d[i+1]]=structuredClon(WW[0][n][d[i]]);//ob das auch ohne clone() geht?
-    WWNEU[0][d[i+1]][n]=structuredClon(WW[0][d[i]][n]);
-    WWNEU[1][n][d[i+1]]=structuredClon(WW[1][n][d[i]]);
-    WWNEU[1][d[i+1]][d[i]]=structuredClon(WW[1][d[i]][d[i+3]]);
-
-    WWNEU[1][d[i]][n]=structuredClon(WW[1][d[i+3]][n]);
-    if (WW[1][n][d[i]][3]!=undefined) Drehliste.push([WW[1][n][d[i]][3],Achsen[n],Winkel[n]]);
-    if (WW[1][d[i]][d[i+3]][3]!=undefined) Drehliste.push([WW[1][d[i]][d[i+3]][3],Achsen[n],Winkel[n]]);
-    if (WW[1][d[i+3]][n][3]!=undefined) Drehliste.push([WW[1][d[i+3]][n][3],Achsen[n],Winkel[n]]);
+    WWNEU[0][n][d[i+j]]=WW[0][n][d[i+k]];//ob das auch ohne clone() geht? ja
+    WWNEU[0][d[i+j]][n]=WW[0][d[i+k]][n];
+    WWNEU[1][n][d[i+j]]=WW[1][n][d[i+k]];
+    WWNEU[1][d[i+j]][d[i+3*k]]=WW[1][d[i+k]][d[i+3*j]];
+    WWNEU[1][d[i+3*k]][n]=WW[1][d[i+3*j]][n];
+    if (WW[1][n][d[i+k]][3]!=undefined) Drehliste.push([WW[1][n][d[i+k]][3],Achsen[n],(j-k)*Winkel[n]]);
+    if (WW[1][d[i+k]][d[i+3*j]][3]!=undefined) Drehliste.push([WW[1][d[i+k]][d[i+3*j]][3],Achsen[n],(j-k)*Winkel[n]]);
+    if (WW[1][d[i+3*j]][n][3]!=undefined) Drehliste.push([WW[1][d[i+3*j]][n][3],Achsen[n],(j-k)*Winkel[n]]);
     
     }
   
@@ -403,6 +402,16 @@ let Achsen=[z_Achse,x_Achse,z_Achse,x_Achse,y_Achse,y_Achse];
 let Winkel=[m90,m90,p90,p90,m90,p90];
 id_drehe0.addEventListener('click',function() {drehe(0)});
 id_drehe1.addEventListener('click',function() {drehe(1)});
+id_drehe2.addEventListener('click',function() {drehe(2)});
+id_drehe3.addEventListener('click',function() {drehe(3)});
+id_drehe4.addEventListener('click',function() {drehe(4)});
+id_drehe5.addEventListener('click',function() {drehe(5)});
+id_drehe6.addEventListener('click',function() {drehe(6)});
+id_drehe7.addEventListener('click',function() {drehe(7)});
+id_drehe8.addEventListener('click',function() {drehe(8)});
+id_drehe9.addEventListener('click',function() {drehe(9)});
+id_drehe10.addEventListener('click',function() {drehe(10)});
+id_drehe11.addEventListener('click',function() {drehe(11)});
 
 function animate_start() {
   for (let dd=0;dd<Drehliste.length;dd++) {
@@ -432,7 +441,8 @@ function animate_go() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+(Drehlist
     } else if (index_Drehliste_gesamt+1<Drehliste_gesamt.length) {
       index_Drehliste_gesamt=index_Drehliste_gesamt+1;
       Drehstart=frametime;
-      drehe2(Drehliste_gesamt[index_Drehliste_gesamt]);
+      let n=Drehliste_gesamt[index_Drehliste_gesamt];
+      if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);
       }
 
   }
@@ -441,5 +451,15 @@ function animate_go() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+(Drehlist
 
 <button id='id_drehe0'>drehe(0)</button>
 <button id='id_drehe1'>drehe(1)</button>
+<button id='id_drehe2'>drehe(2)</button>
+<button id='id_drehe3'>drehe(3)</button>
+<button id='id_drehe4'>drehe(4)</button>
+<button id='id_drehe5'>drehe(5)</button>
+<button id='id_drehe6'>drehe(6)</button>
+<button id='id_drehe7'>drehe(7)</button>
+<button id='id_drehe8'>drehe(8)</button>
+<button id='id_drehe9'>drehe(9)</button>
+<button id='id_drehe10'>drehe(10)</button>
+<button id='id_drehe11'>drehe(11)</button>
 <script>
   </script></body></html>
