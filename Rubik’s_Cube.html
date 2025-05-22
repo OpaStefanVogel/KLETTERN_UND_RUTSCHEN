@@ -336,6 +336,8 @@ function drehe2(n,j,k) {
     if (WW[1][n][d[i+k]][3]!=undefined) Drehliste.push([WW[1][n][d[i+k]][3],Achsen[n],(j-k)*Winkel[n]]);
     if (WW[1][d[i+k]][d[i+3*j]][3]!=undefined) Drehliste.push([WW[1][d[i+k]][d[i+3*j]][3],Achsen[n],(j-k)*Winkel[n]]);
     if (WW[1][d[i+3*j]][n][3]!=undefined) Drehliste.push([WW[1][d[i+3*j]][n][3],Achsen[n],(j-k)*Winkel[n]]);    
+    if (WW[0][n][d[i+k]][2]!=undefined) LISTE[WW[0][n][d[i+k]][2]].userData=[n,d[i+j]];
+    if (WW[0][d[i+k]][n][2]!=undefined) LISTE[WW[0][d[i+k]][n][2]].userData=[d[i+j],n];
     }
   Drehliste.push([20+n,Achsen[n],(j-k)*Winkel[n]]);
   
@@ -385,6 +387,7 @@ let K0144=new THREE.Mesh(
   K0144.position.set(0.2,0.301,0.2)
   K0144.rotateX(-Math.PI/2);
   K014.add(K0144);
+  K014.name=rot+gruen+gelb;
   scene.add(K014);
   //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
   return K014;
@@ -411,6 +414,7 @@ let K0141=new THREE.Mesh(
   K0141.position.set(0.301,0,0.2)
   K0141.rotateY(Math.PI/2);
   K014.add(K0141);
+  K014.name=rot+gruen;
   scene.add(K014);
   //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
   return K014;
@@ -518,6 +522,42 @@ function animate_go() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+(Drehlist
 
   }
 
+function suche(i) {
+  let RET=scene.getObjectByName(LISTE[i].name).userData;
+  Drehliste_gesamt=LOESUNGEN[i][RET[0]][RET[1]];index_Drehliste_gesamt=-1;
+//  alert(RET.name+' '+RET.userData);
+  return RET;
+  } 
+
+function loese() {
+  suche(1);
+//  suche(LISTE[9].name);
+//  suche(LISTE[7].name);
+//  suche(LISTE[10].name);
+  }
+
+id_loese.addEventListener('click',function() {loese()});
+
+let LOESUNGEN=[
+  [],
+  [ [,[0,1,0],,[0,3,2],[0,4,3],[0,5,1]],
+    [[1,0],,[1,2],,[/*1,4,8*/1,1,11],[1,5]],
+    [,[2,1,6],,[2,3,4],[2,4,5],[2,5,7]],
+    [[3,0],,[3,2],,[3,4],[3,5,10]],
+    [[4,0],[/*4,1*/7,0],[4,2],[4,3,11],,],
+    [[5,0],[5,1,9],[5,2],[5,3],,]
+    ],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  ];
   </script>
 
 <button id='id_drehe0'>drehe(0)</button>
@@ -532,5 +572,6 @@ function animate_go() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+(Drehlist
 <button id='id_drehe9'>drehe(9)</button>
 <button id='id_drehe10'>drehe(10)</button>
 <button id='id_drehe11'>drehe(11)</button>
+<button id='id_loese'>Löse</button>
 <script>
   </script></body></html>
