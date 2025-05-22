@@ -279,18 +279,23 @@ function animate(timestamp,frame) {
   renderer.render( scene, camera );
   }
 
+
+
+
+
+
 //Start Rubik’s cube
 let m90=-Math.PI/2;
 let p180=Math.PI;
 let p90=Math.PI/2;
 
 let KANTEN=[
-  [,[0,1,0],,[0,3],[0,4],[0,5]],
-  [[1,0],,[1,2],,[1,4],[1,5]],
-  [,[2,1],,[2,3],[2,4],[2,5]],
-  [[3,0],,[3,2],,[3,4],[3,5]],
-  [[4,0],[4,1],[4,2],[4,3],,],
-  [[5,0],[5,1],[5,2],[5,3],,]];
+  [,[0,1,0],,[0,3,2],[0,4,3],[0,5,1]],
+  [[1,0],,[1,2],,[1,4,8],[1,5]],
+  [,[2,1,6],,[2,3,4],[2,4,5],[2,5,7]],
+  [[3,0],,[3,2],,[3,4],[3,5,10]],
+  [[4,0],[4,1],[4,2],[4,3,11],,],
+  [[5,0],[5,1,9],[5,2],[5,3],,]];
 
 let ECKEN=[
   [,[0,1,4,12],,[0,3,5,14],[0,4,3],[0,5,1,13]],
@@ -307,7 +312,7 @@ let WW=[structuredClone(KANTEN),structuredClone(ECKEN),structuredClone(KANTEN),s
 //alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n'));
 
 let structuredClon=function(W){return W};
-let Drehliste_gesamt=[];
+let Drehliste_gesamt=[0,4,3,2,5,8,9,7,6,10,11,1];
 let index_Drehliste_gesamt=-1;
 let Drehliste=[];
 let Drehstart=-1000000;
@@ -330,9 +335,9 @@ function drehe2(n,j,k) {
     if (WW[0][d[i+k]][n][2]!=undefined) Drehliste.push([WW[0][d[i+k]][n][2],Achsen[n],(j-k)*Winkel[n]]);
     if (WW[1][n][d[i+k]][3]!=undefined) Drehliste.push([WW[1][n][d[i+k]][3],Achsen[n],(j-k)*Winkel[n]]);
     if (WW[1][d[i+k]][d[i+3*j]][3]!=undefined) Drehliste.push([WW[1][d[i+k]][d[i+3*j]][3],Achsen[n],(j-k)*Winkel[n]]);
-    if (WW[1][d[i+3*j]][n][3]!=undefined) Drehliste.push([WW[1][d[i+3*j]][n][3],Achsen[n],(j-k)*Winkel[n]]);
-    
+    if (WW[1][d[i+3*j]][n][3]!=undefined) Drehliste.push([WW[1][d[i+3*j]][n][3],Achsen[n],(j-k)*Winkel[n]]);    
     }
+  Drehliste.push([20+n,Achsen[n],(j-k)*Winkel[n]]);
   
   //alert(WW[1]k.join('\n')+'\n\n'+WWNEU[1].join('\n'));
   WW=WWNEU;
@@ -355,29 +360,29 @@ for (let n=0;n<6;n++) for (let k=0;k<4;k++) {
 function Erzeuge_Ecke(rot,gruen,gelb) {
 let K014=new THREE.Group();
 let K014W=new THREE.Mesh(
-  new THREE.BoxGeometry(0.1,0.1,0.1),
-  new THREE.MeshStandardMaterial( {color: 'gray', transparent:true, opacity:0.8} )
+  new THREE.BoxGeometry(0.2,0.2,0.2),
+  new THREE.MeshStandardMaterial( {color: 'darkgray', transparent:false, opacity:0.8} )
   );
   K014W.position.set(0.2,0.2,0.2)
   K014.add(K014W);
 let K0140=new THREE.Mesh(
-  new THREE.PlaneGeometry(0.09,0.09),
+  new THREE.PlaneGeometry(0.19,0.19),
   new THREE.MeshStandardMaterial( {color: rot, transparent:false} )
   );
-  K0140.position.set(0.2,0.2,0.251)
+  K0140.position.set(0.2,0.2,0.301)
   K014.add(K0140);
 let K0141=new THREE.Mesh(
-  new THREE.PlaneGeometry(0.09,0.09),
+  new THREE.PlaneGeometry(0.19,0.19),
   new THREE.MeshStandardMaterial( {color: gruen, transparent:false} )
   );
-  K0141.position.set(0.251,0.2,0.2)
+  K0141.position.set(0.301,0.2,0.2)
   K0141.rotateY(Math.PI/2);
   K014.add(K0141);
 let K0144=new THREE.Mesh(
-  new THREE.PlaneGeometry(0.09,0.09),
+  new THREE.PlaneGeometry(0.19,0.19),
   new THREE.MeshStandardMaterial( {color: gelb, transparent:false} )
   );
-  K0144.position.set(0.2,0.251,0.2)
+  K0144.position.set(0.2,0.301,0.2)
   K0144.rotateX(-Math.PI/2);
   K014.add(K0144);
   scene.add(K014);
@@ -388,24 +393,43 @@ let K0144=new THREE.Mesh(
 function Erzeuge_Kante(rot,gruen) {
 let K014=new THREE.Group();
 let K014W=new THREE.Mesh(
-  new THREE.BoxGeometry(0.1,0.1,0.1),
-  new THREE.MeshStandardMaterial( {color: 'gray', transparent:true, opacity:0.8} )
+  new THREE.BoxGeometry(0.2,0.2,0.2),
+  new THREE.MeshStandardMaterial( {color: 'darkgray', transparent:false, opacity:0.8} )
   );
   K014W.position.set(0.2,0,0.2)
   K014.add(K014W);
 let K0140=new THREE.Mesh(
-  new THREE.PlaneGeometry(0.09,0.09),
+  new THREE.PlaneGeometry(0.19,0.19),
   new THREE.MeshStandardMaterial( {color: rot, transparent:false} )
   );
-  K0140.position.set(0.2,0,0.251)
+  K0140.position.set(0.2,0,0.301)
   K014.add(K0140);
 let K0141=new THREE.Mesh(
-  new THREE.PlaneGeometry(0.09,0.09),
+  new THREE.PlaneGeometry(0.19,0.19),
   new THREE.MeshStandardMaterial( {color: gruen, transparent:false} )
   );
-  K0141.position.set(0.251,0,0.2)
+  K0141.position.set(0.301,0,0.2)
   K0141.rotateY(Math.PI/2);
   K014.add(K0141);
+  scene.add(K014);
+  //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
+  return K014;
+  }
+
+function Erzeuge_Mitte(rot) {
+let K014=new THREE.Group();
+let K014W=new THREE.Mesh(
+  new THREE.BoxGeometry(0.2,0.2,0.2),
+  new THREE.MeshStandardMaterial( {color: 'darkgray', transparent:false, opacity:0.8} )
+  );
+  K014W.position.set(0,0,0.2)
+  K014.add(K014W);
+let K0140=new THREE.Mesh(
+  new THREE.PlaneGeometry(0.19,0.19),
+  new THREE.MeshStandardMaterial( {color: rot, transparent:false} )
+  );
+  K0140.position.set(0,0,0.301)
+  K014.add(K0140);
   scene.add(K014);
   //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
   return K014;
@@ -421,10 +445,27 @@ let K241=Erzeuge_Ecke('orange','yellow','green'); K241.rotateY(p180);K241.rotate
 let K215=Erzeuge_Ecke('orange','green','white'); K215.rotateY(p180);K215.rotateZ(p180);
 let K253=Erzeuge_Ecke('orange','white','blue'); K253.rotateY(p180);K253.rotateZ(m90);
 let K01=Erzeuge_Kante('red','green');
+let K05=Erzeuge_Kante('red','white'); K05.rotateZ(m90);
+let K03=Erzeuge_Kante('red','blue'); K03.rotateZ(p180);
+let K04=Erzeuge_Kante('red','yellow'); K04.rotateZ(p90);
+let K23=Erzeuge_Kante('orange','blue'); K23.rotateY(p180);
+let K24=Erzeuge_Kante('orange','yellow'); K24.rotateY(p180);K24.rotateZ(p90);
+let K21=Erzeuge_Kante('orange','green'); K21.rotateY(p180);K21.rotateZ(p180);
+let K25=Erzeuge_Kante('orange','white'); K25.rotateY(p180);K25.rotateZ(m90);
+let K14=Erzeuge_Kante('yellow','green'); K14.rotateX(m90);
+let K51=Erzeuge_Kante('white','green'); K51.rotateX(p90);
+let K35=Erzeuge_Kante('white','blue'); K35.rotateX(m90); K35.rotateY(p180);
+let K43=Erzeuge_Kante('yellow','blue'); K43.rotateX(p90); K43.rotateY(p180);
+let K0=Erzeuge_Mitte('red');
+let K1=Erzeuge_Mitte('green'); K1.rotateY(p90);
+let K2=Erzeuge_Mitte('orange'); K2.rotateY(p180);
+let K3=Erzeuge_Mitte('blue'); K3.rotateY(m90);
+let K4=Erzeuge_Mitte('yellow'); K4.rotateX(m90);
+let K5=Erzeuge_Mitte('white'); K5.rotateX(p90);
 
 
 
-let LISTE=[K01,,,,,,,,,,,,K014,K051,K035,K043,K234,K241,K215,K253]; 
+let LISTE=[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K035,K043,K234,K241,K215,K253,K0,K1,K2,K3,K4,K5]; 
 let x_Achse=new THREE.Vector3(1,0,0);
 let y_Achse=new THREE.Vector3(0,1,0);
 let z_Achse=new THREE.Vector3(0,0,1);
@@ -458,8 +499,8 @@ function animate_start() {
   }
 
 function animate_go() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+(Drehliste_gesamt.length-1-index_Drehliste_gesamt);
-  if (frametime<Drehstart+1600) {
-    let alpha=Math.min((frametime-Drehstart)/1500,1);
+  if (frametime<Drehstart+600) {
+    let alpha=Math.min((frametime-Drehstart)/500,1);
     for (let dd=0;dd<Drehliste.length;dd++) {
       let d=Drehliste[dd];
       let Obj=LISTE[d[0]];
