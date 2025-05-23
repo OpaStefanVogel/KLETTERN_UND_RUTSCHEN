@@ -9,10 +9,10 @@
 
 <body>
 <div id="canvas"></div>
-<div id='Log' style='font-family:Courier,monospace; white-space:pre;'> </div>
-<div id='Tdok' style='font-family:Courier,monospace; white-space:pre;'> </div>
-<div><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
-<div id='Log2' style='font-family:Courier,monospace; white-space:pre;'> </div>
+<div id='Log' style='display:none; font-family:Courier,monospace; white-space:pre;'> </div>
+<div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:pre;'> </div>
+<div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
+<div id='Log2' style='display:non; font-family:Courier,monospace; white-space:pre;'> </div>
 
 <!--importmap muß bleiben weil die module auch three aufrufen-->
 		<script type="importmap">
@@ -347,7 +347,6 @@ function drehe2(n,j,k) {
   //alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n'));
 
 //  if (WW[1][d[i+3]][n][3]!=undefined) {LISTE[WW[1][d[i+3]][n][3]]['rotateOnWorldAxis'](Achsen[n],Winkel[n])}
-  animate_start();
   };
 
 for (let n=0;n<6;n++) for (let k=0;k<4;k++) {
@@ -502,9 +501,9 @@ function animate_start() {
   //alert(Drehliste[0][3].toArray()+'\n'+Drehliste[0][4].toArray()+'\n'+Drehstart);
   }
 
-function animate_go() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+(Drehliste_gesamt.length-1-index_Drehliste_gesamt);
-  if (frametime<Drehstart+400) {
-    let alpha=Math.min((frametime-Drehstart)/300,1);
+function animate_go() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+(Drehliste_gesamt.length-1-index_Drehliste_gesamt+' aus '+Drehliste_gesamt+' '+index_Drehliste_gesamt);
+  if (frametime<Drehstart+600) {
+    let alpha=Math.min((frametime-Drehstart)/400,1);
     for (let dd=0;dd<Drehliste.length;dd++) {
       let d=Drehliste[dd];
       let Obj=LISTE[d[0]];
@@ -513,34 +512,53 @@ function animate_go() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+(Drehlist
       Obj.setRotationFromEuler(d[3]);
       Obj.rotateOnWorldAxis(Achs,alpha*Wink);
       }
-    } else if (index_Drehliste_gesamt+1<Drehliste_gesamt.length) {
-      index_Drehliste_gesamt=index_Drehliste_gesamt+1;
-      Drehstart=frametime;
-      let n=Drehliste_gesamt[index_Drehliste_gesamt];
+    } else if ((Drehliste_gesamt.length>0)&&frametime>2000) {
+      //index_Drehliste_gesamt=index_Drehliste_gesamt+1;
+      let n=Drehliste_gesamt.shift();
       if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);
+      //alert(n);
+      animate_start();
+      Drehstart=frametime;
       }
 
   }
 
 function suche(i) {
-  let RET=scene.getObjectByName(LISTE[i].name).userData;
-  Drehliste_gesamt=LOESUNGEN[i][RET[0]][RET[1]];index_Drehliste_gesamt=-1;
-//  alert(RET.name+' '+RET.userData);
-  return RET;
+  let RET=scene.getObjectByName(LISTE[i].name);
+  let WET=RET.userData;
+  let GET=LOESUNGEN[i][WET[0]][WET[1]];
+  alert('i='+i+': '+RET.name+' '+RET.userData+' '+GET);
+  for (i=0;i<GET.length;i++) {
+    let n=GET[i];
+    if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);
+    Loeseliste.push(n);
+    }
+  return GET;
   } 
 
+let Loeseliste=[];
 function loese() {
+  //Drehliste_gesamt=[7,7,11];return;
+  let WWMERK=structuredClone(WW);
+  //let LI=[];
+  //for (let i=0;i<LISTE.length;i++) LI[i]=LISTE[i].rotation;
+  Loeseliste=[];
   suche(1);
-//  suche(LISTE[9].name);
-//  suche(LISTE[7].name);
-//  suche(LISTE[10].name);
+  suche(9);
+  //suche(7);
+  //suche(10);
+  alert(Loeseliste);
+  WW=structuredClone(WWMERK);
+  //for (let i=0;i<LISTE.length;i++) LISTE[i].setRotationFromEuler(LI[i]);alert(8);
+  setTimeout(function() {Drehliste_gesamt=Loeseliste;index_Drehliste_gesamt=-1;},100);
   }
 
 id_loese.addEventListener('click',function() {loese()});
 
 let LOESUNGEN=[
   [],
-  [ [,[/*0,1,0*/0],,[/*0,3,2*/6],[/*0,4,3*/0,0],[/*0,5,1*/]],
+/*1:K05*/[ 
+    [,[/*0,1,0*/0],,[/*0,3,2*/6],[/*0,4,3*/0,0],[/*0,5,1*/]],
     [[/*1,0*/7,11],,[/*1,2*/2,11],,[/*1,4,8*/7,7,11],[/*1,5*/11]],
     [,[/*2,1,6*/1,1,0],,[/*2,3,4*/3,3,6],[/*2,4,5*/4,4,0,0],[/*2,5,7*/5,5]],
     [[/*3,0*/3,5],,[/*3,2*/9,5],,[/*3,4*/9,9,5],[/*3,5,10*/5]],
@@ -552,26 +570,51 @@ let LOESUNGEN=[
   [],
   [],
   [],
+/*7:K25*/[
+    [,[/*0,1,0*/0],,[/*0,3,2*/6],[/*0,4,3*/0,0],[/*0,5,1*/]],
+    [[/*1,0*/7,11],,[/*1,2*/2,11],,[/*1,4,8*/7,7,11],[/*1,5*/11]],
+    [,[/*2,1,6*/1,1,0],,[/*2,3,4*/3,3,6],[/*2,4,5*/4,4,0,0],[/*2,5,7*/5,5]],
+    [[/*3,0*/3,5],,[/*3,2*/9,5],,[/*3,4*/9,9,5],[/*3,5,10*/5]],
+    [[/*4,0*/10,7,0],[/*4,1*/7,0],[/*4,2*/4,7,0],[/*4,3,11*/3,6],,],
+    [[/*5,0*/5,1,0],[/*5,1,9*/1,0],[/*5,2*/11,1,0],[/*5,3*/9,6],,]
+    ],
   [],
-  [],
-  [],
-  [],
+/*9:K51*/[
+    [,[/*0,1,0*/0],,[/*0,3,2*/6],[/*0,4,3*/0,0],[/*0,5,1*/]],
+    [[/*1,0*/7,11],,[/*1,2*/2,11],,[/*1,4,8*/7,7,11],[/*1,5♥*/7,5,8,11]],
+    [,[/*2,1,6*/1,1,0],,[/*2,3,4*/3,3,6],[/*2,4,5*/4,4,0,0],[/*2,5,7*/5,5]],
+    [[/*3,0*/3,5],,[/*3,2*/9,5],,[/*3,4*/9,9,5],[/*3,5,10*/5]],
+    [[/*4,0*/10,7,0],[/*4,1*/7,0],[/*4,2*/4,7,0],[/*4,3,11*/3,6],,],
+    [[/*5,0*/5,1,0],[/*5,1,9*/1,0],[/*5,2*/11,1,0],[/*5,3*/9,6],,]
+    ],
+/*10:K35*/[
+    [,[/*0,1,0*/0],,[/*0,3,2*/6],[/*0,4,3*/0,0],[/*0,5,1*/]],
+    [[/*1,0*/7,11],,[/*1,2*/2,11],,[/*1,4,8*/7,7,11],[/*1,5*/11]],
+    [,[/*2,1,6*/1,1,0],,[/*2,3,4*/3,3,6],[/*2,4,5*/4,4,0,0],[/*2,5,7*/5,5]],
+    [[/*3,0*/3,5],,[/*3,2*/9,5],,[/*3,4*/9,9,5],[/*3,5,10*/5]],
+    [[/*4,0*/10,7,0],[/*4,1*/7,0],[/*4,2*/4,7,0],[/*4,3,11*/3,6],,],
+    [[/*5,0*/5,1,0],[/*5,1,9*/1,0],[/*5,2*/11,1,0],[/*5,3*/9,6],,]    
+    ],
   [],
   ];
   </script>
 
-<button id='id_drehe0'>drehe(0)</button>
-<button id='id_drehe1'>drehe(1)</button>
-<button id='id_drehe2'>drehe(2)</button>
-<button id='id_drehe3'>drehe(3)</button>
-<button id='id_drehe4'>drehe(4)</button>
-<button id='id_drehe5'>drehe(5)</button>
-<button id='id_drehe6'>drehe(6)</button>
-<button id='id_drehe7'>drehe(7)</button>
-<button id='id_drehe8'>drehe(8)</button>
-<button id='id_drehe9'>drehe(9)</button>
-<button id='id_drehe10'>drehe(10)</button>
-<button id='id_drehe11'>drehe(11)</button>
-<button id='id_loese'>Löse</button>
+<div>
+<button id='id_loese' style='font-size:300%; float:right'>Löse</button>
+<button id='id_drehe0' style='background-color:red; font-size:200%'>↷</button>
+<button id='id_drehe1' style='background-color:green; font-size:200%'>↷</button>
+<button id='id_drehe2' style='background-color:orange; font-size:200%'>↷</button>
+<button id='id_drehe3' style='background-color:blue; font-size:200%'>↷</button>
+<button id='id_drehe4' style='background-color:yellow; font-size:200%'>↷</button>
+<button id='id_drehe5' style='background-color:white; font-size:200%'>↻</button>
+  </div>
+<div>
+<button id='id_drehe6' style='background-color:red; font-size:200%'>↶</button>
+<button id='id_drehe7' style='background-color:green; font-size:200%'>↶</button>
+<button id='id_drehe8' style='background-color:orange; font-size:200%'>↶</button>
+<button id='id_drehe9' style='background-color:blue; font-size:200%'>↶</button>
+<button id='id_drehe10' style='background-color:yellow; font-size:200%'>↶</button>
+<button id='id_drehe11' style='background-color:white; font-size:200%'>↺</button>
+  </div>
 <script>
   </script></body></html>
