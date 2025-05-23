@@ -312,8 +312,7 @@ let WW=[structuredClone(KANTEN),structuredClone(ECKEN),structuredClone(KANTEN),s
 //alert(WW[0].join('\n')+'\n\n'+WW[1].join('\n'));
 
 let structuredClon=function(W){return W};
-let Drehliste_gesamt=[0,4,3,2,5,8,9,7,6,10,11,1];
-let index_Drehliste_gesamt=-1;
+let Drehliste_gesamt=[];//[0,4,3,2,5,8,9,7,6,10,11,1];
 let Drehliste=[];
 let Drehstart=-1000000;
 
@@ -439,26 +438,26 @@ let K0140=new THREE.Mesh(
   }
 
 
-let K014=Erzeuge_Ecke('red','green','yellow');
-let K051=Erzeuge_Ecke('red','white','green'); K051.rotateZ(m90);
-let K035=Erzeuge_Ecke('red','blue','white'); K035.rotateZ(p180);
-let K043=Erzeuge_Ecke('red','yellow','blue'); K043.rotateZ(p90);
-let K234=Erzeuge_Ecke('orange','blue','yellow'); K234.rotateY(p180);
-let K241=Erzeuge_Ecke('orange','yellow','green'); K241.rotateY(p180);K241.rotateZ(p90);
-let K215=Erzeuge_Ecke('orange','green','white'); K215.rotateY(p180);K215.rotateZ(p180);
-let K253=Erzeuge_Ecke('orange','white','blue'); K253.rotateY(p180);K253.rotateZ(m90);
-let K01=Erzeuge_Kante('red','green');
-let K05=Erzeuge_Kante('red','white'); K05.rotateZ(m90);
-let K03=Erzeuge_Kante('red','blue'); K03.rotateZ(p180);
-let K04=Erzeuge_Kante('red','yellow'); K04.rotateZ(p90);
-let K23=Erzeuge_Kante('orange','blue'); K23.rotateY(p180);
-let K24=Erzeuge_Kante('orange','yellow'); K24.rotateY(p180);K24.rotateZ(p90);
-let K21=Erzeuge_Kante('orange','green'); K21.rotateY(p180);K21.rotateZ(p180);
-let K25=Erzeuge_Kante('orange','white'); K25.rotateY(p180);K25.rotateZ(m90);
-let K14=Erzeuge_Kante('yellow','green'); K14.rotateX(m90);
-let K51=Erzeuge_Kante('white','green'); K51.rotateX(p90);
-let K35=Erzeuge_Kante('white','blue'); K35.rotateX(m90); K35.rotateY(p180);
-let K43=Erzeuge_Kante('yellow','blue'); K43.rotateX(p90); K43.rotateY(p180);
+let K014=Erzeuge_Ecke('red','green','yellow'); K014.userData=[0,1,4];
+let K051=Erzeuge_Ecke('red','white','green'); K051.userData=[0,5,1]; K051.rotateZ(m90);
+let K035=Erzeuge_Ecke('red','blue','white'); K035.userData=[0,3,5]; K035.rotateZ(p180);
+let K043=Erzeuge_Ecke('red','yellow','blue'); K043.userData=[0,4,3]; K043.rotateZ(p90);
+let K234=Erzeuge_Ecke('orange','blue','yellow'); K234.userData=[2,3,4]; K234.rotateY(p180);
+let K241=Erzeuge_Ecke('orange','yellow','green'); K241.userData=[2,4,1]; K241.rotateY(p180);K241.rotateZ(p90);
+let K215=Erzeuge_Ecke('orange','green','white'); K215.userData=[2,1,5]; K215.rotateY(p180);K215.rotateZ(p180);
+let K253=Erzeuge_Ecke('orange','white','blue'); K253.userData=[2,3,5]; K253.rotateY(p180);K253.rotateZ(m90);
+let K01=Erzeuge_Kante('red','green'); K01.userData=[0,1];
+let K05=Erzeuge_Kante('red','white'); K05.userData=[0,5]; K05.rotateZ(m90);
+let K03=Erzeuge_Kante('red','blue'); K03.userData=[0,3]; K03.rotateZ(p180);
+let K04=Erzeuge_Kante('red','yellow'); K04.userData=[0,4]; K04.rotateZ(p90);
+let K23=Erzeuge_Kante('orange','blue'); K23.userData=[2,3]; K23.rotateY(p180);
+let K24=Erzeuge_Kante('orange','yellow'); K24.userData=[2,4]; K24.rotateY(p180);K24.rotateZ(p90);
+let K21=Erzeuge_Kante('orange','green'); K21.userData=[2,1]; K21.rotateY(p180);K21.rotateZ(p180);
+let K25=Erzeuge_Kante('orange','white'); K25.userData=[2,5]; K25.rotateY(p180);K25.rotateZ(m90);
+let K14=Erzeuge_Kante('yellow','green'); K14.userData=[1,4]; K14.rotateX(m90);
+let K51=Erzeuge_Kante('white','green'); K51.userData=[5,1]; K51.rotateX(p90);
+let K35=Erzeuge_Kante('white','blue'); K35.userData=[3,5]; K35.rotateX(m90); K35.rotateY(p180);
+let K43=Erzeuge_Kante('yellow','blue'); K43.userData=[4,3]; K43.rotateX(p90); K43.rotateY(p180);
 let K0=Erzeuge_Mitte('red');
 let K1=Erzeuge_Mitte('green'); K1.rotateY(p90);
 let K2=Erzeuge_Mitte('orange'); K2.rotateY(p180);
@@ -501,7 +500,7 @@ function animate_start() {
   //alert(Drehliste[0][3].toArray()+'\n'+Drehliste[0][4].toArray()+'\n'+Drehstart);
   }
 
-function animate_go() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+(Drehliste_gesamt.length-1-index_Drehliste_gesamt+' aus '+Drehliste_gesamt+' '+index_Drehliste_gesamt);
+function animate_go() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehliste_gesamt;
   if (frametime<Drehstart+600) {
     let alpha=Math.min((frametime-Drehstart)/400,1);
     for (let dd=0;dd<Drehliste.length;dd++) {
@@ -513,7 +512,6 @@ function animate_go() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+(Drehlist
       Obj.rotateOnWorldAxis(Achs,alpha*Wink);
       }
     } else if ((Drehliste_gesamt.length>0)&&frametime>2000) {
-      //index_Drehliste_gesamt=index_Drehliste_gesamt+1;
       let n=Drehliste_gesamt.shift();
       if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);
       //alert(n);
@@ -527,7 +525,7 @@ function suche(i) {
   let RET=scene.getObjectByName(LISTE[i].name);
   let WET=RET.userData;
   let GET=LOESUNGEN[i][WET[0]][WET[1]];
-  alert('i='+i+': '+RET.name+' '+RET.userData+' '+GET);
+  //alert('i='+i+': '+RET.name+' '+RET.userData+' '+GET);
   for (i=0;i<GET.length;i++) {
     let n=GET[i];
     if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);
@@ -547,10 +545,10 @@ function loese() {
   suche(9);
   //suche(7);
   //suche(10);
-  alert(Loeseliste);
+  //alert(Loeseliste);
   WW=structuredClone(WWMERK);
   //for (let i=0;i<LISTE.length;i++) LISTE[i].setRotationFromEuler(LI[i]);alert(8);
-  setTimeout(function() {Drehliste_gesamt=Loeseliste;index_Drehliste_gesamt=-1;},100);
+  setTimeout(function() {Drehliste_gesamt=Loeseliste},100);
   }
 
 id_loese.addEventListener('click',function() {loese()});
@@ -572,7 +570,7 @@ let LOESUNGEN=[
   [],
 /*7:K25*/[
     [,[/*0,1,0*/0],,[/*0,3,2*/6],[/*0,4,3*/0,0],[/*0,5,1*/]],
-    [[/*1,0*/7,11],,[/*1,2*/2,11],,[/*1,4,8*/7,7,11],[/*1,5*/11]],
+    [[/*1,0*/],,[/*1,2*/2,11],,[/*1,4,8♥*/10,2,2],[/*1,5*/11]],
     [,[/*2,1,6*/1,1,0],,[/*2,3,4*/3,3,6],[/*2,4,5*/4,4,0,0],[/*2,5,7*/5,5]],
     [[/*3,0*/3,5],,[/*3,2*/9,5],,[/*3,4*/9,9,5],[/*3,5,10*/5]],
     [[/*4,0*/10,7,0],[/*4,1*/7,0],[/*4,2*/4,7,0],[/*4,3,11*/3,6],,],
@@ -580,17 +578,17 @@ let LOESUNGEN=[
     ],
   [],
 /*9:K51*/[
-    [,[/*0,1,0*/0],,[/*0,3,2*/6],[/*0,4,3*/0,0],[/*0,5,1*/]],
-    [[/*1,0*/7,11],,[/*1,2*/2,11],,[/*1,4,8*/7,7,11],[/*1,5♥*/7,5,8,11]],
+    [,[/*0,1,0♥*/7],,[/*0,3,2♥*/9,4,4,7,7],[/*0,4,3*/0,0],[/*0,5,1*/]],
+    [[/*1,0*/11,0,5],,[/*1,2*/2,11],,[/*1,4,8*/7,7,11],[/*1,5♥*/7,5,8,11]],
     [,[/*2,1,6*/1,1,0],,[/*2,3,4*/3,3,6],[/*2,4,5*/4,4,0,0],[/*2,5,7*/5,5]],
     [[/*3,0*/3,5],,[/*3,2*/9,5],,[/*3,4*/9,9,5],[/*3,5,10*/5]],
     [[/*4,0*/10,7,0],[/*4,1*/7,0],[/*4,2*/4,7,0],[/*4,3,11*/3,6],,],
-    [[/*5,0*/5,1,0],[/*5,1,9*/1,0],[/*5,2*/11,1,0],[/*5,3*/9,6],,]
+    [[/*5,0*/5,1,0],[/*5,1,9♥*/],[/*5,2*/11,1,0],[/*5,3*/9,6],,]
     ],
 /*10:K35*/[
-    [,[/*0,1,0*/0],,[/*0,3,2*/6],[/*0,4,3*/0,0],[/*0,5,1*/]],
-    [[/*1,0*/7,11],,[/*1,2*/2,11],,[/*1,4,8*/7,7,11],[/*1,5*/11]],
-    [,[/*2,1,6*/1,1,0],,[/*2,3,4*/3,3,6],[/*2,4,5*/4,4,0,0],[/*2,5,7*/5,5]],
+    [,[/*0,1,0*/0],,[/*0,3,2*/6],[/*0,4,3♦*/10,9,9],[/*0,5,1*/]],
+    [[/*1,0*/7,11],,[/*1,2*/2,11],,[/*1,4,8*/10,2,2],[/*1,5*/11]],
+    [,[/*2,1,6*/1,1,0],,[/*2,3,4*/3,3,6],[/*2,4,5♥*/10,9,9],[/*2,5,7*/5,5]],
     [[/*3,0*/3,5],,[/*3,2*/9,5],,[/*3,4*/9,9,5],[/*3,5,10*/5]],
     [[/*4,0*/10,7,0],[/*4,1*/7,0],[/*4,2*/4,7,0],[/*4,3,11*/3,6],,],
     [[/*5,0*/5,1,0],[/*5,1,9*/1,0],[/*5,2*/11,1,0],[/*5,3*/9,6],,]    
