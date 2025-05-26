@@ -299,8 +299,8 @@ let KANTEN=[
 
 let ECKEN=[
   [,[0,1,4,12],,[0,3,5,14],[0,4,3],[0,5,1,13]],
-  [[1,0,5],,[1,2,4],,[1,4,0],[1,5,2]],
-  [,[2,1,5,18],,[2,3,4,16],[2,4,1,17],[2,5,3,19]],
+  [[1,0,5],,[1,2,4],,[1,4,0],[1,5,2,18]],
+  [,[2,1,5],,[2,3,4,16],[2,4,1,17],[2,5,3,19]],
   [[3,0,4],,[3,2,5],,[3,4,2],[3,5,0]],
   [[4,0,1],[4,1,2],[4,2,3],[4,3,0,15],,],
   [[5,0,3],[5,1,0],[5,2,1],[5,3,2],,]];
@@ -447,7 +447,7 @@ let K035=Erzeuge_Ecke('red','blue','white'); K035.userData=[0,3,5]; K035.rotateZ
 let K043=Erzeuge_Ecke('red','yellow','blue'); K043.userData=[0,4,3]; K043.rotateZ(p90);
 let K234=Erzeuge_Ecke('orange','blue','yellow'); K234.userData=[2,3,4]; K234.rotateY(p180);
 let K241=Erzeuge_Ecke('orange','yellow','green'); K241.userData=[2,4,1]; K241.rotateY(p180);K241.rotateZ(p90);
-let K215=Erzeuge_Ecke('orange','green','white'); K215.userData=[2,1,5]; K215.rotateY(p180);K215.rotateZ(p180);
+let K152=Erzeuge_Ecke('green','white','orange'); K152.userData=[1,5,2]; K152.rotateZ(m90);K152.rotateX(m90);
 let K253=Erzeuge_Ecke('orange','white','blue'); K253.userData=[2,3,5]; K253.rotateY(p180);K253.rotateZ(m90);
 let K01=Erzeuge_Kante('red','green'); K01.userData=[0,1];
 let K05=Erzeuge_Kante('red','white'); K05.userData=[0,5]; K05.rotateZ(m90);
@@ -470,7 +470,7 @@ let K5=Erzeuge_Mitte('white'); K5.rotateX(p90);
 
 
 
-let LISTE=[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K035,K043,K234,K241,K215,K253,K0,K1,K2,K3,K4,K5]; 
+let LISTE=[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K035,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5]; 
 let x_Achse=new THREE.Vector3(1,0,0);
 let y_Achse=new THREE.Vector3(0,1,0);
 let z_Achse=new THREE.Vector3(0,0,1);
@@ -489,7 +489,7 @@ id_drehe9.addEventListener('click',function() {drehe(9)});
 id_drehe10.addEventListener('click',function() {drehe(10)});
 id_drehe11.addEventListener('click',function() {drehe(11)});
 
-function animate_start() {
+function animate_start() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehliste_gesamt;
   for (let dd=0;dd<Drehliste.length;dd++) {
     let d=Drehliste[dd];
     let Obj=LISTE[d[0]];
@@ -503,7 +503,7 @@ function animate_start() {
   //alert(Drehliste[0][3].toArray()+'\n'+Drehliste[0][4].toArray()+'\n'+Drehstart);
   }
 
-function animate_go() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehliste_gesamt;
+function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehliste_gesamt;
   if (frametime<Drehstart+600) {
     let alpha=Math.min((frametime-Drehstart)/400,1);
     for (let dd=0;dd<Drehliste.length;dd++) {
@@ -540,6 +540,30 @@ function suche(i) {
 
 let Loeseliste=[];
 function loese() {
+
+/*//aus 
+const canvas = document.getElementById("canvas").firstChild;
+//const canvas = document.createElement("canvas");
+alert(canvas);
+const gl = canvas.getContext("webgl2", {preserveDrawingBuffer: true});alert(gl);alert(gl.drawingBufferWidth);
+const pixels = new Uint8Array(
+400//  gl.drawingBufferWidth * gl.drawingBufferHeight * 4,
+);
+alert(gl.readPixels);
+gl.readPixels(
+  100,//0
+  100,//0
+  10,//gl.drawingBufferWidth,
+  10,//gl.drawingBufferHeight,
+  gl.RGBA,
+  gl.UNSIGNED_BYTE,
+  pixels,
+);
+//console.log(pixels); // Uint8Array
+alert(pixels);
+*/
+
+
   //Drehliste_gesamt=[7,7,11];return;
   let WWMERK=structuredClone(WW);
   //let LI=[];
@@ -550,6 +574,7 @@ function loese() {
   suche(7);
   suche(10);
   suche(13);
+  suche(18);
   //alert(Loeseliste);
   WW=structuredClone(WWMERK);
   //for (let i=0;i<LISTE.length;i++) LISTE[i].setRotationFromEuler(LI[i]);alert(8);
@@ -609,14 +634,26 @@ let LOESUNGEN=[
   ],
 /*13:K051*/[
   [,[/*0,1,4,12♥*/1,4,7],,[/*0,3,5,14*/0,4,6],[/*0,4,3♦*/10],[/*0,5,1,13♣*/]],
-  [[/*1,0,5*/1,4,7],,[/*1,2,4♦*/4],,[/*1,4,0♥*/1,4,4,7,10],[/*1,5,2*/2,4,8]],
+  [[/*1,0,5♦*/1,4,7],,[/*1,2,4♦*/4],,[/*1,4,0♥*/1,4,4,7,10],[/*1,5,2*/2,4,8]],
   [,[/*2,1,5,18*/2,4,8],,[/*2,3,4,16♦*/4,4],[/*2,4,1,17♦*/4],[/*2,5,3,19*/3,4,9]],
   [[/*3,0,4♦*/10],,[/*3,2,5*/3,4,9],,[/*3,4,2♦*/4,4],[/*3,5,0*/0,4,6]],
   [[/*4,0,1♥*/6,10,0],[/*4,1,2♦*/4],[/*4,2,3♦*/4,4],[/*4,3,0,15♦*/10],,],
-  [[/*5,0,3*/0,4,6],[/*5,1,0*/1,4,7],[/*5,2,1*/2,4,8],[/*5,3,2*/3,4,9],,],
+  [[/*5,0,3*/0,4,6],[/*5,1,0♦*/1,4,7],[/*5,2,1*/2,4,8],[/*5,3,2*/3,4,9],,],
+    ],
+  [],
+  [],
+  [],
+  [],
+/*18:K152*/[
+  [,[/*0,1,4,12♦*/10],,[/*0,3,5,14♦*/0,4,6],[/*0,4,3♦*/4,4],[/*0,5,1,13♠*/]],
+  [[/*1,0,5♠*/],,[/*1,2,4♥*/2,4,8],,[/*1,4,0♦*/10],[/*1,5,2♣*/]],
+  [,[/*2,1,5,18♦*/2,4,8],,[/*2,3,4,16♦*/4],[/*2,4,1,17♦*/2,4,4,8,10],[/*2,5,3,19♦*/3,4,9]],
+  [[/*3,0,4♦*/4,4],,[/*3,2,5♦*/3,4,9],,[/*3,4,2♦*/4],[/*3,5,0♦*/0,4,6]],
+  [[/*4,0,1♦*/10],[/*4,1,2♥*/7,10,1],[/*4,2,3♦*/4],[/*4,3,0,15♦*/4,4],,],
+  [[/*5,0,3♦*/0,4,6],[/*5,1,0♠*/],[/*5,2,1♦*/2,4,8],[/*5,3,2♦*/3,4,9],,],
     ],
   ];
-  </script>
+  </script>401 2 10 8
 
 <div>
 <button id='id_loese' style='font-size:300%; float:right'>Löse</button>
