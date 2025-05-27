@@ -9,7 +9,7 @@
 
 <body>
 <div id="canvas"></div>
-<div id='Log' style='display:none; font-family:Courier,monospace; white-space:pre;'> </div>
+<div id='Log' style='display:non; font-family:Courier,monospace; white-space:pre;'> </div>
 <div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:pre;'> </div>
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
 <div id='Log2' style='display:non; font-family:Courier,monospace; white-space:pre;'> </div>
@@ -457,9 +457,9 @@ let K23=Erzeuge_Kante('orange','blue'); K23.userData=[2,3]; K23.rotateY(p180);
 let K24=Erzeuge_Kante('orange','yellow'); K24.userData=[2,4]; K24.rotateY(p180);K24.rotateZ(p90);
 let K21=Erzeuge_Kante('orange','green'); K21.userData=[2,1]; K21.rotateY(p180);K21.rotateZ(p180);
 let K25=Erzeuge_Kante('orange','white'); K25.userData=[2,5]; K25.rotateY(p180);K25.rotateZ(m90);
-let K14=Erzeuge_Kante('yellow','green'); K14.userData=[1,4]; K14.rotateX(m90);
+let K14=Erzeuge_Kante('green','yellow'); K14.userData=[1,4]; K14.rotateZ(p90);K14.rotateX(p90);
 let K51=Erzeuge_Kante('white','green'); K51.userData=[5,1]; K51.rotateX(p90);
-let K35=Erzeuge_Kante('white','blue'); K35.userData=[3,5]; K35.rotateX(m90); K35.rotateY(p180);
+let K35=Erzeuge_Kante('blue','white'); K35.userData=[3,5]; K35.rotateZ(m90); K35.rotateX(p90);
 let K43=Erzeuge_Kante('yellow','blue'); K43.userData=[4,3]; K43.rotateX(p90); K43.rotateY(p180);
 let K0=Erzeuge_Mitte('red');
 let K1=Erzeuge_Mitte('green'); K1.rotateY(p90);
@@ -504,8 +504,8 @@ function animate_start() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehli
   }
 
 function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehliste_gesamt;
-  if (frametime<Drehstart+600) {
-    let alpha=Math.min((frametime-Drehstart)/400,1);
+  if (frametime<Drehstart+300) {
+    let alpha=Math.min((frametime-Drehstart)/200,1);
     for (let dd=0;dd<Drehliste.length;dd++) {
       let d=Drehliste[dd];
       let Obj=LISTE[d[0]];
@@ -588,7 +588,7 @@ id_loese.addEventListener('click',function() {loese()});
 let LOESUNGEN=[
   [],
 /*1:K05*/[ 
-    [,[/*0,1,0*/0],,[/*0,3,2*/6],[/*0,4,3*/0,0],[/*0,5,1*/]],
+    [,[/*0,1,0*/0],,[/*0,3,2*/6],[/*0,4,3*/0,0],[/*0,5,1♣*/]],
     [[/*1,0*/7,11],,[/*1,2*/2,11],,[/*1,4,8*/7,7,11],[/*1,5*/11]],
     [,[/*2,1,6*/1,1,0],,[/*2,3,4*/3,3,6],[/*2,4,5*/4,4,0,0],[/*2,5,7*/5,5]],
     [[/*3,0*/3,5],,[/*3,2*/9,5],,[/*3,4*/9,9,5],[/*3,5,10*/5]],
@@ -612,10 +612,10 @@ let LOESUNGEN=[
 /*9:K51♥*/[
     [,[/*0,1,0♥*/7],,[/*0,3,2♥*/9,4,4,7,7],[/*0,4,3♥*/0,7,6],[/*0,5,1♠*/]],
     [[/*1,0♥*/0,5,6],,[/*1,2♥*/5,8,11],,[/*1,4,8♥*/10,8,1],[/*1,5♥*/7,5,8,11]],
-    [,[/*2,1,6♥*/1],,[/*2,3,4♥*/2,2,1],[/*2,4,5♥*/8,1],[/*2,5,7*/5,5]],
+    [,[/*2,1,6♥*/1],,[/*2,3,4♥*/2,2,1],[/*2,4,5♥*/8,1],[/*2,5,7*/2]],
     [[/*3,0♥*/11,6,5],,[/*3,2♥*/5,2,11],,[/*3,4♥*/4,8,1],[/*3,5,10♥*/9,11,6,5]],
     [[/*4,0♥*/10,1,1],[/*4,1♥*/1,1],[/*4,2♥*/4,1,1],[/*4,3,11♥*/4,4,1,1],,],
-    [[/*5,0♠*/],[/*5,1,9♣*/],[/*5,2♥*/11],[/*5,3♥*/11,11],,]
+    [[/*5,0♠*/],[/*5,1,9♣*/],[/*5,2♥*/2],[/*5,3♥*/3],,]
     ],
 /*10:K35♥*/[
     [,[/*0,1,0♥*/6,4,0,3,3],,[/*0,3,2♥*/0,4,6,3,3],[/*0,4,3♥*/4,9,9],[/*0,5,1♠*/]],
@@ -644,7 +644,7 @@ let LOESUNGEN=[
     ],
 /*14:K350*/[
   [,[/*0,1,4,12♦*/4],,[/*0,3,5,14♦*/0,4,6],[/*0,4,3♦*/0,4,4,6,10],[/*0,5,1,13♠*/]],
-  [[/*1,0,5♠*/],,[/*1,2,4♦*/4,4],,[/*1,4,0♦*/],[/*1,5,2♠*/]],
+  [[/*1,0,5♠*/],,[/*1,2,4♦*/4,4],,[/*1,4,0♦*/4],[/*1,5,2♠*/]],
   [,[/*2,1,5,18♠*/],,[/*2,3,4,16♦*/10],[/*2,4,1,17♦*/4,4],[/*2,5,3,19♠*/]],
   [[/*3,0,4♥*/0,4,6],,[/*3,2,5♠*/],,[/*3,4,2♦*/10],[/*3,5,0♣*/]],
   [[/*4,0,1♦*/4],[/*4,1,2♦*/4,4],[/*4,2,3♦*/10],[/*4,3,0,15♥*/9,10,3],,],
@@ -670,10 +670,56 @@ let LOESUNGEN=[
   [[/*5,0,3♦*/0,4,6],[/*5,1,0♠*/],[/*5,2,1♠*/],[/*5,3,2♦*/3,4,9],,],
     ],
   ];
+  
+//[7,1,1,4,5,8,9,11,9,1,4,4,2,0,2,5,8,1,6,2]
+
+function mische(n) {
+  let RET=[];
+  for (let i=0;i<n;i++) RET.push(Math.floor(Math.random()*12));
+  Log.innerHTML=RET;
+  setTimeout(function() {Drehliste_gesamt=RET},100);
+  }
+
+id_mische.addEventListener('click',function() {mische(20)});
+
+function fehlersuch(liste) {
+  let RET=liste;
+  Log.innerHTML=RET;
+  setTimeout(function() {Drehliste_gesamt=RET},100);
+  }
+
+id_fehlersuch.addEventListener('click',function() {fehlersuch([2,1,10,4,11,5,6,10,9,11,9,9,7,6,2,1,0,0,6,9])});
+
+let Farben=['red','green','orange','blue','yellow','white'];
+function pruefen() {
+  let RET=true;
+  for (let i of [1,9,7,10,13,18,19,14]) {
+    let F='';
+    let K=LISTE[i];
+    for (let j of K.userData) F=F+Farben[j];
+    //alert(K.name+'\n'+F+'\n'+K.userData);
+    if (K.name!=F) RET=false;
+    }
+    
+  return RET;
+  }
+
+function Dauertest() {
+  if (pruefen()==false) alert('Fehler!'); else {
+    setTimeout(function() {id_mische.click()},100);
+    setTimeout(function() {id_loese.click()},10000);
+    setTimeout(function() {id_Dauertest.click()},30000);
+    }
+  }
+
+id_Dauertest.addEventListener('click',function() {Dauertest()});
   </script>
 
 <div>
-<button id='id_loese' style='font-size:300%; float:right'>Löse</button>
+<button id='id_loese' style='font-size:300%; float:right'>lösen</button>
+<button id='id_mische' style='font-size:300%; float:right'>mischen</button>
+<button id='id_fehlersuch' style='font-size:300%; float:right'>Fehlersuche</button>
+<button id='id_Dauertest' style='font-size:300%; float:right'>Dauertest</button>
 <button id='id_drehe0' style='background-color:red; font-size:200%'>↷</button>
 <button id='id_drehe1' style='background-color:green; font-size:200%'>↷</button>
 <button id='id_drehe2' style='background-color:orange; font-size:200%'>↷</button>
