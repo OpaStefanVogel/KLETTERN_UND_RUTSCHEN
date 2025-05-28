@@ -290,19 +290,19 @@ let p180=Math.PI;
 let p90=Math.PI/2;
 
 let KANTEN=[
-  [,[0,1,0],,[0,3,2],[0,4,3],[0,5,1]],
-  [[1,0],,[1,2],,[1,4,8],[1,5]],
-  [,[2,1,6],,[2,3,4],[2,4,5],[2,5,7]],
-  [[3,0],,[3,2],,[3,4],[3,5,10]],
-  [[4,0],[4,1],[4,2],[4,3,11],,],
-  [[5,0],[5,1,9],[5,2],[5,3],,]];
+  [,[0,1,0,0],,[0,3,2,0],[0,4,3,0],[0,5,1,0]],
+  [[1,0],,[1,2],,[1,4,8,0],[1,5]],
+  [,[2,1,6,0],,[2,3,4,0],[2,4,5,0],[2,5,7,0]],
+  [[3,0],,[3,2],,[3,4],[3,5,10,0]],
+  [[4,0],[4,1],[4,2],[4,3,11,0],,],
+  [[5,0],[5,1,9,0],[5,2],[5,3],,]];
 
 let ECKEN=[
-  [,[0,1,4,12],,[0,3,5],[0,4,3],[0,5,1,13]],
-  [[1,0,5],,[1,2,4],,[1,4,0],[1,5,2,18]],
-  [,[2,1,5],,[2,3,4,16],[2,4,1,17],[2,5,3,19]],
-  [[3,0,4],,[3,2,5],,[3,4,2],[3,5,0,14]],
-  [[4,0,1],[4,1,2],[4,2,3],[4,3,0,15],,],
+  [,[0,1,4,12,0],,[0,3,5],[0,4,3],[0,5,1,13,0]],
+  [[1,0,5],,[1,2,4],,[1,4,0],[1,5,2,18,0]],
+  [,[2,1,5],,[2,3,4,16,0],[2,4,1,17,0],[2,5,3,19,0]],
+  [[3,0,4],,[3,2,5],,[3,4,2],[3,5,0,14,0]],
+  [[4,0,1],[4,1,2],[4,2,3],[4,3,0,15,0],,],
   [[5,0,3],[5,1,0],[5,2,1],[5,3,2],,]];
 
 let D=[[1,5,3,4,1,5,3,4],[0,4,2,5,0,4,2,5],[1,4,3,5,1,4,3,5],[2,4,0,5,2,4,0,5],[0,3,2,1,0,3,2,1],[0,1,2,3,0,1,2,3]];
@@ -335,11 +335,11 @@ function drehe2(n,j,k) {
     if (WW[1][n][d[i+k]][3]!=undefined) Drehliste.push([WW[1][n][d[i+k]][3],Achsen[n],(j-k)*Winkel[n]]);
     if (WW[1][d[i+k]][d[i+3*j]][3]!=undefined) Drehliste.push([WW[1][d[i+k]][d[i+3*j]][3],Achsen[n],(j-k)*Winkel[n]]);
     if (WW[1][d[i+3*j]][n][3]!=undefined) Drehliste.push([WW[1][d[i+3*j]][n][3],Achsen[n],(j-k)*Winkel[n]]);    
-    if (WW[0][n][d[i+k]][2]!=undefined) LISTE[WW[0][n][d[i+k]][2]].userData=[n,d[i+j]];
-    if (WW[0][d[i+k]][n][2]!=undefined) LISTE[WW[0][d[i+k]][n][2]].userData=[d[i+j],n];
-    if (WW[1][n][d[i+k]][3]!=undefined) LISTE[WW[1][n][d[i+k]][3]].userData=[n,d[i+j],d[i+3*k]];
-    if (WW[1][d[i+k]][d[i+3*j]][3]!=undefined) LISTE[WW[1][d[i+k]][d[i+3*j]][3]].userData=[d[i+j],d[i+3*k],n];
-    if (WW[1][d[i+3*j]][n][3]!=undefined) LISTE[WW[1][d[i+3*j]][n][3]].userData=[d[i+3*k],n,d[i+j]];
+    if (WW[0][n][d[i+k]][2]!=undefined) LISTE[WW[0][n][d[i+k]][2]].userData.P=[n,d[i+j]];
+    if (WW[0][d[i+k]][n][2]!=undefined) LISTE[WW[0][d[i+k]][n][2]].userData.P=[d[i+j],n];
+    if (WW[1][n][d[i+k]][3]!=undefined) LISTE[WW[1][n][d[i+k]][3]].userData.P=[n,d[i+j],d[i+3*k]];
+    if (WW[1][d[i+k]][d[i+3*j]][3]!=undefined) LISTE[WW[1][d[i+k]][d[i+3*j]][3]].userData.P=[d[i+j],d[i+3*k],n];
+    if (WW[1][d[i+3*j]][n][3]!=undefined) LISTE[WW[1][d[i+3*j]][n][3]].userData.P=[d[i+3*k],n,d[i+j]];
     }
   Drehliste.push([20+n,Achsen[n],(j-k)*Winkel[n]]);
   
@@ -389,6 +389,7 @@ let K0144=new THREE.Mesh(
   K0144.rotateX(-Math.PI/2);
   K014.add(K0144);
   K014.name=rot+gruen+gelb;
+  K014.userData={P:[0,0,0], F:[K0140,K0141,K0144]};
   scene.add(K014);
   //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
   return K014;
@@ -416,6 +417,7 @@ let K0141=new THREE.Mesh(
   K0141.rotateY(Math.PI/2);
   K014.add(K0141);
   K014.name=rot+gruen;
+  K014.userData={P:[0,0,0], F:[K0140,K0141]};
   scene.add(K014);
   //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
   return K014;
@@ -441,26 +443,26 @@ let K0140=new THREE.Mesh(
   }
 
 
-let K014=Erzeuge_Ecke('red','green','yellow'); K014.userData=[0,1,4];
-let K051=Erzeuge_Ecke('red','white','green'); K051.userData=[0,5,1]; K051.rotateZ(m90);
-let K350=Erzeuge_Ecke('blue','white','red'); K350.userData=[3,5,0]; K350.rotateY(m90);K350.rotateZ(m90);
-let K043=Erzeuge_Ecke('red','yellow','blue'); K043.userData=[0,4,3]; K043.rotateZ(p90);
-let K234=Erzeuge_Ecke('orange','blue','yellow'); K234.userData=[2,3,4]; K234.rotateY(p180);
-let K241=Erzeuge_Ecke('orange','yellow','green'); K241.userData=[2,4,1]; K241.rotateY(p180);K241.rotateZ(p90);
-let K152=Erzeuge_Ecke('green','white','orange'); K152.userData=[1,5,2]; K152.rotateZ(m90);K152.rotateX(m90);
-let K253=Erzeuge_Ecke('orange','white','blue'); K253.userData=[2,5,3]; K253.rotateY(p180);K253.rotateZ(m90);
-let K01=Erzeuge_Kante('red','green'); K01.userData=[0,1];
-let K05=Erzeuge_Kante('red','white'); K05.userData=[0,5]; K05.rotateZ(m90);
-let K03=Erzeuge_Kante('red','blue'); K03.userData=[0,3]; K03.rotateZ(p180);
-let K04=Erzeuge_Kante('red','yellow'); K04.userData=[0,4]; K04.rotateZ(p90);
-let K23=Erzeuge_Kante('orange','blue'); K23.userData=[2,3]; K23.rotateY(p180);
-let K24=Erzeuge_Kante('orange','yellow'); K24.userData=[2,4]; K24.rotateY(p180);K24.rotateZ(p90);
-let K21=Erzeuge_Kante('orange','green'); K21.userData=[2,1]; K21.rotateY(p180);K21.rotateZ(p180);
-let K25=Erzeuge_Kante('orange','white'); K25.userData=[2,5]; K25.rotateY(p180);K25.rotateZ(m90);
-let K14=Erzeuge_Kante('green','yellow'); K14.userData=[1,4]; K14.rotateZ(p90);K14.rotateX(p90);
-let K51=Erzeuge_Kante('white','green'); K51.userData=[5,1]; K51.rotateX(p90);
-let K35=Erzeuge_Kante('blue','white'); K35.userData=[3,5]; K35.rotateZ(m90); K35.rotateX(p90);
-let K43=Erzeuge_Kante('yellow','blue'); K43.userData=[4,3]; K43.rotateX(p90); K43.rotateY(p180);
+let K014=Erzeuge_Ecke('red','green','yellow'); K014.userData.P=[0,1,4];
+let K051=Erzeuge_Ecke('red','white','green'); K051.userData.P=[0,5,1]; K051.rotateZ(m90);
+let K350=Erzeuge_Ecke('blue','white','red'); K350.userData.P=[3,5,0]; K350.rotateY(m90);K350.rotateZ(m90);
+let K043=Erzeuge_Ecke('red','yellow','blue'); K043.userData.P=[0,4,3]; K043.rotateZ(p90);
+let K234=Erzeuge_Ecke('orange','blue','yellow'); K234.userData.P=[2,3,4]; K234.rotateY(p180);
+let K241=Erzeuge_Ecke('orange','yellow','green'); K241.userData.P=[2,4,1]; K241.rotateY(p180);K241.rotateZ(p90);
+let K152=Erzeuge_Ecke('green','white','orange'); K152.userData.P=[1,5,2]; K152.rotateZ(m90);K152.rotateX(m90);
+let K253=Erzeuge_Ecke('orange','white','blue'); K253.userData.P=[2,5,3]; K253.rotateY(p180);K253.rotateZ(m90);
+let K01=Erzeuge_Kante('red','green'); K01.userData.P=[0,1];
+let K05=Erzeuge_Kante('red','white'); K05.userData.P=[0,5]; K05.rotateZ(m90);
+let K03=Erzeuge_Kante('red','blue'); K03.userData.P=[0,3]; K03.rotateZ(p180);
+let K04=Erzeuge_Kante('red','yellow'); K04.userData.P=[0,4]; K04.rotateZ(p90);
+let K23=Erzeuge_Kante('orange','blue'); K23.userData.P=[2,3]; K23.rotateY(p180);
+let K24=Erzeuge_Kante('orange','yellow'); K24.userData.P=[2,4]; K24.rotateY(p180);K24.rotateZ(p90);
+let K21=Erzeuge_Kante('orange','green'); K21.userData.P=[2,1]; K21.rotateY(p180);K21.rotateZ(p180);
+let K25=Erzeuge_Kante('orange','white'); K25.userData.P=[2,5]; K25.rotateY(p180);K25.rotateZ(m90);
+let K14=Erzeuge_Kante('green','yellow'); K14.userData.P=[1,4]; K14.rotateZ(p90);K14.rotateX(p90);
+let K51=Erzeuge_Kante('white','green'); K51.userData.P=[5,1]; K51.rotateX(p90);
+let K35=Erzeuge_Kante('blue','white'); K35.userData.P=[3,5]; K35.rotateZ(m90); K35.rotateX(p90);
+let K43=Erzeuge_Kante('yellow','blue'); K43.userData.P=[4,3]; K43.rotateX(p90); K43.rotateY(p180);
 let K0=Erzeuge_Mitte('red');
 let K1=Erzeuge_Mitte('green'); K1.rotateY(p90);
 let K2=Erzeuge_Mitte('orange'); K2.rotateY(p180);
@@ -526,9 +528,9 @@ function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehlis
 
 function suche(i) {
   let RET=scene.getObjectByName(LISTE[i].name);
-  let WET=RET.userData;
+  let WET=RET.userData.P;
   let GET=LOESUNGEN[i][WET[0]][WET[1]];
-  //alert('i='+i+': '+RET.name+' '+RET.userData+' '+GET);
+  //alert('i='+i+': '+RET.name+' '+RET.userData.P+' '+GET);
   for (let j=0;j<GET.length;j++) {
     let n=GET[j];
     if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);
@@ -688,7 +690,7 @@ function fehlersuch(liste) {
   setTimeout(function() {Drehliste_gesamt=RET},100);
   }
 
-id_fehlersuch.addEventListener('click',function() {fehlersuch([2,1,10,4,11,5,6,10,9,11,9,9,7,6,2,1,0,0,6,9])});
+id_fehlersuch.addEventListener('click',function() {fehlersuch([10,4,11,11,0,10,11,0,8,6,1,8,0,6,8,2,1,5,2,5])});
 
 let Farben=['red','green','orange','blue','yellow','white'];
 function pruefen() {
@@ -696,8 +698,8 @@ function pruefen() {
   for (let i of [1,9,7,10,13,18,19,14]) {
     let F='';
     let K=LISTE[i];
-    for (let j of K.userData) F=F+Farben[j];
-    //alert(K.name+'\n'+F+'\n'+K.userData);
+    for (let j of K.userData.P) F=F+Farben[j];
+    //alert(K.name+'\n'+F+'\n'+K.userData.P);
     if (K.name!=F) RET=false;
     }
     
@@ -713,6 +715,26 @@ function Dauertest() {
   }
 
 id_Dauertest.addEventListener('click',function() {Dauertest()});
+
+function knips() {
+  return ['blue','blue','yellow','orange','red','green','white','blue','orange'];
+  }
+
+function scannen() {
+  let Farben=knips();
+  if (Farben[4]=='red') {
+    //alert(Farben+'\n'+WW[0][0].join('\n')+'\n----\n'+LISTE[WW[0][0][1][2]].userData.F[0].material.color.getHexString());
+    LISTE[WW[0][0][1][2]].userData.F[WW[0][0][1][3]].material.color.set(Farben[5]);
+    LISTE[WW[0][0][3][2]].userData.F[WW[0][0][3][3]].material.color.set(Farben[3]);
+    LISTE[WW[0][0][4][2]].userData.F[WW[0][0][4][3]].material.color.set(Farben[1]);
+    LISTE[WW[0][0][5][2]].userData.F[WW[0][0][5][3]].material.color.set(Farben[7]);
+    LISTE[WW[1][0][1][3]].userData.F[WW[1][0][1][4]].material.color.set(Farben[2]);
+    LISTE[WW[1][0][5][3]].userData.F[WW[1][0][5][4]].material.color.set(Farben[8]);
+    }  
+  }
+
+id_scannen.addEventListener('click',function() {scannen()});
+
   </script>
 
 <div>
@@ -720,6 +742,7 @@ id_Dauertest.addEventListener('click',function() {Dauertest()});
 <button id='id_mische' style='font-size:300%; float:right'>mischen</button>
 <button id='id_fehlersuch' style='font-size:300%; float:right'>Fehlersuche</button>
 <button id='id_Dauertest' style='font-size:300%; float:right'>Dauertest</button>
+<button id='id_scannen' style='font-size:300%; float:right'>Scannen</button>
 <button id='id_drehe0' style='background-color:red; font-size:200%'>↷</button>
 <button id='id_drehe1' style='background-color:green; font-size:200%'>↷</button>
 <button id='id_drehe2' style='background-color:orange; font-size:200%'>↷</button>
