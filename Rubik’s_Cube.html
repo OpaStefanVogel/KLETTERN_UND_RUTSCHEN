@@ -335,11 +335,11 @@ function drehe2(n,j,k) {
     if (WW[1][n][d[i+k]][4]==0) Drehliste.push([WW[1][n][d[i+k]][3],Achsen[n],(j-k)*Winkel[n]]);
     if (WW[1][d[i+k]][d[i+3*j]][4]==0) Drehliste.push([WW[1][d[i+k]][d[i+3*j]][3],Achsen[n],(j-k)*Winkel[n]]);
     if (WW[1][d[i+3*j]][n][4]==0) Drehliste.push([WW[1][d[i+3*j]][n][3],Achsen[n],(j-k)*Winkel[n]]);    
-    if (WW[0][n][d[i+k]][3]==0) LISTE[WW[0][n][d[i+k]][2]].userData.P.P=[n,d[i+j]];
-    if (WW[0][d[i+k]][n][3]==0) LISTE[WW[0][d[i+k]][n][2]].userData.P.P=[d[i+j],n];
-    if (WW[1][n][d[i+k]][4]==0) LISTE[WW[1][n][d[i+k]][3]].userData.P.P=[n,d[i+j],d[i+3*k]];
-    if (WW[1][d[i+k]][d[i+3*j]][4]==0) LISTE[WW[1][d[i+k]][d[i+3*j]][3]].userData.P.P=[d[i+j],d[i+3*k],n];
-    if (WW[1][d[i+3*j]][n][4]==0) LISTE[WW[1][d[i+3*j]][n][3]].userData.P.P=[d[i+3*k],n,d[i+j]];
+    if (WW[0][n][d[i+k]][3]==0) LISTE[WW[0][n][d[i+k]][2]].userData.P=[n,d[i+j]];
+    if (WW[0][d[i+k]][n][3]==0) LISTE[WW[0][d[i+k]][n][2]].userData.P=[d[i+j],n];
+    if (WW[1][n][d[i+k]][4]==0) LISTE[WW[1][n][d[i+k]][3]].userData.P=[n,d[i+j],d[i+3*k]];
+    if (WW[1][d[i+k]][d[i+3*j]][4]==0) LISTE[WW[1][d[i+k]][d[i+3*j]][3]].userData.P=[d[i+j],d[i+3*k],n];
+    if (WW[1][d[i+3*j]][n][4]==0) LISTE[WW[1][d[i+3*j]][n][3]].userData.P=[d[i+3*k],n,d[i+j]];
     }
   Drehliste.push([20+n,Achsen[n],(j-k)*Winkel[n]]);
   
@@ -417,7 +417,7 @@ let K0141=new THREE.Mesh(
   K0141.rotateY(Math.PI/2);
   K014.add(K0141);
   K014.name=rot+gruen;
-  K014.userData={P:[0,0,0], F:[K0140,K0141]};
+  K014.userData={P:[0,0], F:[K0140,K0141]};
   scene.add(K014);
   //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
   return K014;
@@ -443,26 +443,26 @@ let K0140=new THREE.Mesh(
   }
 
 
-let K014=Erzeuge_Ecke('red','green','yellow'); K014.userData.P.P=[0,1,4];
-let K051=Erzeuge_Ecke('red','white','green'); K051.userData.P.P=[0,5,1]; K051.rotateZ(m90);
-let K350=Erzeuge_Ecke('blue','white','red'); K350.userData.P.P=[3,5,0]; K350.rotateY(m90);K350.rotateZ(m90);
-let K043=Erzeuge_Ecke('red','yellow','blue'); K043.userData.P.P=[0,4,3]; K043.rotateZ(p90);
-let K234=Erzeuge_Ecke('orange','blue','yellow'); K234.userData.P.P=[2,3,4]; K234.rotateY(p180);
-let K241=Erzeuge_Ecke('orange','yellow','green'); K241.userData.P.P=[2,4,1]; K241.rotateY(p180);K241.rotateZ(p90);
-let K152=Erzeuge_Ecke('green','white','orange'); K152.userData.P.P=[1,5,2]; K152.rotateZ(m90);K152.rotateX(m90);
-let K253=Erzeuge_Ecke('orange','white','blue'); K253.userData.P.P=[2,5,3]; K253.rotateY(p180);K253.rotateZ(m90);
-let K01=Erzeuge_Kante('red','green'); K01.userData.P.P=[0,1];
-let K05=Erzeuge_Kante('red','white'); K05.userData.P.P=[0,5]; K05.rotateZ(m90);
-let K03=Erzeuge_Kante('red','blue'); K03.userData.P.P=[0,3]; K03.rotateZ(p180);
-let K04=Erzeuge_Kante('red','yellow'); K04.userData.P.P=[0,4]; K04.rotateZ(p90);
-let K23=Erzeuge_Kante('orange','blue'); K23.userData.P.P=[2,3]; K23.rotateY(p180);
-let K24=Erzeuge_Kante('orange','yellow'); K24.userData.P.P=[2,4]; K24.rotateY(p180);K24.rotateZ(p90);
-let K21=Erzeuge_Kante('orange','green'); K21.userData.P.P=[2,1]; K21.rotateY(p180);K21.rotateZ(p180);
-let K25=Erzeuge_Kante('orange','white'); K25.userData.P.P=[2,5]; K25.rotateY(p180);K25.rotateZ(m90);
-let K14=Erzeuge_Kante('green','yellow'); K14.userData.P.P=[1,4]; K14.rotateZ(p90);K14.rotateX(p90);
-let K51=Erzeuge_Kante('white','green'); K51.userData.P.P=[5,1]; K51.rotateX(p90);
-let K35=Erzeuge_Kante('blue','white'); K35.userData.P.P=[3,5]; K35.rotateZ(m90); K35.rotateX(p90);
-let K43=Erzeuge_Kante('yellow','blue'); K43.userData.P.P=[4,3]; K43.rotateX(p90); K43.rotateY(p180);
+let K014=Erzeuge_Ecke('red','green','yellow'); K014.userData.P=[0,1,4];
+let K051=Erzeuge_Ecke('red','white','green'); K051.userData.P=[0,5,1]; K051.rotateZ(m90);
+let K350=Erzeuge_Ecke('blue','white','red'); K350.userData.P=[3,5,0]; K350.rotateY(m90);K350.rotateZ(m90);
+let K043=Erzeuge_Ecke('red','yellow','blue'); K043.userData.P=[0,4,3]; K043.rotateZ(p90);
+let K234=Erzeuge_Ecke('orange','blue','yellow'); K234.userData.P=[2,3,4]; K234.rotateY(p180);
+let K241=Erzeuge_Ecke('orange','yellow','green'); K241.userData.P=[2,4,1]; K241.rotateY(p180);K241.rotateZ(p90);
+let K152=Erzeuge_Ecke('green','white','orange'); K152.userData.P=[1,5,2]; K152.rotateZ(m90);K152.rotateX(m90);
+let K253=Erzeuge_Ecke('orange','white','blue'); K253.userData.P=[2,5,3]; K253.rotateY(p180);K253.rotateZ(m90);
+let K01=Erzeuge_Kante('red','green'); K01.userData.P=[0,1];
+let K05=Erzeuge_Kante('red','white'); K05.userData.P=[0,5]; K05.rotateZ(m90);
+let K03=Erzeuge_Kante('red','blue'); K03.userData.P=[0,3]; K03.rotateZ(p180);
+let K04=Erzeuge_Kante('red','yellow'); K04.userData.P=[0,4]; K04.rotateZ(p90);
+let K23=Erzeuge_Kante('orange','blue'); K23.userData.P=[2,3]; K23.rotateY(p180);
+let K24=Erzeuge_Kante('orange','yellow'); K24.userData.P=[2,4]; K24.rotateY(p180);K24.rotateZ(p90);
+let K21=Erzeuge_Kante('orange','green'); K21.userData.P=[2,1]; K21.rotateY(p180);K21.rotateZ(p180);
+let K25=Erzeuge_Kante('orange','white'); K25.userData.P=[2,5]; K25.rotateY(p180);K25.rotateZ(m90);
+let K14=Erzeuge_Kante('green','yellow'); K14.userData.P=[1,4]; K14.rotateZ(p90);K14.rotateX(p90);
+let K51=Erzeuge_Kante('white','green'); K51.userData.P=[5,1]; K51.rotateX(p90);
+let K35=Erzeuge_Kante('blue','white'); K35.userData.P=[3,5]; K35.rotateZ(m90); K35.rotateX(p90);
+let K43=Erzeuge_Kante('yellow','blue'); K43.userData.P=[4,3]; K43.rotateX(p90); K43.rotateY(p180);
 let K0=Erzeuge_Mitte('red');
 let K1=Erzeuge_Mitte('green'); K1.rotateY(p90);
 let K2=Erzeuge_Mitte('orange'); K2.rotateY(p180);
@@ -506,8 +506,8 @@ function animate_start() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehli
   }
 
 function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehliste_gesamt;
-  if (frametime<Drehstart+300) {
-    let alpha=Math.min((frametime-Drehstart)/200,1);
+  if (frametime<Drehstart+600) {
+    let alpha=Math.min((frametime-Drehstart)/500,1);
     for (let dd=0;dd<Drehliste.length;dd++) {
       let d=Drehliste[dd];
       let Obj=LISTE[d[0]];
@@ -528,9 +528,9 @@ function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehlis
 
 function suche(i) {
   let RET=scene.getObjectByName(LISTE[i].name);
-  let WET=RET.userData.P.P;
+  let WET=RET.userData.P;
   let GET=LOESUNGEN[i][WET[0]][WET[1]];
-  //alert('i='+i+': '+RET.name+' '+RET.userData.P.P+' '+GET);
+  alert('i='+i+': '+RET.name+' '+WET+' '+GET);
   for (let j=0;j<GET.length;j++) {
     let n=GET[j];
     if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);
@@ -574,11 +574,11 @@ alert(pixels);
   suche(1);
   suche(9);
   suche(7);
-  suche(10);
+  suche(10);/*
   suche(13);
   suche(18);
   suche(19);
-  suche(14);
+  suche(14);*/
   //alert(Loeseliste);
   WW=structuredClone(WWMERK);
   //for (let i=0;i<LISTE.length;i++) LISTE[i].setRotationFromEuler(LI[i]);alert(8);
@@ -698,8 +698,8 @@ function pruefen() {
   for (let i of [1,9,7,10,13,18,19,14]) {
     let F='';
     let K=LISTE[i];
-    for (let j of K.userData.P.P) F=F+Farben[j];
-    //alert(K.name+'\n'+F+'\n'+K.userData.P.P);
+    for (let j of K.userData.P) F=F+Farben[j];
+    //alert(K.name+'\n'+F+'\n'+K.userData.P);
     if (K.name!=F) RET=false;
     }
     
@@ -806,20 +806,75 @@ function scannen() {
 
 id_scannen.addEventListener('click',function() {scannen()});
 
+
+let Orientierungen_Kanten="redgreen', 'redwhite', 'redblue', 'redyellow', 'orangeblue', 'orangeyellow', 'orangegreen', 'orangewhite', 'greenyellow', 'whitegreen', 'bluewhite', 'yellowblue'";
+//" 'redgreenyellow', 'redwhitegreen', 'bluewhitered', 'redyellowblue', 'orangeblueyellow', 'orangeyellowgreen', 'greenwhiteorange', 'orangewhiteblue";
+
 function checken() {
   alert('und los gehts');
   for (let i=0;i<20;i++) {
     let ke=LISTE[i];
     //alert(JSON.stringify(ke.userData));
     ke.name=ke.userData.F[0].material.userData+ke.userData.F[1].material.userData;
-    if (ke.userData.F[2]) ke.name=ke.name+ke.userData.F[2].material.userData;
-   //  K014.name=rot+gruen;
-   // K014.userData.P={P:[0,0,0], F:[K0140,K0141]};
-    alert(ke.name);
+    if (ke.userData.F[2]) {
+      ke.name=ke.name+ke.userData.F[2].material.userData;
+      } else {
+        if (Orientierungen_Kanten.indexOf(ke.name)==-1) {
+          let x=ke.userData.P[0];
+          ke.userData.P[0]=ke.userData.P[1];
+          ke.userData.P[1]=x;
+          ke.name=ke.userData.F[1].material.userData+ke.userData.F[0].material.userData;
+          //alert(ke.name);
+          }
+        }
+    //alert(ke.name+' '+ke.userData.P);
     }
+
+//       0   1   2   3   4   5   6   7   8   9  10  11 LISTE=[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K350,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5]; 
+LISTE=[K51,K14,K05,K24,K21,K43,K35,K03,K01,K23,K25,K04,K014,K051,K350,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5]; 
+
+KANTEN=[
+  [,[0,1,0,0],,[0,3,2,0],[0,4,3,0],[0,5,1,0]],
+  [[1,0,0,1],,[1,2,6,1],,[1,4,8,0],[1,5,9,1]],
+  [,[2,1,6,0],,[2,3,4,0],[2,4,5,0],[2,5,7,0]],
+  [[3,0,2,1],,[3,2,4,1],,[3,4,11,1],[3,5,10,0]],
+  [[4,0,3,1],[4,1,8,1],[4,2,5,1],[4,3,11,0],,],
+  [[5,0,1,1],[5,1,9,0],[5,2,7,1],[5,3,10,1],,]];
+
+  WW[0]=[
+  [,[0,1,8,0],,[0,3,7,0],[0,4,11,0],[0,5,2,0]],
+  [[1,0,8,1],,[1,2,4,1],,[1,4,1,0],[1,5,0,1]],
+  [,[2,1,4,0],,[2,3,9,1],[2,4,3,0],[2,5,10,0]],
+  [[3,0,7,1],,[3,2,9,0],,[3,4,5,1],[3,5,6,0]],
+  [[4,0,11,1],[4,1,1,1],[4,2,3,1],[4,3,5,0],,],
+  [[5,0,2,1],[5,1,0,0],[5,2,10,1],[5,3,6,1],,]];
+
+  ECKEN=[
+  [,[0,1,4,12,0],,[0,3,5,14,2],[0,4,3,15,0],[0,5,1,13,0]],
+  [[1,0,5,13,2],,[1,2,4,17,2],,[1,4,0,12,1],[1,5,2,18,0]],
+  [,[2,1,5,18,2],,[2,3,4,16,0],[2,4,1,17,0],[2,5,3,19,0]],
+  [[3,0,4,15,2],,[3,2,5,19,2],,[3,4,2,16,1],[3,5,0,14,0]],
+  [[4,0,1,12,2],[4,1,2,17,1],[4,2,3,16,2],[4,3,0,15,1],,],
+  [[5,0,3,14,1],[5,1,0,13,1],[5,2,1,18,1],[5,3,2,19,1],,]];
+
+  WW[1]=[
+  [,[0,1,4,12,0],,[0,3,5,14,2],[0,4,3,15,0],[0,5,1,13,0]],
+  [[1,0,5,13,2],,[1,2,4,17,2],,[1,4,0,12,1],[1,5,2,18,0]],
+  [,[2,1,5,18,2],,[2,3,4,16,0],[2,4,1,17,0],[2,5,3,19,0]],
+  [[3,0,4,15,2],,[3,2,5,19,2],,[3,4,2,16,1],[3,5,0,14,0]],
+  [[4,0,1,12,2],[4,1,2,17,1],[4,2,3,16,2],[4,3,0,15,1],,],
+  [[5,0,3,14,1],[5,1,0,13,1],[5,2,1,18,1],[5,3,2,19,1],,]];
   }
 
+function Test() {
+  alert(K23.name+' '+K23.userData.P);
+  }
 
+id_Test.addEventListener('click',function() {Test()});
+
+let lll='';
+for (let k of LISTE) lll=lll+"'"+k.name+"', ";
+//Log.innerHTML=lll;
   </script>
 
 <div>
@@ -843,5 +898,7 @@ function checken() {
 <button id='id_drehe10' style='background-color:yellow; font-size:200%'>↶</button>
 <button id='id_drehe11' style='background-color:white; font-size:200%'>↺</button>
   </div>
+<button id='id_Test' style='background-color:white; font-size:200%'>Test</button>
+
 <script>
   </script></body></html>
