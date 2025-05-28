@@ -9,10 +9,10 @@
 
 <body>
 <div id="canvas"></div>
-<div id='Log' style='display:non; font-family:Courier,monospace; white-space:pre;'> </div>
-<div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:pre;'> </div>
+<div id='Log' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
+<div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'> </div>
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
-<div id='Log2' style='display:non; font-family:Courier,monospace; white-space:pre;'> </div>
+<div id='Log2' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
 
 <!--importmap muß bleiben weil die module auch three aufrufen-->
 		<script type="importmap">
@@ -807,18 +807,24 @@ function scannen() {
 id_scannen.addEventListener('click',function() {scannen()});
 
 
-let Orientierungen_Kanten="redgreen', 'redwhite', 'redblue', 'redyellow', 'orangeblue', 'orangeyellow', 'orangegreen', 'orangewhite', 'greenyellow', 'whitegreen', 'bluewhite', 'yellowblue'";
-let Orientierungen_Ecken=" 'redgreenyellow', 'redwhitegreen', 'bluewhitered', 'redyellowblue', 'orangeblueyellow', 'orangeyellowgreen', 'greenwhiteorange', 'orangewhiteblue";
+let Orientierungen_Kanten=['redgreen', 'redwhite', 'redblue', 'redyellow', 'orangeblue', 'orangeyellow', 'orangegreen', 'orangewhite', 'greenyellow', 'whitegreen', 'bluewhite', 'yellowblue'];
+let Orientierungen_Ecken=['redgreenyellow', 'redwhitegreen', 'bluewhitered', 'redyellowblue', 'orangeblueyellow', 'orangeyellowgreen', 'greenwhiteorange', 'orangewhiteblue'];
 
+let NEUELISTE=[];
+let INDEXLISTE1=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
+let INDEXLISTE2=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
 function checken() {
   alert('und los gehts');
+  NEUELISTE=LISTE.slice();//wegen K0 bis K6
+  INDEXLISTE1=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
+  INDEXLISTE2=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
   for (let i=0;i<20;i++) {
     let ke=LISTE[i];
     //alert(JSON.stringify(ke.userData));
     ke.name=ke.userData.F[0].material.userData+ke.userData.F[1].material.userData;
+    let y=0;
     if (ke.userData.F[2]) {
       ke.name=ke.name+ke.userData.F[2].material.userData;
-      let y=0;
       while (Orientierungen_Ecken.indexOf(ke.name)==-1) {
         y=y+1;
         let x=ke.userData.P[0];
@@ -828,20 +834,29 @@ function checken() {
         ke.name=ke.userData.F[(0+y)%3].material.userData+ke.userData.F[(1+y)%3].material.userData+ke.userData.F[(2+y)%3].material.userData;
         //alert(ke.name);
         }
+      ke.userData.index=Orientierungen_Ecken.indexOf(ke.name)+12;
       } else {
         if (Orientierungen_Kanten.indexOf(ke.name)==-1) {
+          y=y+1;
           let x=ke.userData.P[0];
           ke.userData.P[0]=ke.userData.P[1];
           ke.userData.P[1]=x;
           ke.name=ke.userData.F[1].material.userData+ke.userData.F[0].material.userData;
           //alert(ke.name);
           }
+        ke.userData.index=Orientierungen_Kanten.indexOf(ke.name);
         }
-    //alert(ke.name+' '+ke.userData.P);
+    ke.userData.Orientierung=y;
+    //alert(i+' '+ke.name+' '+ke.userData.P+' '+ke.userData.index+' '+ke.userData.Orientierung);
+    NEUELISTE[ke.userData.index]=LISTE[i];
+    INDEXLISTE1[i]=ke.userData.index;
+    INDEXLISTE2[ke.userData.index]=[i];
     }
 
-//       0   1   2   3   4   5   6   7   8   9  10  11   12   13  14   15   16   17   18   19 LISTE=[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K350,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5]; 
-LISTE=[K51,K14,K05,K24,K21,K43,K35,K03,K01,K23,K25,K04,K152,K350,K234,K014,K043,K051,K241,K253,K0,K1,K2,K3,K4,K5]; 
+//       0   1   2   3   4   5   6   7   8   9  10  11   12   13  14   15   16   17   18   19 
+//LISTE=[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K350,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5]; 
+//LISTE=[K51,K14,K05,K24,K21,K43,K35,K03,K01,K23,K25,K04,K152,K350,K234,K014,K043,K051,K241,K253,K0,K1,K2,K3,K4,K5]; 
+LISTE=NEUELISTE;
 
 KANTEN=[
   [,[0,1,0,0],,[0,3,2,0],[0,4,3,0],[0,5,1,0]],
