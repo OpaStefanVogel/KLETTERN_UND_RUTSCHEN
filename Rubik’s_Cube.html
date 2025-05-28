@@ -530,7 +530,7 @@ function suche(i) {
   let RET=scene.getObjectByName(LISTE[i].name);
   let WET=RET.userData.P;
   let GET=LOESUNGEN[i][WET[0]][WET[1]];
-  alert('i='+i+': '+RET.name+' '+WET+' '+GET);
+  //alert('i='+i+': '+RET.name+' '+WET+' '+GET);
   for (let j=0;j<GET.length;j++) {
     let n=GET[j];
     if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);
@@ -574,11 +574,11 @@ alert(pixels);
   suche(1);
   suche(9);
   suche(7);
-  suche(10);/*
+  suche(10);
   suche(13);
   suche(18);
   suche(19);
-  suche(14);*/
+  suche(14);/**/
   //alert(Loeseliste);
   WW=structuredClone(WWMERK);
   //for (let i=0;i<LISTE.length;i++) LISTE[i].setRotationFromEuler(LI[i]);alert(8);
@@ -808,7 +808,7 @@ id_scannen.addEventListener('click',function() {scannen()});
 
 
 let Orientierungen_Kanten="redgreen', 'redwhite', 'redblue', 'redyellow', 'orangeblue', 'orangeyellow', 'orangegreen', 'orangewhite', 'greenyellow', 'whitegreen', 'bluewhite', 'yellowblue'";
-//" 'redgreenyellow', 'redwhitegreen', 'bluewhitered', 'redyellowblue', 'orangeblueyellow', 'orangeyellowgreen', 'greenwhiteorange', 'orangewhiteblue";
+let Orientierungen_Ecken=" 'redgreenyellow', 'redwhitegreen', 'bluewhitered', 'redyellowblue', 'orangeblueyellow', 'orangeyellowgreen', 'greenwhiteorange', 'orangewhiteblue";
 
 function checken() {
   alert('und los gehts');
@@ -818,6 +818,16 @@ function checken() {
     ke.name=ke.userData.F[0].material.userData+ke.userData.F[1].material.userData;
     if (ke.userData.F[2]) {
       ke.name=ke.name+ke.userData.F[2].material.userData;
+      let y=0;
+      while (Orientierungen_Ecken.indexOf(ke.name)==-1) {
+        y=y+1;
+        let x=ke.userData.P[0];
+        ke.userData.P[0]=ke.userData.P[1];
+        ke.userData.P[1]=ke.userData.P[2];
+        ke.userData.P[2]=x;
+        ke.name=ke.userData.F[(0+y)%3].material.userData+ke.userData.F[(1+y)%3].material.userData+ke.userData.F[(2+y)%3].material.userData;
+        //alert(ke.name);
+        }
       } else {
         if (Orientierungen_Kanten.indexOf(ke.name)==-1) {
           let x=ke.userData.P[0];
@@ -830,8 +840,8 @@ function checken() {
     //alert(ke.name+' '+ke.userData.P);
     }
 
-//       0   1   2   3   4   5   6   7   8   9  10  11 LISTE=[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K350,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5]; 
-LISTE=[K51,K14,K05,K24,K21,K43,K35,K03,K01,K23,K25,K04,K014,K051,K350,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5]; 
+//       0   1   2   3   4   5   6   7   8   9  10  11   12   13  14   15   16   17   18   19 LISTE=[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K350,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5]; 
+LISTE=[K51,K14,K05,K24,K21,K43,K35,K03,K01,K23,K25,K04,K152,K350,K234,K014,K043,K051,K241,K253,K0,K1,K2,K3,K4,K5]; 
 
 KANTEN=[
   [,[0,1,0,0],,[0,3,2,0],[0,4,3,0],[0,5,1,0]],
@@ -858,12 +868,12 @@ KANTEN=[
   [[5,0,3,14,1],[5,1,0,13,1],[5,2,1,18,1],[5,3,2,19,1],,]];
 
   WW[1]=[
-  [,[0,1,4,12,0],,[0,3,5,14,2],[0,4,3,15,0],[0,5,1,13,0]],
-  [[1,0,5,13,2],,[1,2,4,17,2],,[1,4,0,12,1],[1,5,2,18,0]],
-  [,[2,1,5,18,2],,[2,3,4,16,0],[2,4,1,17,0],[2,5,3,19,0]],
-  [[3,0,4,15,2],,[3,2,5,19,2],,[3,4,2,16,1],[3,5,0,14,0]],
-  [[4,0,1,12,2],[4,1,2,17,1],[4,2,3,16,2],[4,3,0,15,1],,],
-  [[5,0,3,14,1],[5,1,0,13,1],[5,2,1,18,1],[5,3,2,19,1],,]];
+  [,[0,1,4,15,0],,[0,3,5,13,1],[0,4,3,16,0],[0,5,1,17,0]],
+  [[1,0,5,17,2],,[1,2,4,18,0],,[1,4,0,15,1],[1,5,2,12,0]],
+  [,[2,1,5,12,2],,[2,3,4,14,0],[2,4,1,18,1],[2,5,3,19,1]],
+  [[3,0,4,16,2],,[3,2,5,19,0],,[3,4,2,14,1],[3,5,0,13,2]],
+  [[4,0,1,15,2],[4,1,2,18,2],[4,2,3,14,2],[4,3,0,16,1],,],
+  [[5,0,3,13,0],[5,1,0,17,1],[5,2,1,12,1],[5,3,2,19,2],,]];
   }
 
 function Test() {
