@@ -389,7 +389,7 @@ let K0144=new THREE.Mesh(
   K0144.rotateX(-Math.PI/2);
   K014.add(K0144);
   K014.name=rot+gruen+gelb;
-  K014.userData.P={P:[0,0,0], F:[K0140,K0141,K0144]};
+  K014.userData={P:[0,0,0], F:[K0140,K0141,K0144]};
   scene.add(K014);
   //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
   return K014;
@@ -417,7 +417,7 @@ let K0141=new THREE.Mesh(
   K0141.rotateY(Math.PI/2);
   K014.add(K0141);
   K014.name=rot+gruen;
-  K014.userData.P={P:[0,0,0], F:[K0140,K0141]};
+  K014.userData={P:[0,0,0], F:[K0140,K0141]};
   scene.add(K014);
   //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
   return K014;
@@ -722,8 +722,8 @@ let Testfarben=[
   ['blue','red','green','yellow','green','orange','green','red','red'],
   ['white','red','blue','blue','orange','green','yellow','blue','white'],
   ['white','orange','orange','white','blue','white','orange','orange','green'],
-  ['red','yellow','orange','yellow','yellow','white','yellow','yellow','red'],
-  ['red','red','yellow','green','white','green','blue','white','green']
+  ['orange','white','red','yellow','yellow','yellow','red','yellow','yellow'],
+  ['blue','green','red','white','white','red','green','green','yellow']
   ];
 let Testindex=5;
 
@@ -732,72 +732,93 @@ function knips() {
   return Testfarben[Testindex];
   }
 
+function setze_die_Farbe(ke,i,j,farbe) {
+  LISTE[WW[ke][i][j][2+ke]].userData.F[WW[ke][i][j][3+ke]].material.color.set(farbe);
+  LISTE[WW[ke][i][j][2+ke]].userData.F[WW[ke][i][j][3+ke]].material.userData=farbe;
+  
+  }
+
 function scannen() {
   let Farben=knips();
   if (Farben[4]=='red') {
     //alert(Farben+'\n'+WW[0][0].join('\n')+'\n----\n'+LISTE[WW[0][0][1][2]].userData.P.F[0].material.color.getHexString());
-    LISTE[WW[0][0][1][2]].userData.P.F[WW[0][0][1][3]].material.color.set(Farben[5]);
-    LISTE[WW[0][0][3][2]].userData.P.F[WW[0][0][3][3]].material.color.set(Farben[3]);
-    LISTE[WW[0][0][4][2]].userData.P.F[WW[0][0][4][3]].material.color.set(Farben[1]);
-    LISTE[WW[0][0][5][2]].userData.P.F[WW[0][0][5][3]].material.color.set(Farben[7]);
-    LISTE[WW[1][0][1][3]].userData.P.F[WW[1][0][1][4]].material.color.set(Farben[2]);
-    LISTE[WW[1][0][3][3]].userData.P.F[WW[1][0][3][4]].material.color.set(Farben[6]);
-    LISTE[WW[1][0][4][3]].userData.P.F[WW[1][0][4][4]].material.color.set(Farben[0]);
-    LISTE[WW[1][0][5][3]].userData.P.F[WW[1][0][5][4]].material.color.set(Farben[8]);
+    setze_die_Farbe(0,0,1,Farben[5]);
+    setze_die_Farbe(0,0,3,Farben[3]);
+    setze_die_Farbe(0,0,4,Farben[1]);
+    setze_die_Farbe(0,0,5,Farben[7]);
+    setze_die_Farbe(1,0,1,Farben[2]);
+    setze_die_Farbe(1,0,3,Farben[6]);
+    setze_die_Farbe(1,0,4,Farben[0]);
+    setze_die_Farbe(1,0,5,Farben[8]);
     }  
   if (Farben[4]=='green') {
-    LISTE[WW[0][1][0][2]].userData.P.F[WW[0][1][0][3]].material.color.set(Farben[3]);
-    LISTE[WW[0][1][2][2]].userData.P.F[WW[0][1][2][3]].material.color.set(Farben[5]);
-    LISTE[WW[0][1][4][2]].userData.P.F[WW[0][1][4][3]].material.color.set(Farben[1]);
-    LISTE[WW[0][1][5][2]].userData.P.F[WW[0][1][5][3]].material.color.set(Farben[7]);
-    LISTE[WW[1][1][0][3]].userData.P.F[WW[1][1][0][4]].material.color.set(Farben[6]);
-    LISTE[WW[1][1][2][3]].userData.P.F[WW[1][1][2][4]].material.color.set(Farben[2]);
-    LISTE[WW[1][1][4][3]].userData.P.F[WW[1][1][4][4]].material.color.set(Farben[0]);
-    LISTE[WW[1][1][5][3]].userData.P.F[WW[1][1][5][4]].material.color.set(Farben[8]);
+    setze_die_Farbe(0,1,0,Farben[3]);
+    setze_die_Farbe(0,1,2,Farben[5]);
+    setze_die_Farbe(0,1,4,Farben[1]);
+    setze_die_Farbe(0,1,5,Farben[7]);
+    setze_die_Farbe(1,1,0,Farben[6]);
+    setze_die_Farbe(1,1,2,Farben[2]);
+    setze_die_Farbe(1,1,4,Farben[0]);
+    setze_die_Farbe(1,1,5,Farben[8]);
     }  
   if (Farben[4]=='orange') {
-    LISTE[WW[0][2][1][2]].userData.P.F[WW[0][2][1][3]].material.color.set(Farben[3]);
-    LISTE[WW[0][2][3][2]].userData.P.F[WW[0][2][3][3]].material.color.set(Farben[5]);
-    LISTE[WW[0][2][4][2]].userData.P.F[WW[0][2][4][3]].material.color.set(Farben[1]);
-    LISTE[WW[0][2][5][2]].userData.P.F[WW[0][2][5][3]].material.color.set(Farben[7]);
-    LISTE[WW[1][2][1][3]].userData.P.F[WW[1][2][1][4]].material.color.set(Farben[6]);
-    LISTE[WW[1][2][3][3]].userData.P.F[WW[1][2][3][4]].material.color.set(Farben[2]);
-    LISTE[WW[1][2][4][3]].userData.P.F[WW[1][2][4][4]].material.color.set(Farben[0]);
-    LISTE[WW[1][2][5][3]].userData.P.F[WW[1][2][5][4]].material.color.set(Farben[8]);
+    setze_die_Farbe(0,2,1,Farben[3]);
+    setze_die_Farbe(0,2,3,Farben[5]);
+    setze_die_Farbe(0,2,4,Farben[1]);
+    setze_die_Farbe(0,2,5,Farben[7]);
+    setze_die_Farbe(1,2,1,Farben[6]);
+    setze_die_Farbe(1,2,3,Farben[2]);
+    setze_die_Farbe(1,2,4,Farben[0]);
+    setze_die_Farbe(1,2,5,Farben[8]);
     }  
   if (Farben[4]=='blue') {
-    LISTE[WW[0][3][2][2]].userData.P.F[WW[0][3][2][3]].material.color.set(Farben[3]);
-    LISTE[WW[0][3][0][2]].userData.P.F[WW[0][3][0][3]].material.color.set(Farben[5]);
-    LISTE[WW[0][3][4][2]].userData.P.F[WW[0][3][4][3]].material.color.set(Farben[1]);
-    LISTE[WW[0][3][5][2]].userData.P.F[WW[0][3][5][3]].material.color.set(Farben[7]);
-    LISTE[WW[1][3][2][3]].userData.P.F[WW[1][3][2][4]].material.color.set(Farben[6]);
-    LISTE[WW[1][3][0][3]].userData.P.F[WW[1][3][0][4]].material.color.set(Farben[2]);
-    LISTE[WW[1][3][4][3]].userData.P.F[WW[1][3][4][4]].material.color.set(Farben[0]);
-    LISTE[WW[1][3][5][3]].userData.P.F[WW[1][3][5][4]].material.color.set(Farben[8]);
+    setze_die_Farbe(0,3,2,Farben[3]);
+    setze_die_Farbe(0,3,0,Farben[5]);
+    setze_die_Farbe(0,3,4,Farben[1]);
+    setze_die_Farbe(0,3,5,Farben[7]);
+    setze_die_Farbe(1,3,2,Farben[6]);
+    setze_die_Farbe(1,3,0,Farben[2]);
+    setze_die_Farbe(1,3,4,Farben[0]);
+    setze_die_Farbe(1,3,5,Farben[8]);
     }  
   if (Farben[4]=='yellow') {
-    LISTE[WW[0][4][0][2]].userData.P.F[WW[0][4][0][3]].material.color.set(Farben[5]);
-    LISTE[WW[0][4][1][2]].userData.P.F[WW[0][4][1][3]].material.color.set(Farben[1]);
-    LISTE[WW[0][4][2][2]].userData.P.F[WW[0][4][2][3]].material.color.set(Farben[3]);
-    LISTE[WW[0][4][3][2]].userData.P.F[WW[0][4][3][3]].material.color.set(Farben[7]);
-    LISTE[WW[1][4][0][3]].userData.P.F[WW[1][4][0][4]].material.color.set(Farben[2]);
-    LISTE[WW[1][4][1][3]].userData.P.F[WW[1][4][1][4]].material.color.set(Farben[0]);
-    LISTE[WW[1][4][2][3]].userData.P.F[WW[1][4][2][4]].material.color.set(Farben[6]);
-    LISTE[WW[1][4][3][3]].userData.P.F[WW[1][4][3][4]].material.color.set(Farben[8]);
+    setze_die_Farbe(0,4,0,Farben[5]);
+    setze_die_Farbe(0,4,1,Farben[1]);
+    setze_die_Farbe(0,4,2,Farben[3]);
+    setze_die_Farbe(0,4,3,Farben[7]);
+    setze_die_Farbe(1,4,0,Farben[2]);
+    setze_die_Farbe(1,4,1,Farben[0]);
+    setze_die_Farbe(1,4,2,Farben[6]);
+    setze_die_Farbe(1,4,3,Farben[8]);
     }  
   if (Farben[4]=='white') {
-    LISTE[WW[0][5][0][2]].userData.P.F[WW[0][5][0][3]].material.color.set(Farben[5]);
-    LISTE[WW[0][5][1][2]].userData.P.F[WW[0][5][1][3]].material.color.set(Farben[7]);
-    LISTE[WW[0][5][2][2]].userData.P.F[WW[0][5][2][3]].material.color.set(Farben[3]);
-    LISTE[WW[0][5][3][2]].userData.P.F[WW[0][5][3][3]].material.color.set(Farben[1]);
-    LISTE[WW[1][5][0][3]].userData.P.F[WW[1][5][0][4]].material.color.set(Farben[2]);
-    LISTE[WW[1][5][1][3]].userData.P.F[WW[1][5][1][4]].material.color.set(Farben[8]);
-    LISTE[WW[1][5][2][3]].userData.P.F[WW[1][5][2][4]].material.color.set(Farben[6]);
-    LISTE[WW[1][5][3][3]].userData.P.F[WW[1][5][3][4]].material.color.set(Farben[0]);
+    setze_die_Farbe(0,5,0,Farben[5]);
+    setze_die_Farbe(0,5,1,Farben[7]);
+    setze_die_Farbe(0,5,2,Farben[3]);
+    setze_die_Farbe(0,5,3,Farben[1]);
+    setze_die_Farbe(1,5,0,Farben[2]);
+    setze_die_Farbe(1,5,1,Farben[8]);
+    setze_die_Farbe(1,5,2,Farben[6]);
+    setze_die_Farbe(1,5,3,Farben[0]);
+    checken();
     }  
   }
 
 id_scannen.addEventListener('click',function() {scannen()});
+
+function checken() {
+  alert('und los gehts');
+  for (let i=0;i<20;i++) {
+    let ke=LISTE[i];
+    //alert(JSON.stringify(ke.userData));
+    ke.name=ke.userData.F[0].material.userData+ke.userData.F[1].material.userData;
+    if (ke.userData.F[2]) ke.name=ke.name+ke.userData.F[2].material.userData;
+   //  K014.name=rot+gruen;
+   // K014.userData.P={P:[0,0,0], F:[K0140,K0141]};
+    alert(ke.name);
+    }
+  }
+
 
   </script>
 
