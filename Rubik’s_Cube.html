@@ -505,9 +505,12 @@ function animate_start() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehli
   //alert(Drehliste[0][3].toArray()+'\n'+Drehliste[0][4].toArray()+'\n'+Drehstart);
   }
 
+let Drehzeit=200;
+let neue_Drehzeit=0;
+
 function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehliste_gesamt;
-  if (frametime<Drehstart+600) {
-    let alpha=Math.min((frametime-Drehstart)/500,1);
+  if (frametime<Drehstart+Drehzeit+100) {
+    let alpha=Math.min((frametime-Drehstart)/Drehzeit,1);
     for (let dd=0;dd<Drehliste.length;dd++) {
       let d=Drehliste[dd];
       let Obj=LISTE[d[0]];
@@ -517,7 +520,9 @@ function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehlis
       Obj.rotateOnWorldAxis(Achs,alpha*Wink);
       }
     } else if ((Drehliste_gesamt.length>0)&&frametime>2000) {
+      Drehzeit=Math.max(Drehzeit+neue_Drehzeit,100); neue_Drehzeit=0;
       let n=Drehliste_gesamt.shift();
+      if (n==-1) {controls.object.position.y=-1; n=Drehliste_gesamt.shift()}
       if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);
       //alert(n);
       animate_start();
@@ -577,7 +582,7 @@ alert(pixels);
   suche(10);
   suche(13);
   suche(18);
-  suche(19);
+  suche(19);  Loeseliste.push(-1);
   suche(14);/**/
   //alert(Loeseliste);
   WW=structuredClone(WWMERK);
@@ -717,7 +722,16 @@ function Dauertest() {
 id_Dauertest.addEventListener('click',function() {Dauertest()});
 
 
+let Testindex=5;
 let Testfarben=[
+  ['','','','','red','','','',''],
+  ['','','','','green','','','',''],
+  ['','','','','orange','','','',''],
+  ['','','','','blue','','','',''],
+  ['','','','','yellow','','','',''],
+  ['','','','','white','','','','']
+  ];
+Testfarben=[
   ['blue','blue','yellow','orange','red','green','white','blue','orange'],
   ['blue','red','green','yellow','green','orange','green','red','red'],
   ['white','red','blue','blue','orange','green','yellow','blue','white'],
@@ -725,7 +739,22 @@ let Testfarben=[
   ['orange','white','red','yellow','yellow','yellow','red','yellow','yellow'],
   ['blue','green','red','white','white','red','green','green','yellow']
   ];
-let Testindex=5;
+Testfarben=[
+  ['green','yellow','yellow','green','red','green','orange','yellow','white'],
+  ['red','blue','red','white','green','orange','green','green','white'],
+  ['white','white','white','blue','orange','orange','blue','orange','red'],
+  ['blue','blue','yellow','green','blue','red','blue','blue','blue'],
+  ['green','white','green','red','yellow','orange','orange','red','orange'],
+  ['yellow','yellow','yellow','white','white','red','red','yellow','orange']
+  ];
+Testfarben=[
+  ['white','blue','yellow','yellow','red','orange','red','yellow','red'],
+  ['green','orange','green','green','green','red','blue','orange','yellow'],
+  ['red','white','red','green','orange','white','blue','white','orange'],
+  ['green','orange','orange','green','blue','green','white','yellow','blue'],
+  ['white','blue','orange','blue','yellow','red','yellow','yellow','blue'],
+  ['green','red','white','red','white','blue','orange','white','yellow']
+  ];
 
 function knips() {
   Testindex=(Testindex+1)%6;
@@ -900,10 +929,10 @@ KANTEN=[
     WW[1][i][j][4]=(3+WW[1][i][j][4]-LISTE[WW[1][i][j][3]].userData.Orientierung)%3;//na die 3♥
     }
 
-  alert(WW[1][0].join('\n'));
-  alert(WW[1][1].join('\n'));
-  alert(WW[1][2].join('\n'));
-  alert(WW[1][3].join('\n'));
+//  alert(WW[1][0].join('\n'));
+//  alert(WW[1][1].join('\n'));
+//  alert(WW[1][2].join('\n'));
+//  alert(WW[1][3].join('\n'));
 
 /*  WW[1]=[
   [,[0,1,4,15,0],,[0,3,5,13,1],[0,4,3,16,0],[0,5,1,17,0]],
@@ -915,14 +944,108 @@ KANTEN=[
   }
 
 function Test() {
-  alert(K23.name+' '+K23.userData.P);
+  //alert(K23.name+' '+K23.userData.P);
+  //alert(controls.object.position.y);
+  controls.object.position.y=-1;
   }
 
 id_Test.addEventListener('click',function() {Test()});
 
-let lll='';
-for (let k of LISTE) lll=lll+"'"+k.name+"', ";
+//let lll='';
+//for (let k of LISTE) lll=lll+"'"+k.name+"', ";
 //Log.innerHTML=lll;
+
+id_langsamer.addEventListener('click',function() {neue_Drehzeit=+100});
+id_schneller.addEventListener('click',function() {neue_Drehzeit=-100});
+
+function Anfang() {
+  alert('noch nicht fertig');
+  }
+
+id_Anfang.addEventListener('click',function() {Anfang()});
+
+
+
+
+
+
+
+
+//IP-Kamera:
+
+//Test3 nur als Variante aufheben für alle Fälle...
+function Test3(event) {
+const canvas = document.getElementById("canvas");
+//const canvas = document.createElement("canvas");
+alert(canvas);
+const gl = canvas.getContext("webgl2", {preserveDrawingBuffer: true});
+alert(gl);alert(gl.drawingBufferWidth);
+const pixels = new Uint8Array(
+400//  gl.drawingBufferWidth * gl.drawingBufferHeight * 4,
+);
+//alert(gl.readPixels);
+gl.readPixels(
+  100,//0
+  100,//0
+  10,//gl.drawingBufferWidth,
+  10,//gl.drawingBufferHeight,
+  gl.RGBA,
+  gl.UNSIGNED_BYTE,
+  pixels,
+);
+//console.log(pixels); // Uint8Array
+alert('webgl2: '+pixels);
+}
+
+
+//aus https://thewebdev.info/2022/01/27/how-to-get-pixel-color-from-an-image-with-javascript/
+// und das data:image/gif aus 
+// https://ourcodeworld.com/articles/read/185/how-to-get-the-pixel-color-from-a-canvas-on-click-or-mouse-event-with-javascript
+
+const myImg = new Image();
+myImg.crossOrigin = "Anonymous";
+myImg.onload = () => {//alert('onload');
+//  const context = document.createElement('canvas').getContext('webgpu');
+  const context = document.getElementById('canvas2').getContext('2d');//2d oder webgl2 geht auch und sogar auch webgpu!!!
+  //alert(context);
+  context.drawImage(myImg, 0, 0);
+  //context.drawImage(myImg, 0, 0, myImg.width,    myImg.height, 0, 0, canvas2.width, canvas2.height);
+  const {
+    data
+  } = context.getImageData(eventLocation.x, eventLocation.y, 4, 4);
+  //console.log(data);
+  alert(eventLocation.x+' '+eventLocation.y+'\n'+data);
+}
+
+
+
+
+
+
+function Test4(event) {
+  canvas4.src='http://127.0.0.1:56147/video';
+  }
+
+let eventLocation={x:30,y:30};
+function Test5(event) {
+  //for (let i of canvas) alert(i);
+  eventLocation={x:event.offsetX,y:event.offsetY};
+  myImg.src='http://127.0.0.1:56147/video';
+  }
+
+myImg.src='Screenshot_20250527-173334_Chrome.jpg';
+//myImg.src = 'http://127.0.0.1:56147/video';//'Screenshot_20250527-173334_Chrome.jpg';
+
+id_Test4.addEventListener('click',function() {Test4(event)});
+id_rectangle.addEventListener('click',function() {Test5(event)});
+
+  </script>
+
+
+  </body></html>
+
+
+
   </script>
 
 <div>
@@ -947,6 +1070,40 @@ for (let k of LISTE) lll=lll+"'"+k.name+"', ";
 <button id='id_drehe11' style='background-color:white; font-size:200%'>↺</button>
   </div>
 <button id='id_Test' style='background-color:white; font-size:200%'>Test</button>
+<button id='id_langsamer' style='background-color:white; font-size:200%'>langsamer</button>
+<button id='id_schneller' style='background-color:white; font-size:200%'>schneller</button>
+<button id='id_Anfang' style='background-color:red; font-size:200%'>Anfang</button>
+
+<!---IP-Kamera:--->
+<div>
+<canvas id='canvas2' style='display:none; border:solid;' width='288' height='288' onclick='Test2(event)' xmlns="http://www.w3.org/1999/xhtml"></canvas>
+
+<button id='id_Test4' onclick='Test4(event)'>Test4</button>
+
+
+<svg width="352" height="288">
+
+<foreignObject x="0" y="0" width="352" height="288" style="border:none">
+  <iframe id='canvas4' src='Screenshot_20250527-173334_Chrome.jpg' width="352" height="288" style="border:none"> jjj</iframe>
+  </foreignObject>
+      
+<rect x='288' y='0' width='64' height='288' fill='white'/>
+<rect id='id_rectangle' x='0' y='0' width='288' height='288' fill='white' opacity='0'/>
+<g id="Pleyaden" transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='4'>
+  <circle id="linksoben" cx="48" cy="48" r="10" stroke="green"/>
+  <circle id="mitteoben" cx="144" cy="48" r="10" stroke="red"/>
+  <circle id="rechtsoben" cx="240" cy="48" r="10" stroke="yellow"/>
+  <circle id="linksmitte" cx="48" cy="144" r="10" stroke="green"/>
+  <circle id="mittemitte" cx="144" cy="144" r="10" stroke="red"/>
+  <circle id="rechtsmitte" cx="240" cy="144" r="10" stroke="yellow"/>
+  <circle id="linksunten" cx="48" cy="240" r="10" stroke="green"/>
+  <circle id="mitteunten" cx="144" cy="240" r="10" stroke="red"/>
+  <circle id="rechtsunten" cx="240" cy="240" r="10" stroke="yellow"/>
+  </g>
+  </svg>
+
+
+  </div>
 
 <script>
   </script></body></html>
