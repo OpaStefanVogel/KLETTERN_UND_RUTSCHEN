@@ -8,11 +8,6 @@
   </head>
 
 <body>
-<div id="canvas"></div>
-<div id='Log' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
-<div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'> </div>
-<div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
-<div id='Log2' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
 
 <!--importmap muß bleiben weil die module auch three aufrufen-->
 		<script type="importmap">
@@ -32,8 +27,8 @@ import { XRButton } from 'three/addons/webxr/XRButton.js';
 import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
 
-let canvas_width=0.9*window.innerWidth;
-let canvas_height=0.9*window.innerHeight;
+let canvas_width=288;//0.9*window.innerWidth;
+let canvas_height=288;//0.9*window.innerHeight;
 const renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( canvas_width, canvas_height );
@@ -77,7 +72,7 @@ const directionalLight6 = new THREE.DirectionalLight( 0xccffff, 1 );
   directionalLight6.position.set(0,0,-40);
   scene.add( directionalLight6);
 
-const camera = new THREE.PerspectiveCamera( 50, canvas_width / canvas_height, 0.1, 500 );
+const camera = new THREE.PerspectiveCamera( 35, canvas_width / canvas_height, 0.1, 500 );
   scene.add( camera );
 
 const controls = new OrbitControls( camera, renderer.domElement );
@@ -90,7 +85,7 @@ const controls = new OrbitControls( camera, renderer.domElement );
   controls.maxPolarAngle = 2*Math.PI / 2;//das geht, original 1*
   controls.minPolarAngle = 0;
   controls.target.set(0,0,0);
-  controls.object.position.set(0.5,1,2);
+  controls.object.position.set(0.5,0.5,1.5);
 
 const controller1 = renderer.xr.getController( 0 );
   controller1.addEventListener( 'selectstart', onSelectStart );
@@ -1014,7 +1009,7 @@ myImg.onload = () => {//alert('onload');
     data
   } = context.getImageData(eventLocation.x, eventLocation.y, 4, 4);
   //console.log(data);
-  alert(eventLocation.x+' '+eventLocation.y+'\n'+data);
+  Log3.innerHTML=eventLocation.x+' '+eventLocation.y+'\n'+data;
 }
 
 
@@ -1030,14 +1025,16 @@ let eventLocation={x:30,y:30};
 function Test5(event) {
   //for (let i of canvas) alert(i);
   eventLocation={x:event.offsetX,y:event.offsetY};
+  myImg.src='Screenshot_20250529-210046_Chrome.jpg';
   myImg.src='http://127.0.0.1:56147/video';
   }
 
-myImg.src='Screenshot_20250527-173334_Chrome.jpg';
+myImg.src='Screenshot_20250529-210046_Chrome.jpg';
 //myImg.src = 'http://127.0.0.1:56147/video';//'Screenshot_20250527-173334_Chrome.jpg';
 
 id_Test4.addEventListener('click',function() {Test4(event)});
 id_rectangle.addEventListener('click',function() {Test5(event)});
+id_rectangle2.addEventListener('click',function() {Test5(event)});
 
   </script>
 
@@ -1076,15 +1073,13 @@ id_rectangle.addEventListener('click',function() {Test5(event)});
 
 <!---IP-Kamera:--->
 <div>
-<canvas id='canvas2' style='display:none; border:solid;' width='288' height='288' onclick='Test2(event)' xmlns="http://www.w3.org/1999/xhtml"></canvas>
 
 <button id='id_Test4' onclick='Test4(event)'>Test4</button>
-
 
 <svg width="352" height="288">
 
 <foreignObject x="0" y="0" width="352" height="288" style="border:none">
-  <iframe id='canvas4' src='Screenshot_20250527-173334_Chrome.jpg' width="352" height="288" style="border:none"> jjj</iframe>
+  <iframe id='canvas4' src='Screenshot_20250529-210046_Chrome.jpg' width="352" height="288" style="border:none"> jjj</iframe>
   </foreignObject>
       
 <rect x='288' y='0' width='64' height='288' fill='white'/>
@@ -1102,8 +1097,37 @@ id_rectangle.addEventListener('click',function() {Test5(event)});
   </g>
   </svg>
 
+<svg width="352" height="288">
+
+<foreignObject x="0" y="0" width="352" height="288" style="border:none">
+<canvas id='canvas2' style='display:non; border:none;' width='288' height='288' onclick='Test2(event)' xmlns="http://www.w3.org/1999/xhtml"></canvas>
+  </foreignObject>
+      
+<rect x='288' y='0' width='64' height='288' fill='white'/>
+<rect id='id_rectangle2' x='0' y='0' width='288' height='288' fill='white' opacity='0'/>
+<g id="Pleyaden" transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='4'>
+  <circle id="linksoben" cx="48" cy="48" r="10" stroke="green"/>
+  <circle id="mitteoben" cx="144" cy="48" r="10" stroke="red"/>
+  <circle id="rechtsoben" cx="240" cy="48" r="10" stroke="yellow"/>
+  <circle id="linksmitte" cx="48" cy="144" r="10" stroke="green"/>
+  <circle id="mittemitte" cx="144" cy="144" r="10" stroke="red"/>
+  <circle id="rechtsmitte" cx="240" cy="144" r="10" stroke="yellow"/>
+  <circle id="linksunten" cx="48" cy="240" r="10" stroke="green"/>
+  <circle id="mitteunten" cx="144" cy="240" r="10" stroke="red"/>
+  <circle id="rechtsunten" cx="240" cy="240" r="10" stroke="yellow"/>
+  </g>
+  </svg>
+
+<div id="canvas" style='display:inline-block'></div>
+
 
   </div>
+
+<div id='Log' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
+<div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'> </div>
+<div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
+<div id='Log2' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
+<div id='Log3' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:wrap;'> </div>
 
 <script>
   </script></body></html>
