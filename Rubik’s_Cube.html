@@ -762,8 +762,8 @@ function setze_die_Farbe(ke,i,j,farbe) {
   
   }
 
-function scannen() {
-  let Farben=knips();
+function scannen(Farben) {
+  //let Farben=knips();
   if (Farben[4]=='red') {
     //alert(Farben+'\n'+WW[0][0].join('\n')+'\n----\n'+LISTE[WW[0][0][1][2]].userData.P.F[0].material.color.getHexString());
     setze_die_Farbe(0,0,1,Farben[5]);
@@ -828,7 +828,7 @@ function scannen() {
     }  
   }
 
-id_scannen.addEventListener('click',function() {scannen()});
+id_scannen.addEventListener('click',function() {scannen(knips())});
 
 
 let Orientierungen_Kanten=['redgreen', 'redwhite', 'redblue', 'redyellow', 'orangeblue', 'orangeyellow', 'orangegreen', 'orangewhite', 'greenyellow', 'whitegreen', 'bluewhite', 'yellowblue'];
@@ -997,6 +997,7 @@ alert('webgl2: '+pixels);
 // und das data:image/gif aus 
 // https://ourcodeworld.com/articles/read/185/how-to-get-the-pixel-color-from-a-canvas-on-click-or-mouse-event-with-javascript
 
+let dataArray=[];
 const myImg = new Image();
 myImg.crossOrigin = "Anonymous";
 myImg.onload = () => {//alert('onload');
@@ -1005,11 +1006,19 @@ myImg.onload = () => {//alert('onload');
   //alert(context);
   context.drawImage(myImg, 0, 0);
   //context.drawImage(myImg, 0, 0, myImg.width,    myImg.height, 0, 0, canvas2.width, canvas2.height);
-  const {
-    data
-  } = context.getImageData(eventLocation.x, eventLocation.y, 4, 4);
+  //let data = {};
+  dataArray=[];
+  let text = [];
+  for (let Location of [[eventLocation.x, eventLocation.y], 
+        [48,48], [144,48], [240,48], 
+        [48,144], [144,144], [240,144], 
+        [48,240], [144,240], [240,240], ]) {
+    let { data } = context.getImageData(Location[0], Location[1], 2, 2);
+    dataArray.push(data);
+    text=text+data+'\n';
+    }
   //console.log(data);
-  Log3.innerHTML=eventLocation.x+' '+eventLocation.y+'\n'+data;
+  Log3.innerHTML=eventLocation.x+' '+eventLocation.y+'\n'+text;
 }
 
 
@@ -1025,8 +1034,9 @@ let eventLocation={x:30,y:30};
 function Test5(event) {
   //for (let i of canvas) alert(i);
   eventLocation={x:event.offsetX,y:event.offsetY};
-  myImg.src='Screenshot_20250529-210046_Chrome.jpg';
-  myImg.src='http://127.0.0.1:56147/video';
+  myImg.src=canvas4.src;
+  //myImg.src='Screenshot_20250529-210046_Chrome.jpg';
+  //myImg.src='http://127.0.0.1:56147/video';
   }
 
 myImg.src='Screenshot_20250529-210046_Chrome.jpg';
@@ -1127,7 +1137,7 @@ id_rectangle2.addEventListener('click',function() {Test5(event)});
 <div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'> </div>
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
 <div id='Log2' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
-<div id='Log3' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:wrap;'> </div>
+<div id='Log3' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
 
 <script>
   </script></body></html>
