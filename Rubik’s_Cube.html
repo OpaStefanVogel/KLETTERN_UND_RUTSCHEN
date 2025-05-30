@@ -824,7 +824,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,5,1,Farben[8]);
     setze_die_Farbe(1,5,2,Farben[6]);
     setze_die_Farbe(1,5,3,Farben[0]);
-    checken();
+    //checken();
     }  
   }
 
@@ -838,7 +838,7 @@ let NEUELISTE=[];
 let INDEXLISTE1=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
 let INDEXLISTE2=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
 function checken() {
-  alert('und los gehts');
+  //alert('und los gehts');
   NEUELISTE=LISTE.slice();//wegen K0 bis K6
   INDEXLISTE1=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
   INDEXLISTE2=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
@@ -1019,6 +1019,7 @@ myImg.onload = () => {//alert('onload');
     }
   //console.log(data);
   Log3.innerHTML=eventLocation.x+' '+eventLocation.y+'\n'+text;
+  Farben_aus_Daten_bestimmen();
 }
 
 
@@ -1045,6 +1046,30 @@ myImg.src='Screenshot_20250529-210046_Chrome.jpg';
 id_Test4.addEventListener('click',function() {Test4(event)});
 id_rectangle.addEventListener('click',function() {Test5(event)});
 id_rectangle2.addEventListener('click',function() {Test5(event)});
+
+
+function Farben_aus_Daten_bestimmen() {
+  Farben=[];
+  let Farbe='gray';
+  let fu=80;
+  let fo=180;
+  for (let i=0;i<10;i++) {
+    Farbe='gray';
+    let [fr,fg,fb]=dataArray[i];//alert(fr+' '+fg+' '+fb+' '+fu+' '+fo+' '+(fg>fo));
+    if (fr>fo&&fg>fo&&fb>fo) Farbe='white';
+    if (fr>fo&&fg>fu&&fg<fo&&fb<fu) Farbe='orange';
+    if (fr>fo&&fg<fu&&fb<fu) Farbe='red';
+    if (fr<fu&&fg<fu&&fb>fu) Farbe='blue';
+    if (fb>2*fr&&fb>2*fg) Farbe='blue';
+    if (fr>fo&&fg>fo&&fb<fu) Farbe='yellow';
+    if (fr<fu&&fg>fu&&fb<fu) Farbe='green';
+    
+    Farben.push(Farbe);
+    }
+  Log4.innerHTML='Farben: '+Farben;
+  Farben.shift();
+  scannen(Farben);
+  }
 
   </script>
 
@@ -1094,16 +1119,16 @@ id_rectangle2.addEventListener('click',function() {Test5(event)});
       
 <rect x='288' y='0' width='64' height='288' fill='white'/>
 <rect id='id_rectangle' x='0' y='0' width='288' height='288' fill='white' opacity='0'/>
-<g id="Pleyaden" transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='4'>
-  <circle id="linksoben" cx="48" cy="48" r="10" stroke="green"/>
-  <circle id="mitteoben" cx="144" cy="48" r="10" stroke="red"/>
-  <circle id="rechtsoben" cx="240" cy="48" r="10" stroke="yellow"/>
-  <circle id="linksmitte" cx="48" cy="144" r="10" stroke="green"/>
-  <circle id="mittemitte" cx="144" cy="144" r="10" stroke="red"/>
-  <circle id="rechtsmitte" cx="240" cy="144" r="10" stroke="yellow"/>
-  <circle id="linksunten" cx="48" cy="240" r="10" stroke="green"/>
-  <circle id="mitteunten" cx="144" cy="240" r="10" stroke="red"/>
-  <circle id="rechtsunten" cx="240" cy="240" r="10" stroke="yellow"/>
+<g transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='1' stroke='gray'>
+  <circle cx="48" cy="48" r="10"/>
+  <circle cx="144" cy="48" r="10"/>
+  <circle cx="240" cy="48" r="10"/>
+  <circle cx="48" cy="144" r="10"/>
+  <circle cx="144" cy="144" r="10"/>
+  <circle cx="240" cy="144" r="10"/>
+  <circle cx="48" cy="240" r="10"/>
+  <circle cx="144" cy="240" r="10"/>
+  <circle cx="240" cy="240" r="10"/>
   </g>
   </svg>
 
@@ -1115,7 +1140,7 @@ id_rectangle2.addEventListener('click',function() {Test5(event)});
       
 <rect x='288' y='0' width='64' height='288' fill='white'/>
 <rect id='id_rectangle2' x='0' y='0' width='288' height='288' fill='white' opacity='0'/>
-<g id="Pleyaden" transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='4'>
+<g transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='4'>
   <circle id="linksoben" cx="48" cy="48" r="10" stroke="green"/>
   <circle id="mitteoben" cx="144" cy="48" r="10" stroke="red"/>
   <circle id="rechtsoben" cx="240" cy="48" r="10" stroke="yellow"/>
@@ -1137,6 +1162,7 @@ id_rectangle2.addEventListener('click',function() {Test5(event)});
 <div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'> </div>
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
 <div id='Log2' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
+<div id='Log4' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
 <div id='Log3' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
 
 <script>
