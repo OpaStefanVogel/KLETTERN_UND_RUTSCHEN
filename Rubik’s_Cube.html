@@ -829,6 +829,7 @@ function scannen(Farben) {
   }
 
 id_scannen.addEventListener('click',function() {scannen(knips())});
+id_checken.addEventListener('click',function() {checken()});
 
 
 let Orientierungen_Kanten=['redgreen', 'redwhite', 'redblue', 'redyellow', 'orangeblue', 'orangeyellow', 'orangegreen', 'orangewhite', 'greenyellow', 'whitegreen', 'bluewhite', 'yellowblue'];
@@ -893,7 +894,7 @@ KANTEN=[
   [[4,0,3,1],[4,1,8,1],[4,2,5,1],[4,3,11,0],,],
   [[5,0,1,1],[5,1,9,0],[5,2,7,1],[5,3,10,1],,]];
 
-  WW[0]=structuredClone(KANTEN);
+  WW[0]=structuredClone(WW[0]);
   for (let i=0;i<6;i++) for (let j=0;j<6;j++) if (WW[0][i][j]) {
     WW[0][i][j][2]=INDEXLISTE1[WW[0][i][j][2]];
     WW[0][i][j][3]=(WW[0][i][j][3]+LISTE[WW[0][i][j][2]].userData.Orientierung)%2;
@@ -918,7 +919,7 @@ KANTEN=[
   [[4,0,1,12,2],[4,1,2,17,1],[4,2,3,16,2],[4,3,0,15,1],,],
   [[5,0,3,14,1],[5,1,0,13,1],[5,2,1,18,1],[5,3,2,19,1],,]];
 
-  WW[1]=structuredClone(ECKEN);
+  WW[1]=structuredClone(WW[1]);
   for (let i=0;i<6;i++) for (let j=0;j<6;j++) if (WW[1][i][j]) {
     WW[1][i][j][3]=INDEXLISTE1[WW[1][i][j][3]];
     WW[1][i][j][4]=(3+WW[1][i][j][4]-LISTE[WW[1][i][j][3]].userData.Orientierung)%3;//na die 3♥
@@ -994,7 +995,7 @@ alert('webgl2: '+pixels);
 
 
 //aus https://thewebdev.info/2022/01/27/how-to-get-pixel-color-from-an-image-with-javascript/
-// und das data:image/gif aus 
+// und das data:image/gif aus .
 // https://ourcodeworld.com/articles/read/185/how-to-get-the-pixel-color-from-a-canvas-on-click-or-mouse-event-with-javascript
 
 let dataArray=[];
@@ -1080,32 +1081,6 @@ function Farben_aus_Daten_bestimmen() {
 
   </script>
 
-<div>
-<button id='id_loese' style='font-size:300%; float:right'>lösen</button>
-<button id='id_mische' style='font-size:300%; float:right'>mischen</button>
-<button id='id_fehlersuch' style='font-size:300%; float:right'>Fehlersuche</button>
-<button id='id_Dauertest' style='font-size:300%; float:right'>Dauertest</button>
-<button id='id_scannen' style='font-size:300%; float:right'>Scannen</button>
-<button id='id_drehe0' style='background-color:red; font-size:200%'>↷</button>
-<button id='id_drehe1' style='background-color:green; font-size:200%'>↷</button>
-<button id='id_drehe2' style='background-color:orange; font-size:200%'>↷</button>
-<button id='id_drehe3' style='background-color:blue; font-size:200%'>↷</button>
-<button id='id_drehe4' style='background-color:yellow; font-size:200%'>↷</button>
-<button id='id_drehe5' style='background-color:white; font-size:200%'>↻</button>
-  </div>
-<div>
-<button id='id_drehe6' style='background-color:red; font-size:200%'>↶</button>
-<button id='id_drehe7' style='background-color:green; font-size:200%'>↶</button>
-<button id='id_drehe8' style='background-color:orange; font-size:200%'>↶</button>
-<button id='id_drehe9' style='background-color:blue; font-size:200%'>↶</button>
-<button id='id_drehe10' style='background-color:yellow; font-size:200%'>↶</button>
-<button id='id_drehe11' style='background-color:white; font-size:200%'>↺</button>
-  </div>
-<button id='id_Test' style='background-color:white; font-size:200%'>Test</button>
-<button id='id_langsamer' style='background-color:white; font-size:200%'>langsamer</button>
-<button id='id_schneller' style='background-color:white; font-size:200%'>schneller</button>
-<button id='id_Anfang' style='background-color:red; font-size:200%'>Anfang</button>
-
 <!---IP-Kamera:--->
 <div>
 
@@ -1132,7 +1107,7 @@ function Farben_aus_Daten_bestimmen() {
   </g>
   </svg>
 
-<svg width="352" height="288">
+<svg width="352" height="288" style='display:none'>
 
 <foreignObject x="0" y="0" width="352" height="288" style="border:none">
 <canvas id='canvas2' style='display:non; border:none;' width='288' height='288' onclick='Test2(event)' xmlns="http://www.w3.org/1999/xhtml"></canvas>
@@ -1143,7 +1118,7 @@ function Farben_aus_Daten_bestimmen() {
 <g transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='4'>
   <circle id="linksoben" cx="48" cy="48" r="10" stroke="green"/>
   <circle id="mitteoben" cx="144" cy="48" r="10" stroke="red"/>
-  <circle id="rechtsoben" cx="240" cy="48" r="10" stroke="yellow"/>
+  <circle id="rechtsoben" cx="240" cy="48" r="10" stroke="yellow"/>,
   <circle id="linksmitte" cx="48" cy="144" r="10" stroke="green"/>
   <circle id="mittemitte" cx="144" cy="144" r="10" stroke="red"/>
   <circle id="rechtsmitte" cx="240" cy="144" r="10" stroke="yellow"/>
@@ -1153,10 +1128,73 @@ function Farben_aus_Daten_bestimmen() {
   </g>
   </svg>
 
-<div id="canvas" style='display:inline-block'></div>
+<div id="canvas" style='display:inline-block'> </div>
 
+<div style='display:inline-block; min-width:64px'> </div>
+
+<div style='display:inline-block'>
+<div>
+<button id='id_drehe4' style='background-color:yellow; font-size:200%'>↷</button>
+<button id='id_drehe10' style='background-color:yellow; font-size:200%'>↶</button>
+  </div>
+<div>
+<button id='id_drehe6' style='background-color:red; font-size:200%'>↶</button>
+<button id='id_drehe7' style='background-color:green; font-size:200%'>↶</button>
+<button id='id_drehe8' style='background-color:orange; font-size:200%'>↶</button>
+<button id='id_drehe9' style='background-color:blue; font-size:200%'>↶</button>
+  </div>
+<div>
+<button id='id_drehe0' style='background-color:red; font-size:200%'>↷</button>
+<button id='id_drehe1' style='background-color:green; font-size:200%'>↷</button>
+<button id='id_drehe2' style='background-color:orange; font-size:200%'>↷</button>
+<button id='id_drehe3' style='background-color:blue; font-size:200%'>↷</button>
+  </div>
+<div>
+<button id='id_drehe5' style='background-color:white; font-size:200%'>↻</button>
+<button id='id_drehe11' style='background-color:white; font-size:200%'>↺</button>
+  </div>
+
+<span style='min-height:500px'>xxx</span>
+</div>
+
+<div style='display:inline-block; min-width:64px'> </div>
+
+<div style='display:inline-block'>
+<div><button id='id_Anfang' style='background-color:red; font-size:200%'>Anfang</button></div>
+<div><button id='id_mische' style='font-size:300%'>mischen</button></div>
+<div><button id='id_loese' style='font-size:300%'>lösen</button></div>
+<span style='min-height:500px'>xxx</span>
+  </div>
 
   </div>
+
+<div>
+<button id='id_fehlersuch' style='font-size:300%; float:right'>Fehlersuche</button>
+<button id='id_Dauertest' style='font-size:300%; float:right'>Dauertest</button>
+<button id='id_checken' style='font-size:300%; float:right'>Check</button>
+<button id='id_scannen' style='font-size:300%; float:right'>Scannen</button>
+  </div>
+
+<!--div>
+<button id='id_drehe0' style='background-color:red; font-size:200%'>↷</button>
+<button id='id_drehe1' style='background-color:green; font-size:200%'>↷</button>
+<button id='id_drehe2' style='background-color:orange; font-size:200%'>↷</button>
+<button id='id_drehe3' style='background-color:blue; font-size:200%'>↷</button>
+<button id='id_drehe4' style='background-color:yellow; font-size:200%'>↷</button>
+<button id='id_drehe5' style='background-color:white; font-size:200%'>↻</button>
+  </div>
+<div>
+<button id='id_drehe6' style='background-color:red; font-size:200%'>↶</button>
+<button id='id_drehe7' style='background-color:green; font-size:200%'>↶</button>
+<button id='id_drehe8' style='background-color:orange; font-size:200%'>↶</button>
+<button id='id_drehe9' style='background-color:blue; font-size:200%'>↶</button>
+<button id='id_drehe10' style='background-color:yellow; font-size:200%'>↶</button>
+<button id='id_drehe11' style='background-color:white; font-size:200%'>↺</button>
+  </div-->
+<button id='id_Test' style='background-color:white; font-size:200%'>Test</button>
+<button id='id_langsamer' style='background-color:white; font-size:200%'>langsamer</button>
+<button id='id_schneller' style='background-color:white; font-size:200%'>schneller</button>
+
 
 <div id='Log' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
 <div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'> </div>
