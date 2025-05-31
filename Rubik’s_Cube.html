@@ -693,6 +693,7 @@ function fehlersuch(liste) {
 id_fehlersuch.addEventListener('click',function() {fehlersuch([10,4,11,11,0,10,11,0,8,6,1,8,0,6,8,2,1,5,2,5])});
 
 let Farben=['red','green','orange','blue','yellow','white'];
+let Farben2=[];
 function pruefen() {
   let RET=true;
   for (let i of [1,9,7,10,13,18,19,14]) {
@@ -1011,9 +1012,9 @@ myImg.onload = () => {//alert('onload');
   dataArray=[];
   let text = [];
   for (let Location of [[eventLocation.x, eventLocation.y], 
-        [48,48], [144,48], [240,48], 
-        [48,144], [144,144], [240,144], 
-        [48,240], [144,240], [240,240], ]) {
+        [96,96], [144,96], [192,96], 
+        [96,144], [144,144], [192,144], 
+        [96,192], [144,192], [192,192], ]) {
     let { data } = context.getImageData(Location[0], Location[1], 2, 2);
     dataArray.push(data);
     text=text+data+'\n';
@@ -1048,30 +1049,44 @@ id_Test4.addEventListener('click',function() {Test4(event)});
 id_rectangle.addEventListener('click',function() {Test5(event)});
 id_rectangle2.addEventListener('click',function() {Test5(event)});
 
+let Vergleichsfarben=[
+  [0,99,30,'green',63],
+  [0,76,99,'blue',57],
+  [99,39,0,'orange',109],
+  [85,99,0,'yellow',85],
+  [99,0,34,'red',79],
+  [0,33,99,'white',203]
+  ];
+ 
+function MinDist(fr,fg,fb,fm) {
+  if (fm>180) return 'white';
+  let imin=0;
+  let mindist=1000000;
+  for (let i=0;i<5;i++) {
+    let fv=Vergleichsfarben[i];
+    let dist=((fr-fv[0])**2+(fg-fv[1])**2+(fb-fv[2])**2);
+    if (dist<mindist) {mindist=dist;imin=i}
+    }
+  return Vergleichsfarben[imin][3];
+  }
 
 function Farben_aus_Daten_bestimmen() {
   Farben=[];
-  let Farbe='gray';
-  let fu=80;
-  let fo=180;
+  Farben2=[];
   for (let i=0;i<10;i++) {
-    Farbe='gray';
-    let [fr,fg,fb]=dataArray[i];//alert(fr+' '+fg+' '+fb+' '+fu+' '+fo+' '+(fg>fo));
-    if (fr>fo&&fg>fo&&fb>fo) Farbe='white';
-    if (fr>fo&&fg>fu&&fg<fo&&fb<fu) Farbe='orange';
-    if (fr>fo&&fg<fu&&fb<fu) Farbe='red';
-    if (fr<fu&&fg<fu&&fb>fu) Farbe='blue';
-    if (fb>2*fr&&fb>2*fg) Farbe='blue';
-    if (fr>fo&&fg>fo&&fb<fu) Farbe='yellow';
-    if (fr<fu&&fg>fu&&fb<fu) Farbe='green';
-    
+    let [fr,fg,fb]=dataArray[i];//alert(fr+' '+fg+' '+fb);
+    let fm=Math.min(fr,fg,fb);
+    fr=fr-fm;fg=fg-fm;fb=fb-fm;
+    let fn=Math.max(fr,fg,fb);
+    fr=Math.floor(fr/fn*99);fg=Math.floor(fg/fn*99);fb=Math.floor(fb/fn*99);
+    let Farbe=MinDist(fr,fg,fb,fm);
+    Farben2.push([i,fr,fg,fb,Farbe,fm]);
     Farben.push(Farbe);
     }
-  Log4.innerHTML='Farben: '+Farben;
+  Log4.innerHTML='Farben: '+Farben2.join('\n');
   Farben.shift();
   scannen(Farben);
   }
-
   </script>
 
 
@@ -1095,15 +1110,15 @@ function Farben_aus_Daten_bestimmen() {
 <rect x='288' y='0' width='64' height='288' fill='white'/>
 <rect id='id_rectangle' x='0' y='0' width='288' height='288' fill='white' opacity='0'/>
 <g transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='1' stroke='gray'>
-  <circle cx="48" cy="48" r="10"/>
-  <circle cx="144" cy="48" r="10"/>
-  <circle cx="240" cy="48" r="10"/>
-  <circle cx="48" cy="144" r="10"/>
+  <circle cx="96" cy="96" r="10"/>
+  <circle cx="144" cy="96" r="10"/>
+  <circle cx="192" cy="96" r="10"/>
+  <circle cx="96" cy="144" r="10"/>
   <circle cx="144" cy="144" r="10"/>
-  <circle cx="240" cy="144" r="10"/>
-  <circle cx="48" cy="240" r="10"/>
-  <circle cx="144" cy="240" r="10"/>
-  <circle cx="240" cy="240" r="10"/>
+  <circle cx="192" cy="144" r="10"/>
+  <circle cx="96" cy="192" r="10"/>
+  <circle cx="144" cy="192" r="10"/>
+  <circle cx="192" cy="192" r="10"/>
   </g>
   </svg>
 
@@ -1154,7 +1169,8 @@ function Farben_aus_Daten_bestimmen() {
 <button id='id_drehe11' style='background-color:white; font-size:200%'>↺</button>
   </div>
 
-<span style='min-height:500px'>xxx</span>
+<div>xxx</div>
+<div>xxx</div>
 </div>
 
 <div style='display:inline-block; min-width:64px'> </div>
@@ -1163,13 +1179,14 @@ function Farben_aus_Daten_bestimmen() {
 <div><button id='id_Anfang' style='background-color:red; font-size:200%'>Anfang</button></div>
 <div><button id='id_mische' style='font-size:300%'>mischen</button></div>
 <div><button id='id_loese' style='font-size:300%'>lösen</button></div>
-<span style='min-height:500px'>xxx</span>
+<div>xxx</div>
+<div>xxx</div>
   </div>
 
   </div>
 
 <div>
-<button id='id_fehlersuch' style='font-size:300%; float:right'>Fehlersuche</button>
+<button id='id_fehlersuch' style='font-size:300%; float:right'>Fehlersuche</button>.j
 <button id='id_Dauertest' style='font-size:300%; float:right'>Dauertest</button>
 <button id='id_checken' style='font-size:300%; float:right'>Check</button>
 <button id='id_scannen' style='font-size:300%; float:right'>Scannen</button>
