@@ -751,6 +751,15 @@ Testfarben=[
   ['white','blue','orange','blue','yellow','red','yellow','yellow','blue'],
   ['green','red','white','red','white','blue','orange','white','yellow']
   ];
+Testfarben=[
+  ['orange','white','white','red','red','yellow','red','blue','orange'],
+  ['red','white','red','orange','green','white','white','orange','yellow'],
+  ['white','white','blue','blue','orange','yellow','blue','blue','orange'],
+  ['red','yellow','blue','red','blue','green','green','blue','green'],
+  ['green','green','blue','orange','yellow','red','yellow','green','white'],
+  ['yellow','yellow','yellow','orange','white','red','orange','green','green']
+  ];
+
 
 function knips() {
   Testindex=(Testindex+1)%6;
@@ -825,7 +834,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,5,1,Farben[8]);
     setze_die_Farbe(1,5,2,Farben[6]);
     setze_die_Farbe(1,5,3,Farben[0]);
-    //checken();
+    if (checken()) id_loese.click();
     }  
   }
 
@@ -841,6 +850,7 @@ let INDEXLISTE1=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
 let INDEXLISTE2=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
 function checken() {
   //alert('und los gehts');
+  let checktext='';
   NEUELISTE=LISTE.slice();//wegen K0 bis K6
   INDEXLISTE1=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
   INDEXLISTE2=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
@@ -849,9 +859,10 @@ function checken() {
     //alert(JSON.stringify(ke.userData));
     ke.name=ke.userData.F[0].material.userData+ke.userData.F[1].material.userData;
     let y=0;
+    let ungueltig=false;
     if (ke.userData.F[2]) {
       ke.name=ke.name+ke.userData.F[2].material.userData;
-      while (Orientierungen_Ecken.indexOf(ke.name)==-1) {
+      while ((Orientierungen_Ecken.indexOf(ke.name)==-1)&&y<4) {
         y=y+1;
         let x=ke.userData.P[0];
         ke.userData.P[0]=ke.userData.P[1];
@@ -860,6 +871,7 @@ function checken() {
         ke.name=ke.userData.F[(0+y)%3].material.userData+ke.userData.F[(1+y)%3].material.userData+ke.userData.F[(2+y)%3].material.userData;
         //alert(ke.name);
         }
+      if (Orientierungen_Ecken.indexOf(ke.name)==-1) ungueltig=true;
       ke.userData.index=Orientierungen_Ecken.indexOf(ke.name)+12;
       } else {
         if (Orientierungen_Kanten.indexOf(ke.name)==-1) {
@@ -871,9 +883,12 @@ function checken() {
           //alert(ke.name);
           }
         ke.userData.index=Orientierungen_Kanten.indexOf(ke.name);
+        if (Orientierungen_Kanten.indexOf(ke.name)==-1) ungueltig=true;
         }
     ke.userData.Orientierung=y;
-    //alert(i+' '+ke.name+' '+ke.userData.P+' '+ke.userData.index+' '+ke.userData.Orientierung);
+    checktext=checktext+i+' '+ke.name+' '+ke.userData.P+' '+ke.userData.index+' '+ke.userData.Orientierung+'\n';
+    Log4.innerHTML=checktext;
+    if (ungueltig) {return false} //keine gültige Färbung
     NEUELISTE[ke.userData.index]=LISTE[i];
     INDEXLISTE1[i]=ke.userData.index;
     INDEXLISTE2[ke.userData.index]=[i];
@@ -900,7 +915,7 @@ KANTEN=[
     WW[0][i][j][2]=INDEXLISTE1[WW[0][i][j][2]];
     WW[0][i][j][3]=(WW[0][i][j][3]+LISTE[WW[0][i][j][2]].userData.Orientierung)%2;
     }
-//  alert(WW[0][0].join('\n'));
+  checktext=checktext+WW[0][0].join('\n')+'\n\n';
 //  alert(WW[0][1].join('\n'));
 //  alert(WW[0][2].join('\n'));
 //  alert(WW[0][3].join('\n'));
@@ -926,6 +941,7 @@ KANTEN=[
     WW[1][i][j][4]=(3+WW[1][i][j][4]-LISTE[WW[1][i][j][3]].userData.Orientierung)%3;//na die 3♥
     }
 
+  checktext=checktext+WW[1][0].join('\n')+'\n\n';
 //  alert(WW[1][0].join('\n'));
 //  alert(WW[1][1].join('\n'));
 //  alert(WW[1][2].join('\n'));
@@ -938,6 +954,9 @@ KANTEN=[
   [[3,0,4,16,2],,[3,2,5,19,0],,[3,4,2,14,1],[3,5,0,13,2]],
   [[4,0,1,15,2],[4,1,2,18,2],[4,2,3,14,2],[4,3,0,16,1],,],
   [[5,0,3,13,0],[5,1,0,17,1],[5,2,1,12,1],[5,3,2,19,2],,]];*/
+  
+  Log4.innerHTML=checktext;
+  return true;
   }
 
 function Test() {
@@ -1109,7 +1128,8 @@ function Farben_aus_Daten_bestimmen() {
       
 <rect x='288' y='0' width='64' height='288' fill='white'/>
 <rect id='id_rectangle' x='0' y='0' width='288' height='288' fill='white' opacity='0'/>
-<g transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='1' stroke='gray'>
+<g transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='1' stroke='black'>
+  <rect x='72' y='72' width='144' height='144'/>
   <circle cx="96" cy="96" r="10"/>
   <circle cx="144" cy="96" r="10"/>
   <circle cx="192" cy="96" r="10"/>
