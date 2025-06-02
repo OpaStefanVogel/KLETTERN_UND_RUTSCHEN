@@ -132,144 +132,13 @@ function onSelectStart( event ) {
   raycast();
   }
 
-const Ecken=[];
-let Ecke=new THREE.Mesh(
-  new THREE.SphereGeometry(0.04,32,32),
-  new THREE.MeshStandardMaterial( {color: 'green', transparent:true, opacity:0.8} )
-  );
-  Ecke.position.set(0,0,-3);
-  scene.add(Ecke);
 
-function Flaeche(xmin,xmax,ymin,ymax,zmin,zmax,farbe) {
-  let fl=new THREE.Mesh(
-    new THREE.BoxGeometry( Math.abs(xmax-xmin),Math.abs(ymax-ymin),Math.abs(zmax-zmin)),
-    new THREE.MeshStandardMaterial( {color: farbe, transparent:true, opacity:0.9} )
-    );
-  fl.position.set((xmin+xmax)/2,(ymin+ymax)/2,(zmin+zmax)/2);
-  fl.userData.P={tdok:tdok};
-  Flaechen.add(fl);
-  const edges = new THREE.EdgesGeometry(fl.geometry);
-  const fline = new THREE.LineSegments(
-    new THREE.EdgesGeometry(fl.geometry),
-    new THREE.LineBasicMaterial({ color: 0x0 })
-    );
-  fline.position.set((xmin+xmax)/2,(ymin+ymax)/2,(zmin+zmax)/2);
-  scene.add(fline);
-  Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmin , ymin , zmin ) } )
-  Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmin , ymin , zmax ) } )
-  Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmin , ymax , zmin ) } )
-  Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmin , ymax , zmax ) } )
-  Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmax , ymin , zmin ) } )
-  Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmax , ymin , zmax ) } )
-  Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmax , ymax , zmin ) } )
-  Ecken . push ( { object : fl , position : new THREE . Vector3 ( xmax , ymax , zmax ) } )
-  }
-
-/*  
-"TQ(-900,0,0,0)",
-"TNeu(200,500,5,'neuer Putz')",
-"TQ(-900,0,5,0)",
-"TNeu(5,500,2000,'neuer Putz')",
-*/
-
-let tdok='';
-function Interpretiere(text) {
-  let tt=text.split('\n');
-  for (let t of tt) {
-    //alert(t);
-    tdok=t;
-    eval(t);
-    }
-  }
-
-//Ausgangspunkt ist momentan (-1,-1,-5)
-let ax=-3,ay=-1.4,az=-3.50;
-let b1=0.80,b2=1.26,b3=0.40,b4=1.26,b5=0.80;
-let h1=1,h2=3,h3=0.32;
-let t1=0.26,t2=0.45;
-
-Interpretiere(`
-Flaeche(ax,ax+0.2,ay,ay+0.5,az,az-0.005,0xffffff);
-Flaeche(ax,ax-0.005,ay,ay+0.5,az+2,az,'hsl(0,100%,100%)');
-Flaeche(ax,ax-0.005,ay+0.5,ay+h2,az+0.5,az,'hsl(10,100%,100%)');
-Flaeche(ax,ax+b1,ay+0.5,ay+h2,az,az-0.005,'hsl(20,100%,100%)');
-Flaeche(ax+0.2,ax+b1,ay,ay+0.5,az,az-0.005,'hsl(20,100%,100%)');
-Flaeche(ax+b1,ax+b1+b2+b3+b4,ay+h2-h3,ay+h2,az,az-0.005,'hsl(30,100%,100%)');
-Flaeche(ax+b1,ax+b1-0.005,ay+h1,ay+h2-h3,az,az-t2,'hsl(31,100%,100%)');
-Flaeche(ax+b1,ax+b1-0.005,ay+h1,ay,az,az-t1,'hsl(32,100%,100%)');
-Flaeche(ax+b1,ax+b1+b2+b3+b4,ay+h1,ay,az-t1,az-t1-0.005,'hsl(33,100%,100%)');
-Flaeche(ax+b1+b2,ax+b1+b2+b3,ay+h1,ay+h2-h3,az-t1,az-t1-0.005,'hsl(33,100%,100%)');
-Flaeche(ax+b1+b2,ax+b1+b2+b3,ay+h2-h3,ay+h2-h3+0.005,az,az-t1,'hsl(34,100%,100%)');
-Flaeche(ax+b1+b2+b3+b4,ax+b1+b2+b3+b4+0.005,ay+h1,ay,az,az-t1,'hsl(32,100%,100%)');
-Flaeche(ax+b1+b2+b3+b4,ax+b1+b2+b3+b4+0.005,ay+h1,ay+h2-h3,az,az-t2,'hsl(32,100%,100%)');
-Flaeche(ax+b1+b2+b3+b4,ax+b1+b2+b3+b4+b5,ay,ay+h2,az,az-0.005,'hsl(31,100%,100%)');
-Flaeche(ax+b1+b2+b3+b4+b5,ax+b1+b2+b3+b4+b5+0.005,ay,ay+h2,az,az+0.5,'hsl(10,100%,100%)');
-Flaeche(ax+b1,ax+b1+b2,ay+h1,ay+h1-0.005,az-t1,az-t2,'hsl(35,100%,40%)');
-Flaeche(ax+b1+b2,ax+b1+b2+0.005,ay+h1,ay+h2-h3,az-t1,az-t2,'hsl(36,100%,100%)');
-Flaeche(ax+b1+b2+b3,ax+b1+b2+b3-0.005,ay+h1,ay+h2-h3,az-t1,az-t2,'hsl(36,100%,100%)');
-Flaeche(ax+b1+b2+b3,ax+b1+b2+b3+b4,ay+h1,ay+h1-0.005,az-t1,az-t2,'hsl(35,100%,40%)');
-Flaeche(ax+b1,ax+b1+b2,ay+h2-h3,ay+h2-h3+0.005,az,az-t2,'hsl(34,100%,100%)');
-Flaeche(ax+b1+b2+b3,ax+b1+b2+b3+b4,ay+h2-h3,ay+h2-h3+0.005,az,az-t2,'hsl(34,100%,100%)');
-`);
-
-let sx=0.36, sy=0.76, sz=0.66;
-Interpretiere(`
-Flaeche(ax+sx,ax+sx+0.70,ay+sy,ay+sy+0.05,az+sz,az+sz+1.36,'hsl(35,100%,40%)'); //STisch
-`);
-
-//außen
-let ox=ax-0.5, oy=ay+3.00, oz=az+9.00;
-let ox1=ox-3.50, oy1=ay-0.30;
-let ox2=ox-4.50, oy2=oy-0.30;
-let ox3=ox-5.00;
-
-Interpretiere(`
-Flaeche(ox,ox1,oy1,oy,oz,oz+0.005,'hsl(200,100%,100%)');
-Flaeche(ox1,ox2,oy2,oy,oz,oz+0.005,'hsl(200,100%,100%)');
-Flaeche(ox2,ox3,oy1,oy,oz,oz+0.005,'hsl(200,100%,100%)');
-`);
-
-let tx=ox, ty=ay, tz=oz-0.20;
-let tx1=tx+0.20, ty1=ty+2.30, tz1=tz-0.60;
-
-Interpretiere(`
-Flaeche(tx,tx1,ty,ty1,tz,tz+0.005,'hsl(200,100%,100%)');
-Flaeche(tx,tx1,ty1,ty1+0.005,tz,tz1,'hsl(200,100%,100%)');
-Flaeche(tx,tx1,ty,ty1,tz1,tz1-0.005,'hsl(200,100%,100%)');
-Flaeche(tx,tx+0.005,ty,oy,oz,tz,'hsl(200,100%,100%)');
-Flaeche(tx,tx+0.005,ty1,oy,tz,tz1,'hsl(200,100%,100%)');
-Flaeche(tx,tx-0.30,ty,ty-0.15,oz,tz1-0.30,'hsl(35,100%,40%)');
-Flaeche(tx,tx-0.60,ty-0.15,ty-0.30,oz,tz1-0.30,'hsl(35,100%,40%)');
-`);
-
-//controls.target.set(ox-1,oy-1,oz-1);
-//controls.object.position.set(ox-1,oy-1,oz-3);
-
-//neu ab 2025: Ostseite weiter
-let nz1=az+2.00,ny1=ay,nx1=ax;
-let nz2=az+5.00,ny2=ay+0.5;
-let nz3=az+0.50,nz4=az+2.50,ny3=ay+h2;
-let ny4=ay+2.00,nz5=az+3.50;
-let ny5=ay+2.50
-
-Interpretiere(`
-Flaeche(nx1,nx1-0.005,ny1,ny2,nz1,nz2,'hsl(140,100%,99%)');
-Flaeche(nx1,nx1-0.005,ny2,ny3,nz3,nz4,'hsl(140,100%,99%)');
-Flaeche(nx1,nx1-0.005,ny2,ny4,nz4,nz5,'hsl(140,100%,99%)');
-Flaeche(nx1,nx1-0.005,ny5,ny3,nz4,nz5,'hsl(140,100%,99%)');
-Flaeche(nx1,nx1-0.005,ny2,ny3,nz5,nz2,'hsl(140,100%,99%)');
-Flaeche(nx1,nx1-0.005,ny5,ny3,nz4,nz5,'hsl(140,100%,99%)');
-Flaeche(nx1,nx1-0.2,ny5,ny5+0.005,nz4,nz5,'hsl(140,100%,99%)');
-Flaeche(nx1,nx1-0.2,ny4,ny5,nz4,nz4-0.005,'hsl(140,100%,99%)');
-Flaeche(nx1,nx1-0.2,ny4,ny5,nz5,nz5+0.005,'hsl(140,100%,99%)');
-Flaeche(nx1,nx1-0.2,ny4,ny4-0.005,nz4,nz5,'hsl(35,100%,40%)');
-`);
 
 let frametime=0;
 function animate(timestamp,frame) {
   frametime=timestamp;
   controls.update();
-  Ecke.position.copy(controls.target);
+  //Ecke.position.copy(controls.target);
   animate_go();
   renderer.render( scene, camera );
   }
@@ -279,7 +148,7 @@ function animate(timestamp,frame) {
 
 
 
-//Start Rubik’s cube
+//Start Rubik’s cube-------------------------
 let m90=-Math.PI/2;
 let p180=Math.PI;
 let p90=Math.PI/2;
@@ -365,20 +234,20 @@ let K014W=new THREE.Mesh(
   K014.add(K014W);
 let K0140=new THREE.Mesh(
   new THREE.PlaneGeometry(0.19,0.19),
-  new THREE.MeshStandardMaterial( {color: rot, transparent:false, roughness:1, vertexColors:false} )
+  new THREE.MeshStandardMaterial( {color: 'gray', transparent:false, roughness:1, vertexColors:false} )
   );
   K0140.position.set(0.2,0.2,0.301)
   K014.add(K0140);
 let K0141=new THREE.Mesh(
   new THREE.PlaneGeometry(0.19,0.19),
-  new THREE.MeshStandardMaterial( {color: gruen, transparent:false} )
+  new THREE.MeshStandardMaterial( {color: 'gray', transparent:false} )
   );
   K0141.position.set(0.301,0.2,0.2)
   K0141.rotateY(Math.PI/2);
   K014.add(K0141);
 let K0144=new THREE.Mesh(
   new THREE.PlaneGeometry(0.19,0.19),
-  new THREE.MeshStandardMaterial( {color: gelb, transparent:false} )
+  new THREE.MeshStandardMaterial( {color: 'gray', transparent:false} )
   );
   K0144.position.set(0.2,0.301,0.2)
   K0144.rotateX(-Math.PI/2);
@@ -400,13 +269,13 @@ let K014W=new THREE.Mesh(
   K014.add(K014W);
 let K0140=new THREE.Mesh(
   new THREE.PlaneGeometry(0.19,0.19),
-  new THREE.MeshStandardMaterial( {color: rot, transparent:false} )
+  new THREE.MeshStandardMaterial( {color: 'gray', transparent:false} )
   );
   K0140.position.set(0.2,0,0.301)
   K014.add(K0140);
 let K0141=new THREE.Mesh(
   new THREE.PlaneGeometry(0.19,0.19),
-  new THREE.MeshStandardMaterial( {color: gruen, transparent:false} )
+  new THREE.MeshStandardMaterial( {color: 'gray', transparent:false} )
   );
   K0141.position.set(0.301,0,0.2)
   K0141.rotateY(Math.PI/2);
@@ -581,7 +450,7 @@ alert(pixels);
   suche(14);/**/
   //alert(Loeseliste);
   WW=structuredClone(WWMERK);
-  //for (let i=0;i<LISTE.length;i++) LISTE[i].setRotationFromEuler(LI[i]);alert(8);
+  //for (let i=0;i<LISTE.length;i++) LISTE[i].setRotationFromEuler(LI[i]);
   setTimeout(function() {Drehliste_gesamt=Loeseliste},100);
   }
 
@@ -772,7 +641,8 @@ function setze_die_Farbe(ke,i,j,farbe) {
   
   }
 
-function scannen(Farben) {//alert(controls.object.position.x+' '+controls.object.position.y+' '+controls.object.position.z);
+function scannen(Farben) {
+  //alert(controls.object.position.x+' '+controls.object.position.y+' '+controls.object.position.z);
   //let Farben=knips();
   if (Farben[4]=='red') {
     //alert(Farben+'\n'+WW[0][0].join('\n')+'\n----\n'+LISTE[WW[0][0][1][2]].userData.P.F[0].material.color.getHexString());
@@ -852,7 +722,7 @@ function scannen(Farben) {//alert(controls.object.position.x+' '+controls.object
     controls.object.position.x=-1.2;
     controls.object.position.y=-0.8;
     controls.object.position.z=0.6;
-    if (checken()) id_loese.click();
+    if (checken()) {scanbit=0; id_loese.click()}
     }  
   }
 
@@ -1079,6 +949,10 @@ function Test5(event) {
   //myImg.src='http://127.0.0.1:56147/video';
   }
 
+function Test6() {
+  myImg.src=canvas4.src;
+  }
+
 myImg.src='Screenshot_20250529-210046_Chrome.jpg';
 //myImg.src = 'http://127.0.0.1:56147/video';//'Screenshot_20250527-173334_Chrome.jpg';
 
@@ -1097,6 +971,7 @@ let Vergleichsfarben=[
  
 function MinDist(fr,fg,fb,fm) {
   if (fm>180) return 'white';
+  if (fm<30) return 'black';
   let imin=0;
   let mindist=1000000;
   for (let i=0;i<5;i++) {
@@ -1124,19 +999,24 @@ function Farben_aus_Daten_bestimmen() {
   Farben.shift();
   scannen(Farben);
   }
+
+let scannum=5;
+let scanbit=1;
+setInterval(function(){
+  if (scanbit==1) {
+    scannum=scannum-1;
+    if (scannum==-1) scannum=5;
+    id_scannum.innerHTML=scannum;
+    if (scannum==0) Test6();
+    }
+  },1000);
+  
+Test4();
   </script>
 
-
-  </body></html>
-
-
-
-  </script>
 
 <!---IP-Kamera:--->
 <div>
-
-<button id='id_Test4' onclick='Test4(event)'>Test4</button>
 
 <svg width="352" height="288">
 
@@ -1159,6 +1039,8 @@ function Farben_aus_Daten_bestimmen() {
   <circle cx="192" cy="192" r="10"/>
   </g>
   </svg>
+
+<span id='id_scannum' style='font-size:800%'>5</span>
 
 <svg width="352" height="288" style='display:none'>
 
@@ -1224,7 +1106,7 @@ function Farben_aus_Daten_bestimmen() {
   </div>
 
 <div>
-<button id='id_fehlersuch' style='font-size:300%; float:right'>Fehlersuche</button>.j
+<button id='id_fehlersuch' style='font-size:300%; float:right'>Fehlersuche</button>
 <button id='id_Dauertest' style='font-size:300%; float:right'>Dauertest</button>
 <button id='id_checken' style='font-size:300%; float:right'>Check</button>
 <button id='id_scannen' style='font-size:300%; float:right'>Scannen</button>
@@ -1249,6 +1131,7 @@ function Farben_aus_Daten_bestimmen() {
 <button id='id_Test' style='background-color:white; font-size:200%'>Test</button>
 <button id='id_langsamer' style='background-color:white; font-size:200%'>langsamer</button>
 <button id='id_schneller' style='background-color:white; font-size:200%'>schneller</button>
+<button id='id_Test4' onclick='Test4(event)'>Test4</button>
 
 
 <div id='Log' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
