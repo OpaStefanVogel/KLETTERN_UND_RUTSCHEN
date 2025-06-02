@@ -640,8 +640,8 @@ let Testphotos=[
 function knips() {
   Testindex=(Testindex+1)%6;
   canvas4.src=Testphotos[Testindex];
-  myImg.src=Testphotos[Testindex];
-  return Testfarben[Testindex];
+  //myImg.src=Testphotos[Testindex];
+  //return Testfarben[Testindex];
   }
 
 function setze_die_Farbe(ke,i,j,farbe) {
@@ -731,11 +731,11 @@ function scannen(Farben) {
     controls.object.position.x=-1.2;
     controls.object.position.y=-0.8;
     controls.object.position.z=0.6;
-    if (checken()) {scanbit=0; id_loese.click()}
+    if (checken()) {scanbit=0; id_loese.click()};
     }  
   }
 
-id_scannen.addEventListener('click',function() {scannen(knips())});
+id_scannen.addEventListener('click',function() {knips()});
 id_checken.addEventListener('click',function() {checken()});
 
 
@@ -962,7 +962,7 @@ function Test6() {
   myImg.src=canvas4.src;
   }
 
-myImg.src='photo_2025-06-02_10-32.jpg';
+//myImg.src='photo_2025-06-02_10-32.jpg';
 //myImg.src='Screenshot_20250529-210046_Chrome.jpg';
 //myImg.src = 'http://127.0.0.1:56147/video';//'Screenshot_20250527-173334_Chrome.jpg';
 
@@ -1031,7 +1031,7 @@ setInterval(function(){
 <svg width="352" height="288">
 
 <foreignObject x="0" y="0" width="352" height="288" style="border:none">
-  <iframe id='canvas4' src='photo_2025-06-02_10-32.jpg' width="352" height="288" style="border:none"> jjj</iframe>
+  <iframe id='canvas4' src='http://127.0.0.1:56147/video' width="352" height="288" style="border:none"> jjj</iframe>
   </foreignObject>
       
 <rect x='288' y='0' width='64' height='288' fill='white'/>
@@ -1118,7 +1118,7 @@ setInterval(function(){
 <button id='id_fehlersuch' style='font-size:300%; float:right'>Fehlersuche</button>
 <button id='id_Dauertest' style='font-size:300%; float:right'>Dauertest</button>
 <button id='id_checken' style='font-size:300%; float:right'>Check</button>
-<button id='id_scannen' style='font-size:300%; float:right'>Scannen</button>
+<button id='id_scannen' style='font-size:300%; float:right'>Testbild</button>
   </div>
 
 <!--div>
