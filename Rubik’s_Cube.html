@@ -629,9 +629,18 @@ Testfarben=[
   ['yellow','yellow','yellow','orange','white','red','orange','green','green']
   ];
 
-
+let Testphotos=[
+  'photo_2025-06-02_10-32.jpg',
+  'photo_2025-06-02_10-33.jpg',
+  'photo_2025-06-02_10-33-1.jpg',
+  'photo_2025-06-02_10-33-2.jpg',
+  'photo_2025-06-02_10-33-3.jpg',
+  'photo_2025-06-02_10-33-4.jpg'];
+  
 function knips() {
   Testindex=(Testindex+1)%6;
+  canvas4.src=Testphotos[Testindex];
+  myImg.src=Testphotos[Testindex];
   return Testfarben[Testindex];
   }
 
@@ -953,7 +962,8 @@ function Test6() {
   myImg.src=canvas4.src;
   }
 
-myImg.src='Screenshot_20250529-210046_Chrome.jpg';
+myImg.src='photo_2025-06-02_10-32.jpg';
+//myImg.src='Screenshot_20250529-210046_Chrome.jpg';
 //myImg.src = 'http://127.0.0.1:56147/video';//'Screenshot_20250527-173334_Chrome.jpg';
 
 id_Test4.addEventListener('click',function() {Test4(event)});
@@ -1011,7 +1021,7 @@ setInterval(function(){
     }
   },1000);
   
-Test4();
+//Test4();
   </script>
 
 
@@ -1021,10 +1031,11 @@ Test4();
 <svg width="352" height="288">
 
 <foreignObject x="0" y="0" width="352" height="288" style="border:none">
-  <iframe id='canvas4' src='Screenshot_20250529-210046_Chrome.jpg' width="352" height="288" style="border:none"> jjj</iframe>
+  <iframe id='canvas4' src='photo_2025-06-02_10-32.jpg' width="352" height="288" style="border:none"> jjj</iframe>
   </foreignObject>
       
 <rect x='288' y='0' width='64' height='288' fill='white'/>
+<text id='id_scannum' x='290' y='200' style='font-size:700%'>5</text>
 <rect id='id_rectangle' x='0' y='0' width='288' height='288' fill='white' opacity='0'/>
 <g transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='1' stroke='black'>
   <rect x='72' y='72' width='144' height='144'/>
@@ -1039,8 +1050,6 @@ Test4();
   <circle cx="192" cy="192" r="10"/>
   </g>
   </svg>
-
-<span id='id_scannum' style='font-size:800%'>5</span>
 
 <svg width="352" height="288" style='display:none'>
 
@@ -1135,7 +1144,7 @@ Test4();
 
 
 <div id='Log' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
-<div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'> </div>
+<div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'>raycaster</div>
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
 <div id='Log2' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
 <div id='Log4' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
