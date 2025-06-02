@@ -224,6 +224,13 @@ for (let n=0;n<6;n++) for (let k=0;k<4;k++) {
 
 //oder: dreh(0)= [1,1,1],[1,1,-1],[-1,1,-1],[-1,1,1],[1,1,1]  [x,y,z],[z,y,-x] [1,1,0],[...
 
+let RCube=new THREE.Group();
+RCube.setRotationFromEuler(new THREE.Euler(0.01,0.01,0.01));
+scene.add(RCube);
+let RCube_alte_Ausrichtung=RCube.rotation.clone();
+let RCube_neue_Ausrichtung=[new THREE.Vector3(0,1,0),frametime-100000];
+
+
 function Erzeuge_Ecke(rot,gruen,gelb) {
 let K014=new THREE.Group();
 let K014W=new THREE.Mesh(
@@ -254,7 +261,7 @@ let K0144=new THREE.Mesh(
   K014.add(K0144);
   K014.name=rot+gruen+gelb;
   K014.userData={P:[0,0,0], F:[K0140,K0141,K0144]};
-  scene.add(K014);
+  RCube.add(K014);
   //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
   return K014;
   }
@@ -282,7 +289,7 @@ let K0141=new THREE.Mesh(
   K014.add(K0141);
   K014.name=rot+gruen;
   K014.userData={P:[0,0], F:[K0140,K0141]};
-  scene.add(K014);
+  RCube.add(K014);
   //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
   return K014;
   }
@@ -301,7 +308,7 @@ let K0140=new THREE.Mesh(
   );
   K0140.position.set(0,0,0.301)
   K014.add(K0140);
-  scene.add(K014);
+  RCube.add(K014);
   //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
   return K014;
   }
@@ -392,7 +399,13 @@ function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehlis
       animate_start();
       Drehstart=frametime;
       }
-
+  if (frametime<RCube_neue_Ausrichtung[1]+Drehzeit+100) {
+    let alpha=Math.min((frametime-RCube_neue_Ausrichtung[1])/Drehzeit,1);
+ //   RCube.rotateY(0.01);
+    RCube.setRotationFromEuler(RCube_alte_Ausrichtung);
+    RCube.rotateOnWorldAxis(RCube_neue_Ausrichtung[0],alpha*Math.PI/2);
+    Log4.innerHTML=alpha+' '+JSON.stringify(RCube_neue_Ausrichtung);
+    } else RCube_alte_Ausrichtung=RCube.rotation.clone();
   }
 
 function suche(i) {
@@ -640,7 +653,7 @@ let Testphotos=[
 function knips() {
   Testindex=(Testindex+1)%6;
   canvas4.src=Testphotos[Testindex];
-  //myImg.src=Testphotos[Testindex];
+  if (scanbit==0) myImg.src=Testphotos[Testindex];
   //return Testfarben[Testindex];
   }
 
@@ -663,9 +676,10 @@ function scannen(Farben) {
     setze_die_Farbe(1,0,3,Farben[6]);
     setze_die_Farbe(1,0,4,Farben[0]);
     setze_die_Farbe(1,0,5,Farben[8]);
-    controls.object.position.x=0.5;
-    controls.object.position.y=0.5;
-    controls.object.position.z=1.5;
+    //controls.object.position.x=0.5;
+    //controls.object.position.y=0.5;
+    //controls.object.position.z=1.5;
+    RCube_neue_Ausrichtung=[new THREE.Vector3(0,-1,0),frametime];
     }  
   if (Farben[4]=='green') {
     setze_die_Farbe(0,1,0,Farben[3]);
@@ -676,9 +690,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,1,2,Farben[2]);
     setze_die_Farbe(1,1,4,Farben[0]);
     setze_die_Farbe(1,1,5,Farben[8]);
-    controls.object.position.x=1.5;
-    controls.object.position.y=0.5;
-    controls.object.position.z=-0.5;
+    RCube_neue_Ausrichtung=[new THREE.Vector3(1,0,0),frametime];
     }  
   if (Farben[4]=='orange') {
     setze_die_Farbe(0,2,1,Farben[7]);
@@ -689,9 +701,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,2,3,Farben[0]);
     setze_die_Farbe(1,2,4,Farben[6]);
     setze_die_Farbe(1,2,5,Farben[2]);
-    controls.object.position.x=-0.5;
-    controls.object.position.y=0.5;
-    controls.object.position.z=-1.5;
+    RCube_neue_Ausrichtung=[new THREE.Vector3(1,0,0),frametime];
     }  
   if (Farben[4]=='blue') {
     setze_die_Farbe(0,3,2,Farben[7]);
@@ -702,9 +712,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,3,0,Farben[0]);
     setze_die_Farbe(1,3,4,Farben[6]);
     setze_die_Farbe(1,3,5,Farben[2]);
-    controls.object.position.x=-1.5;
-    controls.object.position.y=0.5;
-    controls.object.position.z=0.5;
+    RCube_neue_Ausrichtung=[new THREE.Vector3(0,-1,0),frametime];
     }  
   if (Farben[4]=='yellow') {
     setze_die_Farbe(0,4,0,Farben[3]);
@@ -715,9 +723,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,4,1,Farben[8]);
     setze_die_Farbe(1,4,2,Farben[2]);
     setze_die_Farbe(1,4,3,Farben[0]);
-    controls.object.position.x=-1.3;
-    controls.object.position.y=0.8;
-    controls.object.position.z=0.5;
+    RCube_neue_Ausrichtung=[new THREE.Vector3(0,-1,0),frametime];
     }  
   if (Farben[4]=='white') {
     setze_die_Farbe(0,5,0,Farben[1]);
@@ -728,14 +734,12 @@ function scannen(Farben) {
     setze_die_Farbe(1,5,1,Farben[2]);
     setze_die_Farbe(1,5,2,Farben[8]);
     setze_die_Farbe(1,5,3,Farben[6]);
-    controls.object.position.x=-1.2;
-    controls.object.position.y=-0.8;
-    controls.object.position.z=0.6;
+    RCube_neue_Ausrichtung=[new THREE.Vector3(1,0,0),frametime];
     if (checken()) {scanbit=0; id_loese.click()};
     }  
   }
 
-id_scannen.addEventListener('click',function() {knips()});
+id_scannen.addEventListener('click',function() {scanbit=0;knips()});
 id_checken.addEventListener('click',function() {checken()});
 
 
@@ -859,7 +863,11 @@ KANTEN=[
 function Test() {
   //alert(K23.name+' '+K23.userData.P);
   //alert(controls.object.position.y);
-  controls.object.position.y=-1;
+  //controls.object.position.y=-1;
+  //RCube.rotateY(Math.PI/2);
+  RCube_neue_Ausrichtung=[new THREE.Vector3(0,1,0),frametime];
+  //alert(RCube_neue_Ausrichtung);
+  //RCube.rotateY(-Math.PI/2);
   }
 
 id_Test.addEventListener('click',function() {Test()});
@@ -969,14 +977,15 @@ function Test6() {
 id_Test4.addEventListener('click',function() {Test4(event)});
 id_rectangle.addEventListener('click',function() {Test5(event)});
 id_rectangle2.addEventListener('click',function() {Test5(event)});
+id_Blende.addEventListener('click',function() {scanbit=1-scanbit});
 
 let Vergleichsfarben=[
-  [0,99,30,'green',63,0.3],
-  [0,76,99,'blue',57,0.53],
-  [99,39,0,'orange',109,0.06],
-  [85,99,0,'yellow',85,0.16],
-  [99,0,34,'red',79,0.96],
-  [0,33,99,'white',203,0.59]
+  [0,99,30,'green',63,0.3,0,4,0.5],
+  [0,76,99,'blue',57,0.53,0.65,0.52],
+  [99,39,0,'orange',109,0.06,0.9,0.6],
+  [85,99,0,'yellow',85,0.16,0.6,0.5],
+  [99,0,34,'red',79,0.96,0.5,0.5],
+  [0,33,99,'white',203,0.6,0.3,0.9]
   ];
  
 function MinDist(fr,fg,fb,fm,h,s,l) {
@@ -987,7 +996,7 @@ function MinDist(fr,fg,fb,fm,h,s,l) {
   for (let i=0;i<6;i++) {
     let fv=Vergleichsfarben[i];
     //let dist=((fr-fv[0])**2+(fg-fv[1])**2+(fb-fv[2])**2);
-    let dist=(h-fv[5])**2;
+    let dist=((h-fv[5])**2+0*(s-fv[6])**2+0*(l-fv[7])**2);
     if (dist<mindist) {mindist=dist;imin=i}
     }
   return Vergleichsfarben[imin][3];
@@ -1039,7 +1048,7 @@ setInterval(function(){
   <iframe id='canvas4' src='http://127.0.0.1:56147/video' width="352" height="288" style="border:none"> jjj</iframe>
   </foreignObject>
       
-<rect x='288' y='0' width='64' height='288' fill='white'/>
+<rect id='id_Blende' x='288' y='0' width='64' height='288' fill='white'/>
 <text id='id_scannum' x='290' y='200' style='font-size:700%'>5</text>
 <rect id='id_rectangle' x='0' y='0' width='288' height='288' fill='white' opacity='0'/>
 <g transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='1' stroke='black'>
