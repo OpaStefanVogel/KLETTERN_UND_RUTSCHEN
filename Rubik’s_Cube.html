@@ -404,7 +404,7 @@ function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehlis
  //   RCube.rotateY(0.01);
     RCube.setRotationFromEuler(RCube_alte_Ausrichtung);
     RCube.rotateOnWorldAxis(RCube_neue_Ausrichtung[0],alpha*Math.PI/2);
-    Log4.innerHTML=alpha+' '+JSON.stringify(RCube_neue_Ausrichtung);
+    Log5.innerHTML=alpha+' '+JSON.stringify(RCube_neue_Ausrichtung);
     } else RCube_alte_Ausrichtung=RCube.rotation.clone();
   }
 
@@ -679,7 +679,7 @@ function scannen(Farben) {
     //controls.object.position.x=0.5;
     //controls.object.position.y=0.5;
     //controls.object.position.z=1.5;
-    if (scanbit==1) RCube_neue_Ausrichtung=[new THREE.Vector3(0,-1,0),frametime];
+    if (scanbit==1&&scannum==0) {dran_ist='green';RCube_neue_Ausrichtung=[new THREE.Vector3(0,-1,0),frametime]}
     }  
   if (Farben[4]=='green') {
     setze_die_Farbe(0,1,0,Farben[3]);
@@ -690,7 +690,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,1,2,Farben[2]);
     setze_die_Farbe(1,1,4,Farben[0]);
     setze_die_Farbe(1,1,5,Farben[8]);
-    if (scanbit==1) RCube_neue_Ausrichtung=[new THREE.Vector3(1,0,0),frametime];
+    if (scanbit==1&&scannum==0) {dran_ist='yellow';RCube_neue_Ausrichtung=[new THREE.Vector3(1,0,0),frametime]}
     }  
   if (Farben[4]=='orange') {
     setze_die_Farbe(0,2,1,Farben[7]);
@@ -701,7 +701,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,2,3,Farben[0]);
     setze_die_Farbe(1,2,4,Farben[6]);
     setze_die_Farbe(1,2,5,Farben[2]);
-    if (scanbit==1) RCube_neue_Ausrichtung=[new THREE.Vector3(1,0,0),frametime];
+    if (scanbit==1&&scannum==0) {dran_ist='blue';RCube_neue_Ausrichtung=[new THREE.Vector3(1,0,0),frametime]}
     }  
   if (Farben[4]=='blue') {
     setze_die_Farbe(0,3,2,Farben[7]);
@@ -712,7 +712,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,3,0,Farben[0]);
     setze_die_Farbe(1,3,4,Farben[6]);
     setze_die_Farbe(1,3,5,Farben[2]);
-    if (scanbit==1) RCube_neue_Ausrichtung=[new THREE.Vector3(0,-1,0),frametime];
+    if (scanbit==1&&scannum==0) {dran_ist='white';RCube_neue_Ausrichtung=[new THREE.Vector3(0,-1,0),frametime]}
     }  
   if (Farben[4]=='yellow') {
     setze_die_Farbe(0,4,0,Farben[3]);
@@ -723,7 +723,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,4,1,Farben[8]);
     setze_die_Farbe(1,4,2,Farben[2]);
     setze_die_Farbe(1,4,3,Farben[0]);
-    if (scanbit==1) RCube_neue_Ausrichtung=[new THREE.Vector3(0,-1,0),frametime];
+    if (scanbit==1&&scannum==0) {dran_ist='orange';RCube_neue_Ausrichtung=[new THREE.Vector3(0,-1,0),frametime]}
     }  
   if (Farben[4]=='white') {
     setze_die_Farbe(0,5,0,Farben[1]);
@@ -734,12 +734,14 @@ function scannen(Farben) {
     setze_die_Farbe(1,5,1,Farben[2]);
     setze_die_Farbe(1,5,2,Farben[8]);
     setze_die_Farbe(1,5,3,Farben[6]);
-    if (scanbit==1) RCube_neue_Ausrichtung=[new THREE.Vector3(1,0,0),frametime];
-    if (checken()) {scanbit=0; id_loese.click()};
+    if (scanbit==1&&scannum==0) {
+      dran_ist='red';RCube_neue_Ausrichtung=[new THREE.Vector3(1,0,0),frametime]
+      if (checken()) {scanbit=0; id_loese.click()};
+      }
     }  
   }
 
-id_scannen.addEventListener('click',function() {scanbit=0;knips()});
+id_scannen.addEventListener('click',function() {knips()});
 id_checken.addEventListener('click',function() {checken()});
 
 
@@ -966,10 +968,6 @@ function Test5(event) {
   //myImg.src='http://127.0.0.1:56147/video';
   }
 
-function Test6() {
-  myImg.src=canvas4.src;
-  }
-
 //myImg.src='photo_2025-06-02_10-32.jpg';
 //myImg.src='Screenshot_20250529-210046_Chrome.jpg';
 //myImg.src = 'http://127.0.0.1:56147/video';//'Screenshot_20250527-173334_Chrome.jpg';
@@ -978,6 +976,8 @@ id_Test4.addEventListener('click',function() {Test4(event)});
 id_rectangle.addEventListener('click',function() {Test5(event)});
 id_rectangle2.addEventListener('click',function() {Test5(event)});
 id_Blende.addEventListener('click',function() {scanbit=1-scanbit});
+id_Drehen.addEventListener('click',function() {RCube_neue_Ausrichtung=[new THREE.Vector3(0,-1,0),frametime]});
+id_Kippen.addEventListener('click',function() {RCube_neue_Ausrichtung=[new THREE.Vector3(1,0,0),frametime]});
 
 let Vergleichsfarben=[
   [0,99,30,'green',63,0.3,0,4,0.5],
@@ -1022,21 +1022,40 @@ function Farben_aus_Daten_bestimmen() {
     }
   Log4.innerHTML='Farben: '+Farben2.join('\n');
   Farben.shift();
-  scannen(Farben);
   }
 
 let scannum=5;
 let scanbit=1;
+let dran_ist='red';
+let dran_merk='none';
+
 setInterval(function(){
   if (scanbit==1) {
     scannum=scannum-1;
+    myImg.src=canvas4.src;//endet mit Farben_aus_Daten_bestimmen()
+    if (Farben[4]!=dran_merk) scannum=5;
+    dran_merk=Farben[4];
     if (scannum==-1) scannum=5;
-    id_scannum.innerHTML=scannum;
-    if (scannum==0) Test6();
+    if (Farben[4]==dran_ist) scannen(Farben); else scannum=5;
+    if (Farben[4]==dran_ist) id_scannum.innerHTML=scannum; else id_scannum.innerHTML='?'; 
+    //if (scannum==0) scannen(Farben);
+
     }
   },1000);
   
-//Test4();
+Test4();
+
+/*jetzt noch:
+.. bei Farbwechsel wieder 5
+.. großer Bildschirm
+.. andere Drehrichtung von rot auf blau
+.. Anfangsstellung
+.. Lösung ausgeben
+.. 
+
+
+*/
+
   </script>
 
 
@@ -1046,9 +1065,9 @@ setInterval(function(){
 <svg width="352" height="288">
 
 <foreignObject x="0" y="0" width="352" height="288" style="border:none">
-  <iframe id='canvas4' src='http://127.0.0.1:56147/video' width="352" height="288" style="border:none"> jjj</iframe>
+  <iframe id='canvas4' src='threejs2024/manual/examples/resources/models/cartoon_lowpoly_small_city_free_pack/textures/World_ap.11_baseColor.jpeg' width="352" height="288" style="border:none"> jjj</iframe>
   </foreignObject>
-      
+ 
 <rect id='id_Blende' x='288' y='0' width='64' height='288' fill='white'/>
 <text id='id_scannum' x='290' y='200' style='font-size:700%'>5</text>
 <rect id='id_rectangle' x='0' y='0' width='288' height='288' fill='white' opacity='0'/>
@@ -1092,6 +1111,13 @@ setInterval(function(){
 <div style='display:inline-block; min-width:64px'> </div>
 
 <div style='display:inline-block'>
+
+<div>
+<button id='id_Drehen' style='background-color:yellow; font-size:200%'>Drehen</button>
+<button id='id_Kippen' style='background-color:yellow; font-size:200%'>Kippen</button>
+  </div>
+
+
 <div>
 <button id='id_drehe4' style='background-color:yellow; font-size:200%'>↷</button>
 <button id='id_drehe10' style='background-color:yellow; font-size:200%'>↶</button>
@@ -1163,6 +1189,7 @@ setInterval(function(){
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
 <div id='Log2' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
 <div id='Log4' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
+<div id='Log5' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
 <div id='Log3' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
 
 <script>
