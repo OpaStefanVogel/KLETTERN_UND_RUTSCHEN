@@ -736,7 +736,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,5,3,Farben[6]);
     if (scanbit==1&&scannum==0) {
       dran_ist='red';RCube_neue_Ausrichtung=[new THREE.Vector3(1,0,0),frametime]
-      if (checken()) {scanbit=0; id_loese.click()};
+      if (checken()) {scanbit=0; id_scannum.innerHTML='-'; id_loese.click()};
       }
     }  
   }
@@ -863,11 +863,12 @@ KANTEN=[
   }
 
 function Test() {
+  id_fullscreen.requestFullscreen();
   //alert(K23.name+' '+K23.userData.P);
   //alert(controls.object.position.y);
   //controls.object.position.y=-1;
   //RCube.rotateY(Math.PI/2);
-  RCube_neue_Ausrichtung=[new THREE.Vector3(0,1,0),frametime];
+  //RCube_neue_Ausrichtung=[new THREE.Vector3(0,1,0),frametime];
   //alert(RCube_neue_Ausrichtung);
   //RCube.rotateY(-Math.PI/2);
   }
@@ -1033,25 +1034,23 @@ setInterval(function(){
   if (scanbit==1) {
     scannum=scannum-1;
     myImg.src=canvas4.src;//endet mit Farben_aus_Daten_bestimmen()
-    if (Farben[4]!=dran_merk) scannum=5;
-    dran_merk=Farben[4];
+    if (Farben.join('-')!=dran_merk) scannum=5;
+    dran_merk=Farben.join('-');
     if (scannum==-1) scannum=5;
     if (Farben[4]==dran_ist) scannen(Farben); else scannum=5;
     if (Farben[4]==dran_ist) id_scannum.innerHTML=scannum; else id_scannum.innerHTML='?'; 
-    //if (scannum==0) scannen(Farben);
-
     }
   },1000);
   
 Test4();
 
 /*jetzt noch:
-.. bei Farbwechsel wieder 5
-.. großer Bildschirm
+ok bei Farbwechsel wieder 5
+ok fullscreen geht nur nach click-event
 .. andere Drehrichtung von rot auf blau
 .. Anfangsstellung
 .. Lösung ausgeben
-.. 
+.. Adresse IP-Webcam
 
 
 */
@@ -1060,7 +1059,7 @@ Test4();
 
 
 <!---IP-Kamera:--->
-<div>
+<div id='id_fullscreen'>
 
 <svg width="352" height="288">
 
