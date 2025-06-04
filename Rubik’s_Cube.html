@@ -422,6 +422,20 @@ function suche(i) {
   return GET;
   } 
 
+let Loesetext=[
+  'vorn plus',
+  'rechts plus',
+  'hinten plus',
+  'links plus',
+  'oben plus',
+  'unten plus',
+  'vorn minus',
+  'rechts minus',
+  'hinten minus',
+  'links minus',
+  'oben minus',
+  'unten minus',
+  ];
 let Loeseliste=[];
 function loese() {
 
@@ -465,6 +479,11 @@ alert(pixels);
   WW=structuredClone(WWMERK);
   //for (let i=0;i<LISTE.length;i++) LISTE[i].setRotationFromEuler(LI[i]);
   setTimeout(function() {Drehliste_gesamt=Loeseliste},100);
+  let Loesung='';
+  for (let i=0;i<Loeseliste.length;i++) if (Loeseliste[i]>-1) {
+    Loesung=Loesung+'<div>'+i+'. '+Loesetext[Loeseliste[i]]+'</div>\n';
+    }
+  Log6.innerHTML='Lösung: '+Loesung;
   }
 
 id_loese.addEventListener('click',function() {loese()});
@@ -949,7 +968,7 @@ myImg.onload = () => {//alert('onload');
   //console.log(data);
   Log3.innerHTML=eventLocation.x+' '+eventLocation.y+'\n'+text;
   Farben_aus_Daten_bestimmen();
-}
+  }
 
 
 
@@ -1044,13 +1063,13 @@ setInterval(function(){
   
 Test4();
 
-/*jetzt noch:
+/*jetzt noch:  
 ok bei Farbwechsel wieder 5
 ok fullscreen geht nur nach click-event
 .. andere Drehrichtung von rot auf blau
 .. Anfangsstellung
-.. Lösung ausgeben
-.. Adresse IP-Webcam
+.. Lösung ausgeben, rotweiß fertig dazuschreiben
+.. Eingabe Adresse IP-Webcam
 
 
 */
@@ -1187,6 +1206,7 @@ ok fullscreen geht nur nach click-event
 <div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'>raycaster</div>
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
 <div id='Log2' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
+<div id='Log6' style='display:non; font-family:Courier,monospace; white-space:wrap;'>Lösung:</div>
 <div id='Log4' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
 <div id='Log5' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
 <div id='Log3' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
