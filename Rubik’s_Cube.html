@@ -707,8 +707,10 @@ Testphotos=[
 function knips() {
   Testindex=(Testindex+1)%6;
   canvas4.src=Testphotos[Testindex];
-  scannum=2;
-  if (scanbit==0) myImg.src=Testphotos[Testindex];
+  scanbit=0;
+  scannum=0;
+  myImg.src=Testphotos[Testindex];
+  setTimeout(function() {scannen(Farben)},100);
   //return Testfarben[Testindex];
   }
 
@@ -734,7 +736,7 @@ function scannen(Farben) {
     //controls.object.position.x=0.5;
     //controls.object.position.y=0.5;
     //controls.object.position.z=1.5;
-    if (scanbit==1&&scannum==0) {dran_ist='blue';RCube_neue_Ausrichtung=[new THREE.Vector3(0,1,0),frametime]}
+    if (scannum==0) {dran_ist='blue';RCube_neue_Ausrichtung=[new THREE.Vector3(0,1,0),frametime]}
     }  
   if (Farben[4]=='green') {
     setze_die_Farbe(0,1,0,Farben[7]);
@@ -745,7 +747,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,1,2,Farben[0]);
     setze_die_Farbe(1,1,4,Farben[6]);
     setze_die_Farbe(1,1,5,Farben[2]);
-    if (scanbit==1&&scannum==0) {dran_ist='yellow';RCube_neue_Ausrichtung=[new THREE.Vector3(0,1,0),frametime]}
+    if (scannum==0) {dran_ist='yellow';RCube_neue_Ausrichtung=[new THREE.Vector3(0,1,0),frametime]}
     }  
   if (Farben[4]=='orange') {
     setze_die_Farbe(0,2,1,Farben[7]);
@@ -756,7 +758,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,2,3,Farben[0]);
     setze_die_Farbe(1,2,4,Farben[6]);
     setze_die_Farbe(1,2,5,Farben[2]);
-    if (scanbit==1&&scannum==0) {dran_ist='green';RCube_neue_Ausrichtung=[new THREE.Vector3(-1,0,0),frametime]}
+    if (scannum==0) {dran_ist='green';RCube_neue_Ausrichtung=[new THREE.Vector3(-1,0,0),frametime]}
     }  
   if (Farben[4]=='blue') {
     setze_die_Farbe(0,3,2,Farben[3]);
@@ -767,7 +769,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,3,0,Farben[2]);
     setze_die_Farbe(1,3,4,Farben[0]);
     setze_die_Farbe(1,3,5,Farben[8]);
-    if (scanbit==1&&scannum==0) {dran_ist='white';RCube_neue_Ausrichtung=[new THREE.Vector3(-1,0,0),frametime]}
+    if (scannum==0) {dran_ist='white';RCube_neue_Ausrichtung=[new THREE.Vector3(-1,0,0),frametime]}
     }  
   if (Farben[4]=='yellow') {
     setze_die_Farbe(0,4,0,Farben[7]);
@@ -778,7 +780,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,4,1,Farben[2]);
     setze_die_Farbe(1,4,2,Farben[0]);
     setze_die_Farbe(1,4,3,Farben[6]);
-    if (scanbit==1&&scannum==0) {
+    if (scannum==0) {
       dran_ist='red';RCube_neue_Ausrichtung=[new THREE.Vector3(-1,0,0),frametime]
       if (checken()) {scanbit=0; id_scannum.innerHTML='-'; id_loese.click()};
       }
@@ -792,7 +794,7 @@ function scannen(Farben) {
     setze_die_Farbe(1,5,1,Farben[8]);
     setze_die_Farbe(1,5,2,Farben[6]);
     setze_die_Farbe(1,5,3,Farben[0]);
-    if (scanbit==1&&scannum==0) {dran_ist='orange';RCube_neue_Ausrichtung=[new THREE.Vector3(0,1,0),frametime]}
+    if (scannum==0) {dran_ist='orange';RCube_neue_Ausrichtung=[new THREE.Vector3(0,1,0),frametime]}
     }  
   }
 
@@ -1032,8 +1034,8 @@ id_Test4.addEventListener('click',function() {Test4(event)});
 id_rectangle.addEventListener('click',function() {Test5(event)});
 id_rectangle2.addEventListener('click',function() {Test5(event)});
 id_Blende.addEventListener('click',function() {scanbit=1-scanbit});
-id_Drehen.addEventListener('click',function() {RCube_neue_Ausrichtung=[new THREE.Vector3(0,-1,0),frametime]});
-id_Kippen.addEventListener('click',function() {RCube_neue_Ausrichtung=[new THREE.Vector3(1,0,0),frametime]});
+id_Drehen.addEventListener('click',function() {RCube_neue_Ausrichtung=[new THREE.Vector3(0,1,0),frametime]});
+id_Kippen.addEventListener('click',function() {RCube_neue_Ausrichtung=[new THREE.Vector3(-1,0,0),frametime]});
 
 let Vergleichsfarben=[
   [0,99,30,'green',63,0.3,0,4,0.5],
