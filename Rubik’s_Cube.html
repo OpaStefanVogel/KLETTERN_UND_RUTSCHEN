@@ -393,7 +393,8 @@ function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehlis
     } else if ((Drehliste_gesamt.length>0)&&frametime>2000) {
       Drehzeit=Math.max(Drehzeit+neue_Drehzeit,100); neue_Drehzeit=0;
       let n=Drehliste_gesamt.shift();
-      if (n==-1) {controls.object.position.y=-1; n=Drehliste_gesamt.shift()}
+      while (n<0&&Drehliste_gesamt.length>0) {n=Drehliste_gesamt.shift()}
+      if (n<0) {Log2.innerHTML=''; return}
       if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);
       //alert(n);
       animate_start();
@@ -418,23 +419,47 @@ function suche(i) {
     if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);
     Loeseliste.push(n);
     }
-  if (GET.length>0) suche(i);
+  if (GET.length>0) suche(i); else Loeseliste.push(-i);
   return GET;
   } 
 
 let Loesetext=[
-  'vorn plus',
-  'rechts plus',
-  'hinten plus',
-  'links plus',
-  'oben plus',
-  'unten plus',
-  'vorn minus',
-  'rechts minus',
-  'hinten minus',
-  'links minus',
-  'oben minus',
-  'unten minus',
+  'vorn (rot) plus',
+  'rechts (grün) plus',
+  'hinten (orange) plus',
+  'links (blau} plus',
+  'oben (gelb) plus',
+  'unten (weiß) plus',
+  'vorn (rot) minus',
+  'rechts (grün) minus',
+  'hinten (orange) minus',
+  'links (blau) minus',
+  'oben (gelb) minus',
+  'unten (weiß) minus',
+  ];
+//[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K350,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5]; 
+let Loesetext2=[
+  'Kante ',
+  'Kante rot-weiß',
+  'Kante ',
+  'Kante ',
+  'Kante ',
+  'Kante ',
+  'Kante ',
+  'Kante orange-weiß',
+  'Kante ',
+  'Kante grün-weiß',
+  'Kante blau-weiß',
+  'Kante ',
+  'Ecke ',
+  'Ecke rot-weiß-grün',
+  'Ecke blau-weiß-rot',
+  'Ecke ',
+  'Ecke ',
+  'Ecke ',
+  'Ecke grün-weiß-orange',
+  'Ecke orange-weiß-blau',
+  
   ];
 let Loeseliste=[];
 function loese() {
@@ -473,16 +498,18 @@ alert(pixels);
   suche(10);
   suche(13);
   suche(18);
-  suche(19);  Loeseliste.push(-1);
+  suche(19);
   suche(14);/**/
   //alert(Loeseliste);
   WW=structuredClone(WWMERK);
   //for (let i=0;i<LISTE.length;i++) LISTE[i].setRotationFromEuler(LI[i]);
   setTimeout(function() {Drehliste_gesamt=Loeseliste},100);
   let Loesung='';
+  let Drehnummer=0;
   for (let i=0;i<Loeseliste.length;i++) if (Loeseliste[i]>-1) {
-    Loesung=Loesung+'<div>'+i+'. '+Loesetext[Loeseliste[i]]+'</div>\n';
-    }
+    Drehnummer=Drehnummer+1;
+    Loesung=Loesung+'\n</div><div>'+Drehnummer+'. Drehung '+Loesetext[Loeseliste[i]];
+    } else Loesung=Loesung+', '+Loesetext2[-Loeseliste[i]]+' ist am Platz';
   Log6.innerHTML='Lösung: '+Loesung;
   }
 
@@ -680,6 +707,7 @@ Testphotos=[
 function knips() {
   Testindex=(Testindex+1)%6;
   canvas4.src=Testphotos[Testindex];
+  scannum=2;
   if (scanbit==0) myImg.src=Testphotos[Testindex];
   //return Testfarben[Testindex];
   }
@@ -1074,9 +1102,9 @@ Test4();
 /*jetzt noch:  
 ok bei Farbwechsel wieder 5
 ok fullscreen geht nur nach click-event
-.. andere Drehrichtung von rot auf blau
+ok andere Drehrichtung von rot auf blau
+ok Lösung ausgeben, rot-weiß fertig dazuschreiben
 .. Anfangsstellung
-.. Lösung ausgeben, rotweiß fertig dazuschreiben
 .. Eingabe Adresse IP-Webcam
 
 
