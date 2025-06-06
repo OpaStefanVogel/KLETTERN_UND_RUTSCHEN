@@ -23,7 +23,7 @@
 //alert(('’’').charCodeAt(0)+'  '+('’’').charCodeAt(1));
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { XRButton } from 'three/addons/webxr/XRButton.js';
+//import { XRButton } from 'three/addons/webxr/XRButton.js';
 import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
 
@@ -38,8 +38,8 @@ const renderer = new THREE.WebGLRenderer( { antialias: true } );
   canvas.appendChild( renderer.domElement );
 
 
-const XRButt=XRButton.createButton( renderer );
-  document.body.appendChild( XRButt);
+//const XRButt=XRButton.createButton( renderer );
+//  document.body.appendChild( XRButt);
 
 const scene = new THREE.Scene();
   scene.background = new THREE.Color( 0xcccc66 );
@@ -241,20 +241,20 @@ let K014W=new THREE.Mesh(
   K014.add(K014W);
 let K0140=new THREE.Mesh(
   new THREE.PlaneGeometry(0.19,0.19),
-  new THREE.MeshStandardMaterial( {color: 'gray', transparent:false, roughness:1, vertexColors:false} )
+  new THREE.MeshStandardMaterial( {color: rot, transparent:false, roughness:1, vertexColors:false} )
   );
   K0140.position.set(0.2,0.2,0.301)
   K014.add(K0140);
 let K0141=new THREE.Mesh(
   new THREE.PlaneGeometry(0.19,0.19),
-  new THREE.MeshStandardMaterial( {color: 'gray', transparent:false} )
+  new THREE.MeshStandardMaterial( {color: gruen, transparent:false} )
   );
   K0141.position.set(0.301,0.2,0.2)
   K0141.rotateY(Math.PI/2);
   K014.add(K0141);
 let K0144=new THREE.Mesh(
   new THREE.PlaneGeometry(0.19,0.19),
-  new THREE.MeshStandardMaterial( {color: 'gray', transparent:false} )
+  new THREE.MeshStandardMaterial( {color: gelb, transparent:false} )
   );
   K0144.position.set(0.2,0.301,0.2)
   K0144.rotateX(-Math.PI/2);
@@ -276,13 +276,13 @@ let K014W=new THREE.Mesh(
   K014.add(K014W);
 let K0140=new THREE.Mesh(
   new THREE.PlaneGeometry(0.19,0.19),
-  new THREE.MeshStandardMaterial( {color: 'gray', transparent:false} )
+  new THREE.MeshStandardMaterial( {color: rot, transparent:false} )
   );
   K0140.position.set(0.2,0,0.301)
   K014.add(K0140);
 let K0141=new THREE.Mesh(
   new THREE.PlaneGeometry(0.19,0.19),
-  new THREE.MeshStandardMaterial( {color: 'gray', transparent:false} )
+  new THREE.MeshStandardMaterial( {color: gruen, transparent:false} )
   );
   K0141.position.set(0.301,0,0.2)
   K0141.rotateY(Math.PI/2);
@@ -313,7 +313,8 @@ let K0140=new THREE.Mesh(
   return K014;
   }
 
-
+let LISTE=[];
+function ini() {
 let K014=Erzeuge_Ecke('red','green','yellow'); K014.userData.P=[0,1,4];
 let K051=Erzeuge_Ecke('red','white','green'); K051.userData.P=[0,5,1]; K051.rotateZ(m90);
 let K350=Erzeuge_Ecke('blue','white','red'); K350.userData.P=[3,5,0]; K350.rotateY(m90);K350.rotateZ(m90);
@@ -340,10 +341,10 @@ let K2=Erzeuge_Mitte('orange'); K2.rotateY(p180);
 let K3=Erzeuge_Mitte('blue'); K3.rotateY(m90);
 let K4=Erzeuge_Mitte('yellow'); K4.rotateX(m90);
 let K5=Erzeuge_Mitte('white'); K5.rotateX(p90);
+LISTE=[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K350,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5];
+}
+ini();
 
-
-
-let LISTE=[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K350,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5]; 
 let x_Achse=new THREE.Vector3(1,0,0);
 let y_Achse=new THREE.Vector3(0,1,0);
 let z_Achse=new THREE.Vector3(0,0,1);
@@ -376,7 +377,7 @@ function animate_start() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehli
   //alert(Drehliste[0][3].toArray()+'\n'+Drehliste[0][4].toArray()+'\n'+Drehstart);
   }
 
-let Drehzeit=600;
+let Drehzeit=600;//200 oder 600
 let neue_Drehzeit=0;
 
 function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehliste_gesamt;
@@ -504,13 +505,13 @@ alert(pixels);
   WW=structuredClone(WWMERK);
   //for (let i=0;i<LISTE.length;i++) LISTE[i].setRotationFromEuler(LI[i]);
   setTimeout(function() {Drehliste_gesamt=Loeseliste},100);
-  let Loesung='';
+  let Loesung='Lösung: <div>Lege gelbe Mitte nach oben und grüne Mitte nach rechts.</div><div>plus heißt Drehung im Uhrzeigersinn.</div><div>minus heißt Drehung entgegen Uhrzeigersinn.</div>';
   let Drehnummer=0;
   for (let i=0;i<Loeseliste.length;i++) if (Loeseliste[i]>-1) {
     Drehnummer=Drehnummer+1;
     Loesung=Loesung+'\n</div><div>'+Drehnummer+'. Drehung '+Loesetext[Loeseliste[i]];
     } else Loesung=Loesung+', '+Loesetext2[-Loeseliste[i]]+' ist am Platz';
-  Log6.innerHTML='Lösung: '+Loesung;
+  Log6.innerHTML=Loesung;
   }
 
 id_loese.addEventListener('click',function() {loese()});
@@ -939,8 +940,15 @@ id_Test.addEventListener('click',function() {Test()});
 id_langsamer.addEventListener('click',function() {neue_Drehzeit=+100});
 id_schneller.addEventListener('click',function() {neue_Drehzeit=-100});
 
+
 function Anfang() {
-  alert('noch nicht fertig');
+  RCube.clear();
+  ini();
+  WW[0]=structuredClone(WW[2]);
+  WW[1]=structuredClone(WW[3]);
+  scanbit=1;
+  RCube.rotation.set(0,0,0);
+  controls.object.position.set(0.5,0.5,1.5);
   }
 
 id_Anfang.addEventListener('click',function() {Anfang()});
@@ -1106,7 +1114,7 @@ ok bei Farbwechsel wieder 5
 ok fullscreen geht nur nach click-event
 ok andere Drehrichtung von rot auf blau
 ok Lösung ausgeben, rot-weiß fertig dazuschreiben
-.. Anfangsstellung
+ok Anfangsstellung
 .. Eingabe Adresse IP-Webcam
 
 
@@ -1202,7 +1210,7 @@ ok Lösung ausgeben, rot-weiß fertig dazuschreiben
 <div style='display:inline-block; min-width:64px'> </div>
 
 <div style='display:inline-block'>
-<div><button id='id_Anfang' style='background-color:red; font-size:200%'>Anfang</button></div>
+<div><button id='id_Anfang' style='font-size:300%'>Anfang</button></div>
 <div><button id='id_mische' style='font-size:300%'>mischen</button></div>
 <div><button id='id_loese' style='font-size:300%'>lösen</button></div>
 <div>xxx</div>
@@ -1240,14 +1248,14 @@ ok Lösung ausgeben, rot-weiß fertig dazuschreiben
 <button id='id_Test4' onclick='Test4(event)'>Test4</button>
 
 
-<div id='Log' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
+<div id='Log' style='display:none; font-family:Courier,monospace; white-space:wrap;'> </div>
 <div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'>raycaster</div>
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
-<div id='Log2' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
+<div id='Log2' style='display:none; font-family:Courier,monospace; white-space:wrap; overflow:auto'> </div>
 <div id='Log6' style='display:non; font-family:Courier,monospace; white-space:wrap;'>Lösung:</div>
-<div id='Log4' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
-<div id='Log5' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
-<div id='Log3' style='display:flex; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
+<div id='Log4' style='display:flex; display:none; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
+<div id='Log5' style='display:flex; display:none; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
+<div id='Log3' style='display:flex; display:none; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
 
 <script>
   </script></body></html>
