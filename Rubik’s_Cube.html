@@ -1022,7 +1022,7 @@ myImg.onload = () => {//alert('onload');
 
 
 function Test4(event) {
-  canvas4.src='http://127.0.0.1:56147/video';
+  canvas4.src=id_port.value+'/video';
   }
 
 let eventLocation={x:30,y:30};
@@ -1124,6 +1124,8 @@ ok Anfangsstellung
 
 
 <!---IP-Kamera:--->
+<div><a href='https://play.google.com/store/apps/details?id=com.pas.webcam'>IP-Webcam</a> auf Videoauflösung 352x288 und Port <input id='id_port' value='http://localhost:56147'/> konfigurieren, dann <button id='id_Test4' onclick='Test4(event)'>verbinden</button>.
+
 <div id='id_fullscreen'>
 
 <svg width="352" height="288">
@@ -1245,7 +1247,6 @@ ok Anfangsstellung
 <button id='id_Test' style='background-color:white; font-size:200%'>Test</button>
 <button id='id_langsamer' style='background-color:white; font-size:200%'>langsamer</button>
 <button id='id_schneller' style='background-color:white; font-size:200%'>schneller</button>
-<button id='id_Test4' onclick='Test4(event)'>Test4</button>
 
 
 <div id='Log' style='display:none; font-family:Courier,monospace; white-space:wrap;'> </div>
