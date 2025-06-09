@@ -505,7 +505,7 @@ alert(pixels);
   WW=structuredClone(WWMERK);
   //for (let i=0;i<LISTE.length;i++) LISTE[i].setRotationFromEuler(LI[i]);
   setTimeout(function() {Drehliste_gesamt=Loeseliste},100);
-  let Loesung='Lösung: <div>Lege gelbe Mitte nach oben und grüne Mitte nach rechts.</div><div>plus heißt Drehung im Uhrzeigersinn.</div><div>minus heißt Drehung entgegen Uhrzeigersinn.</div>';
+  let Loesung='Lösung nach <a href="https://www.taurelin.de/downloads/anfaengermethode.pdf">taurelin anfaengermethode.pdf</a>: <div>Lege gelbe Mitte nach oben und grüne Mitte nach rechts.</div><div>plus heißt Drehung im Uhrzeigersinn.</div><div>minus heißt Drehung entgegen Uhrzeigersinn.</div>';
   let Drehnummer=0;
   for (let i=0;i<Loeseliste.length;i++) if (Loeseliste[i]>-1) {
     Drehnummer=Drehnummer+1;
@@ -1054,6 +1054,38 @@ let Vergleichsfarben=[
   [0,33,99,'white',203,0.6,0.3,0.9]
   ];
  
+Vergleichsfarben=[
+  [0,99,43,'green',58,0.4,0,5,0.5],
+  [0,87,99,'blue',79,0.53,0.9,0.6],
+  [99,30,0,'orange',109,0.06,0.9,0.7],
+  [93,99,0,'yellow',144,0.16,1,0.8],
+  [99,0,34,'red',102,0.96,0.6,0.6],
+  [0,33,99,'white',220,0.6,0.9,0.9]
+  ];
+ 
+/*
+1,84,99,0,yellow,141,0.1915204678362573,1,0.7764705882352941
+2,0,87,99,blue,79,0.519723865877712,0.923497267759563,0.6411764705882352
+3,0,99,52,blue,87,0.42207792207792205,0.846153846153846,0.6431372549019607
+4,99,0,40,red,102,0.9322033898305085,0.6276595744680852,0.6313725490196078
+5,99,0,34,red,104,0.9411764705882354,0.6502732240437159,0.6411764705882352
+6,93,99,0,yellow,144,0.17567567567567569,1,0.7823529411764706
+7,99,30,0,orange,115,0.05137844611528824,0.9047619047619047,0.711764705882353
+8,0,99,43,green,58,0.40617283950617283,0.5378486055776893,0.492156862745098
+9,0,34,99,white,219,0.6078431372549019,0.8947368421052635,0.9254901960784314
+30 30
+119,119,127,255,127,127,135,255,146,146,154,255,149,149,157,255
+238,255,141,255,238,255,141,255,238,255,141,255,238,255,141,255
+79,228,248,255,79,228,248,255,79,228,248,255,79,228,248,255
+87,241,169,255,87,241,169,255,86,240,168,255,86,240,168,255
+220,102,150,255,219,101,149,255,221,101,149,255,221,101,149,255
+223,104,146,255,222,103,143,255,223,104,144,255,222,103,143,255
+249,255,144,255,249,255,142,255,250,255,145,255,250,255,143,255
+248,156,115,255,247,155,114,255,247,155,114,255,247,155,114,255
+58,193,117,255,58,193,117,255,57,192,116,255,57,192,116,255
+219,231,253,255,219,231,253,255,217,229,251,255,217,229,251,255
+*/
+
 function MinDist(fr,fg,fb,fm,h,s,l) {
   //if (fm>180) return 'white';
   //if (fm<30) return 'black';
@@ -1109,13 +1141,20 @@ setInterval(function(){
   
 Test4();
 
+window.addEventListener('error',function(event) {alert('aha '+event+'\n'+event.error.name+'\n'+event.error.cause+'\n'+event.error.stack+'\n'+event.error.columnNumber+'\n'+event.error.fileName+'\n'+event.error.lineNumber+'\n'+event.error.message)});
+window.onerror=function(message, file, line, col, error) {alert('message '+message+'\nfile: '+file+'\nline: '+line+'\ncol: '+col+'\nerror: '+error)};
+//alert(window.onerror);
+//window.onerror();
+//Error('ooooh');
+//alert(8);
+
 /*jetzt noch:  
 ok bei Farbwechsel wieder 5
 ok fullscreen geht nur nach click-event
 ok andere Drehrichtung von rot auf blau
 ok Lösung ausgeben, rot-weiß fertig dazuschreiben
 ok Anfangsstellung
-.. Eingabe Adresse IP-Webcam
+.. Eingabe Adresse IP-Webcam 
 
 
 */
@@ -1124,7 +1163,7 @@ ok Anfangsstellung
 
 
 <!---IP-Kamera:--->
-<div><a href='https://play.google.com/store/apps/details?id=com.pas.webcam'>IP-Webcam</a> auf Videoauflösung 352x288 und Port <input id='id_port' value='http://localhost:56147'/> konfigurieren, dann <button id='id_Test4' onclick='Test4(event)'>verbinden</button>.
+<div><a href='https://play.google.com/store/apps/details?id=com.pas.webcam'>IP-Webcam</a> auf Videoauflösung 352x288 und Port <input id='id_port' value='http://localhost:56147'/> konfigurieren, dann <button id='id_Test4'>verbinden</button>.
 
 <div id='id_fullscreen'>
 
@@ -1253,7 +1292,7 @@ ok Anfangsstellung
 <div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'>raycaster</div>
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
 <div id='Log2' style='display:none; font-family:Courier,monospace; white-space:wrap; overflow:auto'> </div>
-<div id='Log6' style='display:non; font-family:Courier,monospace; white-space:wrap;'>Lösung:</div>
+<div id='Log6' style='display:n; font-family:Courier,monospace; white-space:wrap;'>Lösung:</div>
 <div id='Log4' style='display:flex; display:none; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
 <div id='Log5' style='display:flex; display:none; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
 <div id='Log3' style='display:flex; display:none; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
