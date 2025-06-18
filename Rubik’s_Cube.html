@@ -377,7 +377,7 @@ function animate_start() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehli
   //alert(Drehliste[0][3].toArray()+'\n'+Drehliste[0][4].toArray()+'\n'+Drehstart);
   }
 
-let Drehzeit=600;//200 oder 600
+let Drehzeit=100;//100, 200 oder 600
 let neue_Drehzeit=0;
 
 function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehliste_gesamt;
@@ -410,11 +410,11 @@ function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehlis
     } else RCube_alte_Ausrichtung=RCube.rotation.clone();
   }
 
-function suche(i) {
+function suche(i) {//if (i==4) alert('suche(4) gestartet');
   let RET=scene.getObjectByName(LISTE[i].name);
   let WET=RET.userData.P;
   let GET=LOESUNGEN[i][WET[0]][WET[1]];
-  //alert('i='+i+': '+RET.name+' '+WET+' '+GET);
+  //if (i==4) alert('i='+i+': '+RET.name+' '+WET+' '+GET);
   for (let j=0;j<GET.length;j++) {
     let n=GET[j];
     if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);
@@ -442,11 +442,11 @@ let Loesetext=[
 let Loesetext2=[
   'Kante rot-grün',
   'Kante rot-weiß',
+  'Kante rot-blau',
   'Kante ',
+  'Kante orange-blau',
   'Kante ',
-  'Kante ',
-  'Kante ',
-  'Kante ',
+  'Kante orange-grün',
   'Kante orange-weiß',
   'Kante ',
   'Kante grün-weiß',
@@ -501,7 +501,10 @@ alert(pixels);
   suche(18);
   suche(19);
   suche(14);
-  suche(0);/**/
+  suche(0);
+  suche(6);
+  suche(4);
+  suche(2)/**/
   //alert(Loeseliste);
   WW=structuredClone(WWMERK);
   //for (let i=0;i<LISTE.length;i++) LISTE[i].setRotationFromEuler(LI[i]);
@@ -535,11 +538,32 @@ let LOESUNGEN=[
     [[/*4,0*/10,7,0],[/*4,1*/7,0],[/*4,2*/4,7,0],[/*4,3,11*/3,6],,],
     [[/*5,0*/5,1,0],[/*5,1,9*/1,0],[/*5,2*/11,1,0],[/*5,3*/9,6],,]
     ],
+/*2:K03*/[
+    [,[/*0,1,0♠*/],,[/*0,3,2♣*/],[/*0,4,3♦*/10,9,4,3,4,0,10,6],[/*0,5,1♠*/]],
+    [[/*1,0♠*/],,[/*1,2♠*/],,[/*1,4,8♦*/4],[/*1,5♠*/]],
+    [,[/*2,1,6♠*/],,[/*2,3,4♠*/],[/*2,4,5♦*/4,4],[/*2,5,7♠*/]],
+    [[/*3,0♥*/10,9,4,3,4,0,10,6],,[/*3,2♠*/],,[/*3,4♦*/10],[/*3,5,10♠*/]],
+    [[/*4,0♥*/4],[/*4,1♥*/4,4],[/*4,2♥*/10],[/*4,3,11♥*/4,0,10,6,10,9,4,3],,],
+    [[/*5,0♠*/],[/*5,1,9♠*/],[/*5,2♠*/],[/*5,3♠*/],,]    
+    ],
   [],
+/*4:K23*/[
+    [,[/*0,1,0♠*/],,[/*0,3,2♥*/10,9,4,3,4,0,10,6],[/*0,4,3♦*/4,4],[/*0,5,1♠*/]],
+    [[/*1,0♠*/],,[/*1,2♠*/],,[/*1,4,8♦*/10],[/*1,5♠*/]],
+    [,[/*2,1,6♠*/],,[/*2,3,4♣*/],[/*2,4,5♦*/4,3,10,9,10,8,4,2],[/*2,5,7♠*/]],
+    [[/*3,0♥*/10,9,4,3,4,0,10,6],,[/*3,2♥*/10,8,4,2,4,3,10,9],,[/*3,4♦*/4],[/*3,5,10♠*/]],
+    [[/*4,0♥*/4],[/*4,1♥*/4,4],[/*4,2♥*/10],[/*4,3,11♥*/10,8,4,2,4,3,10,9],,],
+    [[/*5,0♠*/],[/*5,1,9♠*/],[/*5,2♠*/],[/*5,3♠*/],,]    
+  ],
   [],
-  [],
-  [],
-  [],
+/*6:K21*/[
+    [,[/*0,1,0♠*/],,[/*0,3,2♥*/10,9,4,3,4,0,10,6],[/*0,4,3♦*/4,4],[/*0,5,1♠*/]],
+    [[/*1,0♠*/],,[/*1,2♥*/10,7,4,1,4,2,10,8],,[/*1,4,8♦*/10],[/*1,5♠*/]],
+    [,[/*2,1,6♣*/],,[/*2,3,4♥*/10,8,4,2,4,3,10,9],[/*2,4,5♦*/10,7,4,1,4,2,10,8],[/*2,5,7♠*/]],
+    [[/*3,0♥*/10,9,4,3,4,0,10,6],,[/*3,2♥*/10,8,4,2,4,3,10,9],,[/*3,4♦*/4],[/*3,5,10♠*/]],
+    [[/*4,0♥*/10],[/*4,1♥*/4,2,10,8,10,7,4,1],[/*4,2♥*/4],[/*4,3,11♥*/4,4],,],
+    [[/*5,0♠*/],[/*5,1,9♠*/],[/*5,2♠*/],[/*5,3♠*/],,]    
+    ],
 /*7:K25♥*/[
     [,[/*0,1,0♥*/6,4,4,0,2,2],,[/*0,3,2♥*/0,4,4,6,2,2],[/*0,4,3♥*/4,4,2,2],[/*0,5,1♠*/]],
     [[/*1,0♥*/1,10,7,2,2],,[/*1,2♥*/7,10,1,2,2],,[/*1,4,8♥*/10,2,2],[/*1,5♠*/]],
@@ -616,7 +640,7 @@ let LOESUNGEN=[
 function mische(n) {
   let RET=[];
   for (let i=0;i<n;i++) RET.push(Math.floor(Math.random()*12));
-  Log.innerHTML=RET;
+  Log.innerHTML=Log.innerHTML+',<br/>'+RET;
   setTimeout(function() {Drehliste_gesamt=RET},100);
   }
 
@@ -958,6 +982,7 @@ function Anfang() {
   scanbit=1;
   RCube.rotation.set(0,0,0);
   controls.object.position.set(0.5,0.5,1.5);
+  Log.innerHTML=' ';
   }
 
 id_Anfang.addEventListener('click',function() {Anfang()});
@@ -1297,7 +1322,7 @@ ok Anfangsstellung
 <button id='id_schneller' style='background-color:white; font-size:200%'>schneller</button>
 
 
-<div id='Log' style='display:none; font-family:Courier,monospace; white-space:wrap;'> </div>
+<div id='Log' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
 <div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'>raycaster</div>
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
 <div id='Log2' style='display:none; font-family:Courier,monospace; white-space:wrap; overflow:auto'> </div>
