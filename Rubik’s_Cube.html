@@ -8,6 +8,10 @@
   </head>
 
 <body>
+<script>
+window.onerror=function(message, file, line, col, error) {alert('window.onerror:\nmessage '+message+'\nfile: '+file+'\nline: '+line+'\ncol: '+col+'\nerror: '+error+'\n\n')};
+window.addEventListener('error',function(arg) {alert('window.addEventListener:\nERROR ERROR ERROR\n message '+arg.error.message+' '+arg.error.name+' '+arg.error['name'])});
+  </script>
 
 <!--importmap muß bleiben weil die module auch three aufrufen-->
 		<script type="importmap">
@@ -106,6 +110,7 @@ function raycast() {
   let Dist = 0;
   let minDist = 100000;
   let gefunden = 0;
+return;
   for (let i = 0; i < Ecken.length; i++) {
     Dist = raycaster.ray.direction.angleTo(Ecken[i].position.clone().sub(raycaster.ray.origin))
     if (Dist < minDist) { minDist = Dist; gefunden = Ecken[i].position }
@@ -1088,15 +1093,6 @@ let Vergleichsfarben=[
   [0,33,99,'white',203,0.6,0.3,0.9]
   ];
  
-/*Vergleichsfarben=[
-  [0,99,43,'green',58,0.4,0,5,0.5],
-  [0,87,99,'blue',79,0.53,0.9,0.6],
-  [99,30,0,'orange',109,0.06,0.9,0.7],
-  [93,99,0,'yellow',144,0.16,1,0.8],
-  [99,0,34,'red',102,0.96,0.6,0.6],
-  [0,33,99,'white',220,0.6,0.9,0.9]
-  ];*/
- 
 /*
 1,84,99,0,yellow,141,0.1915204678362573,1,0.7764705882352941
 2,0,87,99,blue,79,0.519723865877712,0.923497267759563,0.6411764705882352
@@ -1120,7 +1116,7 @@ let Vergleichsfarben=[
 219,231,253,255,219,231,253,255,217,229,251,255,217,229,251,255
 */
 
-function MinDist(fr,fg,fb,fm,h,s,l) {
+function MinDist_alt(fr,fg,fb,fm,h,s,l) {
   //if (fm>180) return 'white';
   //if (fm<30) return 'black';
   let imin=0;
@@ -1133,6 +1129,26 @@ function MinDist(fr,fg,fb,fm,h,s,l) {
     }
   if ((imin==1)&&(l>0.8)) imin=5;
   return Vergleichsfarben[imin][3];
+  }
+
+Vergleichsfarben=[
+  [0,99,43,'green',58,0.4,0,5,0.5],
+  [0,87,99,'blue',79,0.53,0.9,0.6],
+  [99,30,0,'orange',109,0.06,0.9,0.7],
+  [93,99,0,'yellow',144,0.16,1,0.8],
+  [99,0,34,'red',102,0.96,0.6,0.6],
+  [0,33,99,'white',220,0.6,0.9,0.9]
+  ];
+ 
+function MinDist(fr,fg,fb,fm,h,s,l) {
+  let RET='gray';
+  if (fr==99&fg>10) RET='orange';
+  if (fr==99&fb>0) RET='red';
+  if (fg==99&fr<50) RET='green';
+  if (fg>89&fr>80) RET='yellow';
+  if (fb==99&fg<50) RET='white';
+  if (fb==99&fg>50) RET='blue';
+  return RET;
   }
 
 function Farben_aus_Daten_bestimmen() {
@@ -1188,8 +1204,11 @@ ok fullscreen geht nur nach click-event
 ok andere Drehrichtung von rot auf blau
 ok Lösung ausgeben, rot-weiß fertig dazuschreiben
 ok Anfangsstellung
-.. Eingabe Adresse IP-Webcam 
-
+ok Eingabe Adresse IP-Webcam 
+.. die circle auvn färben
+.. Log-files neu anordnen
+.. Lösung als Einzelschritte
+.. 
 
 */
 
@@ -1323,13 +1342,13 @@ ok Anfangsstellung
 
 
 <div id='Log' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
-<div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'>raycaster</div>
+<div id='Tdok' style='display:non; font-family:Courier,monospace; white-space:wrap;'>raycaster</div>
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
-<div id='Log2' style='display:none; font-family:Courier,monospace; white-space:wrap; overflow:auto'> </div>
+<div id='Log2' style='display:non; font-family:Courier,monospace; white-space:wrap; overflow:auto'> </div>
 <div id='Log6' style='display:n; font-family:Courier,monospace; white-space:wrap;'>Lösung:</div>
-<div id='Log4' style='display:flex; display:none; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
-<div id='Log5' style='display:flex; display:none; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
-<div id='Log3' style='display:flex; display:none; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
+<div id='Log4' style='display:flex; display:non; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
+<div id='Log5' style='display:flex; display:non; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
+<div id='Log3' style='display:flex; display:non; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
 
 <script>
   </script></body></html>
