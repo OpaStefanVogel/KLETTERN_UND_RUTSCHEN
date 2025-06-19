@@ -1170,6 +1170,15 @@ function Farben_aus_Daten_bestimmen() {
     }
   Log4.innerHTML='Farben: '+Farben2.join('\n');
   Farben.shift();
+  linksoben.setAttribute('fill',Farben[0]);
+  mitteoben.setAttribute('fill',Farben[1]);
+  rechtsoben.setAttribute('fill',Farben[2]);
+  linksmitte.setAttribute('fill',Farben[3]);
+  mittemitte.setAttribute('fill',Farben[4]);
+  rechtsmitte.setAttribute('fill',Farben[5]);
+  linksunten.setAttribute('fill',Farben[6]);
+  mitteunten.setAttribute('fill',Farben[7]);
+  rechtsunten.setAttribute('fill',Farben[8]);
   }
 
 let scannum=5;
@@ -1205,7 +1214,7 @@ ok andere Drehrichtung von rot auf blau
 ok Lösung ausgeben, rot-weiß fertig dazuschreiben
 ok Anfangsstellung
 ok Eingabe Adresse IP-Webcam 
-.. die circle auvn färben
+ok die circle auch färben
 .. Log-files neu anordnen
 .. Lösung als Einzelschritte
 .. 
@@ -1231,15 +1240,15 @@ ok Eingabe Adresse IP-Webcam
 <rect id='id_rectangle' x='0' y='0' width='288' height='288' fill='white' opacity='0'/>
 <g transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='1' stroke='black'>
   <rect x='72' y='72' width='144' height='144'/>
-  <circle cx="96" cy="96" r="10"/>
-  <circle cx="144" cy="96" r="10"/>
-  <circle cx="192" cy="96" r="10"/>
-  <circle cx="96" cy="144" r="10"/>
-  <circle cx="144" cy="144" r="10"/>
-  <circle cx="192" cy="144" r="10"/>
-  <circle cx="96" cy="192" r="10"/>
-  <circle cx="144" cy="192" r="10"/>
-  <circle cx="192" cy="192" r="10"/>
+  <circle id="linksoben" cx="96" cy="96" r="10"/>
+  <circle id="mitteoben" cx="144" cy="96" r="10"/>
+  <circle id="rechtsoben" cx="192" cy="96" r="10"/>
+  <circle id="linksmitte" cx="96" cy="144" r="10"/>
+  <circle id="mittemitte" cx="144" cy="144" r="10"/>
+  <circle id="rechtsmitte" cx="192" cy="144" r="10"/>
+  <circle id="linksunten" cx="96" cy="192" r="10"/>
+  <circle id="mitteunten" cx="144" cy="192" r="10"/>
+  <circle id="rechtsunten" cx="192" cy="192" r="10"/>
   </g>
   </svg>
 
@@ -1252,15 +1261,15 @@ ok Eingabe Adresse IP-Webcam
 <rect x='288' y='0' width='64' height='288' fill='white'/>
 <rect id='id_rectangle2' x='0' y='0' width='288' height='288' fill='white' opacity='0'/>
 <g transform="translate(0,0) rotate(0) translate(0)" fill='none' stroke-width='4'>
-  <circle id="linksoben" cx="48" cy="48" r="10" stroke="green"/>
-  <circle id="mitteoben" cx="144" cy="48" r="10" stroke="red"/>
-  <circle id="rechtsoben" cx="240" cy="48" r="10" stroke="yellow"/>,
-  <circle id="linksmitte" cx="48" cy="144" r="10" stroke="green"/>
-  <circle id="mittemitte" cx="144" cy="144" r="10" stroke="red"/>
-  <circle id="rechtsmitte" cx="240" cy="144" r="10" stroke="yellow"/>
-  <circle id="linksunten" cx="48" cy="240" r="10" stroke="green"/>
-  <circle id="mitteunten" cx="144" cy="240" r="10" stroke="red"/>
-  <circle id="rechtsunten" cx="240" cy="240" r="10" stroke="yellow"/>
+  <circle cx="48" cy="48" r="10" stroke="green"/>
+  <circle cx="144" cy="48" r="10" stroke="red"/>
+  <circle cx="240" cy="48" r="10" stroke="yellow"/>,
+  <circle cx="48" cy="144" r="10" stroke="green"/>
+  <circle cx="144" cy="144" r="10" stroke="red"/>
+  <circle cx="240" cy="144" r="10" stroke="yellow"/>
+  <circle cx="48" cy="240" r="10" stroke="green"/>
+  <circle cx="144" cy="240" r="10" stroke="red"/>
+  <circle cx="240" cy="240" r="10" stroke="yellow"/>
   </g>
   </svg>
 
