@@ -842,6 +842,8 @@ id_checken.addEventListener('click',function() {checken()});
 
 
 let Orientierungen_Kanten=['redgreen', 'redwhite', 'redblue', 'redyellow', 'orangeblue', 'orangeyellow', 'orangegreen', 'orangewhite', 'greenyellow', 'whitegreen', 'bluewhite', 'yellowblue'];
+let Flaechennummern_Kanten=[[6,18], [8,56], [4,36], [2,48], [22,34], [24,42], [28,12], [26,54], [14,46], [58,16], [38,52], [44,32]];
+let Flaechennummern_Kanten_gesamt=[];
 let Orientierungen_Ecken=['redgreenyellow', 'redwhitegreen', 'bluewhitered', 'redyellowblue', 'orangeblueyellow', 'orangeyellowgreen', 'greenwhiteorange', 'orangewhiteblue'];
 
 let NEUELISTE=[];
@@ -853,6 +855,7 @@ function checken() {
   NEUELISTE=LISTE.slice();//wegen K0 bis K6
   INDEXLISTE1=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
   INDEXLISTE2=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
+  Flaechennummern_Kanten_gesamt=[]; for (let i=0;i<60;i++) Flaechennummern_Kanten_gesamt[i]=i;
   for (let i=0;i<20;i++) {
     let ke=LISTE[i];
     //alert(JSON.stringify(ke.userData));
@@ -885,13 +888,30 @@ function checken() {
         if (Orientierungen_Kanten.indexOf(ke.name)==-1) ungueltig=true;
         }
     ke.userData.Orientierung=y;
-    checktext=checktext+i+' '+ke.name+' '+ke.userData.P+' '+ke.userData.index+' '+ke.userData.Orientierung+'\n';
+    checktext=checktext+i+' '+ke.name+' '+ke.userData.P+' '+ke.userData.index+' '+ke.userData.Orientierung+' ';
+    if (ke.userData.F[2]) {
+      } else {
+        if (ke.userData.Orientierung==0) {
+          checktext=checktext+Flaechennummern_Kanten[i];
+          Flaechennummern_Kanten_gesamt[Flaechennummern_Kanten[i][0]]=Flaechennummern_Kanten[ke.userData.index][0];
+          Flaechennummern_Kanten_gesamt[Flaechennummern_Kanten[i][1]]=Flaechennummern_Kanten[ke.userData.index][1];
+          }
+        if (ke.userData.Orientierung==1) {
+          checktext=checktext+Flaechennummern_Kanten[i].slice().reverse();
+          Flaechennummern_Kanten_gesamt[Flaechennummern_Kanten[i][1]]=Flaechennummern_Kanten[ke.userData.index][0];
+          Flaechennummern_Kanten_gesamt[Flaechennummern_Kanten[i][0]]=Flaechennummern_Kanten[ke.userData.index][1];
+          }
+        checktext=checktext+'→'+Flaechennummern_Kanten[ke.userData.index];
+        }
+    checktext=checktext+'\n';
     Log4.innerHTML=checktext;
     if (ungueltig) {return false} //keine gültige Färbung
     NEUELISTE[ke.userData.index]=LISTE[i];
     INDEXLISTE1[i]=ke.userData.index;
     INDEXLISTE2[ke.userData.index]=[i];
     }
+  checktext=checktext+'Flaechennummern_Kanten_gesamt='+Flaechennummern_Kanten_gesamt+'\n';
+  Log7.innerHTML=Log7.innerHTML+'perm := PermList(['+Flaechennummern_Kanten_gesamt+'])\nword := PreImagesRepresentative( hom,perm );\n';
 
 //       0   1   2   3   4   5   6   7   8   9  10  11   12   13  14   15   16   17   18   19 
 //LISTE=[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K350,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5]; 
@@ -1142,12 +1162,12 @@ Vergleichsfarben=[
  
 function MinDist(fr,fg,fb,fm,h,s,l) {
   let RET='gray';
-  if (fr==99&fg>10) RET='orange';
-  if (fr==99&fb>0) RET='red';
-  if (fg==99&fr<50) RET='green';
-  if (fg>89&fr>80) RET='yellow';
-  if (fb==99&fg<50) RET='white';
-  if (fb==99&fg>50) RET='blue';
+  if (fr==99&fg>0&&fb==0) RET='orange';
+  if (fr==99&fg==0&&fb>0) RET='red';
+  if (fg==99&fr<50&&fb<80) RET='green';
+  if (fg>80&fr>50) RET='yellow';
+  if (fm>180) RET='white';
+  if (fb==99&fg>50&&fm<150) RET='blue';
   return RET;
   }
 
@@ -1217,7 +1237,14 @@ ok Eingabe Adresse IP-Webcam
 ok die circle auch färben
 .. Log-files neu anordnen
 .. Lösung als Einzelschritte
-.. 
+.. Verbindung zu gap
+.. zu Robi verbinden
+
+i:=0; j:=0; d:=0; t:=function(n) local s; s:=0; for i in [-n..n] do for j in [-n..n] do for d in [1..Gcd(i,j)] do if Gcd(i,j) mod d = 0 then s:=s+MoebiusMu(d); fi; od; od; od; return s; end;
+
+u:=function(n) local s; s:=0; for i in [-n..n] do for j in [-n..n] do if Gcd(i,j)=1 then s:=s+1; fi; od; od; return s; end;
+
+#8 16 32 48 80 96 144 176 224 256 336 368 464 512 576 640 768 816 960 1024 1120 1200 1376 1440 1600 1696 1840 1936 2160 2224 2464 2592 2752 2880 3072 3168 3456 3600 3792 3920 4240 4336 4672 4832 5024 5200 5568 5696 6032 6192 6448 6640 7056 7200 7520
 
 */
 
@@ -1290,16 +1317,16 @@ ok die circle auch färben
 <button id='id_drehe10' style='background-color:yellow; font-size:200%'>↶</button>
   </div>
 <div>
-<button id='id_drehe6' style='background-color:red; font-size:200%'>↶</button>
-<button id='id_drehe7' style='background-color:green; font-size:200%'>↶</button>
-<button id='id_drehe8' style='background-color:orange; font-size:200%'>↶</button>
-<button id='id_drehe9' style='background-color:blue; font-size:200%'>↶</button>
-  </div>
-<div>
 <button id='id_drehe0' style='background-color:red; font-size:200%'>↷</button>
 <button id='id_drehe1' style='background-color:green; font-size:200%'>↷</button>
 <button id='id_drehe2' style='background-color:orange; font-size:200%'>↷</button>
 <button id='id_drehe3' style='background-color:blue; font-size:200%'>↷</button>
+  </div>
+<div>
+<button id='id_drehe6' style='background-color:red; font-size:200%'>↶</button>
+<button id='id_drehe7' style='background-color:green; font-size:200%'>↶</button>
+<button id='id_drehe8' style='background-color:orange; font-size:200%'>↶</button>
+<button id='id_drehe9' style='background-color:blue; font-size:200%'>↶</button>
   </div>
 <div>
 <button id='id_drehe5' style='background-color:white; font-size:200%'>↻</button>
@@ -1355,9 +1382,21 @@ ok die circle auch färben
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
 <div id='Log2' style='display:non; font-family:Courier,monospace; white-space:wrap; overflow:auto'> </div>
 <div id='Log6' style='display:n; font-family:Courier,monospace; white-space:wrap;'>Lösung:</div>
-<div id='Log4' style='display:flex; display:non; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
+<div id='Log4' style='display:flex; display:non; overflow:auto; font-family:monospace; white-space:pre; color:blue'> </div>
 <div id='Log5' style='display:flex; display:non; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
 <div id='Log3' style='display:flex; display:non; overflow:auto; font-family:Courier, monospace; white-space:pre;'> </div>
+<div id='Log7' style='display:flex; display:non; overflow:auto; font-family:monospace; white-space:pre; color:brown'>
+perms := [
+  (2,6,8,4)(48,18,56,36),
+  (12,16,18,14)(28,58,6,46),
+  (22,26,28,24)(34,54,12,42),
+  (32,36,38,34)(44,4,52,22),
+  (42,46,48,44)(24,14,2,32)
+  (52,56,58,54)(38,8,16,26)
+  ];
+puzzle := Group( perms );Size( puzzle );
+hom:=EpimorphismFromFreeGroup(puzzle:names:=['V', 'R', 'H', 'L', 'O', 'U']);
+</div>
 
 <script>
   </script></body></html>
