@@ -382,8 +382,10 @@ function animate_start() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehli
   //alert(Drehliste[0][3].toArray()+'\n'+Drehliste[0][4].toArray()+'\n'+Drehstart);
   }
 
-let Drehzeit=100;//100, 200 oder 600
+let Drehzeit=600;//100, 200 oder 600
 let neue_Drehzeit=0;
+let weiter=1;
+let Einzelschritt=false;
 
 function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehliste_gesamt;
   if (frametime<Drehstart+Drehzeit+100) {
@@ -396,7 +398,8 @@ function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehlis
       Obj.setRotationFromEuler(d[3]);
       Obj.rotateOnWorldAxis(Achs,alpha*Wink);
       }
-    } else if ((Drehliste_gesamt.length>0)&&frametime>2000) {
+    } else if ((Drehliste_gesamt.length>0)&&frametime>2000&&weiter==1) {
+      if (Einzelschritt==true) weiter=0;
       Drehzeit=Math.max(Drehzeit+neue_Drehzeit,100); neue_Drehzeit=0;
       let n=Drehliste_gesamt.shift();
       while (n<0&&Drehliste_gesamt.length>0) {n=Drehliste_gesamt.shift()}
@@ -469,7 +472,7 @@ let Loesetext2=[
   ];
 let Loeseliste=[];
 function loese() {
-
+  Einzelschritt=true;
 /*//aus 
 const canvas = document.getElementById("canvas").firstChild;
 //const canvas = document.createElement("canvas");
@@ -523,7 +526,8 @@ alert(pixels);
   Log6.innerHTML=Loesung;
   }
 
-id_loese.addEventListener('click',function() {loese()});
+id_loese.addEventListener('click',function() {if (Einzelschritt==false) loese(); else weiter=1});
+//id_weiter.addEventListener('click',function() {weiter=1});
 
 //[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K350,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5]; 
 let LOESUNGEN=[
@@ -643,6 +647,7 @@ let LOESUNGEN=[
 //[7,1,1,4,5,8,9,11,9,1,4,4,2,0,2,5,8,1,6,2]
 
 function mische(n) {
+  Einzelschritt=false;
   let RET=[];
   for (let i=0;i<n;i++) RET.push(Math.floor(Math.random()*12));
   Log.innerHTML=Log.innerHTML+',<br/>'+RET;
@@ -1008,6 +1013,9 @@ function Anfang() {
   RCube.rotation.set(0,0,0);
   controls.object.position.set(0.5,0.5,1.5);
   Log.innerHTML=' ';
+  Einzelschritt=false;
+  weiter=1;
+  Drehliste_gesamt=[];
   }
 
 id_Anfang.addEventListener('click',function() {Anfang()});
@@ -1239,6 +1247,7 @@ ok die circle auch färben
 .. Lösung als Einzelschritte
 .. Verbindung zu gap
 .. zu Robi verbinden
+.. das Farbensechseck
 
 i:=0; j:=0; d:=0; t:=function(n) local s; s:=0; for i in [-n..n] do for j in [-n..n] do for d in [1..Gcd(i,j)] do if Gcd(i,j) mod d = 0 then s:=s+MoebiusMu(d); fi; od; od; od; return s; end;
 
@@ -1343,6 +1352,7 @@ u:=function(n) local s; s:=0; for i in [-n..n] do for j in [-n..n] do if Gcd(i,j
 <div><button id='id_Anfang' style='font-size:300%'>Anfang</button></div>
 <div><button id='id_mische' style='font-size:300%'>mischen</button></div>
 <div><button id='id_loese' style='font-size:300%'>lösen</button></div>
+<!--div><button id='id_weiter' style='font-size:300%'>weiter</button></div-->
 <div>xxx</div>
 <div>xxx</div>
   </div>
