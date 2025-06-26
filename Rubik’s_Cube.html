@@ -313,6 +313,7 @@ let K0140=new THREE.Mesh(
   );
   K0140.position.set(0,0,0.301)
   K014.add(K0140);
+  K014.userData={P:[0], F:[K0140]};
   RCube.add(K014);
   //WW[1][0][1].push(K014);//alert(WW[1][0][1]);
   return K014;
@@ -528,6 +529,20 @@ alert(pixels);
 
 id_loese.addEventListener('click',function() {if (Einzelschritt==false) loese(); else weiter=1});
 //id_weiter.addEventListener('click',function() {weiter=1});
+id_nochmal.addEventListener('click',function() {Drehstart=frametime});
+
+/*
+perms := [
+  (2,6,8,4)(48,18,56,36),
+  (12,16,18,14)(28,58,6,46),
+  (22,26,28,24)(34,54,12,42),
+  (32,36,38,34)(44,4,52,22),
+  (42,46,48,44)(24,14,2,32)
+  (52,56,58,54)(38,8,16,26)
+  ];
+puzzle := Group( perms );Size( puzzle );
+hom:=EpimorphismFromFreeGroup(puzzle:names:=['V', 'R', 'H', 'L', 'O', 'U']);
+*/
 
 //[K01,K05,K03,K04,K23,K24,K21,K25,K14,K51,K35,K43,K014,K051,K350,K043,K234,K241,K152,K253,K0,K1,K2,K3,K4,K5]; 
 let LOESUNGEN=[
@@ -666,6 +681,7 @@ id_fehlersuch.addEventListener('click',function() {fehlersuch([10,4,11,11,0,10,1
 
 let Farben=['red','green','orange','blue','yellow','white'];
 let Farben2=[];
+let Farben3=[];
 function pruefen() {
   let RET=true;
   for (let i of [1,9,7,10,13,18,19,14]) {
@@ -758,8 +774,10 @@ function knips() {
   //return Testfarben[Testindex];
   }
 
+let Farbtabelle={'red':'red','green':'green','orange':'orange','blue':'blue','yellow':'yellow','white':'white'}
+
 function setze_die_Farbe(ke,i,j,farbe) {
-  LISTE[WW[ke][i][j][2+ke]].userData.F[WW[ke][i][j][3+ke]].material.color.set(farbe);
+  LISTE[WW[ke][i][j][2+ke]].userData.F[WW[ke][i][j][3+ke]].material.color.set(Farbtabelle[farbe]);
   LISTE[WW[ke][i][j][2+ke]].userData.F[WW[ke][i][j][3+ke]].material.userData=farbe;
   
   }
@@ -767,8 +785,10 @@ function setze_die_Farbe(ke,i,j,farbe) {
 function scannen(Farben) {
   //alert(controls.object.position.x+' '+controls.object.position.y+' '+controls.object.position.z);
   //let Farben=knips();
+  if (scannum==0) for (let i=0;i<Farben.length;i++) if (Farbtabelle[Farben[i]]==Farben[i]) Farbtabelle[Farben[i]]=Farben3[i];
   if (Farben[4]=='red') {
     //alert(Farben+'\n'+WW[0][0].join('\n')+'\n----\n'+LISTE[WW[0][0][1][2]].userData.P.F[0].material.color.getHexString());
+    LISTE[20].userData.F[0].material.color.set(Farbtabelle[Farben[4]]);
     setze_die_Farbe(0,0,1,Farben[5]);
     setze_die_Farbe(0,0,3,Farben[3]);
     setze_die_Farbe(0,0,4,Farben[1]);
@@ -783,6 +803,7 @@ function scannen(Farben) {
     if (scannum==0) {dran_ist='blue';RCube_neue_Ausrichtung=[new THREE.Vector3(0,1,0),frametime]}
     }  
   if (Farben[4]=='green') {
+    LISTE[21].userData.F[0].material.color.set(Farbtabelle[Farben[4]]);
     setze_die_Farbe(0,1,0,Farben[7]);
     setze_die_Farbe(0,1,2,Farben[1]);
     setze_die_Farbe(0,1,4,Farben[3]);
@@ -794,6 +815,7 @@ function scannen(Farben) {
     if (scannum==0) {dran_ist='yellow';RCube_neue_Ausrichtung=[new THREE.Vector3(0,1,0),frametime]}
     }  
   if (Farben[4]=='orange') {
+    LISTE[22].userData.F[0].material.color.set(Farbtabelle[Farben[4]]);
     setze_die_Farbe(0,2,1,Farben[7]);
     setze_die_Farbe(0,2,3,Farben[1]);
     setze_die_Farbe(0,2,4,Farben[3]);
@@ -805,6 +827,7 @@ function scannen(Farben) {
     if (scannum==0) {dran_ist='green';RCube_neue_Ausrichtung=[new THREE.Vector3(-1,0,0),frametime]}
     }  
   if (Farben[4]=='blue') {
+    LISTE[23].userData.F[0].material.color.set(Farbtabelle[Farben[4]]);
     setze_die_Farbe(0,3,2,Farben[3]);
     setze_die_Farbe(0,3,0,Farben[5]);
     setze_die_Farbe(0,3,4,Farben[1]);
@@ -816,6 +839,7 @@ function scannen(Farben) {
     if (scannum==0) {dran_ist='white';RCube_neue_Ausrichtung=[new THREE.Vector3(-1,0,0),frametime]}
     }  
   if (Farben[4]=='yellow') {
+    LISTE[24].userData.F[0].material.color.set(Farbtabelle[Farben[4]]);
     setze_die_Farbe(0,4,0,Farben[7]);
     setze_die_Farbe(0,4,1,Farben[5]);
     setze_die_Farbe(0,4,2,Farben[1]);
@@ -826,10 +850,11 @@ function scannen(Farben) {
     setze_die_Farbe(1,4,3,Farben[6]);
     if (scannum==0) {
       dran_ist='red';RCube_neue_Ausrichtung=[new THREE.Vector3(-1,0,0),frametime]
-      if (checken()) {scanbit=0; id_scannum.innerHTML='-'; id_loese.click()};
+      if (checken()) {scanbit=0; id_scannum.innerHTML='-'; canvas4.src=''; id_loese.click()};
       }
     }  
   if (Farben[4]=='white') {
+    LISTE[25].userData.F[0].material.color.set(Farbtabelle[Farben[4]]);
     setze_die_Farbe(0,5,0,Farben[5]);
     setze_die_Farbe(0,5,1,Farben[7]);
     setze_die_Farbe(0,5,2,Farben[3]);
@@ -1182,10 +1207,11 @@ function MinDist(fr,fg,fb,fm,h,s,l) {
 function Farben_aus_Daten_bestimmen() {
   Farben=[];
   Farben2=[];
+  Farben3=[];
   for (let i=0;i<10;i++) {
     let [fr,fg,fb]=dataArray[i];//alert([fr,fg,fb]);
+    let [fr0,fg0,fb0]=dataArray[i];//alert(dataArray[i]);
     let hsl=new THREE.Color().setRGB( fr/255,fg/255,fb/255);
-    hsl.setRGB( fr/255,fg/255,fb/255);
     let hs={h:0,s:0,l:0};
     hsl.getHSL(hs);
     let fm=Math.min(fr,fg,fb);
@@ -1195,9 +1221,11 @@ function Farben_aus_Daten_bestimmen() {
     let Farbe=MinDist(fr,fg,fb,fm,hs.h,hs.s,hs.l);
     Farben2.push([i,fr,fg,fb,Farbe,fm,hs.h,hs.s,hs.l]);
     Farben.push(Farbe);
+    Farben3.push('rgb('+fr0+','+fg0+','+fb0+')');
     }
   Log4.innerHTML='Farben: '+Farben2.join('\n');
   Farben.shift();
+  Farben3.shift();
   linksoben.setAttribute('fill',Farben[0]);
   mitteoben.setAttribute('fill',Farben[1]);
   rechtsoben.setAttribute('fill',Farben[2]);
@@ -1243,18 +1271,15 @@ ok Lösung ausgeben, rot-weiß fertig dazuschreiben
 ok Anfangsstellung
 ok Eingabe Adresse IP-Webcam 
 ok die circle auch färben
+ok Lösung als Einzelschritte
+ok mit den echten Farben einfärben
 .. Log-files neu anordnen
-.. Lösung als Einzelschritte
 .. Verbindung zu gap
 .. zu Robi verbinden
 .. das Farbensechseck
-
-i:=0; j:=0; d:=0; t:=function(n) local s; s:=0; for i in [-n..n] do for j in [-n..n] do for d in [1..Gcd(i,j)] do if Gcd(i,j) mod d = 0 then s:=s+MoebiusMu(d); fi; od; od; od; return s; end;
-
-u:=function(n) local s; s:=0; for i in [-n..n] do for j in [-n..n] do if Gcd(i,j)=1 then s:=s+1; fi; od; od; return s; end;
-
-#8 16 32 48 80 96 144 176 224 256 336 368 464 512 576 640 768 816 960 1024 1120 1200 1376 1440 1600 1696 1840 1936 2160 2224 2464 2592 2752 2880 3072 3168 3456 3600 3792 3920 4240 4336 4672 4832 5024 5200 5568 5696 6032 6192 6448 6640 7056 7200 7520
-
+.. nochmal mit sichtbarem Zurückdrehen
+.. Lösung nicht gleich starten
+.. Anzeige des einzelnen Lösungstextes
 */
 
   </script>
@@ -1353,6 +1378,7 @@ u:=function(n) local s; s:=0; for i in [-n..n] do for j in [-n..n] do if Gcd(i,j
 <div><button id='id_mische' style='font-size:300%'>mischen</button></div>
 <div><button id='id_loese' style='font-size:300%'>lösen</button></div>
 <!--div><button id='id_weiter' style='font-size:300%'>weiter</button></div-->
+<div><button id='id_nochmal' style='font-size:300%'>nochmal</button></div>
 <div>xxx</div>
 <div>xxx</div>
   </div>
