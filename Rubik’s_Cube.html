@@ -186,10 +186,11 @@ let Drehliste=[];
 let Drehstart=-1000000;
 
 function drehe(n) {
+  beachte_Checkbox_Einzelschritte=false;weiter=1;
   Drehliste_gesamt.push(n);
   }
 
-function drehe2(n,j,k) {
+function drehe2(n,j,k) {//Log0.innerHTML='drehe('+[n,j,k]+')';
   let d=D[n];
   let WWNEU=structuredClone(WW);
   Drehliste=[];
@@ -392,7 +393,7 @@ function animate_start() {Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehli
 let Drehzeit=600;//100, 200 oder 600
 let neue_Drehzeit=0;
 let weiter=1;
-let Einzelschritt=false;
+let beachte_Checkbox_Einzelschritte=false;
 
 function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehliste_gesamt;
   if (frametime<Drehstart+Drehzeit+100) {
@@ -406,7 +407,7 @@ function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehlis
       Obj.rotateOnWorldAxis(Achs,alpha*Wink);
       }
     } else if ((Drehliste_gesamt.length>0)&&frametime>2000&&weiter==1) {
-      if (Einzelschritt==true) weiter=0;
+      if ((beachte_Checkbox_Einzelschritte==true)&&(id_Einzelschritte.checked==true)) weiter=0;
       Drehzeit=Math.max(Drehzeit+neue_Drehzeit,100); neue_Drehzeit=0;
       let n=Drehliste_gesamt.shift();
       while (n<0&&Drehliste_gesamt.length>0) {n=Drehliste_gesamt.shift()}
@@ -479,7 +480,7 @@ let Loesetext2=[
   ];
 let Loeseliste=[];
 function loese() {
-  Einzelschritt=true;
+  beachte_Checkbox_Einzelschritte=true;
 /*//aus 
 const canvas = document.getElementById("canvas").firstChild;
 //const canvas = document.createElement("canvas");
@@ -533,7 +534,7 @@ alert(pixels);
   Log6.innerHTML=Loesung;
   }
 
-id_loese.addEventListener('click',function() {if (Einzelschritt==false) loese(); else weiter=1});
+id_loese.addEventListener('click',function() {if (beachte_Checkbox_Einzelschritte==false) loese(); else {weiter=1}});
 //id_weiter.addEventListener('click',function() {weiter=1});
 id_nochmal.addEventListener('click',function() {Drehstart=frametime});
 
@@ -668,7 +669,7 @@ let LOESUNGEN=[
 //[7,1,1,4,5,8,9,11,9,1,4,4,2,0,2,5,8,1,6,2]
 
 function mische(n) {
-  Einzelschritt=false;
+  beachte_Checkbox_Einzelschritte=false;weiter=1;
   let RET=[];
   for (let i=0;i<n;i++) RET.push(Math.floor(Math.random()*12));
   Log.innerHTML=Log.innerHTML+',<br/>'+RET;
@@ -1044,7 +1045,7 @@ function Anfang() {
   RCube.rotation.set(0,0,0);
   controls.object.position.set(0.5,0.5,1.5);
   Log.innerHTML=' ';
-  Einzelschritt=false;
+  beachte_Checkbox_Einzelschritte=false;
   weiter=1;
   Drehliste_gesamt=[];
   }
@@ -1382,7 +1383,7 @@ ok mit den echten Farben einfärben
 <div style='display:inline-block'>
 <div><button id='id_Anfang' style='font-size:300%'>Anfang</button></div>
 <div><button id='id_mische' style='font-size:300%'>mischen</button></div>
-<div><button id='id_loese' style='font-size:300%'>lösen</button></div>
+<div><button id='id_loese' style='font-size:300%'>lösen</button> <input id='id_Einzelschritte' type='checkbox' checked='checked'>Einzelschritte</input></div>
 <!--div><button id='id_weiter' style='font-size:300%'>weiter</button></div-->
 <div><button id='id_nochmal' style='font-size:300%'>nochmal</button></div>
 <div>xxx</div>
@@ -1419,8 +1420,9 @@ ok mit den echten Farben einfärben
 <button id='id_schneller' style='background-color:white; font-size:200%'>schneller</button>
 
 
+<div id='Log0' style='display:flex; display:non; overflow:auto; font-family:monospace; white-space:pre; color:gray'></div>
 <div id='Log' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
-<div id='Tdok' style='display:non; font-family:Courier,monospace; white-space:wrap;'>raycaster</div>
+<div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'>raycaster</div>
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
 <div id='Log2' style='display:non; font-family:Courier,monospace; white-space:wrap; overflow:auto'> </div>
 <div id='Log6' style='display:n; font-family:Courier,monospace; white-space:wrap;'>Lösung:</div>
