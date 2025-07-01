@@ -249,12 +249,14 @@ let K0140=new THREE.Mesh(
   new THREE.MeshStandardMaterial( {color: rot, transparent:false, roughness:1, vertexColors:false} )
   );
   K0140.position.set(0.2,0.2,0.301)
+  K0140.material.userData=rot;
   K014.add(K0140);
 let K0141=new THREE.Mesh(
   new THREE.PlaneGeometry(0.19,0.19),
   new THREE.MeshStandardMaterial( {color: gruen, transparent:false} )
   );
   K0141.position.set(0.301,0.2,0.2)
+  K0141.material.userData=gruen;
   K0141.rotateY(Math.PI/2);
   K014.add(K0141);
 let K0144=new THREE.Mesh(
@@ -262,6 +264,7 @@ let K0144=new THREE.Mesh(
   new THREE.MeshStandardMaterial( {color: gelb, transparent:false} )
   );
   K0144.position.set(0.2,0.301,0.2)
+  K0144.material.userData=gelb;
   K0144.rotateX(-Math.PI/2);
   K014.add(K0144);
   K014.name=rot+gruen+gelb;
@@ -277,19 +280,21 @@ let K014W=new THREE.Mesh(
   new THREE.BoxGeometry(0.2,0.2,0.2),
   new THREE.MeshStandardMaterial( {color: 'darkgray', transparent:false, opacity:0.8} )
   );
-  K014W.position.set(0.2,0,0.2)
+  K014W.position.set(0.2,0,0.2);
   K014.add(K014W);
 let K0140=new THREE.Mesh(
   new THREE.PlaneGeometry(0.19,0.19),
   new THREE.MeshStandardMaterial( {color: rot, transparent:false} )
   );
-  K0140.position.set(0.2,0,0.301)
+  K0140.position.set(0.2,0,0.301);
+  K0140.material.userData=rot;
   K014.add(K0140);
 let K0141=new THREE.Mesh(
   new THREE.PlaneGeometry(0.19,0.19),
   new THREE.MeshStandardMaterial( {color: gruen, transparent:false} )
   );
   K0141.position.set(0.301,0,0.2)
+  K0141.material.userData=gruen;
   K0141.rotateY(Math.PI/2);
   K014.add(K0141);
   K014.name=rot+gruen;
@@ -312,6 +317,7 @@ let K0140=new THREE.Mesh(
   new THREE.MeshStandardMaterial( {color: rot, transparent:false} )
   );
   K0140.position.set(0,0,0.301)
+  K0140.material.userData=rot;
   K014.add(K0140);
   K014.userData={P:[0], F:[K0140]};
   RCube.add(K014);
@@ -888,7 +894,7 @@ function checken() {
   Flaechennummern_Kanten_gesamt=[]; for (let i=0;i<60;i++) Flaechennummern_Kanten_gesamt[i]=i;
   for (let i=0;i<20;i++) {
     let ke=LISTE[i];
-    //alert(JSON.stringify(ke.userData));
+    //alert(JSON.stringify(ke.userData));alert('i='+i);
     ke.name=ke.userData.F[0].material.userData+ke.userData.F[1].material.userData;
     let y=0;
     let ungueltig=false;
@@ -914,7 +920,7 @@ function checken() {
           ke.name=ke.userData.F[1].material.userData+ke.userData.F[0].material.userData;
           //alert(ke.name);
           }
-        ke.userData.index=Orientierungen_Kanten.indexOf(ke.name);
+        ke.userData.index=Orientierungen_Kanten.indexOf(ke.name);//alert('ke.userData.index='+ke.userData.index);
         if (Orientierungen_Kanten.indexOf(ke.name)==-1) ungueltig=true;
         }
     ke.userData.Orientierung=y;
@@ -1432,6 +1438,12 @@ perms := [
   ];
 puzzle := Group( perms );Size( puzzle );
 hom:=EpimorphismFromFreeGroup(puzzle:names:=['V', 'R', 'H', 'L', 'O', 'U']);
+
+#perm:=PermList([1,46,3,38,5,44,7,6,9,10,11,48,13,24,15,26,17,32,19,20,21,58,23,34,25,4,27,2,29,30,31,56,33,16,35,52,37,12,39,40,41,22,43,8,45,42,47,14,49,50,51,28,53,36,55,18,57,54,59]);
+
+#V^-1*R*V^-1*R^-1*V^-2*O^-1*R^-1*V^-1*R*V*O*V*R*V^-1*O*V^-1*L*V*L^-1*O^-1*R^-1*V^-1*O*R^-1*H*R*H^-1*O^-1*R^-1*O^-1*R*O*R^-1*O^-1*V*R^-1*O^2*R^-1*O^-3*R^-2*H^-2*R
+
+
 </div>
 
 <script>
