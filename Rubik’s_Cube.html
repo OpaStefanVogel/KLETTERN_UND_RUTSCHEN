@@ -411,8 +411,8 @@ function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehlis
       if ((beachte_Checkbox_Einzelschritte==true)&&(id_Einzelschritte.checked==true)) weiter=0;
       Drehzeit=Math.max(Drehzeit+neue_Drehzeit,100); neue_Drehzeit=0;
       let n=Drehliste_gesamt.shift();
-      while (n<0&&Drehliste_gesamt.length>0) {Log0.innerHTML=Log0.innerHTML+' n='+n; n=Drehliste_gesamt.shift()}
-      if (n<0) {Log0.innerHTML=Log0.innerHTML+' n='+n; return}
+      while (n<0&&Drehliste_gesamt.length>0) {/*Log0.innerHTML=Log0.innerHTML+' n='+n; */n=Drehliste_gesamt.shift()}
+      if (n<0) {/*Log0.innerHTML=Log0.innerHTML+' n='+n; */return}
       if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);//am Platz
       if (n>-1) Drehnummer=Drehnummer+1;
       Log0.innerHTML=Drehnummer+'. '+Loesetext[n];
@@ -447,7 +447,7 @@ let Loesetext=[
   'vorn (rot) plus',
   'rechts (grün) plus',
   'hinten (orange) plus',
-  'links (blau} plus',
+  'links (blau) plus',
   'oben (gelb) plus',
   'unten (weiß) plus',
   'vorn (rot) minus',
@@ -1368,8 +1368,8 @@ ok mit den echten Farben einfärben
 <button id='id_drehe11' style='background-color:white; font-size:200%'>↺</button>
   </div>
 
-<div>xxx</div>
-<div>xxx</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
 </div>
 
 <div style='display:inline-block; min-width:64px'> </div>
@@ -1379,9 +1379,10 @@ ok mit den echten Farben einfärben
 <div><button id='id_mische' style='font-size:300%'>mischen</button></div>
 <div><button id='id_loese' style='font-size:300%'>lösen</button> <input id='id_Einzelschritte' type='checkbox' checked='checked'>Einzelschritte</input></div>
 <!--div><button id='id_weiter' style='font-size:300%'>weiter</button></div-->
-<div><button id='id_nochmal' style='font-size:300%'>nochmal</button></div>
-<div>xxx</div>
-<div>xxx</div>
+<div id='Log0' style='display:flex; display:non; overflow:auto; font-family:monospace; font-size:140%; white-space:pre;'>1.</div>
+<div><button id='id_nochmal' style='font-size:300%'>(nochmal)</button></div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
   </div>
 
   </div>
@@ -1414,7 +1415,6 @@ ok mit den echten Farben einfärben
 <button id='id_schneller' style='background-color:white; font-size:200%'>schneller</button>
 
 
-<div id='Log0' style='display:flex; display:non; overflow:auto; font-family:monospace; white-space:pre; color:gray'></div>
 <div id='Log' style='display:non; font-family:Courier,monospace; white-space:wrap;'> </div>
 <div id='Tdok' style='display:none; font-family:Courier,monospace; white-space:wrap;'>raycaster</div>
 <div style='display:none'><i>"one-touchmove"→drehen, "two-touchmove"→verschieben+zoomen</i></div>
