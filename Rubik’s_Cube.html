@@ -394,6 +394,7 @@ let Drehzeit=600;//100, 200 oder 600
 let neue_Drehzeit=0;
 let weiter=1;
 let beachte_Checkbox_Einzelschritte=false;
+let Drehnummer=0;
 
 function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehliste_gesamt;
   if (frametime<Drehstart+Drehzeit+100) {
@@ -410,9 +411,11 @@ function animate_go() {//Log2.innerHTML=frametime+' '+Drehstart+' noch '+Drehlis
       if ((beachte_Checkbox_Einzelschritte==true)&&(id_Einzelschritte.checked==true)) weiter=0;
       Drehzeit=Math.max(Drehzeit+neue_Drehzeit,100); neue_Drehzeit=0;
       let n=Drehliste_gesamt.shift();
-      while (n<0&&Drehliste_gesamt.length>0) {n=Drehliste_gesamt.shift()}
-      if (n<0) {Log2.innerHTML=''; return}
-      if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);
+      while (n<0&&Drehliste_gesamt.length>0) {Log0.innerHTML=Log0.innerHTML+' n='+n; n=Drehliste_gesamt.shift()}
+      if (n<0) {Log0.innerHTML=Log0.innerHTML+' n='+n; return}
+      if (n<6) drehe2(n,1,0); else drehe2(n-6,0,1);//am Platz
+      if (n>-1) Drehnummer=Drehnummer+1;
+      Log0.innerHTML=Drehnummer+'. '+Loesetext[n];
       //alert(n);
       animate_start();
       Drehstart=frametime;
@@ -526,12 +529,13 @@ alert(pixels);
   //for (let i=0;i<LISTE.length;i++) LISTE[i].setRotationFromEuler(LI[i]);
   setTimeout(function() {Drehliste_gesamt=Loeseliste},100);
   let Loesung='Lösung nach <a href="https://www.taurelin.de/downloads/anfaengermethode.pdf">taurelin anfaengermethode.pdf</a>: <div>Lege gelbe Mitte nach oben und grüne Mitte nach rechts.</div><div>plus heißt Drehung im Uhrzeigersinn.</div><div>minus heißt Drehung entgegen Uhrzeigersinn.</div>';
-  let Drehnummer=0;
+  Drehnummer=0;
   for (let i=0;i<Loeseliste.length;i++) if (Loeseliste[i]>-1) {
     Drehnummer=Drehnummer+1;
     Loesung=Loesung+'\n</div><div>'+Drehnummer+'. Drehung '+Loesetext[Loeseliste[i]];
     } else Loesung=Loesung+', '+Loesetext2[-Loeseliste[i]-1]+' ist am Platz';
   Log6.innerHTML=Loesung;
+  Drehnummer=0;
   }
 
 id_loese.addEventListener('click',function() {if (beachte_Checkbox_Einzelschritte==false) loese(); else {weiter=1}});
@@ -756,14 +760,6 @@ Testfarben=[
   ];
 
 let Testphotos=[
-  'photo_2025-06-02_18-34.jpg',
-  'photo_2025-06-02_18-34-1.jpg',
-  'photo_2025-06-02_18-35.jpg',
-  'photo_2025-06-02_18-35-1.jpg',
-  'photo_2025-06-02_18-35-2.jpg',
-  'photo_2025-06-02_18-35-3.jpg'];
-  
-Testphotos=[
   'photo_2025-06-05_10-46.jpg',
   'photo_2025-06-05_10-46-1.jpg',
   'photo_2025-06-05_10-46-2.jpg',
@@ -1048,6 +1044,7 @@ function Anfang() {
   beachte_Checkbox_Einzelschritte=false;
   weiter=1;
   Drehliste_gesamt=[];
+  Drehnummer=0;
   }
 
 id_Anfang.addEventListener('click',function() {Anfang()});
@@ -1129,13 +1126,10 @@ function Test5(event) {
   //for (let i of canvas) alert(i);
   eventLocation={x:event.offsetX,y:event.offsetY};
   myImg.src=canvas4.src;
-  //myImg.src='Screenshot_20250529-210046_Chrome.jpg';
   //myImg.src='http://127.0.0.1:56147/video';
   }
 
-//myImg.src='photo_2025-06-02_10-32.jpg';
-//myImg.src='Screenshot_20250529-210046_Chrome.jpg';
-//myImg.src = 'http://127.0.0.1:56147/video';//'Screenshot_20250527-173334_Chrome.jpg';
+//myImg.src = 'http://127.0.0.1:56147/video';
 
 id_Test4.addEventListener('click',function() {Test4(event)});
 id_rectangle.addEventListener('click',function() {Test5(event)});
