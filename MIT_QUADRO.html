@@ -187,6 +187,9 @@ import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFa
 			renderer.setSize( window.innerWidth*0.9, window.innerHeight*0.9);
 			renderer.xr.enabled = true;
 			renderer.xr.setReferenceSpaceType( 'local' );
+			THREE.ColorManagement.enabled = false;
+			//renderer.outputColorSpace = THREE.LinearSRGBColorSpace; // optional with post-processing
+			//alert(renderer.outputColorSpace);
 			//document.body.appendChild( renderer.domElement );
 
 			//document.body.appendChild( VRButton.createButton( renderer ) );
